@@ -1,0 +1,25 @@
+model companies {
+  id           String    @id @default(cuid())
+  name         String
+  subdomain    String?   @unique
+  plan         String    @default("free")
+  settings     Json?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+
+  users       users[]
+  vendors     vendors[]
+  categories  categories[]
+  purchaseOrders purchase_orders[]
+  contracts   contracts[]
+  workOrders  work_orders[]
+  invoices    invoices[]
+  payments    payments[]
+  documents   documents[]
+  activities  activity_logs[]
+  notifications notifications[]
+
+  @@index([subdomain])
+  @@map("companies")
+}

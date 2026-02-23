@@ -1,0 +1,3 @@
+
+  createdPurchaseOrders purchase_orders[] @relation("PurchaseOrderCreatedBy")
+  approvedPurchaseOrders purchase_orders[] @relation("PurchaseOrderApprovedBy")

@@ -1,0 +1,9 @@
+
+  purchaseOrders purchase_orders[]
+  rfqs          rfqs[]
+  quotes        quotes[]
+  bids          bids[]
+  contracts     contracts[]
+  workOrders    work_orders[]
+  invoices      invoices[]
+  documents     documents[]

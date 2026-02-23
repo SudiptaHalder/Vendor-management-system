@@ -1,0 +1,899 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ====================
+// CORE TENANT TABLES
+// ====================
+
+model companies {
+  id           String    @id @default(cuid())
+  name         String
+  subdomain    String?   @unique
+  plan         String    @default("free")
+  settings     Json?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+
+  users       users[]
+  vendors     vendors[]
+  contracts   contracts[]
+  workOrders  work_orders[]
+  invoices    invoices[]
+  payments    payments[]
+  documents   documents[]
+  activities  activity_logs[]
+  notifications notifications[]
+  categories  categories[]
+
+  @@index([subdomain])
+  @@map("companies")
+}
+
+model users {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  password     String?
+  name         String?
+  role         String    @default("member")
+  avatarUrl    String?
+  lastLoginAt  DateTime?
+  preferences  Json?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+
+  companyId    String?
+  company      companies? @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  createdWorkOrders work_orders[] @relation("WorkOrderCreatedBy")
+  assignedWorkOrders work_orders[] @relation("WorkOrderAssignedTo")
+  createdInvoices invoices[] @relation("InvoiceCreatedBy")
+  approvedInvoices invoices[] @relation("InvoiceApprovedBy")
+  uploadedDocuments documents[]
+  activityLogs activity_logs[]
+  notifications notifications[]
+
+  @@index([companyId])
+  @@index([email])
+  @@index([role])
+  @@map("users")
+}
+
+model categories {
+  id           String    @id @default(cuid())
+  companyId    String?
+  company      companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+
+  name         String
+  description  String?
+  color        String    @default("blue")
+  icon         String?   @default("Package")
+  vendorCount  Int       @default(0)
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+
+  vendors      vendors[]
+
+  @@unique([companyId, name])
+  @@index([companyId])
+  @@index([companyId, name])
+  @@map("categories")
+}
+
+model vendors {
+  id           String    @id @default(cuid())
+  companyId    String?
+  company      companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+
+  categoryId   String?
+  category     categories? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  name         String
+  email        String?
+  phone        String?
+  website      String?
+  taxId        String?
+  registrationNumber String?
+  status       String    @default("pending")
+  rating       Int?      @default(0)
+
+  address      String?
+  city         String?
+  state        String?
+  country      String?
+  postalCode   String?
+
+  contactPerson String?
+  contactPersonRole String?
+  notes        String?
+  tags         String[]
+
+  paymentTerms String?   @default("net30")
+  currency     String?   @default("USD")
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+
+  contracts   contracts[]
+  workOrders  work_orders[]
+  invoices    invoices[]
+  documents   documents[]
+
+  @@index([companyId])
+  @@index([companyId, status])
+  @@index([companyId, categoryId])
+  @@index([companyId, name])
+  @@map("vendors")
+}
+
+// Keep the rest of your models (contracts, work_orders, invoices, etc.) the same...
+// ... (rest of your schema remains unchanged with companyId optional and onDelete: SetNull)
+
+model contracts {
+  id           String    @id @default(cuid())
+  companyId    String?
+  company      companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  vendorId     String
+  vendor       vendors   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+
+  title        String
+  description  String?
+  contractNumber String  @unique
+  type         String
+  status       String    @default("draft")
+
+  startDate    DateTime?
+  endDate      DateTime?
+  value        Decimal?  @db.Decimal(19, 4)
+  currency     String?   @default("USD")
+  terms        String?
+  paymentSchedule String?
+
+  documentUrl  String?
+  signedBy     String?
+  signedAt     DateTime?
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+
+  workOrders  work_orders[]
+  invoices    invoices[]
+
+  @@index([companyId])
+  @@index([companyId, vendorId])
+  @@index([companyId, status])
+  @@index([contractNumber])
+  @@map("contracts")
+}
+
+model work_orders {
+  id           String    @id @default(cuid())
+  companyId    String?
+  company      companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  vendorId     String
+  vendor       vendors   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  contractId   String?
+  contract     contracts? @relation(fields: [contractId], references: [id], onDelete: SetNull)
+
+  title        String
+  description  String?
+  workOrderNumber String @unique
+  status       String    @default("pending")
+  priority     String    @default("medium")
+
+  assignedById String?
+  assignedToId String?
+  assignedBy   users?    @relation("WorkOrderCreatedBy", fields: [assignedById], references: [id])
+  assignedTo   users?    @relation("WorkOrderAssignedTo", fields: [assignedToId], references: [id])
+
+  dueDate      DateTime?
+  startDate    DateTime?
+  completedAt  DateTime?
+  estimatedHours Decimal? @db.Decimal(10, 2)
+
+  location     String?
+  siteContact  String?
+  sitePhone    String?
+
+  estimatedCost Decimal? @db.Decimal(19, 4)
+  actualCost   Decimal?  @db.Decimal(19, 4)
+  currency     String?   @default("USD")
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+
+  invoices     invoices[]
+
+  @@index([companyId])
+  @@index([companyId, vendorId])
+  @@index([companyId, status])
+  @@index([companyId, assignedToId])
+  @@index([workOrderNumber])
+  @@index([companyId, dueDate])
+  @@map("work_orders")
+}
+
+model invoices {
+  id           String    @id @default(cuid())
+  companyId    String?
+  company      companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  vendorId     String
+  vendor       vendors   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  workOrderId  String?
+  workOrder    work_orders? @relation(fields: [workOrderId], references: [id], onDelete: SetNull)
+  contractId   String?
+  contract     contracts? @relation(fields: [contractId], references: [id], onDelete: SetNull)
+
+  invoiceNumber String   @unique
+  reference     String?
+  status       String    @default("draft")
+  type         String    @default("service")
+
+  issueDate    DateTime  @default(now())
+  dueDate      DateTime?
+  paidAt       DateTime?
+
+  subtotal     Decimal   @db.Decimal(19, 4)
+  taxAmount    Decimal   @db.Decimal(19, 4) @default(0)
+  discount     Decimal   @db.Decimal(19, 4) @default(0)
+  total        Decimal   @db.Decimal(19, 4)
+  currency     String    @default("USD")
+  taxRate      Decimal?  @db.Decimal(5, 2)
+
+  paymentTerms String?   @default("net30")
+  paymentMethod String?
+
+  approvedById String?
+  approvedBy   users?    @relation("InvoiceApprovedBy", fields: [approvedById], references: [id])
+  approvedAt   DateTime?
+  notes        String?
+
+  createdAt    DateTime  @default(now())
+  createdById  String
+  createdBy    users     @relation("InvoiceCreatedBy", fields: [createdById], references: [id])
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+
+  payments     payments[]
+  lineItems    invoice_line_items[]
+
+  @@index([companyId])
+  @@index([companyId, vendorId])
+  @@index([companyId, status])
+  @@index([companyId, workOrderId])
+  @@index([invoiceNumber])
+  @@index([companyId, dueDate])
+  @@index([companyId, paidAt])
+  @@map("invoices")
+}
+
+model invoice_line_items {
+  id          String   @id @default(cuid())
+  invoiceId   String
+  invoice     invoices @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  description String
+  quantity    Decimal  @db.Decimal(10, 2)
+  unitPrice   Decimal  @db.Decimal(19, 4)
+  unit        String?
+  taxRate     Decimal? @db.Decimal(5, 2)
+  total       Decimal  @db.Decimal(19, 4)
+
+  @@index([invoiceId])
+  @@map("invoice_line_items")
+}
+
+model payments {
+  id           String    @id @default(cuid())
+  companyId    String?
+  company      companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  invoiceId    String
+  invoice      invoices  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  paymentNumber String   @unique
+  amount       Decimal   @db.Decimal(19, 4)
+  currency     String    @default("USD")
+  method       String
+  status       String    @default("pending")
+
+  transactionId String?
+  paymentDate  DateTime  @default(now())
+  processedAt  DateTime?
+  notes        String?
+
+  bankName     String?
+  accountNumber String?
+  checkNumber  String?
+  reference    String?
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+
+  @@index([companyId])
+  @@index([companyId, invoiceId])
+  @@index([companyId, status])
+  @@index([paymentNumber])
+  @@index([companyId, paymentDate])
+  @@map("payments")
+}
+
+model documents {
+  id           String    @id @default(cuid())
+  companyId    String?
+  company      companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+
+  entityType   String
+  entityId     String
+
+  name         String
+  description  String?
+  fileUrl      String
+  fileName     String
+  fileSize     Int
+  fileType     String
+  category     String?
+
+  uploadedById String
+  uploadedBy   users     @relation(fields: [uploadedById], references: [id], onDelete: Cascade)
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+
+  vendorId     String?
+  vendor       vendors?  @relation(fields: [vendorId], references: [id], onDelete: SetNull)
+
+  @@index([companyId])
+  @@index([companyId, entityType, entityId])
+  @@index([companyId, vendorId])
+  @@index([companyId, category])
+  @@map("documents")
+}
+
+model activity_logs {
+  id           String    @id @default(cuid())
+  companyId    String?
+  company      companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+
+  action       String
+  entityType   String
+  entityId     String
+  entityName   String?
+
+  userId       String
+  user         users     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userEmail    String
+  userName     String?
+
+  oldData      Json?
+  newData      Json?
+  changes      Json?
+  ipAddress    String?
+  userAgent    String?
+
+  createdAt    DateTime  @default(now())
+
+  @@index([companyId])
+  @@index([companyId, entityType, entityId])
+  @@index([companyId, userId])
+  @@index([companyId, createdAt])
+  @@map("activity_logs")
+}
+
+model notifications {
+  id           String    @id @default(cuid())
+  companyId    String?
+  company      companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+
+  userId       String
+  user         users     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  type         String
+  title        String
+  message      String
+  status       String    @default("unread")
+  priority     String    @default("normal")
+
+  entityType   String?
+  entityId     String?
+  actionUrl    String?
+
+  createdAt    DateTime  @default(now())
+  readAt       DateTime?
+  scheduledFor DateTime?
+
+  @@index([companyId])
+  @@index([companyId, userId])
+  @@index([companyId, userId, status])
+  @@index([companyId, createdAt])
+  @@index([companyId, scheduledFor])
+  @@map("notifications")
+}
+
+// Add this to your existing vendors model if not already present
+// The status field should have these default values
+// status       String    @default("pending") // pending, active, inactive, rejected
+
+// ====================
+// PROCUREMENT MODULES
+// ====================
+
+// Purchase Orders
+model purchase_orders {
+  id           String    @id @default(cuid())
+  companyId    String?
+  company      companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  vendorId     String
+  vendor       vendors   @relation(fields: [vendorId], references: [id], onDelete: Restrict)
+
+  poNumber     String    @unique
+  title        String
+  description  String?
+  status       String    @default("draft") // draft, sent, acknowledged, confirmed, shipped, delivered, cancelled
+  priority     String    @default("medium") // low, medium, high, urgent
+  
+  orderDate    DateTime  @default(now())
+  expectedDate DateTime?
+  deliveredAt  DateTime?
+  
+  subtotal     Decimal   @db.Decimal(19, 4)
+  taxAmount    Decimal   @db.Decimal(19, 4) @default(0)
+  discount     Decimal   @db.Decimal(19, 4) @default(0)
+  total        Decimal   @db.Decimal(19, 4)
+  currency     String    @default("USD")
+  
+  notes        String?
+  terms        String?
+  
+  createdById  String
+  createdBy    users     @relation("PurchaseOrderCreatedBy", fields: [createdById], references: [id])
+  approvedById String?
+  approvedBy   users?    @relation("PurchaseOrderApprovedBy", fields: [approvedById], references: [id])
+  approvedAt   DateTime?
+  
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+  
+  lineItems    purchase_order_line_items[]
+  rfqs         rfqs[]
+  receipts     goods_receipts[]
+  
+  @@index([companyId])
+  @@index([companyId, vendorId])
+  @@index([companyId, status])
+  @@index([poNumber])
+  @@index([companyId, orderDate])
+  @@map("purchase_orders")
+}
+
+// Purchase Order Line Items
+model purchase_order_line_items {
+  id              String   @id @default(cuid())
+  purchaseOrderId String
+  purchaseOrder   purchase_orders @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
+  
+  description     String
+  quantity        Decimal  @db.Decimal(10, 2)
+  unitPrice       Decimal  @db.Decimal(19, 4)
+  total           Decimal  @db.Decimal(19, 4)
+  
+  notes           String?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([purchaseOrderId])
+  @@map("purchase_order_line_items")
+}
+
+// RFQs (Request for Quotes)
+model rfqs {
+  id           String    @id @default(cuid())
+  companyId    String?
+  company      companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  
+  rfqNumber    String    @unique
+  title        String
+  description  String?
+  status       String    @default("draft") // draft, sent, receiving_quotes, evaluating, awarded, cancelled
+  
+  issueDate    DateTime  @default(now())
+  deadline     DateTime?
+  expectedDeliveryDate DateTime?
+  
+  createdById  String
+  createdBy    users     @relation("RFQCreatedBy", fields: [createdById], references: [id])
+  approvedById String?
+  approvedBy   users?    @relation("RFQApprovedBy", fields: [approvedById], references: [id])
+  approvedAt   DateTime?
+  
+  notes        String?
+  terms        String?
+  
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+  
+  lineItems    rfq_line_items[]
+  recipients   rfq_recipients[]
+  quotes       quotes[]
+  purchaseOrderId String?
+  purchaseOrder   purchase_orders? @relation(fields: [purchaseOrderId], references: [id], onDelete: SetNull)
+  
+  @@index([companyId])
+  @@index([companyId, status])
+  @@index([rfqNumber])
+  @@index([companyId, deadline])
+  @@map("rfqs")
+}
+
+// RFQ Line Items
+model rfq_line_items {
+  id          String   @id @default(cuid())
+  rfqId       String
+  rfq         rfqs     @relation(fields: [rfqId], references: [id], onDelete: Cascade)
+  
+  description String
+  quantity    Decimal  @db.Decimal(10, 2)
+  unit        String?
+  
+  notes       String?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([rfqId])
+  @@map("rfq_line_items")
+}
+
+// RFQ Recipients (Vendors invited to quote)
+model rfq_recipients {
+  id          String   @id @default(cuid())
+  rfqId       String
+  rfq         rfqs     @relation(fields: [rfqId], references: [id], onDelete: Cascade)
+  vendorId    String
+  vendor      vendors  @relation(fields: [vendorId], references: [id], onDelete: Restrict)
+  
+  status      String   @default("pending") // pending, submitted, declined, no_response
+  invitedAt   DateTime @default(now())
+  respondedAt DateTime?
+  
+  @@unique([rfqId, vendorId])
+  @@index([rfqId])
+  @@index([vendorId])
+  @@map("rfq_recipients")
+}
+
+// Quotes (Vendor responses to RFQs)
+model quotes {
+  id           String    @id @default(cuid())
+  companyId    String?
+  company      companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  
+  rfqId        String
+  rfq          rfqs      @relation(fields: [rfqId], references: [id], onDelete: Cascade)
+  vendorId     String
+  vendor       vendors   @relation(fields: [vendorId], references: [id], onDelete: Restrict)
+  
+  quoteNumber  String    @unique
+  status       String    @default("submitted") // submitted, under_review, accepted, rejected, withdrawn
+  
+  submittedAt  DateTime  @default(now())
+  validUntil   DateTime?
+  
+  subtotal     Decimal   @db.Decimal(19, 4)
+  taxAmount    Decimal   @db.Decimal(19, 4) @default(0)
+  discount     Decimal   @db.Decimal(19, 4) @default(0)
+  total        Decimal   @db.Decimal(19, 4)
+  currency     String    @default("USD")
+  
+  notes        String?
+  terms        String?
+  
+  deliveryTime Int?      // Estimated delivery time in days
+  
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+  
+  lineItems    quote_line_items[]
+  contracts    contracts[]
+  
+  @@index([companyId])
+  @@index([companyId, rfqId])
+  @@index([companyId, vendorId])
+  @@index([companyId, status])
+  @@index([quoteNumber])
+  @@map("quotes")
+}
+
+// Quote Line Items
+model quote_line_items {
+  id          String   @id @default(cuid())
+  quoteId     String
+  quote       quotes   @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+  
+  description String
+  quantity    Decimal  @db.Decimal(10, 2)
+  unitPrice   Decimal  @db.Decimal(19, 4)
+  total       Decimal  @db.Decimal(19, 4)
+  
+  notes       String?
+  
+  @@index([quoteId])
+  @@map("quote_line_items")
+}
+
+// Contracts (from approved quotes/vendors)
+model contracts {
+  id           String    @id @default(cuid())
+  companyId    String?
+  company      companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  
+  vendorId     String
+  vendor       vendors   @relation(fields: [vendorId], references: [id], onDelete: Restrict)
+  quoteId      String?
+  quote        quotes?   @relation(fields: [quoteId], references: [id], onDelete: SetNull)
+  
+  contractNumber String  @unique
+  title        String
+  description  String?
+  type         String    // master_service_agreement, purchase_contract, etc.
+  status       String    @default("draft") // draft, active, completed, terminated, expired
+  
+  startDate    DateTime
+  endDate      DateTime?
+  value        Decimal   @db.Decimal(19, 4)
+  currency     String    @default("USD")
+  
+  terms        String?
+  paymentTerms String?
+  
+  signedBy     String?   // Signatory name
+  signedAt     DateTime?
+  
+  documentUrl  String?   // Link to uploaded contract PDF
+  
+  createdById  String
+  createdBy    users     @relation(fields: [createdById], references: [id])
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+  
+  purchaseOrders purchase_orders[]
+  amendments   contract_amendments[]
+  
+  @@index([companyId])
+  @@index([companyId, vendorId])
+  @@index([companyId, status])
+  @@index([contractNumber])
+  @@index([companyId, startDate, endDate])
+  @@map("contracts")
+}
+
+// Contract Amendments
+model contract_amendments {
+  id          String   @id @default(cuid())
+  contractId  String
+  contract    contracts @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  
+  amendmentNumber String @unique
+  title       String
+  description String?
+  effectiveDate DateTime
+  valueChange Decimal?  @db.Decimal(19, 4)
+  termsChange String?
+  
+  documentUrl String?
+  signedAt    DateTime?
+  
+  createdAt   DateTime @default(now())
+  createdById String
+  createdBy   users    @relation(fields: [createdById], references: [id])
+  
+  @@index([contractId])
+  @@index([amendmentNumber])
+  @@map("contract_amendments")
+}
+
+// Bids (Vendor bidding on opportunities)
+model bids {
+  id           String    @id @default(cuid())
+  companyId    String?
+  company      companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  
+  bidNumber    String    @unique
+  title        String
+  description  String?
+  type         String    // public_tender, private_bid, auction
+  status       String    @default("draft") // draft, open, evaluating, awarded, closed, cancelled
+  
+  openDate     DateTime  @default(now())
+  closeDate    DateTime?
+  awardDate    DateTime?
+  
+  estimatedValue Decimal? @db.Decimal(19, 4)
+  currency     String    @default("USD")
+  
+  requirements String?
+  evaluationCriteria String?
+  
+  createdById  String
+  createdBy    users     @relation(fields: [createdById], references: [id])
+  
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+  
+  submissions  bid_submissions[]
+  
+  @@index([companyId])
+  @@index([companyId, status])
+  @@index([bidNumber])
+  @@index([companyId, closeDate])
+  @@map("bids")
+}
+
+// Bid Submissions
+model bid_submissions {
+  id          String   @id @default(cuid())
+  bidId       String
+  bid         bids     @relation(fields: [bidId], references: [id], onDelete: Cascade)
+  vendorId    String
+  vendor      vendors  @relation(fields: [vendorId], references: [id], onDelete: Restrict)
+  
+  submissionNumber String @unique
+  status      String   @default("submitted") // submitted, under_review, shortlisted, rejected, awarded
+  
+  submittedAt DateTime @default(now())
+  amount      Decimal  @db.Decimal(19, 4)
+  currency    String   @default("USD")
+  
+  documents   String?  // JSON array of document URLs
+  notes       String?
+  
+  awardedAt   DateTime?
+  awardedById String?
+  awardedBy   users?   @relation(fields: [awardedById], references: [id])
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@unique([bidId, vendorId])
+  @@index([bidId])
+  @@index([vendorId])
+  @@index([status])
+  @@map("bid_submissions")
+}
+
+// Goods Receipts
+model goods_receipts {
+  id              String   @id @default(cuid())
+  companyId       String?
+  company         companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  
+  receiptNumber   String   @unique
+  purchaseOrderId String
+  purchaseOrder   purchase_orders @relation(fields: [purchaseOrderId], references: [id], onDelete: Restrict)
+  
+  receivedDate    DateTime @default(now())
+  status          String   @default("pending") // pending, partial, complete, rejected
+  
+  receivedById    String
+  receivedBy      users    @relation(fields: [receivedById], references: [id])
+  
+  notes           String?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  deletedAt       DateTime?
+  
+  lineItems       goods_receipt_line_items[]
+  
+  @@index([companyId])
+  @@index([companyId, purchaseOrderId])
+  @@index([receiptNumber])
+  @@map("goods_receipts")
+}
+
+// Goods Receipt Line Items
+model goods_receipt_line_items {
+  id              String   @id @default(cuid())
+  goodsReceiptId  String
+  goodsReceipt    goods_receipts @relation(fields: [goodsReceiptId], references: [id], onDelete: Cascade)
+  
+  poLineItemId    String?
+  description     String
+  quantity        Decimal  @db.Decimal(10, 2)
+  acceptedQuantity Decimal @db.Decimal(10, 2)
+  rejectedQuantity Decimal @db.Decimal(10, 2) @default(0)
+  rejectionReason String?
+  
+  @@index([goodsReceiptId])
+  @@map("goods_receipt_line_items")
+}
+
+// ====================
+// PURCHASE ORDERS MODULE
+// ====================
+
+// Purchase Orders
+model purchase_orders {
+  id           String    @id @default(cuid())
+  companyId    String?
+  company      companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  vendorId     String
+  vendor       vendors   @relation(fields: [vendorId], references: [id], onDelete: Restrict)
+
+  poNumber     String    @unique
+  title        String
+  description  String?
+  status       String    @default("draft") // draft, sent, acknowledged, confirmed, shipped, delivered, cancelled
+  priority     String    @default("medium") // low, medium, high, urgent
+  
+  orderDate    DateTime  @default(now())
+  expectedDate DateTime?
+  deliveredAt  DateTime?
+  
+  subtotal     Decimal   @db.Decimal(19, 4)
+  taxAmount    Decimal   @db.Decimal(19, 4) @default(0)
+  discount     Decimal   @db.Decimal(19, 4) @default(0)
+  total        Decimal   @db.Decimal(19, 4)
+  currency     String    @default("USD")
+  
+  notes        String?
+  terms        String?
+  
+  createdById  String
+  createdBy    users     @relation("PurchaseOrderCreatedBy", fields: [createdById], references: [id])
+  approvedById String?
+  approvedBy   users?    @relation("PurchaseOrderApprovedBy", fields: [approvedById], references: [id])
+  approvedAt   DateTime?
+  
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+  
+  lineItems    purchase_order_line_items[]
+  
+  @@index([companyId])
+  @@index([companyId, vendorId])
+  @@index([companyId, status])
+  @@index([poNumber])
+  @@index([companyId, orderDate])
+  @@map("purchase_orders")
+}
+
+// Purchase Order Line Items
+model purchase_order_line_items {
+  id              String   @id @default(cuid())
+  purchaseOrderId String
+  purchaseOrder   purchase_orders @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
+  
+  description     String
+  quantity        Decimal  @db.Decimal(10, 2)
+  unitPrice       Decimal  @db.Decimal(19, 4)
+  total           Decimal  @db.Decimal(19, 4)
+  
+  notes           String?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([purchaseOrderId])
+  @@map("purchase_order_line_items")
+}
