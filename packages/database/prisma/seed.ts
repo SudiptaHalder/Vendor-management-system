@@ -1,2234 +1,1351 @@
-// seed.ts
 import { PrismaClient } from '@prisma/client'
+import bcrypt from 'bcrypt'
 
 const prisma = new PrismaClient()
 
 async function main() {
-  console.log('Starting seed...')
+  console.log('🌱 Starting database seeding...')
 
-  // Clean up existing data (optional - be careful in production!)
-  await cleanDatabase()
+  // Clean up existing data (optional - comment out if you want to keep existing)
+  console.log('Cleaning existing data...')
+  await prisma.$transaction([
+    prisma.activity_logs.deleteMany(),
+    prisma.notifications.deleteMany(),
+    prisma.documents.deleteMany(),
+    prisma.payments.deleteMany(),
+    prisma.invoice_line_items.deleteMany(),
+    prisma.invoices.deleteMany(),
+    prisma.expenses.deleteMany(),
+    prisma.budget_items.deleteMany(),
+    prisma.goods_receipt_line_items.deleteMany(),
+    prisma.goods_receipts.deleteMany(),
+    prisma.bid_submissions.deleteMany(),
+    prisma.bids.deleteMany(),
+    prisma.quote_line_items.deleteMany(),
+    prisma.quotes.deleteMany(),
+    prisma.rfq_recipients.deleteMany(),
+    prisma.rfq_line_items.deleteMany(),
+    prisma.rfqs.deleteMany(),
+    prisma.purchase_order_line_items.deleteMany(),
+    prisma.purchase_orders.deleteMany(),
+    prisma.contract_amendments.deleteMany(),
+    prisma.contracts.deleteMany(),
+    prisma.project_vendors.deleteMany(),
+    prisma.work_orders.deleteMany(),
+    prisma.resource_assignments.deleteMany(),
+    prisma.resources.deleteMany(),
+    prisma.schedule_items.deleteMany(),
+    prisma.schedules.deleteMany(),
+    prisma.projects.deleteMany(),
+    prisma.vendor_ratings.deleteMany(),
+    prisma.vendor_portal_access.deleteMany(),
+    prisma.vendors.deleteMany(),
+    prisma.categories.deleteMany(),
+    prisma.team_members.deleteMany(),
+    prisma.team_permissions.deleteMany(),
+    prisma.team_roles.deleteMany(),
+    prisma.role_permissions.deleteMany(),
+    prisma.permissions.deleteMany(),
+    prisma.roles.deleteMany(),
+    prisma.teams.deleteMany(),
+    prisma.users.deleteMany(),
+    prisma.companies.deleteMany(),
+    prisma.reports.deleteMany(),
+    prisma.integrations.deleteMany(),
+    prisma.demo_requests.deleteMany(),
+  ])
 
-  // Create main company
+  console.log('✅ Cleanup complete')
+
+  // ========================================
+  // CREATE COMPANY
+  // ========================================
   const company = await prisma.companies.create({
     data: {
-      name: 'Acme Corporation',
-      subdomain: 'acme',
-      logo: 'https://example.com/logo.png',
-      website: 'https://acme.com',
-      phone: '+1-800-555-0123',
-      email: 'info@acme.com',
-      address: '123 Business Ave',
-      city: 'San Francisco',
-      state: 'CA',
+      name: 'ABC Construction Inc.',
+      subdomain: 'abcconstruction',
+      logo: 'https://via.placeholder.com/150',
+      website: 'https://www.abcconstruction.com',
+      phone: '+1 (555) 123-4567',
+      email: 'info@abcconstruction.com',
+      address: '123 Builder Ave',
+      city: 'New York',
+      state: 'NY',
       country: 'USA',
-      postalCode: '94105',
+      postalCode: '10001',
       taxId: '12-3456789',
-      registrationNumber: 'REG123456',
+      registrationNumber: 'CON123456',
       plan: 'enterprise',
       planStatus: 'active',
-      settings: {
-        timezone: 'America/Los_Angeles',
-        dateFormat: 'MM/DD/YYYY',
-        currency: 'USD'
-      },
-      features: {
-        advancedProcurement: true,
-        projectManagement: true,
-        vendorPortal: true
-      }
+      settings: { theme: 'light', timezone: 'America/New_York' },
+      features: { vendors: true, procurement: true, projects: true, finance: true }
     }
   })
+  console.log('✅ Created company:', company.name)
 
-  console.log('Created company:', company.name)
-
-  // Create second company
-  const company2 = await prisma.companies.create({
+  // ========================================
+  // CREATE USERS
+  // ========================================
+  const hashedPassword = await bcrypt.hash('password123', 10)
+  
+  const adminUser = await prisma.users.create({
     data: {
-      name: 'TechStart Inc',
-      subdomain: 'techstart',
-      website: 'https://techstart.io',
-      phone: '+1-888-555-0123',
-      email: 'hello@techstart.io',
-      city: 'Austin',
-      state: 'TX',
-      country: 'USA',
-      plan: 'professional',
-      planStatus: 'active',
-      settings: {
-        timezone: 'America/Chicago',
-        dateFormat: 'MM/DD/YYYY',
-        currency: 'USD'
-      }
-    }
-  })
-
-  console.log('Created company:', company2.name)
-
-  // Create users
-  const users = await createUsers(company.id, company2.id)
-  
-  // Create permissions
-  const permissions = await createPermissions(company.id)
-  
-  // Create roles
-  const roles = await createRoles(company.id, permissions)
-  
-  // Update users with roles
-  await assignRolesToUsers(users, roles)
-  
-  // Create teams
-  const teams = await createTeams(company.id, users)
-  
-  // Add team members
-  await addTeamMembers(teams, users, roles)
-
-  // Create categories
-  const categories = await createCategories(company.id)
-
-  // Create vendors
-  const vendors = await createVendors(company.id, categories)
-
-  // Create vendor ratings
-  await createVendorRatings(vendors, users)
-
-  // Create vendor portal access
-  await createVendorPortalAccess(vendors)
-
-  // Create projects
-  const projects = await createProjects(company.id, users)
-
-  // Create contracts
-  const contracts = await createContracts(company.id, vendors, users, projects)
-
-  // Create purchase orders
-  const purchaseOrders = await createPurchaseOrders(company.id, vendors, contracts, projects, users)
-
-  // Create RFQs
-  const rfqs = await createRFQs(company.id, vendors, projects, users, purchaseOrders)
-
-  // Create quotes
-  const quotes = await createQuotes(company.id, rfqs, vendors, users)
-
-  // Create work orders
-  const workOrders = await createWorkOrders(company.id, vendors, contracts, projects, users)
-
-  // Create schedules
-  const schedules = await createSchedules(company.id, projects, users, workOrders)
-
-  // Create resources
-  const resources = await createResources(company.id, users)
-
-  // Create resource assignments
-  await createResourceAssignments(resources, projects, workOrders, users)
-
-  // Create invoices
-  const invoices = await createInvoices(company.id, vendors, workOrders, contracts, purchaseOrders, projects, users)
-
-  // Create payments
-  await createPayments(company.id, invoices, users)
-
-  // Create expenses
-  await createExpenses(company.id, vendors, projects, workOrders, users)
-
-  // Create budget items
-  await createBudgetItems(company.id, projects, users)
-
-  // Create goods receipts
-  await createGoodsReceipts(company.id, purchaseOrders, users)
-
-  // Create documents
-  await createDocuments(company.id, vendors, contracts, purchaseOrders, users)
-
-  // Create demo requests
-  await createDemoRequests()
-
-  // Create activity logs
-  await createActivityLogs(company.id, users)
-
-  // Create notifications
-  await createNotifications(company.id, users)
-
-  console.log('Seeding completed successfully!')
-}
-
-async function cleanDatabase() {
-  // Delete in correct order to avoid foreign key constraints
-  const tables = [
-    'activity_logs',
-    'notifications',
-    'documents',
-    'payments',
-    'invoice_line_items',
-    'invoices',
-    'expenses',
-    'budget_items',
-    'resource_assignments',
-    'resources',
-    'schedule_items',
-    'schedules',
-    'goods_receipt_line_items',
-    'goods_receipts',
-    'quote_line_items',
-    'quotes',
-    'rfq_recipients',
-    'rfq_line_items',
-    'rfqs',
-    'purchase_order_line_items',
-    'purchase_orders',
-    'work_orders',
-    'contract_amendments',
-    'contracts',
-    'project_vendors',
-    'projects',
-    'vendor_ratings',
-    'vendor_portal_access',
-    'vendors',
-    'categories',
-    'team_members',
-    'team_permissions',
-    'team_roles',
-    'teams',
-    'role_permissions',
-    'permissions',
-    'roles',
-    'users',
-    'demo_requests',
-    'companies'
-  ]
-
-  for (const table of tables) {
-    await prisma.$executeRawUnsafe(`DELETE FROM "${table}";`)
-  }
-}
-
-async function createUsers(companyId: string, company2Id: string) {
-  const userData = [
-    {
-      email: 'john.doe@acme.com',
-      password: '$2b$10$hashedpassword1',
-      name: 'John Doe',
+      email: 'admin@construction.com',
+      password: hashedPassword,
+      name: 'John Admin',
       firstName: 'John',
-      lastName: 'Doe',
-      title: 'Procurement Manager',
-      department: 'Procurement',
+      lastName: 'Admin',
+      phone: '+1 (555) 111-2222',
+      title: 'Project Director',
+      department: 'Management',
       role: 'admin',
       isActive: true,
-      companyId,
-      preferences: {
-        theme: 'light',
-        notifications: true
-      }
-    },
-    {
-      email: 'jane.smith@acme.com',
-      password: '$2b$10$hashedpassword2',
-      name: 'Jane Smith',
-      firstName: 'Jane',
-      lastName: 'Smith',
+      emailVerified: new Date(),
+      companyId: company.id,
+      preferences: { notifications: true, theme: 'dark' },
+      notificationSettings: { email: true, push: true, inApp: true }
+    }
+  })
+
+  const projectManager = await prisma.users.create({
+    data: {
+      email: 'sarah.manager@construction.com',
+      password: hashedPassword,
+      name: 'Sarah Johnson',
+      firstName: 'Sarah',
+      lastName: 'Johnson',
+      phone: '+1 (555) 222-3333',
       title: 'Project Manager',
-      department: 'Operations',
+      department: 'Projects',
       role: 'manager',
       isActive: true,
-      companyId,
-      preferences: {
-        theme: 'dark',
-        notifications: true
-      }
-    },
-    {
-      email: 'bob.johnson@acme.com',
-      password: '$2b$10$hashedpassword3',
-      name: 'Bob Johnson',
-      firstName: 'Bob',
-      lastName: 'Johnson',
-      title: 'Accounts Payable',
-      department: 'Finance',
-      role: 'member',
-      isActive: true,
-      companyId
-    },
-    {
-      email: 'alice.williams@acme.com',
-      password: '$2b$10$hashedpassword4',
-      name: 'Alice Williams',
-      firstName: 'Alice',
-      lastName: 'Williams',
-      title: 'Vendor Relations',
+      emailVerified: new Date(),
+      companyId: company.id,
+      preferences: { notifications: true, theme: 'light' },
+      notificationSettings: { email: true, push: true, inApp: true }
+    }
+  })
+
+  const procurementOfficer = await prisma.users.create({
+    data: {
+      email: 'mike.procurement@construction.com',
+      password: hashedPassword,
+      name: 'Mike Wilson',
+      firstName: 'Mike',
+      lastName: 'Wilson',
+      phone: '+1 (555) 333-4444',
+      title: 'Procurement Officer',
       department: 'Procurement',
       role: 'member',
       isActive: true,
-      companyId
-    },
-    {
-      email: 'charlie.brown@techstart.io',
-      password: '$2b$10$hashedpassword5',
-      name: 'Charlie Brown',
-      firstName: 'Charlie',
-      lastName: 'Brown',
-      title: 'CEO',
-      department: 'Executive',
-      role: 'admin',
+      emailVerified: new Date(),
+      companyId: company.id,
+      preferences: { notifications: true, theme: 'light' },
+      notificationSettings: { email: true, push: true, inApp: true }
+    }
+  })
+
+  const financeManager = await prisma.users.create({
+    data: {
+      email: 'lisa.finance@construction.com',
+      password: hashedPassword,
+      name: 'Lisa Chen',
+      firstName: 'Lisa',
+      lastName: 'Chen',
+      phone: '+1 (555) 444-5555',
+      title: 'Finance Manager',
+      department: 'Finance',
+      role: 'finance',
       isActive: true,
-      companyId: company2Id
+      emailVerified: new Date(),
+      companyId: company.id,
+      preferences: { notifications: true, theme: 'light' },
+      notificationSettings: { email: true, push: true, inApp: true }
     }
-  ]
-
-  const users = []
-  for (const data of userData) {
-    const user = await prisma.users.create({ data })
-    users.push(user)
-  }
-
-  console.log(`Created ${users.length} users`)
-  return users
-}
-
-async function createPermissions(companyId: string) {
-  const permissionModules = [
-    { module: 'vendors', actions: ['create', 'read', 'update', 'delete', 'approve'] },
-    { module: 'contracts', actions: ['create', 'read', 'update', 'delete', 'approve', 'sign'] },
-    { module: 'purchase_orders', actions: ['create', 'read', 'update', 'delete', 'approve'] },
-    { module: 'invoices', actions: ['create', 'read', 'update', 'delete', 'approve', 'pay'] },
-    { module: 'projects', actions: ['create', 'read', 'update', 'delete', 'manage'] },
-    { module: 'users', actions: ['create', 'read', 'update', 'delete', 'manage'] },
-    { module: 'reports', actions: ['create', 'read', 'export', 'schedule'] }
-  ]
-
-  const permissions = []
-  for (const mod of permissionModules) {
-    for (const action of mod.actions) {
-      const permission = await prisma.permissions.create({
-        data: {
-          companyId,
-          name: `${mod.module}:${action}`,
-          module: mod.module,
-          action,
-          description: `Can ${action} ${mod.module}`,
-          isSystem: true
-        }
-      })
-      permissions.push(permission)
-    }
-  }
-
-  console.log(`Created ${permissions.length} permissions`)
-  return permissions
-}
-
-async function createRoles(companyId: string, permissions: any[]) {
-  const roleData = [
-    {
-      name: 'Admin',
-      description: 'Full system access',
-      isSystem: true,
-      permissions: permissions
-    },
-    {
-      name: 'Procurement Manager',
-      description: 'Manage procurement processes',
-      isSystem: true,
-      permissions: permissions.filter(p => 
-        ['vendors', 'contracts', 'purchase_orders'].includes(p.module) ||
-        p.name === 'reports:read'
-      )
-    },
-    {
-      name: 'Project Manager',
-      description: 'Manage projects and work orders',
-      isSystem: true,
-      permissions: permissions.filter(p => 
-        ['projects', 'work_orders'].includes(p.module) ||
-        p.name === 'reports:read'
-      )
-    },
-    {
-      name: 'Finance User',
-      description: 'Manage invoices and payments',
-      isSystem: true,
-      permissions: permissions.filter(p => 
-        ['invoices', 'payments'].includes(p.module)
-      )
-    },
-    {
-      name: 'Viewer',
-      description: 'Read-only access',
-      isSystem: true,
-      permissions: permissions.filter(p => p.action === 'read')
-    }
-  ]
-
-  const roles = []
-  for (const role of roleData) {
-    const createdRole = await prisma.roles.create({
-      data: {
-        companyId,
-        name: role.name,
-        description: role.description,
-        isSystem: role.isSystem,
-        permissions: {
-          create: role.permissions.map(p => ({
-            permissionId: p.id
-          }))
-        }
-      }
-    })
-    roles.push(createdRole)
-  }
-
-  console.log(`Created ${roles.length} roles`)
-  return roles
-}
-
-async function assignRolesToUsers(users: any[], roles: any[]) {
-  // Assign admin role to first user
-  await prisma.users.update({
-    where: { id: users[0].id },
-    data: { roleId: roles.find(r => r.name === 'Admin')?.id }
   })
 
-  // Assign procurement manager to second user
-  await prisma.users.update({
-    where: { id: users[1].id },
-    data: { roleId: roles.find(r => r.name === 'Project Manager')?.id }
-  })
+  console.log('✅ Created 4 users')
 
-  // Assign finance role to third user
-  await prisma.users.update({
-    where: { id: users[2].id },
-    data: { roleId: roles.find(r => r.name === 'Finance User')?.id }
-  })
-
-  // Assign viewer role to fourth user
-  await prisma.users.update({
-    where: { id: users[3].id },
-    data: { roleId: roles.find(r => r.name === 'Viewer')?.id }
-  })
-
-  console.log('Assigned roles to users')
-}
-
-async function createTeams(companyId: string, users: any[]) {
-  const teamData = [
-    {
-      name: 'Procurement Team',
-      description: 'Handles all procurement activities',
-      createdById: users[0].id
-    },
-    {
-      name: 'Project Management Office',
-      description: 'Oversees all projects',
-      createdById: users[1].id
-    },
-    {
-      name: 'Finance Department',
-      description: 'Manages financial operations',
-      createdById: users[2].id
-    },
-    {
-      name: 'Executive Team',
-      description: 'Company leadership',
-      createdById: users[0].id
-    }
-  ]
-
-  const teams = []
-  for (const team of teamData) {
-    const createdTeam = await prisma.teams.create({
+  // ========================================
+  // CREATE CATEGORIES
+  // ========================================
+  const categories = await Promise.all([
+    prisma.categories.create({
       data: {
-        companyId,
-        ...team
+        name: 'Electrical',
+        description: 'Electrical supplies and equipment',
+        color: 'yellow',
+        icon: 'Zap',
+        companyId: company.id
+      }
+    }),
+    prisma.categories.create({
+      data: {
+        name: 'Plumbing',
+        description: 'Plumbing fixtures and supplies',
+        color: 'blue',
+        icon: 'Droplet',
+        companyId: company.id
+      }
+    }),
+    prisma.categories.create({
+      data: {
+        name: 'HVAC',
+        description: 'Heating, ventilation, and air conditioning',
+        color: 'orange',
+        icon: 'Thermometer',
+        companyId: company.id
+      }
+    }),
+    prisma.categories.create({
+      data: {
+        name: 'Lumber',
+        description: 'Wood and building materials',
+        color: 'green',
+        icon: 'TreePine',
+        companyId: company.id
+      }
+    }),
+    prisma.categories.create({
+      data: {
+        name: 'Concrete',
+        description: 'Concrete and masonry',
+        color: 'gray',
+        icon: 'Square',
+        companyId: company.id
+      }
+    }),
+    prisma.categories.create({
+      data: {
+        name: 'Tools',
+        description: 'Power tools and equipment',
+        color: 'red',
+        icon: 'Wrench',
+        companyId: company.id
+      }
+    }),
+    prisma.categories.create({
+      data: {
+        name: 'Safety',
+        description: 'Safety equipment and gear',
+        color: 'orange',
+        icon: 'Shield',
+        companyId: company.id
+      }
+    }),
+    prisma.categories.create({
+      data: {
+        name: 'Office Supplies',
+        description: 'Office and administrative supplies',
+        color: 'purple',
+        icon: 'PenTool',
+        companyId: company.id
       }
     })
-    teams.push(createdTeam)
-  }
+  ])
+  console.log('✅ Created 8 categories')
 
-  console.log(`Created ${teams.length} teams`)
-  return teams
-}
-
-async function addTeamMembers(teams: any[], users: any[], roles: any[]) {
-  // Add users to teams
-  const memberships = [
-    { team: teams[0], user: users[0], role: roles[0] }, // John in Procurement
-    { team: teams[0], user: users[3], role: roles[1] }, // Alice in Procurement
-    { team: teams[1], user: users[1], role: roles[2] }, // Jane in PMO
-    { team: teams[2], user: users[2], role: roles[3] }, // Bob in Finance
-    { team: teams[3], user: users[0], role: roles[0] }, // John in Executive
-    { team: teams[3], user: users[1], role: roles[2] }  // Jane in Executive
-  ]
-
-  for (const m of memberships) {
-    await prisma.team_members.create({
+  // ========================================
+  // CREATE VENDORS
+  // ========================================
+  const vendors = await Promise.all([
+    prisma.vendors.create({
       data: {
-        teamId: m.team.id,
-        userId: m.user.id,
-        roleId: m.role?.id
+        name: 'City Electrical Supply',
+        email: 'sales@cityelectrical.com',
+        phone: '+1 (555) 101-1111',
+        website: 'https://cityelectrical.com',
+        taxId: '12-3456789',
+        registrationNumber: 'V12345',
+        status: 'active',
+        rating: 5,
+        reviewCount: 12,
+        address: '100 Electric Ave',
+        city: 'New York',
+        state: 'NY',
+        country: 'USA',
+        postalCode: '10001',
+        contactPerson: 'Robert Brown',
+        contactPersonRole: 'Sales Manager',
+        contactPersonEmail: 'robert@cityelectrical.com',
+        contactPersonPhone: '+1 (555) 101-1112',
+        businessType: 'corporation',
+        yearEstablished: 2005,
+        employeeCount: 50,
+        annualRevenue: 5000000,
+        paymentTerms: 'net30',
+        currency: 'USD',
+        creditLimit: 100000,
+        notes: 'Preferred electrical supplier',
+        tags: ['electrical', 'preferred'],
+        certified: true,
+        preferred: true,
+        companyId: company.id,
+        categoryId: categories[0].id // Electrical
+      }
+    }),
+    prisma.vendors.create({
+      data: {
+        name: 'Metro Plumbing Supply',
+        email: 'info@metroplumbing.com',
+        phone: '+1 (555) 202-2222',
+        website: 'https://metroplumbing.com',
+        taxId: '23-4567890',
+        registrationNumber: 'V23456',
+        status: 'active',
+        rating: 4,
+        reviewCount: 8,
+        address: '200 Pipe St',
+        city: 'Brooklyn',
+        state: 'NY',
+        country: 'USA',
+        postalCode: '11201',
+        contactPerson: 'Maria Garcia',
+        contactPersonRole: 'Account Manager',
+        contactPersonEmail: 'maria@metroplumbing.com',
+        contactPersonPhone: '+1 (555) 202-2223',
+        businessType: 'llc',
+        yearEstablished: 2010,
+        employeeCount: 25,
+        annualRevenue: 2000000,
+        paymentTerms: 'net30',
+        currency: 'USD',
+        creditLimit: 50000,
+        notes: 'Reliable plumbing supplier',
+        tags: ['plumbing', 'reliable'],
+        certified: true,
+        preferred: false,
+        companyId: company.id,
+        categoryId: categories[1].id // Plumbing
+      }
+    }),
+    prisma.vendors.create({
+      data: {
+        name: 'Empire Lumber Co',
+        email: 'orders@empirelumber.com',
+        phone: '+1 (555) 303-3333',
+        website: 'https://empirelumber.com',
+        taxId: '34-5678901',
+        registrationNumber: 'V34567',
+        status: 'active',
+        rating: 5,
+        reviewCount: 15,
+        address: '300 Wood Rd',
+        city: 'Queens',
+        state: 'NY',
+        country: 'USA',
+        postalCode: '11354',
+        contactPerson: 'David Kim',
+        contactPersonRole: 'Sales Director',
+        contactPersonEmail: 'david@empirelumber.com',
+        contactPersonPhone: '+1 (555) 303-3334',
+        businessType: 'corporation',
+        yearEstablished: 1995,
+        employeeCount: 100,
+        annualRevenue: 10000000,
+        paymentTerms: 'net45',
+        currency: 'USD',
+        creditLimit: 200000,
+        notes: 'Best lumber prices in town',
+        tags: ['lumber', 'preferred'],
+        certified: true,
+        preferred: true,
+        companyId: company.id,
+        categoryId: categories[3].id // Lumber
+      }
+    }),
+    prisma.vendors.create({
+      data: {
+        name: 'Precision Tools Inc',
+        email: 'sales@precisiontools.com',
+        phone: '+1 (555) 404-4444',
+        website: 'https://precisiontools.com',
+        taxId: '45-6789012',
+        registrationNumber: 'V45678',
+        status: 'active',
+        rating: 4,
+        reviewCount: 6,
+        address: '400 Tool Blvd',
+        city: 'Bronx',
+        state: 'NY',
+        country: 'USA',
+        postalCode: '10451',
+        contactPerson: 'James Wilson',
+        contactPersonRole: 'Sales Rep',
+        contactPersonEmail: 'james@precisiontools.com',
+        contactPersonPhone: '+1 (555) 404-4445',
+        businessType: 'llc',
+        yearEstablished: 2015,
+        employeeCount: 15,
+        annualRevenue: 1500000,
+        paymentTerms: 'net15',
+        currency: 'USD',
+        creditLimit: 25000,
+        notes: 'Quality power tools',
+        tags: ['tools', 'power-tools'],
+        certified: false,
+        preferred: false,
+        companyId: company.id,
+        categoryId: categories[5].id // Tools
+      }
+    }),
+    prisma.vendors.create({
+      data: {
+        name: 'Safety First Gear',
+        email: 'info@safetyfirst.com',
+        phone: '+1 (555) 505-5555',
+        website: 'https://safetyfirst.com',
+        taxId: '56-7890123',
+        registrationNumber: 'V56789',
+        status: 'pending',
+        rating: 0,
+        reviewCount: 0,
+        address: '500 Safety Lane',
+        city: 'Staten Island',
+        state: 'NY',
+        country: 'USA',
+        postalCode: '10301',
+        contactPerson: 'Patricia Lee',
+        contactPersonRole: 'Owner',
+        contactPersonEmail: 'patricia@safetyfirst.com',
+        contactPersonPhone: '+1 (555) 505-5556',
+        businessType: 'sole_proprietor',
+        yearEstablished: 2022,
+        employeeCount: 5,
+        annualRevenue: 250000,
+        paymentTerms: 'net30',
+        currency: 'USD',
+        creditLimit: 10000,
+        notes: 'New vendor - under review',
+        tags: ['safety', 'ppe'],
+        certified: false,
+        preferred: false,
+        companyId: company.id,
+        categoryId: categories[6].id // Safety
       }
     })
-  }
+  ])
+  console.log('✅ Created 5 vendors')
 
-  console.log(`Created ${memberships.length} team memberships`)
-}
-
-async function createCategories(companyId: string) {
-  const categoryData = [
-    { name: 'Office Supplies', color: 'blue', icon: 'Package', description: 'General office supplies and stationery' },
-    { name: 'IT Hardware', color: 'green', icon: 'Laptop', description: 'Computers, servers, and peripherals' },
-    { name: 'Software', color: 'purple', icon: 'Code', description: 'Software licenses and subscriptions' },
-    { name: 'Consulting', color: 'orange', icon: 'Users', description: 'Professional services and consulting' },
-    { name: 'Marketing', color: 'red', icon: 'Megaphone', description: 'Marketing and advertising services' },
-    { name: 'Facilities', color: 'yellow', icon: 'Building', description: 'Facility maintenance and management' },
-    { name: 'Raw Materials', color: 'indigo', icon: 'Box', description: 'Raw materials for manufacturing' },
-    { name: 'Logistics', color: 'pink', icon: 'Truck', description: 'Shipping and logistics services' }
-  ]
-
-  const categories = []
-  for (const cat of categoryData) {
-    const category = await prisma.categories.create({
-      data: {
-        companyId,
-        ...cat
-      }
-    })
-    categories.push(category)
-  }
-
-  console.log(`Created ${categories.length} categories`)
-  return categories
-}
-
-async function createVendors(companyId: string, categories: any[]) {
-  const vendorData = [
-    {
-      name: 'TechSupply Co',
-      email: 'sales@techsupply.com',
-      phone: '+1-415-555-0101',
-      website: 'https://techsupply.com',
-      taxId: '98-7654321',
-      status: 'active',
-      rating: 4,
-      reviewCount: 12,
-      address: '456 Tech Blvd',
-      city: 'San Jose',
-      state: 'CA',
-      country: 'USA',
-      postalCode: '95110',
-      contactPerson: 'Sarah Chen',
-      contactPersonRole: 'Account Manager',
-      contactPersonEmail: 's.chen@techsupply.com',
-      contactPersonPhone: '+1-408-555-0102',
-      businessType: 'corporation',
-      yearEstablished: 2010,
-      employeeCount: 50,
-      annualRevenue: 10000000,
-      paymentTerms: 'net30',
-      creditLimit: 50000,
-      certified: true,
-      preferred: true,
-      categoryId: categories.find(c => c.name === 'IT Hardware')?.id,
-      tags: ['hardware', 'preferred']
-    },
-    {
-      name: 'Office Essentials',
-      email: 'orders@officeessentials.com',
-      phone: '+1-510-555-0201',
-      website: 'https://officeessentials.com',
-      taxId: '87-6543210',
-      status: 'active',
-      rating: 3,
-      reviewCount: 8,
-      address: '789 Market St',
-      city: 'Oakland',
-      state: 'CA',
-      country: 'USA',
-      postalCode: '94612',
-      contactPerson: 'Mike Ross',
-      contactPersonRole: 'Sales Director',
-      contactPersonEmail: 'm.ross@officeessentials.com',
-      businessType: 'llc',
-      yearEstablished: 2015,
-      employeeCount: 25,
-      paymentTerms: 'net15',
-      creditLimit: 25000,
-      categoryId: categories.find(c => c.name === 'Office Supplies')?.id,
-      tags: ['supplies']
-    },
-    {
-      name: 'CloudSoft Inc',
-      email: 'sales@cloudsoft.io',
-      phone: '+1-650-555-0301',
-      website: 'https://cloudsoft.io',
-      taxId: '76-5432109',
-      status: 'active',
-      rating: 5,
-      reviewCount: 24,
-      address: '321 Innovation Drive',
-      city: 'Palo Alto',
-      state: 'CA',
-      country: 'USA',
-      postalCode: '94304',
-      contactPerson: 'Alex Rivera',
-      contactPersonRole: 'Solutions Engineer',
-      contactPersonEmail: 'a.rivera@cloudsoft.io',
-      businessType: 'corporation',
-      yearEstablished: 2018,
-      employeeCount: 120,
-      paymentTerms: 'net45',
-      creditLimit: 100000,
-      certified: true,
-      preferred: true,
-      categoryId: categories.find(c => c.name === 'Software')?.id,
-      tags: ['software', 'cloud']
-    },
-    {
-      name: 'Premier Consulting Group',
-      email: 'info@premierconsulting.com',
-      phone: '+1-415-555-0401',
-      website: 'https://premierconsulting.com',
-      taxId: '65-4321098',
-      status: 'pending',
-      rating: 0,
-      reviewCount: 0,
-      address: '555 Financial District',
-      city: 'San Francisco',
-      state: 'CA',
-      country: 'USA',
-      postalCode: '94111',
-      contactPerson: 'Jennifer Lee',
-      contactPersonRole: 'Partner',
-      contactPersonEmail: 'j.lee@premierconsulting.com',
-      businessType: 'partnership',
-      yearEstablished: 2020,
-      employeeCount: 15,
-      paymentTerms: 'net30',
-      categoryId: categories.find(c => c.name === 'Consulting')?.id,
-      tags: ['consulting']
-    },
-    {
-      name: 'BuildRight Construction',
-      email: 'estimates@buildright.com',
-      phone: '+1-925-555-0501',
-      website: 'https://buildright.com',
-      taxId: '54-3210987',
-      status: 'active',
-      rating: 4,
-      reviewCount: 6,
-      address: '777 Contractor Way',
-      city: 'Walnut Creek',
-      state: 'CA',
-      country: 'USA',
-      postalCode: '94597',
-      contactPerson: 'Tom Builder',
-      contactPersonRole: 'Project Manager',
-      contactPersonEmail: 't.builder@buildright.com',
-      businessType: 'corporation',
-      yearEstablished: 2005,
-      employeeCount: 200,
-      paymentTerms: 'net60',
-      creditLimit: 200000,
-      certified: true,
-      categoryId: categories.find(c => c.name === 'Facilities')?.id,
-      tags: ['construction', 'facilities']
-    }
-  ]
-
-  const vendors = []
-  for (const vendor of vendorData) {
-    const createdVendor = await prisma.vendors.create({
-      data: {
-        companyId,
-        ...vendor
-      }
-    })
-    vendors.push(createdVendor)
-  }
-
-  console.log(`Created ${vendors.length} vendors`)
-  return vendors
-}
-
-async function createVendorRatings(vendors: any[], users: any[]) {
-  const ratings = [
-    { vendor: vendors[0], rating: 5, comment: 'Excellent service and fast delivery', category: 'quality' },
-    { vendor: vendors[0], rating: 4, comment: 'Good products, reasonable prices', category: 'value' },
-    { vendor: vendors[1], rating: 3, comment: 'Average quality, slow shipping', category: 'quality' },
-    { vendor: vendors[2], rating: 5, comment: 'Best software vendor we\'ve worked with', category: 'support' },
-    { vendor: vendors[2], rating: 5, comment: 'Great integration support', category: 'technical' },
-    { vendor: vendors[4], rating: 4, comment: 'Completed project on time', category: 'reliability' }
-  ]
-
-  for (const r of ratings) {
-    await prisma.vendor_ratings.create({
-      data: {
-        vendorId: r.vendor.id,
-        userId: users[Math.floor(Math.random() * users.length)].id,
-        rating: r.rating,
-        comment: r.comment,
-        category: r.category
-      }
-    })
-  }
-
-  console.log(`Created ${ratings.length} vendor ratings`)
-}
-
-async function createVendorPortalAccess(vendors: any[]) {
-  const portalAccess = [
-    {
-      vendor: vendors[0],
-      email: 'vendor-portal@techsupply.com',
-      password: '$2b$10$hashedportal1',
-      isActive: true,
-      accessLevel: 'standard',
-      canViewInvoices: true,
-      canSubmitInvoices: true,
-      canViewPayments: true,
-      canViewPOs: true,
-      canViewContracts: true,
-      canUploadDocs: true
-    },
-    {
-      vendor: vendors[2],
-      email: 'cloudsoft-portal@cloudsoft.io',
-      password: '$2b$10$hashedportal2',
-      isActive: true,
-      accessLevel: 'advanced',
-      canViewInvoices: true,
-      canSubmitInvoices: true,
-      canViewPayments: true,
-      canViewPOs: true,
-      canSubmitQuotes: true,
-      canViewContracts: true,
-      canUploadDocs: true
-    }
-  ]
-
-  for (const portal of portalAccess) {
-    await prisma.vendor_portal_access.create({
-      data: {
-        vendorId: portal.vendor.id,
-        email: portal.email,
-        password: portal.password,
-        isActive: portal.isActive,
-        accessLevel: portal.accessLevel,
-        canViewInvoices: portal.canViewInvoices,
-        canSubmitInvoices: portal.canSubmitInvoices,
-        canViewPayments: portal.canViewPayments,
-        canViewPOs: portal.canViewPOs,
-        canSubmitQuotes: portal.canSubmitQuotes,
-        canViewContracts: portal.canViewContracts,
-        canUploadDocs: portal.canUploadDocs
-      }
-    })
-  }
-
-  console.log(`Created ${portalAccess.length} vendor portal access records`)
-}
-
-async function createProjects(companyId: string, users: any[]) {
-  const projectData = [
-    {
-      projectNumber: 'PRJ-2024-001',
-      name: 'Office Renovation Project',
-      description: 'Complete renovation of main office floor',
-      status: 'in_progress',
+  // ========================================
+  // CREATE PURCHASE ORDERS
+  // ========================================
+  const po1 = await prisma.purchase_orders.create({
+    data: {
+      poNumber: 'PO-2024-0001',
+      title: 'Electrical Supplies - Tower Project',
+      description: 'Electrical materials for downtown tower project',
+      status: 'delivered',
       priority: 'high',
-      startDate: new Date('2024-01-15'),
-      endDate: new Date('2024-06-30'),
-      location: 'San Francisco HQ',
-      budget: 250000,
+      orderDate: new Date('2024-01-15'),
+      expectedDate: new Date('2024-02-01'),
+      deliveredDate: new Date('2024-01-30'),
+      shippingAddress: '123 Tower Plaza, New York, NY 10001',
+      shippingMethod: 'Truck',
+      subtotal: 12500.00,
+      taxAmount: 1031.25,
+      discount: 0,
+      total: 13531.25,
       currency: 'USD',
-      progressPercent: 35,
-      managerId: users[1].id,
-      createdById: users[1].id
-    },
-    {
-      projectNumber: 'PRJ-2024-002',
-      name: 'IT Infrastructure Upgrade',
-      description: 'Upgrade servers and network equipment',
-      status: 'planning',
-      priority: 'medium',
-      startDate: new Date('2024-03-01'),
-      endDate: new Date('2024-08-31'),
-      location: 'Data Center',
-      budget: 150000,
-      currency: 'USD',
-      progressPercent: 10,
-      managerId: users[1].id,
-      createdById: users[0].id
-    },
-    {
-      projectNumber: 'PRJ-2024-003',
-      name: 'ERP Implementation',
-      description: 'Implement new ERP system',
-      status: 'pending',
-      priority: 'high',
-      startDate: new Date('2024-04-15'),
-      endDate: new Date('2024-12-31'),
-      location: 'All Locations',
-      budget: 500000,
-      currency: 'USD',
-      progressPercent: 0,
-      managerId: users[1].id,
-      createdById: users[0].id
-    },
-    {
-      projectNumber: 'PRJ-2024-004',
-      name: 'Annual Marketing Campaign',
-      description: 'Q2-Q3 Marketing initiatives',
-      status: 'active',
-      priority: 'medium',
-      startDate: new Date('2024-02-01'),
-      endDate: new Date('2024-09-30'),
-      location: 'Remote',
-      budget: 75000,
-      currency: 'USD',
-      progressPercent: 45,
-      managerId: users[3].id,
-      createdById: users[3].id
-    },
-    {
-      projectNumber: 'PRJ-2024-005',
-      name: 'Vendor Portal Launch',
-      description: 'Launch vendor self-service portal',
-      status: 'completed',
-      priority: 'high',
-      startDate: new Date('2023-11-01'),
-      endDate: new Date('2024-01-31'),
-      actualStartDate: new Date('2023-11-01'),
-      actualEndDate: new Date('2024-02-15'),
-      budget: 80000,
-      actualCost: 78500,
-      currency: 'USD',
-      progressPercent: 100,
-      managerId: users[0].id,
-      createdById: users[0].id
-    }
-  ]
-
-  const projects = []
-  for (const project of projectData) {
-    const createdProject = await prisma.projects.create({
-      data: {
-        companyId,
-        ...project
-      }
-    })
-    projects.push(createdProject)
-    
-    // Add project vendors
-    if (createdProject.name === 'Office Renovation Project') {
-      await prisma.project_vendors.create({
-        data: {
-          projectId: createdProject.id,
-          vendorId: vendors[4].id, // BuildRight Construction
-          role: 'General Contractor',
-          contractValue: 200000,
-          startDate: new Date('2024-01-15'),
-          status: 'active'
-        }
-      })
-    }
-  }
-
-  console.log(`Created ${projects.length} projects`)
-  return projects
-}
-
-async function createContracts(companyId: string, vendors: any[], users: any[], projects: any[]) {
-  const contractData = [
-    {
-      contractNumber: 'CT-2024-001',
-      title: 'IT Hardware Supply Agreement',
-      description: 'Annual contract for IT hardware procurement',
-      type: 'supply_agreement',
-      status: 'active',
+      notes: 'Urgent - needed for floor 10-15 electrical work',
+      terms: 'Net 30',
+      approvalStatus: 'approved',
+      approvedAt: new Date('2024-01-16'),
+      createdById: procurementOfficer.id,
       vendorId: vendors[0].id,
-      startDate: new Date('2024-01-01'),
-      endDate: new Date('2024-12-31'),
-      signedDate: new Date('2023-12-15'),
-      effectiveDate: new Date('2024-01-01'),
-      signedByVendor: true,
-      signedByCompany: true,
-      value: 500000,
-      currency: 'USD',
-      paymentTerms: 'net30',
-      autoRenew: true,
-      approvalStatus: 'approved',
-      approvedById: users[0].id,
-      approvedAt: new Date('2023-12-10'),
-      createdById: users[0].id
-    },
-    {
-      contractNumber: 'CT-2024-002',
-      title: 'Office Supplies Framework',
-      description: 'Framework agreement for office supplies',
-      type: 'framework_agreement',
-      status: 'active',
-      vendorId: vendors[1].id,
-      startDate: new Date('2024-02-01'),
-      endDate: new Date('2025-01-31'),
-      signedDate: new Date('2024-01-20'),
-      value: 100000,
-      currency: 'USD',
-      paymentTerms: 'net15',
-      approvalStatus: 'approved',
-      approvedById: users[2].id,
-      approvedAt: new Date('2024-01-15'),
-      createdById: users[2].id
-    },
-    {
-      contractNumber: 'CT-2024-003',
-      title: 'Software License Agreement',
-      description: 'Enterprise software licenses',
-      type: 'license_agreement',
-      status: 'pending',
-      vendorId: vendors[2].id,
-      startDate: new Date('2024-03-01'),
-      endDate: new Date('2025-02-28'),
-      value: 250000,
-      currency: 'USD',
-      paymentTerms: 'net45',
-      approvalStatus: 'pending_review',
-      createdById: users[0].id
-    },
-    {
-      contractNumber: 'CT-2024-004',
-      title: 'Construction Services Contract',
-      description: 'Office renovation services',
-      type: 'service_contract',
-      status: 'active',
-      vendorId: vendors[4].id,
-      projectId: projects[0].id,
-      startDate: new Date('2024-01-15'),
-      endDate: new Date('2024-06-30'),
-      signedDate: new Date('2024-01-10'),
-      value: 200000,
-      currency: 'USD',
-      paymentTerms: 'net60',
-      approvalStatus: 'approved',
-      approvedById: users[1].id,
-      approvedAt: new Date('2024-01-05'),
-      createdById: users[1].id
-    }
-  ]
-
-  const contracts = []
-  for (const contract of contractData) {
-    const createdContract = await prisma.contracts.create({
-      data: {
-        companyId,
-        ...contract
-      }
-    })
-    contracts.push(createdContract)
-  }
-
-  console.log(`Created ${contracts.length} contracts`)
-  return contracts
-}
-
-async function createPurchaseOrders(companyId: string, vendors: any[], contracts: any[], projects: any[], users: any[]) {
-  const poData = [
-    {
-      poNumber: 'PO-2024-001',
-      title: 'Server Hardware Order',
-      description: 'Purchase of 10 new servers',
-      status: 'approved',
-      priority: 'high',
-      vendorId: vendors[0].id,
-      contractId: contracts[0].id,
-      projectId: projects[1].id,
-      orderDate: new Date('2024-02-15'),
-      expectedDate: new Date('2024-03-15'),
-      subtotal: 85000,
-      taxAmount: 6800,
-      taxRate: 8,
-      total: 91800,
-      currency: 'USD',
-      approvalStatus: 'approved',
-      approvedById: users[0].id,
-      approvedAt: new Date('2024-02-16'),
-      createdById: users[0].id,
+      companyId: company.id,
       lineItems: {
         create: [
           {
             lineNumber: 1,
-            description: 'Dell PowerEdge R750 Server',
-            sku: 'PE-R750-001',
-            quantity: 5,
-            unit: 'each',
-            unitPrice: 12000,
-            total: 60000,
-            expectedDate: new Date('2024-03-15')
+            description: '14/2 NM-B Wire (250ft)',
+            sku: 'ELEC-14-2',
+            quantity: 10,
+            unit: 'roll',
+            unitPrice: 85.50,
+            total: 855.00,
+            receivedQuantity: 10
           },
           {
             lineNumber: 2,
-            description: 'Dell PowerEdge R650 Server',
-            sku: 'PE-R650-002',
-            quantity: 5,
-            unit: 'each',
-            unitPrice: 5000,
-            total: 25000,
-            expectedDate: new Date('2024-03-15')
-          }
-        ]
-      }
-    },
-    {
-      poNumber: 'PO-2024-002',
-      title: 'Office Supplies Order',
-      description: 'Monthly office supplies',
-      status: 'pending',
-      priority: 'low',
-      vendorId: vendors[1].id,
-      contractId: contracts[1].id,
-      orderDate: new Date('2024-03-01'),
-      expectedDate: new Date('2024-03-07'),
-      subtotal: 3500,
-      taxAmount: 280,
-      taxRate: 8,
-      total: 3780,
-      currency: 'USD',
-      approvalStatus: 'pending',
-      createdById: users[3].id,
-      lineItems: {
-        create: [
-          {
-            lineNumber: 1,
-            description: 'Printer Paper - Case of 10',
-            sku: 'PP-001',
-            quantity: 20,
-            unit: 'case',
-            unitPrice: 45,
-            total: 900
-          },
-          {
-            lineNumber: 2,
-            description: 'Pilot G2 Pens - Box of 12',
-            sku: 'PG-12',
+            description: 'GFCI Outlets - White',
+            sku: 'ELEC-GFCI-W',
             quantity: 50,
-            unit: 'box',
-            unitPrice: 15,
-            total: 750
+            unit: 'each',
+            unitPrice: 12.75,
+            total: 637.50,
+            receivedQuantity: 50
           },
           {
             lineNumber: 3,
-            description: 'Post-it Notes - Pack of 24',
-            sku: 'PN-24',
+            description: '200A Breaker Panel',
+            sku: 'ELEC-PNL-200',
+            quantity: 2,
+            unit: 'each',
+            unitPrice: 450.00,
+            total: 900.00,
+            receivedQuantity: 2
+          },
+          {
+            lineNumber: 4,
+            description: 'Conduit - 3/4" EMT (10ft)',
+            sku: 'ELEC-CND-34',
             quantity: 100,
-            unit: 'pack',
-            unitPrice: 8.50,
-            total: 850
-          }
-        ]
-      }
-    },
-    {
-      poNumber: 'PO-2024-003',
-      title: 'Construction Materials',
-      description: 'Materials for office renovation',
-      status: 'approved',
-      priority: 'high',
-      vendorId: vendors[4].id,
-      contractId: contracts[3].id,
-      projectId: projects[0].id,
-      orderDate: new Date('2024-02-01'),
-      expectedDate: new Date('2024-02-28'),
-      subtotal: 45000,
-      taxAmount: 3600,
-      taxRate: 8,
-      total: 48600,
-      currency: 'USD',
-      approvalStatus: 'approved',
-      approvedById: users[1].id,
-      approvedAt: new Date('2024-02-02'),
-      createdById: users[1].id,
-      lineItems: {
-        create: [
-          {
-            lineNumber: 1,
-            description: 'Office Furniture Package',
-            sku: 'FURN-001',
-            quantity: 1,
-            unit: 'lot',
-            unitPrice: 35000,
-            total: 35000
+            unit: 'pieces',
+            unitPrice: 8.25,
+            total: 825.00,
+            receivedQuantity: 100
           },
           {
-            lineNumber: 2,
-            description: 'Paint and Supplies',
-            sku: 'PAINT-001',
-            quantity: 1,
-            unit: 'lot',
-            unitPrice: 5000,
-            total: 5000
+            lineNumber: 5,
+            description: 'Circuit Breakers - 20A',
+            sku: 'ELEC-CB-20',
+            quantity: 30,
+            unit: 'each',
+            unitPrice: 6.50,
+            total: 195.00,
+            receivedQuantity: 30
           }
         ]
       }
     }
-  ]
+  })
 
-  const purchaseOrders = []
-  for (const po of poData) {
-    const { lineItems, ...poWithoutItems } = po
-    const createdPO = await prisma.purchase_orders.create({
-      data: {
-        companyId,
-        ...poWithoutItems,
-        lineItems: lineItems
-      }
-    })
-    purchaseOrders.push(createdPO)
-  }
-
-  console.log(`Created ${purchaseOrders.length} purchase orders`)
-  return purchaseOrders
-}
-
-async function createRFQs(companyId: string, vendors: any[], projects: any[], users: any[], purchaseOrders: any[]) {
-  const rfqData = [
-    {
-      rfqNumber: 'RFQ-2024-001',
-      title: 'RFQ for Network Equipment',
-      description: 'Request for quotes for network switches and routers',
-      status: 'sent',
-      issueDate: new Date('2024-02-10'),
-      deadline: new Date('2024-02-25'),
-      expectedDeliveryDate: new Date('2024-03-15'),
-      purchaseOrderId: purchaseOrders[0].id,
-      createdById: users[0].id,
-      lineItems: {
-        create: [
-          {
-            lineNumber: 1,
-            description: 'Cisco Catalyst 9300 Switch',
-            quantity: 4,
-            unit: 'each',
-            specifications: '48-port, PoE+'
-          },
-          {
-            lineNumber: 2,
-            description: 'Cisco ISR 4321 Router',
-            quantity: 2,
-            unit: 'each',
-            specifications: 'with security license'
-          }
-        ]
-      },
-      recipients: {
-        create: [
-          { vendorId: vendors[0].id, status: 'responded' },
-          { vendorId: vendors[2].id, status: 'pending' }
-        ]
-      }
-    },
-    {
-      rfqNumber: 'RFQ-2024-002',
-      title: 'RFQ for Marketing Services',
-      description: 'Digital marketing campaign services',
-      status: 'draft',
-      issueDate: new Date('2024-03-01'),
-      deadline: new Date('2024-03-20'),
-      projectId: projects[3].id,
-      createdById: users[3].id,
-      lineItems: {
-        create: [
-          {
-            lineNumber: 1,
-            description: 'Social Media Management',
-            quantity: 3,
-            unit: 'months'
-          },
-          {
-            lineNumber: 2,
-            description: 'Content Creation',
-            quantity: 1,
-            unit: 'package'
-          }
-        ]
-      },
-      recipients: {
-        create: [
-          { vendorId: vendors[3].id, status: 'pending' }
-        ]
-      }
-    }
-  ]
-
-  const rfqs = []
-  for (const rfq of rfqData) {
-    const { recipients, lineItems, ...rfqWithoutRelations } = rfq
-    const createdRFQ = await prisma.rfqs.create({
-      data: {
-        companyId,
-        ...rfqWithoutRelations,
-        lineItems: lineItems,
-        recipients: recipients
-      }
-    })
-    rfqs.push(createdRFQ)
-  }
-
-  console.log(`Created ${rfqs.length} RFQs`)
-  return rfqs
-}
-
-async function createQuotes(companyId: string, rfqs: any[], vendors: any[], users: any[]) {
-  const quoteData = [
-    {
-      quoteNumber: 'Q-2024-001',
-      rfqId: rfqs[0].id,
-      vendorId: vendors[0].id,
-      status: 'submitted',
-      validUntil: new Date('2024-03-25'),
-      submittedAt: new Date('2024-02-20'),
-      subtotal: 45000,
-      taxAmount: 3600,
-      taxRate: 8,
-      total: 48600,
-      currency: 'USD',
-      notes: 'Includes installation',
-      deliveryTime: 14,
-      createdById: users[0].id,
-      lineItems: {
-        create: [
-          {
-            lineNumber: 1,
-            description: 'Cisco Catalyst 9300 Switch',
-            quantity: 4,
-            unit: 'each',
-            unitPrice: 8500,
-            total: 34000
-          },
-          {
-            lineNumber: 2,
-            description: 'Cisco ISR 4321 Router',
-            quantity: 2,
-            unit: 'each',
-            unitPrice: 5500,
-            total: 11000
-          }
-        ]
-      }
-    },
-    {
-      quoteNumber: 'Q-2024-002',
-      rfqId: rfqs[0].id,
-      vendorId: vendors[2].id,
-      status: 'submitted',
-      validUntil: new Date('2024-03-20'),
-      submittedAt: new Date('2024-02-22'),
-      subtotal: 42500,
-      taxAmount: 3400,
-      taxRate: 8,
-      total: 45900,
-      currency: 'USD',
-      notes: '5-year warranty included',
-      deliveryTime: 10,
-      createdById: users[0].id,
-      lineItems: {
-        create: [
-          {
-            lineNumber: 1,
-            description: 'Juniper EX3400 Switch',
-            quantity: 4,
-            unit: 'each',
-            unitPrice: 7800,
-            total: 31200
-          },
-          {
-            lineNumber: 2,
-            description: 'Juniper SRX300 Router',
-            quantity: 2,
-            unit: 'each',
-            unitPrice: 5650,
-            total: 11300
-          }
-        ]
-      }
-    }
-  ]
-
-  const quotes = []
-  for (const quote of quoteData) {
-    const { lineItems, ...quoteWithoutItems } = quote
-    const createdQuote = await prisma.quotes.create({
-      data: {
-        companyId,
-        ...quoteWithoutItems,
-        lineItems: lineItems
-      }
-    })
-    quotes.push(createdQuote)
-  }
-
-  console.log(`Created ${quotes.length} quotes`)
-  return quotes
-}
-
-async function createWorkOrders(companyId: string, vendors: any[], contracts: any[], projects: any[], users: any[]) {
-  const workOrderData = [
-    {
-      workOrderNumber: 'WO-2024-001',
-      title: 'Office Renovation - Phase 1',
-      description: 'Demolition and framing',
-      status: 'in_progress',
-      priority: 'high',
-      type: 'construction',
-      vendorId: vendors[4].id,
-      contractId: contracts[3].id,
-      projectId: projects[0].id,
-      requestedDate: new Date('2024-01-15'),
-      scheduledDate: new Date('2024-01-20'),
-      startDate: new Date('2024-01-20'),
-      dueDate: new Date('2024-02-15'),
-      estimatedHours: 240,
-      actualHours: 180,
-      location: 'Main Office - Floor 3',
-      siteContact: 'Tom Builder',
-      sitePhone: '+1-925-555-0501',
-      estimatedCost: 35000,
-      actualCost: 32500,
-      currency: 'USD',
-      approvalStatus: 'approved',
-      approvedById: users[1].id,
-      approvedAt: new Date('2024-01-18'),
-      createdById: users[1].id
-    },
-    {
-      workOrderNumber: 'WO-2024-002',
-      title: 'Server Installation',
-      description: 'Install new servers in data center',
-      status: 'pending',
+  const po2 = await prisma.purchase_orders.create({
+    data: {
+      poNumber: 'PO-2024-0002',
+      title: 'Lumber Order - Residential Project',
+      description: 'Framing lumber for 5 new residential units',
+      status: 'shipped',
       priority: 'medium',
-      type: 'installation',
-      vendorId: vendors[0].id,
-      contractId: contracts[0].id,
-      projectId: projects[1].id,
-      requestedDate: new Date('2024-03-01'),
-      scheduledDate: new Date('2024-03-20'),
-      dueDate: new Date('2024-03-25'),
-      estimatedHours: 40,
-      location: 'Data Center - Rack A',
-      siteContact: 'Sarah Chen',
-      estimatedCost: 5000,
+      orderDate: new Date('2024-02-10'),
+      expectedDate: new Date('2024-02-25'),
+      shippedDate: new Date('2024-02-20'),
+      shippingAddress: '456 Residential Ave, Brooklyn, NY 11201',
+      shippingMethod: 'Flatbed',
+      trackingNumber: 'LUM-12345',
+      subtotal: 18750.00,
+      taxAmount: 0,
+      discount: 937.50,
+      total: 17812.50,
       currency: 'USD',
-      approvalStatus: 'pending',
-      createdById: users[0].id
-    },
-    {
-      workOrderNumber: 'WO-2024-003',
-      title: 'Quarterly Maintenance',
-      description: 'Routine facility maintenance',
-      status: 'completed',
-      priority: 'low',
-      type: 'maintenance',
-      vendorId: vendors[4].id,
-      requestedDate: new Date('2024-02-01'),
-      scheduledDate: new Date('2024-02-05'),
-      startDate: new Date('2024-02-05'),
-      completedDate: new Date('2024-02-06'),
-      dueDate: new Date('2024-02-10'),
-      estimatedHours: 16,
-      actualHours: 14,
-      location: 'All Facilities',
-      estimatedCost: 2000,
-      actualCost: 1750,
-      currency: 'USD',
-      completionNotes: 'All maintenance completed successfully',
-      completedBy: 'Maintenance Team',
-      completedAt: new Date('2024-02-06'),
+      notes: '5% volume discount applied',
+      terms: 'Net 45',
       approvalStatus: 'approved',
-      approvedById: users[1].id,
-      approvedAt: new Date('2024-02-04'),
-      createdById: users[1].id
-    }
-  ]
-
-  const workOrders = []
-  for (const wo of workOrderData) {
-    const createdWO = await prisma.work_orders.create({
-      data: {
-        companyId,
-        ...wo
+      approvedAt: new Date('2024-02-11'),
+      createdById: procurementOfficer.id,
+      vendorId: vendors[2].id,
+      companyId: company.id,
+      lineItems: {
+        create: [
+          {
+            lineNumber: 1,
+            description: '2x4x8 SPF Studs',
+            sku: 'LUM-2X4-8',
+            quantity: 500,
+            unit: 'pieces',
+            unitPrice: 4.50,
+            total: 2250.00,
+            receivedQuantity: 0
+          },
+          {
+            lineNumber: 2,
+            description: '2x6x12 SPF Joists',
+            sku: 'LUM-2X6-12',
+            quantity: 300,
+            unit: 'pieces',
+            unitPrice: 8.75,
+            total: 2625.00,
+            receivedQuantity: 0
+          },
+          {
+            lineNumber: 3,
+            description: '4x8 Plywood Sheets (3/4")',
+            sku: 'LUM-PLY-34',
+            quantity: 100,
+            unit: 'sheets',
+            unitPrice: 42.00,
+            total: 4200.00,
+            receivedQuantity: 0
+          },
+          {
+            lineNumber: 4,
+            description: 'Pressure Treated 4x4x8',
+            sku: 'LUM-PT-4X4',
+            quantity: 50,
+            unit: 'pieces',
+            unitPrice: 12.50,
+            total: 625.00,
+            receivedQuantity: 0
+          }
+        ]
       }
-    })
-    workOrders.push(createdWO)
-  }
+    }
+  })
 
-  console.log(`Created ${workOrders.length} work orders`)
-  return workOrders
-}
+  const po3 = await prisma.purchase_orders.create({
+    data: {
+      poNumber: 'PO-2024-0003',
+      title: 'Plumbing Fixtures - Office Renovation',
+      description: 'Bathroom fixtures for 3rd floor office renovation',
+      status: 'sent',
+      priority: 'medium',
+      orderDate: new Date('2024-03-01'),
+      expectedDate: new Date('2024-03-15'),
+      shippingAddress: '789 Office Park, Manhattan, NY 10016',
+      shippingMethod: 'Truck',
+      subtotal: 8900.00,
+      taxAmount: 734.25,
+      discount: 445.00,
+      total: 9189.25,
+      currency: 'USD',
+      notes: '5% early payment discount available',
+      terms: 'Net 30',
+      approvalStatus: 'approved',
+      approvedAt: new Date('2024-03-02'),
+      createdById: procurementOfficer.id,
+      vendorId: vendors[1].id,
+      companyId: company.id,
+      lineItems: {
+        create: [
+          {
+            lineNumber: 1,
+            description: 'Commercial Toilets - White',
+            sku: 'PLUMB-TOILET-C',
+            quantity: 8,
+            unit: 'each',
+            unitPrice: 350.00,
+            total: 2800.00
+          },
+          {
+            lineNumber: 2,
+            description: 'Sinks - Stainless Steel',
+            sku: 'PLUMB-SINK-SS',
+            quantity: 6,
+            unit: 'each',
+            unitPrice: 225.00,
+            total: 1350.00
+          },
+          {
+            lineNumber: 3,
+            description: 'Faucets - Commercial',
+            sku: 'PLUMB-FAUCET-C',
+            quantity: 8,
+            unit: 'each',
+            unitPrice: 85.00,
+            total: 680.00
+          },
+          {
+            lineNumber: 4,
+            description: 'Water Heaters - 50 Gal',
+            sku: 'PLUMB-WH-50',
+            quantity: 2,
+            unit: 'each',
+            unitPrice: 650.00,
+            total: 1300.00
+          }
+        ]
+      }
+    }
+  })
+  console.log('✅ Created 3 purchase orders')
 
-async function createSchedules(companyId: string, projects: any[], users: any[], workOrders: any[]) {
-  const scheduleData = [
-    {
-      scheduleNumber: 'SCH-2024-001',
-      name: 'Office Renovation Schedule',
-      description: 'Detailed schedule for renovation project',
-      type: 'project',
+  // ========================================
+  // CREATE CONTRACTS
+  // ========================================
+  const contract1 = await prisma.contracts.create({
+    data: {
+      contractNumber: 'CT-2024-001',
+      title: 'Electrical Supply Agreement',
+      description: 'Annual electrical supply contract',
+      type: 'purchase_contract',
       status: 'active',
+      startDate: new Date('2024-01-01'),
+      endDate: new Date('2024-12-31'),
+      value: 150000.00,
+      currency: 'USD',
+      paymentTerms: 'Net 30',
+      billingCycle: 'monthly',
+      autoRenew: true,
+      terms: 'Standard terms and conditions apply',
+      approvalStatus: 'approved',
+      approvedAt: new Date('2023-12-15'),
+      createdById: adminUser.id,
+      vendorId: vendors[0].id,
+      companyId: company.id
+    }
+  })
+
+  const contract2 = await prisma.contracts.create({
+    data: {
+      contractNumber: 'CT-2024-002',
+      title: 'Lumber Supply Framework',
+      description: 'Framework agreement for lumber purchases',
+      type: 'purchase_contract',
+      status: 'active',
+      startDate: new Date('2024-02-01'),
+      endDate: new Date('2025-01-31'),
+      value: 250000.00,
+      currency: 'USD',
+      paymentTerms: 'Net 45',
+      billingCycle: 'per_order',
+      autoRenew: false,
+      terms: 'Volume discounts apply',
+      approvalStatus: 'approved',
+      approvedAt: new Date('2024-01-20'),
+      createdById: adminUser.id,
+      vendorId: vendors[2].id,
+      companyId: company.id
+    }
+  })
+  console.log('✅ Created 2 contracts')
+
+  // ========================================
+  // CREATE PROJECTS
+  // ========================================
+  const project1 = await prisma.projects.create({
+    data: {
+      projectNumber: 'PRJ-2024-001',
+      name: 'Downtown Tower Construction',
+      description: '30-story commercial tower in downtown Manhattan',
+      status: 'active',
+      priority: 'high',
       startDate: new Date('2024-01-15'),
-      endDate: new Date('2024-06-30'),
-      projectId: projects[0].id,
-      createdById: users[1].id,
-      items: {
-        create: [
-          {
-            title: 'Demolition Phase',
-            description: 'Remove existing structures',
-            startTime: new Date('2024-01-20T08:00:00Z'),
-            endTime: new Date('2024-02-05T17:00:00Z'),
-            isAllDay: false,
-            location: 'Floor 3',
-            status: 'in_progress',
-            assignedToId: users[4]?.id,
-            workOrderId: workOrders[0]?.id
-          },
-          {
-            title: 'Framing',
-            description: 'Install new walls and partitions',
-            startTime: new Date('2024-02-06T08:00:00Z'),
-            endTime: new Date('2024-02-28T17:00:00Z'),
-            isAllDay: false,
-            location: 'Floor 3',
-            status: 'scheduled',
-            assignedToId: users[4]?.id
-          },
-          {
-            title: 'Electrical Work',
-            description: 'Run new wiring and install fixtures',
-            startTime: new Date('2024-03-01T08:00:00Z'),
-            endTime: new Date('2024-03-20T17:00:00Z'),
-            isAllDay: false,
-            location: 'Floor 3',
-            status: 'scheduled'
-          }
-        ]
-      }
-    },
-    {
-      scheduleNumber: 'SCH-2024-002',
-      name: 'IT Project Schedule',
-      description: 'Schedule for IT infrastructure upgrade',
-      type: 'project',
+      endDate: new Date('2025-06-30'),
+      actualStartDate: new Date('2024-01-15'),
+      location: '123 Tower Plaza',
+      address: '123 Tower Plaza',
+      city: 'New York',
+      state: 'NY',
+      country: 'USA',
+      budget: 50000000.00,
+      actualCost: 8500000.00,
+      currency: 'USD',
+      progressPercent: 17,
+      managerId: projectManager.id,
+      createdById: adminUser.id,
+      companyId: company.id
+    }
+  })
+
+  const project2 = await prisma.projects.create({
+    data: {
+      projectNumber: 'PRJ-2024-002',
+      name: 'Residential Complex - Phase 1',
+      description: '5-building residential complex in Brooklyn',
       status: 'active',
+      priority: 'medium',
+      startDate: new Date('2024-02-01'),
+      endDate: new Date('2025-03-31'),
+      actualStartDate: new Date('2024-02-01'),
+      location: '456 Residential Ave',
+      address: '456 Residential Ave',
+      city: 'Brooklyn',
+      state: 'NY',
+      country: 'USA',
+      budget: 25000000.00,
+      actualCost: 5200000.00,
+      currency: 'USD',
+      progressPercent: 21,
+      managerId: projectManager.id,
+      createdById: adminUser.id,
+      companyId: company.id
+    }
+  })
+
+  const project3 = await prisma.projects.create({
+    data: {
+      projectNumber: 'PRJ-2024-003',
+      name: 'Office Renovation - 3rd Floor',
+      description: 'Complete renovation of 3rd floor office space',
+      status: 'active',
+      priority: 'medium',
       startDate: new Date('2024-03-01'),
-      endDate: new Date('2024-08-31'),
-      projectId: projects[1].id,
-      createdById: users[0].id,
-      items: {
-        create: [
-          {
-            title: 'Server Installation',
-            description: 'Install new servers',
-            startTime: new Date('2024-03-20T09:00:00Z'),
-            endTime: new Date('2024-03-25T17:00:00Z'),
-            isAllDay: false,
-            location: 'Data Center',
-            status: 'scheduled',
-            assignedToId: users[0].id,
-            workOrderId: workOrders[1]?.id
-          },
-          {
-            title: 'Network Configuration',
-            description: 'Configure network equipment',
-            startTime: new Date('2024-03-26T09:00:00Z'),
-            endTime: new Date('2024-03-30T17:00:00Z'),
-            isAllDay: false,
-            location: 'Data Center',
-            status: 'scheduled'
-          }
-        ]
-      }
+      endDate: new Date('2024-05-30'),
+      actualStartDate: new Date('2024-03-01'),
+      location: '789 Office Park',
+      address: '789 Office Park',
+      city: 'Manhattan',
+      state: 'NY',
+      country: 'USA',
+      budget: 3500000.00,
+      actualCost: 890000.00,
+      currency: 'USD',
+      progressPercent: 25,
+      managerId: projectManager.id,
+      createdById: adminUser.id,
+      companyId: company.id
     }
-  ]
+  })
+  console.log('✅ Created 3 projects')
 
-  const schedules = []
-  for (const schedule of scheduleData) {
-    const { items, ...scheduleWithoutItems } = schedule
-    const createdSchedule = await prisma.schedules.create({
-      data: {
-        companyId,
-        ...scheduleWithoutItems,
-        items: items
+  // ========================================
+  // CREATE PROJECT VENDORS
+  // ========================================
+  await prisma.project_vendors.createMany({
+    data: [
+      {
+        projectId: project1.id,
+        vendorId: vendors[0].id,
+        role: 'Electrical Contractor',
+        contractValue: 1500000.00,
+        startDate: new Date('2024-01-15'),
+        endDate: new Date('2025-06-30'),
+        status: 'active'
+      },
+      {
+        projectId: project1.id,
+        vendorId: vendors[2].id,
+        role: 'Lumber Supplier',
+        contractValue: 2800000.00,
+        startDate: new Date('2024-01-15'),
+        endDate: new Date('2025-06-30'),
+        status: 'active'
+      },
+      {
+        projectId: project2.id,
+        vendorId: vendors[1].id,
+        role: 'Plumbing Contractor',
+        contractValue: 850000.00,
+        startDate: new Date('2024-02-01'),
+        endDate: new Date('2025-03-31'),
+        status: 'active'
+      },
+      {
+        projectId: project2.id,
+        vendorId: vendors[2].id,
+        role: 'Lumber Supplier',
+        contractValue: 1200000.00,
+        startDate: new Date('2024-02-01'),
+        endDate: new Date('2025-03-31'),
+        status: 'active'
+      },
+      {
+        projectId: project3.id,
+        vendorId: vendors[1].id,
+        role: 'Plumbing Supplier',
+        contractValue: 350000.00,
+        startDate: new Date('2024-03-01'),
+        endDate: new Date('2024-05-30'),
+        status: 'active'
       }
-    })
-    schedules.push(createdSchedule)
-  }
+    ]
+  })
+  console.log('✅ Created 5 project-vendor assignments')
 
-  console.log(`Created ${schedules.length} schedules`)
-  return schedules
-}
-
-async function createResources(companyId: string, users: any[]) {
-  const resourceData = [
-    {
-      name: 'Excavator - CAT 320',
-      type: 'equipment',
-      category: 'Heavy Equipment',
-      description: 'Hydraulic excavator for construction',
-      status: 'available',
-      location: 'Warehouse A',
-      model: 'CAT 320',
-      serialNumber: 'CAT320-2023-001',
-      capacity: '20 tons',
-      lastMaintenance: new Date('2024-01-15'),
-      nextMaintenance: new Date('2024-04-15'),
-      maintenanceInterval: 90,
-      hourlyRate: 150,
-      dailyRate: 1200,
-      purchaseCost: 250000,
-      createdById: users[1].id
-    },
-    {
-      name: 'Scissor Lift',
-      type: 'equipment',
-      category: 'Access Equipment',
-      description: 'Electric scissor lift',
-      status: 'in_use',
-      location: 'Main Office - Floor 3',
-      model: 'JLG 1930ES',
-      serialNumber: 'JLG-2023-045',
-      capacity: '500 lbs',
-      lastMaintenance: new Date('2024-02-01'),
-      nextMaintenance: new Date('2024-05-01'),
-      hourlyRate: 45,
-      dailyRate: 350,
-      createdById: users[1].id
-    },
-    {
-      name: 'Project Manager - Senior',
-      type: 'personnel',
-      category: 'Management',
-      description: 'Senior project manager',
-      status: 'available',
-      hourlyRate: 85,
-      dailyRate: 650,
-      createdById: users[1].id
-    },
-    {
-      name: 'Electrician',
-      type: 'personnel',
-      category: 'Skilled Labor',
-      description: 'Licensed electrician',
-      status: 'available',
-      hourlyRate: 65,
-      dailyRate: 520,
-      createdById: users[1].id
-    },
-    {
-      name: 'Forklift - Toyota',
-      type: 'equipment',
-      category: 'Material Handling',
-      description: 'Propane forklift',
-      status: 'maintenance',
-      location: 'Warehouse B',
-      model: 'Toyota 8FGCU25',
-      serialNumber: 'TOY-2022-123',
-      capacity: '5000 lbs',
-      lastMaintenance: new Date('2024-02-28'),
-      nextMaintenance: new Date('2024-03-28'),
-      hourlyRate: 55,
-      dailyRate: 440,
-      createdById: users[1].id
-    }
-  ]
-
-  const resources = []
-  for (const resource of resourceData) {
-    const createdResource = await prisma.resources.create({
-      data: {
-        companyId,
-        ...resource
+  // ========================================
+  // CREATE WORK ORDERS - Fix: Remove createdById
+  // ========================================
+  await prisma.work_orders.createMany({
+    data: [
+      {
+        workOrderNumber: 'WO-2024-001',
+        title: 'Electrical Wiring - Floor 10',
+        description: 'Install electrical wiring for floor 10 of tower project',
+        status: 'completed',
+        priority: 'high',
+        type: 'electrical',
+        requestedDate: new Date('2024-01-20'),
+        scheduledDate: new Date('2024-01-22'),
+        startDate: new Date('2024-01-22'),
+        completedDate: new Date('2024-02-05'),
+        dueDate: new Date('2024-02-10'),
+        estimatedHours: 160,
+        actualHours: 145,
+        location: 'Floor 10, Tower Project',
+        siteContact: 'Bob Foreman',
+        sitePhone: '+1 (555) 123-1000',
+        estimatedCost: 24000.00,
+        actualCost: 21750.00,
+        currency: 'USD',
+        completionNotes: 'All wiring completed, passed inspection',
+        completedBy: 'Mike Electrician',
+        completedAt: new Date('2024-02-05'),
+        approvalStatus: 'approved',
+        approvedAt: new Date('2024-02-06'),
+        projectId: project1.id,
+        vendorId: vendors[0].id,
+        companyId: company.id
+      },
+      {
+        workOrderNumber: 'WO-2024-002',
+        title: 'Framing - Building A',
+        description: 'Framing for Building A of residential complex',
+        status: 'in_progress',
+        priority: 'high',
+        type: 'construction',
+        requestedDate: new Date('2024-02-05'),
+        scheduledDate: new Date('2024-02-08'),
+        startDate: new Date('2024-02-08'),
+        dueDate: new Date('2024-03-15'),
+        estimatedHours: 320,
+        actualHours: 215,
+        location: 'Building A, Residential Complex',
+        siteContact: 'Tom Carpenter',
+        sitePhone: '+1 (555) 123-2000',
+        estimatedCost: 48000.00,
+        actualCost: 32250.00,
+        currency: 'USD',
+        approvalStatus: 'approved',
+        approvedAt: new Date('2024-02-06'),
+        projectId: project2.id,
+        vendorId: vendors[2].id,
+        companyId: company.id
+      },
+      {
+        workOrderNumber: 'WO-2024-003',
+        title: 'Plumbing Installation - 3rd Floor',
+        description: 'Install plumbing fixtures for office renovation',
+        status: 'pending',
+        priority: 'medium',
+        type: 'plumbing',
+        requestedDate: new Date('2024-03-05'),
+        scheduledDate: new Date('2024-03-10'),
+        dueDate: new Date('2024-03-25'),
+        estimatedHours: 80,
+        estimatedCost: 12000.00,
+        currency: 'USD',
+        projectId: project3.id,
+        vendorId: vendors[1].id,
+        companyId: company.id
       }
-    })
-    resources.push(createdResource)
-  }
+    ]
+  })
+  console.log('✅ Created 3 work orders')
 
-  console.log(`Created ${resources.length} resources`)
-  return resources
-}
-
-async function createResourceAssignments(resources: any[], projects: any[], workOrders: any[], users: any[]) {
-  const assignmentData = [
-    {
-      resourceId: resources[1].id, // Scissor Lift
-      projectId: projects[0].id,
-      workOrderId: workOrders[0]?.id,
-      assignedFrom: new Date('2024-02-15T08:00:00Z'),
-      assignedTo: new Date('2024-03-15T17:00:00Z'),
-      quantity: 1,
-      status: 'active',
-      assignedById: users[1].id,
-      notes: 'For ceiling work'
-    },
-    {
-      resourceId: resources[3].id, // Electrician
-      projectId: projects[0].id,
-      assignedFrom: new Date('2024-03-01T08:00:00Z'),
-      assignedTo: new Date('2024-03-20T17:00:00Z'),
-      quantity: 2,
-      status: 'active',
-      assignedById: users[1].id,
-      notes: 'Electrical rough-in'
-    },
-    {
-      resourceId: resources[4].id, // Forklift
-      projectId: projects[0].id,
-      assignedFrom: new Date('2024-02-01T08:00:00Z'),
-      assignedTo: new Date('2024-02-28T17:00:00Z'),
-      quantity: 1,
-      status: 'completed',
-      assignedById: users[1].id
-    }
-  ]
-
-  for (const assignment of assignmentData) {
-    await prisma.resource_assignments.create({
-      data: assignment
-    })
-  }
-
-  console.log(`Created ${assignmentData.length} resource assignments`)
-}
-
-async function createInvoices(companyId: string, vendors: any[], workOrders: any[], contracts: any[], purchaseOrders: any[], projects: any[], users: any[]) {
-  const invoiceData = [
-    {
+  // ========================================
+  // CREATE INVOICES
+  // ========================================
+  const invoice1 = await prisma.invoices.create({
+    data: {
       invoiceNumber: 'INV-2024-001',
-      vendorId: vendors[4].id,
-      workOrderId: workOrders[0]?.id,
-      contractId: contracts[3]?.id,
-      projectId: projects[0]?.id,
-      reference: 'Progress Billing - Phase 1',
+      reference: 'PO-2024-0001',
       status: 'paid',
       type: 'service',
       issueDate: new Date('2024-02-01'),
-      dueDate: new Date('2024-03-02'),
+      dueDate: new Date('2024-03-01'),
       paidDate: new Date('2024-02-20'),
-      subtotal: 32500,
-      taxAmount: 2600,
-      taxRate: 8,
-      total: 35100,
+      subtotal: 12500.00,
+      taxAmount: 1031.25,
+      total: 13531.25,
       balance: 0,
       currency: 'USD',
       paymentTerms: 'net30',
-      notes: 'Payment for phase 1 completion',
+      paymentMethod: 'bank_transfer',
+      notes: 'Paid via wire transfer',
       approvalStatus: 'approved',
-      approvedById: users[2].id,
-      approvedAt: new Date('2024-02-03'),
-      createdById: users[1].id,
-      lineItems: {
-        create: [
-          {
-            lineNumber: 1,
-            description: 'Demolition and framing',
-            quantity: 1,
-            unit: 'lump sum',
-            unitPrice: 20000,
-            total: 20000
-          },
-          {
-            lineNumber: 2,
-            description: 'Materials',
-            quantity: 1,
-            unit: 'lump sum',
-            unitPrice: 12500,
-            total: 12500
-          }
-        ]
-      }
-    },
-    {
-      invoiceNumber: 'INV-2024-002',
+      approvedAt: new Date('2024-02-05'),
+      createdById: financeManager.id,
       vendorId: vendors[0].id,
-      purchaseOrderId: purchaseOrders[0]?.id,
-      contractId: contracts[0]?.id,
-      projectId: projects[1]?.id,
-      reference: 'Server Hardware',
+      purchaseOrderId: po1.id,
+      companyId: company.id
+    }
+  })
+
+  const invoice2 = await prisma.invoices.create({
+    data: {
+      invoiceNumber: 'INV-2024-002',
+      reference: 'PO-2024-0002',
+      status: 'sent',
+      type: 'product',
+      issueDate: new Date('2024-02-25'),
+      dueDate: new Date('2024-04-10'),
+      subtotal: 18750.00,
+      taxAmount: 0,
+      discount: 937.50,
+      total: 17812.50,
+      balance: 17812.50,
+      currency: 'USD',
+      paymentTerms: 'net45',
+      notes: 'Volume discount applied',
+      approvalStatus: 'approved',
+      approvedAt: new Date('2024-02-26'),
+      createdById: financeManager.id,
+      vendorId: vendors[2].id,
+      purchaseOrderId: po2.id,
+      companyId: company.id
+    }
+  })
+
+  const invoice3 = await prisma.invoices.create({
+    data: {
+      invoiceNumber: 'INV-2024-003',
+      reference: 'PO-2024-0003',
       status: 'pending',
       type: 'product',
       issueDate: new Date('2024-03-01'),
       dueDate: new Date('2024-03-31'),
-      subtotal: 85000,
-      taxAmount: 6800,
-      taxRate: 8,
-      total: 91800,
-      balance: 91800,
+      subtotal: 8900.00,
+      taxAmount: 734.25,
+      discount: 445.00,
+      total: 9189.25,
+      balance: 9189.25,
       currency: 'USD',
       paymentTerms: 'net30',
-      notes: 'Invoice for server hardware',
       approvalStatus: 'pending',
-      createdById: users[0].id,
-      lineItems: {
-        create: [
-          {
-            lineNumber: 1,
-            description: 'Dell PowerEdge R750 Servers',
-            quantity: 5,
-            unit: 'each',
-            unitPrice: 12000,
-            total: 60000,
-            poLineItemId: (await prisma.purchase_order_line_items.findFirst({
-              where: { purchaseOrderId: purchaseOrders[0]?.id, lineNumber: 1 }
-            }))?.id
-          },
-          {
-            lineNumber: 2,
-            description: 'Dell PowerEdge R650 Servers',
-            quantity: 5,
-            unit: 'each',
-            unitPrice: 5000,
-            total: 25000,
-            poLineItemId: (await prisma.purchase_order_line_items.findFirst({
-              where: { purchaseOrderId: purchaseOrders[0]?.id, lineNumber: 2 }
-            }))?.id
-          }
-        ]
-      }
-    },
-    {
-      invoiceNumber: 'INV-2024-003',
+      createdById: financeManager.id,
       vendorId: vendors[1].id,
-      purchaseOrderId: purchaseOrders[1]?.id,
-      reference: 'Monthly Office Supplies',
-      status: 'draft',
-      type: 'product',
-      issueDate: new Date('2024-03-05'),
-      dueDate: new Date('2024-03-20'),
-      subtotal: 3500,
-      taxAmount: 280,
-      taxRate: 8,
-      total: 3780,
-      balance: 3780,
-      currency: 'USD',
-      paymentTerms: 'net15',
-      approvalStatus: 'draft',
-      createdById: users[3].id,
-      lineItems: {
-        create: [
-          {
-            lineNumber: 1,
-            description: 'Office supplies',
-            quantity: 1,
-            unit: 'lot',
-            unitPrice: 3500,
-            total: 3500,
-            poLineItemId: (await prisma.purchase_order_line_items.findFirst({
-              where: { purchaseOrderId: purchaseOrders[1]?.id }
-            }))?.id
-          }
-        ]
-      }
+      purchaseOrderId: po3.id,
+      companyId: company.id
     }
-  ]
+  })
+  console.log('✅ Created 3 invoices')
 
-  const invoices = []
-  for (const invoice of invoiceData) {
-    const { lineItems, ...invoiceWithoutItems } = invoice
-    const createdInvoice = await prisma.invoices.create({
-      data: {
-        companyId,
-        ...invoiceWithoutItems,
-        lineItems: lineItems
+  // ========================================
+  // CREATE INVOICE LINE ITEMS
+  // ========================================
+  await prisma.invoice_line_items.createMany({
+    data: [
+      {
+        lineNumber: 1,
+        description: 'Electrical supplies - PO-2024-0001',
+        quantity: 1,
+        unitPrice: 12500.00,
+        total: 12500.00,
+        invoiceId: invoice1.id
+      },
+      {
+        lineNumber: 1,
+        description: 'Lumber - PO-2024-0002',
+        quantity: 1,
+        unitPrice: 17812.50,
+        total: 17812.50,
+        invoiceId: invoice2.id
+      },
+      {
+        lineNumber: 1,
+        description: 'Plumbing fixtures - PO-2024-0003',
+        quantity: 1,
+        unitPrice: 9189.25,
+        total: 9189.25,
+        invoiceId: invoice3.id
       }
-    })
-    invoices.push(createdInvoice)
-  }
+    ]
+  })
+  console.log('✅ Created 3 invoice line items')
 
-  console.log(`Created ${invoices.length} invoices`)
-  return invoices
-}
-
-async function createPayments(companyId: string, invoices: any[], users: any[]) {
-  const paymentData = [
-    {
+  // ========================================
+  // CREATE PAYMENTS
+  // ========================================
+  await prisma.payments.create({
+    data: {
       paymentNumber: 'PAY-2024-001',
-      invoiceId: invoices[0].id,
-      amount: 35100,
+      amount: 13531.25,
       currency: 'USD',
-      method: 'wire_transfer',
+      method: 'bank_transfer',
       status: 'completed',
+      transactionId: 'TRX-12345',
       paymentDate: new Date('2024-02-20'),
       processedDate: new Date('2024-02-20'),
-      settlementDate: new Date('2024-02-22'),
-      reference: 'Wire transfer confirmation #12345',
+      notes: 'Payment for invoice INV-2024-001',
       bankName: 'Chase Bank',
       accountNumber: '****1234',
-      createdById: users[2].id
-    },
-    {
-      paymentNumber: 'PAY-2024-002',
-      invoiceId: invoices[0].id,
-      amount: 17550,
-      currency: 'USD',
-      method: 'check',
-      status: 'processing',
-      paymentDate: new Date('2024-02-15'),
-      checkNumber: '1001',
-      reference: 'Partial payment',
-      createdById: users[2].id
+      reference: 'PO-2024-0001',
+      createdById: financeManager.id,
+      invoiceId: invoice1.id,
+      companyId: company.id
     }
-  ]
+  })
+  console.log('✅ Created 1 payment')
 
-  for (const payment of paymentData) {
-    await prisma.payments.create({
-      data: {
-        companyId,
-        ...payment
+  // ========================================
+  // CREATE EXPENSES
+  // ========================================
+  await prisma.expenses.createMany({
+    data: [
+      {
+        expenseNumber: 'EXP-2024-001',
+        category: 'travel',
+        description: 'Site visit - Tower Project',
+        amount: 350.75,
+        currency: 'USD',
+        expenseDate: new Date('2024-02-10'),
+        receiptUrl: '/receipts/travel-001.pdf',
+        isBillable: true,
+        status: 'approved',
+        approvedAt: new Date('2024-02-15'),
+        createdById: projectManager.id,
+        projectId: project1.id,
+        companyId: company.id,
+        notes: 'Uber to site and lunch'
+      },
+      {
+        expenseNumber: 'EXP-2024-002',
+        category: 'supplies',
+        description: 'Office supplies for project trailer',
+        amount: 125.50,
+        currency: 'USD',
+        expenseDate: new Date('2024-02-15'),
+        receiptUrl: '/receipts/supplies-001.pdf',
+        isBillable: true,
+        status: 'approved',
+        approvedAt: new Date('2024-02-18'),
+        createdById: projectManager.id,
+        projectId: project2.id,
+        companyId: company.id,
+        notes: 'Stationery and打印 paper'
+      },
+      {
+        expenseNumber: 'EXP-2024-003',
+        category: 'equipment',
+        description: 'Safety equipment - hard hats, vests',
+        amount: 875.25,
+        currency: 'USD',
+        expenseDate: new Date('2024-02-20'),
+        receiptUrl: '/receipts/equipment-001.pdf',
+        isBillable: true,
+        status: 'pending',
+        createdById: projectManager.id,
+        projectId: project3.id,
+        companyId: company.id,
+        notes: '10 hard hats, 20 safety vests'
       }
-    })
-  }
+    ]
+  })
+  console.log('✅ Created 3 expenses')
 
-  console.log(`Created ${paymentData.length} payments`)
+  // ========================================
+  // CREATE BUDGET ITEMS
+  // ========================================
+  await prisma.budget_items.createMany({
+    data: [
+      {
+        fiscalYear: 2024,
+        category: 'materials',
+        description: 'Electrical materials',
+        plannedAmount: 150000.00,
+        actualAmount: 13531.25,
+        committedAmount: 0,
+        variance: 150000 - 13531.25,
+        variancePercent: 9.0,
+        currency: 'USD',
+        periodStart: new Date('2024-01-01'),
+        periodEnd: new Date('2024-03-31'),
+        status: 'active',
+        projectId: project1.id,
+        createdById: financeManager.id,
+        companyId: company.id
+      },
+      {
+        fiscalYear: 2024,
+        category: 'materials',
+        description: 'Lumber materials',
+        plannedAmount: 200000.00,
+        actualAmount: 17812.50,
+        committedAmount: 0,
+        variance: 200000 - 17812.50,
+        variancePercent: 8.9,
+        currency: 'USD',
+        periodStart: new Date('2024-01-01'),
+        periodEnd: new Date('2024-03-31'),
+        status: 'active',
+        projectId: project2.id,
+        createdById: financeManager.id,
+        companyId: company.id
+      },
+      {
+        fiscalYear: 2024,
+        category: 'materials',
+        description: 'Plumbing materials',
+        plannedAmount: 50000.00,
+        actualAmount: 9189.25,
+        committedAmount: 0,
+        variance: 50000 - 9189.25,
+        variancePercent: 18.4,
+        currency: 'USD',
+        periodStart: new Date('2024-01-01'),
+        periodEnd: new Date('2024-03-31'),
+        status: 'active',
+        projectId: project3.id,
+        createdById: financeManager.id,
+        companyId: company.id
+      }
+    ]
+  })
+  console.log('✅ Created 3 budget items')
+
+  // ========================================
+  // CREATE DEMO REQUESTS
+  // ========================================
+  await prisma.demo_requests.createMany({
+    data: [
+      {
+        requestNumber: 'DEMO-2024-001',
+        fullName: 'Robert Johnson',
+        email: 'robert.j@constructco.com',
+        companyName: 'ConstructCo Builders',
+        phone: '+1 (555) 123-7890',
+        companySize: '50-100',
+        interests: ['vendor_management', 'procurement'],
+        preferredDate: new Date('2024-03-15'),
+        preferredTime: '10:00 AM',
+        status: 'contacted',
+        notes: 'Interested in enterprise plan',
+        assignedToId: adminUser.id
+      },
+      {
+        requestNumber: 'DEMO-2024-002',
+        fullName: 'Emily Williams',
+        email: 'emily.w@citydevelopers.com',
+        companyName: 'City Developers Inc',
+        phone: '+1 (555) 234-5678',
+        companySize: '100-250',
+        interests: ['project_management', 'finance'],
+        preferredDate: new Date('2024-03-18'),
+        preferredTime: '2:00 PM',
+        status: 'pending',
+        notes: 'Looking for comprehensive solution'
+      },
+      {
+        requestNumber: 'DEMO-2024-003',
+        fullName: 'Michael Chen',
+        email: 'michael.c@premiumbuild.com',
+        companyName: 'Premium Builders',
+        phone: '+1 (555) 345-6789',
+        companySize: '25-50',
+        interests: ['vendor_portal', 'contracts'],
+        preferredDate: new Date('2024-03-20'),
+        preferredTime: '11:30 AM',
+        status: 'converted',
+        notes: 'Signed up for pro plan',
+        assignedToId: adminUser.id
+      }
+    ]
+  })
+  console.log('✅ Created 3 demo requests')
+
+  // ========================================
+  // CREATE VENDOR RATINGS
+  // ========================================
+  await prisma.vendor_ratings.createMany({
+    data: [
+      {
+        rating: 5,
+        comment: 'Excellent quality and on-time delivery',
+        category: 'quality',
+        vendorId: vendors[0].id,
+        userId: adminUser.id
+      },
+      {
+        rating: 4,
+        comment: 'Good products, communication could be better',
+        category: 'communication',
+        vendorId: vendors[1].id,
+        userId: projectManager.id
+      },
+      {
+        rating: 5,
+        comment: 'Best lumber supplier in the city',
+        category: 'quality',
+        vendorId: vendors[2].id,
+        userId: adminUser.id
+      }
+    ]
+  })
+  console.log('✅ Created 3 vendor ratings')
+
+  // ========================================
+  // CREATE ACTIVITY LOGS
+  // ========================================
+  await prisma.activity_logs.createMany({
+    data: [
+      {
+        action: 'created',
+        entityType: 'purchase_order',
+        entityId: po1.id,
+        entityName: 'PO-2024-0001',
+        userId: procurementOfficer.id,
+        userEmail: procurementOfficer.email,
+        userName: procurementOfficer.name,
+        companyId: company.id
+      },
+      {
+        action: 'approved',
+        entityType: 'purchase_order',
+        entityId: po1.id,
+        entityName: 'PO-2024-0001',
+        userId: adminUser.id,
+        userEmail: adminUser.email,
+        userName: adminUser.name,
+        companyId: company.id
+      },
+      {
+        action: 'created',
+        entityType: 'invoice',
+        entityId: invoice1.id,
+        entityName: 'INV-2024-001',
+        userId: financeManager.id,
+        userEmail: financeManager.email,
+        userName: financeManager.name,
+        companyId: company.id
+      },
+      {
+        action: 'paid',
+        entityType: 'invoice',
+        entityId: invoice1.id,
+        entityName: 'INV-2024-001',
+        userId: financeManager.id,
+        userEmail: financeManager.email,
+        userName: financeManager.name,
+        companyId: company.id
+      }
+    ]
+  })
+  console.log('✅ Created 4 activity logs')
+
+  // ========================================
+  // CREATE NOTIFICATIONS
+  // ========================================
+  await prisma.notifications.createMany({
+    data: [
+      {
+        type: 'approval',
+        title: 'Purchase Order Approved',
+        message: 'PO-2024-0001 has been approved',
+        status: 'read',
+        priority: 'high',
+        entityType: 'purchase_order',
+        entityId: po1.id,
+        actionUrl: '/procurement/purchase-orders/' + po1.id,
+        userId: procurementOfficer.id,
+        companyId: company.id,
+        readAt: new Date()
+      },
+      {
+        type: 'invoice',
+        title: 'New Invoice Received',
+        message: 'Invoice INV-2024-001 has been received',
+        status: 'unread',
+        priority: 'medium',
+        entityType: 'invoice',
+        entityId: invoice1.id,
+        actionUrl: '/finance/invoices/' + invoice1.id,
+        userId: financeManager.id,
+        companyId: company.id
+      },
+      {
+        type: 'work_order',
+        title: 'Work Order Due Soon',
+        message: 'WO-2024-003 is due in 3 days',
+        status: 'unread',
+        priority: 'medium',
+        entityType: 'work_order',
+        entityId: 'WO-2024-003',
+        actionUrl: '/projects/work-orders/WO-2024-003',
+        userId: projectManager.id,
+        companyId: company.id,
+        scheduledFor: new Date('2024-03-22')
+      }
+    ]
+  })
+  console.log('✅ Created 3 notifications')
+
+  console.log('🎉 Seeding complete!')
 }
 
-async function createExpenses(companyId: string, vendors: any[], projects: any[], workOrders: any[], users: any[]) {
-  const expenseData = [
-    {
-      expenseNumber: 'EXP-2024-001',
-      vendorId: vendors[4].id,
-      projectId: projects[0].id,
-      workOrderId: workOrders[0]?.id,
-      category: 'Materials',
-      description: 'Emergency material purchase',
-      amount: 2500,
-      currency: 'USD',
-      expenseDate: new Date('2024-02-10'),
-      receiptUrl: 'https://example.com/receipts/001.pdf',
-      receiptNumber: 'REC-001',
-      isBillable: true,
-      billableClient: 'Office Renovation',
-      status: 'approved',
-      approvedById: users[1].id,
-      approvedAt: new Date('2024-02-12'),
-      createdById: users[1].id,
-      notes: 'Additional drywall materials'
-    },
-    {
-      expenseNumber: 'EXP-2024-002',
-      vendorId: vendors[1].id,
-      category: 'Office Supplies',
-      description: 'Emergency office supplies',
-      amount: 350,
-      currency: 'USD',
-      expenseDate: new Date('2024-02-15'),
-      receiptUrl: 'https://example.com/receipts/002.pdf',
-      status: 'pending',
-      createdById: users[3].id,
-      notes: 'Printer toner'
-    },
-    {
-      expenseNumber: 'EXP-2024-003',
-      category: 'Travel',
-      description: 'Site visit - Project manager',
-      amount: 450,
-      currency: 'USD',
-      expenseDate: new Date('2024-02-20'),
-      status: 'approved',
-      approvedById: users[0].id,
-      approvedAt: new Date('2024-02-22'),
-      createdById: users[1].id,
-      notes: 'Uber and meals'
-    }
-  ]
-
-  for (const expense of expenseData) {
-    await prisma.expenses.create({
-      data: {
-        companyId,
-        ...expense
-      }
-    })
-  }
-
-  console.log(`Created ${expenseData.length} expenses`)
-}
-
-async function createBudgetItems(companyId: string, projects: any[], users: any[]) {
-  const budgetItemData = [
-    {
-      projectId: projects[0].id,
-      fiscalYear: 2024,
-      category: 'Construction',
-      description: 'Construction materials and labor',
-      plannedAmount: 200000,
-      actualAmount: 32500,
-      committedAmount: 48500,
-      currency: 'USD',
-      periodStart: new Date('2024-01-01'),
-      periodEnd: new Date('2024-03-31'),
-      status: 'active',
-      approvedById: users[1].id,
-      approvedAt: new Date('2024-01-05'),
-      createdById: users[1].id
-    },
-    {
-      projectId: projects[1].id,
-      fiscalYear: 2024,
-      category: 'Hardware',
-      description: 'Server and network equipment',
-      plannedAmount: 150000,
-      actualAmount: 0,
-      committedAmount: 91800,
-      currency: 'USD',
-      periodStart: new Date('2024-01-01'),
-      periodEnd: new Date('2024-06-30'),
-      status: 'active',
-      approvedById: users[0].id,
-      approvedAt: new Date('2024-01-10'),
-      createdById: users[0].id
-    },
-    {
-      fiscalYear: 2024,
-      category: 'Office Supplies',
-      description: 'General office supplies budget',
-      plannedAmount: 25000,
-      actualAmount: 3850,
-      committedAmount: 3780,
-      currency: 'USD',
-      periodStart: new Date('2024-01-01'),
-      periodEnd: new Date('2024-12-31'),
-      status: 'active',
-      approvedById: users[2].id,
-      approvedAt: new Date('2024-01-15'),
-      createdById: users[2].id
-    }
-  ]
-
-  for (const budget of budgetItemData) {
-    const variance = budget.actualAmount - budget.plannedAmount
-    const variancePercent = (variance / budget.plannedAmount) * 100
-    
-    await prisma.budget_items.create({
-      data: {
-        companyId,
-        ...budget,
-        variance,
-        variancePercent
-      }
-    })
-  }
-
-  console.log(`Created ${budgetItemData.length} budget items`)
-}
-
-async function createGoodsReceipts(companyId: string, purchaseOrders: any[], users: any[]) {
-  const receiptData = [
-    {
-      receiptNumber: 'GR-2024-001',
-      purchaseOrderId: purchaseOrders[0].id,
-      receivedDate: new Date('2024-03-15'),
-      status: 'completed',
-      notes: 'All items received in good condition',
-      inspectedById: users[0].id,
-      inspectedAt: new Date('2024-03-15'),
-      inspectionNotes: 'Visual inspection passed',
-      receivedById: users[0].id,
-      lineItems: {
-        create: [
-          {
-            poLineItemId: (await prisma.purchase_order_line_items.findFirst({
-              where: { purchaseOrderId: purchaseOrders[0].id, lineNumber: 1 }
-            }))?.id,
-            quantity: 5,
-            acceptedQuantity: 5,
-            rejectedQuantity: 0,
-            notes: 'All servers received'
-          },
-          {
-            poLineItemId: (await prisma.purchase_order_line_items.findFirst({
-              where: { purchaseOrderId: purchaseOrders[0].id, lineNumber: 2 }
-            }))?.id,
-            quantity: 5,
-            acceptedQuantity: 4,
-            rejectedQuantity: 1,
-            rejectionReason: 'Damaged during shipping',
-            notes: 'One unit damaged, will return'
-          }
-        ]
-      }
-    }
-  ]
-
-  for (const receipt of receiptData) {
-    const { lineItems, ...receiptWithoutItems } = receipt
-    await prisma.goods_receipts.create({
-      data: {
-        companyId,
-        ...receiptWithoutItems,
-        lineItems: lineItems
-      }
-    })
-  }
-
-  console.log(`Created ${receiptData.length} goods receipts`)
-}
-
-async function createDocuments(companyId: string, vendors: any[], contracts: any[], purchaseOrders: any[], users: any[]) {
-  const documentData = [
-    {
-      entityType: 'vendor',
-      entityId: vendors[0].id,
-      vendorId: vendors[0].id,
-      name: 'Vendor Agreement - TechSupply',
-      description: 'Signed vendor agreement',
-      fileUrl: 'https://example.com/docs/vendor-agreement-techsupply.pdf',
-      fileName: 'vendor-agreement-techsupply.pdf',
-      fileSize: 2500000,
-      fileType: 'application/pdf',
-      category: 'contracts',
-      version: 1,
-      isLatest: true,
-      uploadedById: users[0].id,
-      uploadedAt: new Date('2024-01-15')
-    },
-    {
-      entityType: 'contract',
-      entityId: contracts[0].id,
-      vendorId: vendors[0].id,
-      name: 'IT Hardware Supply Contract',
-      description: 'Signed contract',
-      fileUrl: 'https://example.com/docs/contract-it-hardware.pdf',
-      fileName: 'contract-it-hardware.pdf',
-      fileSize: 3500000,
-      fileType: 'application/pdf',
-      category: 'contracts',
-      version: 1,
-      isLatest: true,
-      uploadedById: users[0].id,
-      uploadedAt: new Date('2024-01-10')
-    },
-    {
-      entityType: 'purchase_order',
-      entityId: purchaseOrders[0].id,
-      vendorId: vendors[0].id,
-      name: 'PO-2024-001 Supporting Documents',
-      description: 'Technical specifications',
-      fileUrl: 'https://example.com/docs/po-2024-001-specs.pdf',
-      fileName: 'po-2024-001-specs.pdf',
-      fileSize: 1800000,
-      fileType: 'application/pdf',
-      category: 'specifications',
-      version: 1,
-      isLatest: true,
-      uploadedById: users[0].id,
-      uploadedAt: new Date('2024-02-15')
-    },
-    {
-      entityType: 'vendor',
-      entityId: vendors[2].id,
-      vendorId: vendors[2].id,
-      name: 'W-9 Form',
-      description: 'Tax information',
-      fileUrl: 'https://example.com/docs/w9-cloudsoft.pdf',
-      fileName: 'w9-cloudsoft.pdf',
-      fileSize: 500000,
-      fileType: 'application/pdf',
-      category: 'tax',
-      version: 1,
-      isLatest: true,
-      uploadedById: users[2].id,
-      uploadedAt: new Date('2024-02-01')
-    }
-  ]
-
-  for (const doc of documentData) {
-    await prisma.documents.create({
-      data: {
-        companyId,
-        ...doc
-      }
-    })
-  }
-
-  console.log(`Created ${documentData.length} documents`)
-}
-
-async function createDemoRequests() {
-  const demoRequestData = [
-    {
-      requestNumber: 'DEMO-2024-001',
-      fullName: 'Michael Scott',
-      email: 'michael.scott@dundermifflin.com',
-      companyName: 'Dunder Mifflin',
-      phone: '+1-570-555-0101',
-      companySize: '200-500',
-      interests: ['procurement', 'vendor-management'],
-      preferredDate: new Date('2024-03-20'),
-      preferredTime: '10:00 AM EST',
-      status: 'pending',
-      notes: 'Interested in procurement module',
-      ipAddress: '192.168.1.100',
-      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-    },
-    {
-      requestNumber: 'DEMO-2024-002',
-      fullName: 'Dwight Schrute',
-      email: 'dwight.schrute@dundermifflin.com',
-      companyName: 'Schrute Farms',
-      phone: '+1-570-555-0102',
-      companySize: '10-50',
-      interests: ['contracts', 'project-management'],
-      preferredDate: new Date('2024-03-22'),
-      preferredTime: '2:00 PM EST',
-      status: 'contacted',
-      assignedToId: users[0]?.id,
-      notes: 'Interested in beet farming project tracking',
-      ipAddress: '192.168.1.101'
-    },
-    {
-      requestNumber: 'DEMO-2024-003',
-      fullName: 'Jim Halpert',
-      email: 'jim.halpert@dundermifflin.com',
-      companyName: 'Athlead',
-      phone: '+1-570-555-0103',
-      companySize: '50-200',
-      interests: ['invoicing', 'payments'],
-      status: 'converted',
-      assignedToId: users[1]?.id,
-      notes: 'Signed up for trial',
-      ipAddress: '192.168.1.102'
-    }
-  ]
-
-  for (const demo of demoRequestData) {
-    await prisma.demo_requests.create({
-      data: demo
-    })
-  }
-
-  console.log(`Created ${demoRequestData.length} demo requests`)
-}
-
-async function createActivityLogs(companyId: string, users: any[]) {
-  const activityData = [
-    {
-      action: 'CREATE',
-      entityType: 'vendor',
-      entityId: vendors[0].id,
-      entityName: vendors[0].name,
-      userId: users[0].id,
-      userEmail: users[0].email,
-      userName: users[0].name,
-      changes: { created: vendors[0] },
-      ipAddress: '10.0.0.1'
-    },
-    {
-      action: 'UPDATE',
-      entityType: 'purchase_order',
-      entityId: purchaseOrders[0].id,
-      entityName: purchaseOrders[0].title,
-      userId: users[0].id,
-      userEmail: users[0].email,
-      userName: users[0].name,
-      changes: { status: { old: 'draft', new: 'approved' } },
-      ipAddress: '10.0.0.1'
-    },
-    {
-      action: 'APPROVE',
-      entityType: 'invoice',
-      entityId: invoices[0].id,
-      entityName: invoices[0].invoiceNumber,
-      userId: users[2].id,
-      userEmail: users[2].email,
-      userName: users[2].name,
-      changes: { approvalStatus: 'approved' },
-      ipAddress: '10.0.0.2'
-    },
-    {
-      action: 'LOGIN',
-      entityType: 'user',
-      entityId: users[0].id,
-      entityName: users[0].name,
-      userId: users[0].id,
-      userEmail: users[0].email,
-      userName: users[0].name,
-      ipAddress: '10.0.0.1',
-      userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)'
-    }
-  ]
-
-  for (const activity of activityData) {
-    await prisma.activity_logs.create({
-      data: {
-        companyId,
-        ...activity
-      }
-    })
-  }
-
-  console.log(`Created ${activityData.length} activity logs`)
-}
-
-async function createNotifications(companyId: string, users: any[]) {
-  const notificationData = [
-    {
-      userId: users[0].id,
-      type: 'PO_APPROVAL',
-      title: 'Purchase Order Approval Required',
-      message: 'PO-2024-002 requires your approval',
-      status: 'unread',
-      priority: 'high',
-      entityType: 'purchase_order',
-      entityId: purchaseOrders[1]?.id,
-      actionUrl: '/procurement/po/PO-2024-002',
-      actions: { approve: true, reject: true }
-    },
-    {
-      userId: users[2].id,
-      type: 'INVOICE_DUE',
-      title: 'Invoice Payment Due',
-      message: 'INV-2024-002 is due in 5 days',
-      status: 'unread',
-      priority: 'medium',
-      entityType: 'invoice',
-      entityId: invoices[1]?.id,
-      actionUrl: '/finance/invoices/INV-2024-002',
-      createdAt: new Date('2024-03-01')
-    },
-    {
-      userId: users[1].id,
-      type: 'WORK_ORDER_STATUS',
-      title: 'Work Order Update',
-      message: 'WO-2024-001 has been updated',
-      status: 'read',
-      priority: 'low',
-      entityType: 'work_order',
-      entityId: workOrders[0]?.id,
-      readAt: new Date('2024-02-16'),
-      createdAt: new Date('2024-02-15')
-    },
-    {
-      userId: users[3].id,
-      type: 'DOCUMENT_UPLOAD',
-      title: 'Document Uploaded',
-      message: 'New document has been uploaded to Vendor Portal',
-      status: 'unread',
-      priority: 'normal',
-      createdAt: new Date('2024-03-05')
-    }
-  ]
-
-  for (const notification of notificationData) {
-    await prisma.notifications.create({
-      data: {
-        companyId,
-        ...notification
-      }
-    })
-  }
-
-  console.log(`Created ${notificationData.length} notifications`)
-}
-
-// Execute the seed function
 main()
   .catch((e) => {
-    console.error('Error during seeding:', e)
+    console.error('❌ Seeding failed:', e)
     process.exit(1)
   })
   .finally(async () => {
