@@ -526,3 +526,20 @@ app.listen(PORT, () => {
   console.log(`👤  Users:       http://localhost:${PORT}/api/users`)
   console.log(`=========================================\n`)
 })
+// Vendor Routes
+import vendorDashboardRoutes from './routes/vendor/dashboard.routes'
+import vendorInvoicesRoutes from './routes/vendor/invoices.routes'
+import vendorOrdersRoutes from './routes/vendor/orders.routes'
+import vendorProfileRoutes from './routes/vendor/profile.routes'
+import vendorDocumentsRoutes from './routes/vendor/documents.routes'
+import vendorNotificationsRoutes from './routes/vendor/notifications.routes'
+import vendorMessagesRoutes from './routes/vendor/messages.routes'
+
+// Vendor routes
+app.use('/api/vendor/dashboard', vendorDashboardRoutes)
+app.use('/api/vendor/invoices', vendorInvoicesRoutes)
+app.use('/api/vendor/orders', vendorOrdersRoutes)
+app.use('/api/vendor/profile', vendorProfileRoutes)
+app.use('/api/vendor/documents', vendorDocumentsRoutes)
+app.use('/api/vendor/notifications', vendorNotificationsRoutes)
+app.use('/api/vendor/messages', vendorMessagesRoutes)

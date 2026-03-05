@@ -1,5 +1,5 @@
 // ========================================
-// VENDORFLOW - COMPLETE PRODUCTION SCHEMA - WORKING
+// VENDORFLOW - COMPLETE PRODUCTION SCHEMA - FIXED
 // ========================================
 
 generator client {
@@ -85,8 +85,7 @@ model users {
   phone        String?
   title        String?
   department   String?
-    assignedDemoRequests demo_requests[] @relation("DemoRequestAssignedTo")
-
+  
   role         String    @default("member")
   isActive     Boolean   @default(true)
   emailVerified DateTime?
@@ -160,7 +159,12 @@ model users {
   receivedReceipts      goods_receipts[] @relation("GoodsReceiptReceivedBy")
   
   // Work Order Relations
+    // Demo Requests
+    assignedDemoRequests demo_requests[] @relation("DemoRequestAssignedTo")
   approvedWorkOrders    work_orders[] @relation("WorkOrderApprovedBy")
+  
+  // Vendor Messages - Admin can send/receive messages
+  vendorMessages        vendor_messages[] @relation("AdminMessages")
 
   @@index([companyId])
   @@index([email])
@@ -365,6 +369,7 @@ model vendors {
   updatedAt    DateTime  @updatedAt
   deletedAt    DateTime?
 
+  // Existing Relations
   contracts       contracts[]
   workOrders      work_orders[]
   invoices        invoices[]
@@ -375,7 +380,12 @@ model vendors {
   bidSubmissions  bid_submissions[]
   projects        project_vendors[]
   expenses        expenses[]
-  ratings        vendor_ratings[]
+  ratings         vendor_ratings[]
+  
+  // NEW: Vendor Portal Relations
+  notifications   vendor_notifications[]
+  messages        vendor_messages[]
+  activityLogs    vendor_activity_logs[]
 
   @@index([companyId])
   @@index([companyId, status])
@@ -428,6 +438,74 @@ model vendor_portal_access {
   @@index([email])
   @@map("vendor_portal_access")
 }
+
+// ========================================
+// VENDOR COMMUNICATIONS & NOTIFICATIONS
+// ========================================
+
+model vendor_notifications {
+  id              String    @id @default(cuid())
+  vendorId        String
+  vendor          vendors   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  
+  type            String    // invoice_created, invoice_paid, order_created, order_shipped, profile_updated, message
+  title           String
+  message         String
+  data            Json?     // Additional data like invoiceId, orderId etc.
+  
+  isRead          Boolean   @default(false)
+  readAt          DateTime?
+  
+  createdAt       DateTime  @default(now())
+  
+  @@index([vendorId])
+  @@index([vendorId, isRead])
+  @@index([createdAt])
+  @@map("vendor_notifications")
+}
+
+model vendor_messages {
+  id              String    @id @default(cuid())
+  vendorId        String
+  vendor          vendors   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  adminId         String?
+  admin           users?    @relation("AdminMessages", fields: [adminId], references: [id], onDelete: SetNull)
+  
+  subject         String
+  message         String
+  attachments     String[]  // URLs to attachments
+  
+  isFromVendor    Boolean   @default(true) // true = vendor to admin, false = admin to vendor
+  isRead          Boolean   @default(false)
+  readAt          DateTime?
+  
+  createdAt       DateTime  @default(now())
+  
+  @@index([vendorId])
+  @@index([vendorId, isRead])
+  @@index([createdAt])
+  @@map("vendor_messages")
+}
+
+model vendor_activity_logs {
+  id              String    @id @default(cuid())
+  vendorId        String
+  vendor          vendors   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  
+  action          String    // invoice_submitted, invoice_viewed, profile_updated, document_uploaded, etc.
+  entityType      String    // invoice, order, document, profile
+  entityId        String?
+  details         Json?
+  ipAddress       String?
+  userAgent       String?
+  
+  createdAt       DateTime  @default(now())
+  
+  @@index([vendorId])
+  @@index([vendorId, createdAt])
+  @@map("vendor_activity_logs")
+}
+
 // ========================================
 // PROCUREMENT - PURCHASE ORDERS
 // ========================================
@@ -1089,7 +1167,7 @@ model work_orders {
 
 model schedules {
   id              String    @id @default(cuid())
-  scheduleNumber  String?   @unique  // Add this line - OPTIONAL, no data loss
+  scheduleNumber  String?   @unique
   name            String
   description     String?
   type            String    @default("project")
@@ -1106,6 +1184,10 @@ model schedules {
   companyId       String?
   company         companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
   items           schedule_items[]
+
+  @@index([companyId])
+  @@index([projectId])
+  @@map("schedules")
 }
 
 model schedule_items {
@@ -1625,7 +1707,7 @@ model notifications {
   @@index([companyId, scheduledFor])
   @@map("notifications")
 }
-// Add this new model
+
 model demo_requests {
   id            String    @id @default(cuid())
   requestNumber String    @unique
@@ -1655,4 +1737,3 @@ model demo_requests {
   @@index([createdAt])
   @@map("demo_requests")
 }
-

@@ -13,9 +13,11 @@
     "seed": "prisma db seed"
   },
   "dependencies": {
-    "@prisma/client": "^5.7.0"
+    "@prisma/client": "^5.7.0",
+    "bcrypt": "^6.0.0"
   },
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
     "@types/node": "^20.19.33",
     "prisma": "^5.7.0",
     "ts-node": "^10.9.2",

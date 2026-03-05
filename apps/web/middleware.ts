@@ -55,7 +55,8 @@ export function middleware(request: NextRequest) {
                           pathname.startsWith('/bids') ||
                           pathname.startsWith('/contracts') ||
                           pathname.startsWith('/quotes') ||
-                          pathname.startsWith('/rfqs')
+                          pathname.startsWith('/rfqs') ||
+                          pathname.startsWith('/vendor') // Add vendor routes
 
   if (!isAuthenticated && isDashboardRoute) {
     const loginUrl = new URL('/login', request.url)

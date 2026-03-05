@@ -22,8 +22,7 @@ import {
   X
 } from 'lucide-react'
 import { getCurrentUser, clearAuth } from '@/lib/dev-auth'
-import NotificationBell from '../NotificationBell'
-
+import NotificationBell from '@/components/NotificationBell' 
 interface NavbarProps {
   onMenuClick: () => void
 }

@@ -1,11 +1,9 @@
-// apps/web/app/(dashboard)/layout.tsx
 'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Sidebar from '@/components/layout/Sidebar'
 import Navbar from '@/components/layout/Navbar'
-import { isAuthenticated, getCurrentUser } from '@/lib/dev-auth'
 
 export default function DashboardLayout({
   children,
@@ -18,11 +16,32 @@ export default function DashboardLayout({
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // Check authentication
-    if (!isAuthenticated()) {
+    // Check authentication directly from localStorage
+    const token = localStorage.getItem('token')
+    const userStr = localStorage.getItem('user')
+    
+    if (!token || !userStr) {
+      console.log('No token found, redirecting to login')
       router.push(`/login?callbackUrl=${encodeURIComponent(pathname)}`)
-    } else {
+      return
+    }
+    
+    try {
+      const user = JSON.parse(userStr)
+      
+      // Make sure this is an admin user (not vendor)
+      if (user.type === 'vendor') {
+        console.log('Vendor trying to access admin dashboard, redirecting to vendor dashboard')
+        router.push('/vendor/dashboard')
+        return
+      }
+      
+      // Valid admin user
       setIsLoading(false)
+    } catch (err) {
+      console.error('Invalid user data, clearing storage')
+      localStorage.clear()
+      router.push('/login')
     }
   }, [pathname, router])
 

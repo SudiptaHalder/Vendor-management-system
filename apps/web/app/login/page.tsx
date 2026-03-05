@@ -1,22 +1,39 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Mail, Lock, ArrowRight, Loader2 } from 'lucide-react'
-import { initDevAuth } from '@/lib/dev-auth'
+import { api } from '@/lib/api'
 
 export default function LoginPage() {
   const router = useRouter()
-  const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard'
-  
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   })
+
+  // Check if already logged in
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    const userStr = localStorage.getItem('user')
+    
+    if (token && userStr) {
+      try {
+        const user = JSON.parse(userStr)
+        if (user.type === 'vendor') {
+          router.push('/vendor/dashboard')
+        } else {
+          router.push('/dashboard')
+        }
+      } catch (err) {
+        // Invalid user data, clear it
+        localStorage.clear()
+      }
+    }
+  }, [router])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -29,32 +46,47 @@ export default function LoginPage() {
     setLoading(true)
     setError('')
 
-    // Simulate API call
-    setTimeout(() => {
-      // For development, any credentials work
-      // Just initialize the dev auth
-      initDevAuth()
+    try {
+      const response = await api.login(formData.email, formData.password)
       
-      // Set cookie for middleware
-      document.cookie = `token=dev-mock-token-12345; path=/; max-age=86400`
-      
-      router.push(callbackUrl)
-    }, 1000)
+      if (response.success) {
+        // Clear old data first
+        localStorage.clear()
+        
+        // Store new data
+        localStorage.setItem('token', response.data.token)
+        localStorage.setItem('user', JSON.stringify(response.data.user))
+        
+        // ✅ Set cookie for middleware (7 days expiry)
+        document.cookie = `token=${response.data.token}; path=/; max-age=604800; SameSite=Lax`
+        
+        // Redirect based on user type
+        if (response.data.user.type === 'vendor') {
+          router.push('/vendor/dashboard')
+        } else {
+          router.push('/dashboard')
+        }
+      } else {
+        setError(response.error || 'Invalid email or password')
+      }
+    } catch (err: any) {
+      setError(err.message || 'Network error. Please try again.')
+    } finally {
+      setLoading(false)
+    }
   }
 
-  const handleDevLogin = () => {
-    setLoading(true)
+  const handleDemoLogin = (email: string, password: string) => {
+    setFormData({ email, password })
     setTimeout(() => {
-      initDevAuth()
-      document.cookie = `token=dev-mock-token-12345; path=/; max-age=86400`
-      router.push(callbackUrl)
-    }, 500)
+      const form = document.querySelector('form')
+      if (form) form.requestSubmit()
+    }, 100)
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white flex items-center justify-center p-4">
       <div className="max-w-md w-full">
-        {/* Logo */}
         <Link href="/" className="flex justify-center items-center space-x-2 mb-8">
           <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-lg">
             <span className="text-white font-bold text-2xl">VF</span>
@@ -70,19 +102,22 @@ export default function LoginPage() {
             <p className="text-gray-600 mt-2">Sign in to your account</p>
           </div>
 
-          {/* Development Quick Login */}
           <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-            <p className="text-sm font-medium text-blue-800 mb-3">Development Mode</p>
-            <button
-              onClick={handleDevLogin}
-              disabled={loading}
-              className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium transition-colors disabled:opacity-50"
-            >
-              {loading ? 'Logging in...' : 'Login as Admin (Dev)'}
-            </button>
-            <p className="text-xs text-blue-600 mt-2 text-center">
-              Email: admin@construction.com
-            </p>
+            <p className="text-sm font-medium text-blue-800 mb-3">Demo Accounts</p>
+            <div className="space-y-2">
+              <button
+                onClick={() => handleDemoLogin('superadmin@vendorflow.com', 'Admin@123')}
+                className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium transition-colors"
+              >
+                Login as Super Admin
+              </button>
+              <button
+                onClick={() => handleDemoLogin('vendor.cityelectricalsupply@portal.com', 'vendor123')}
+                className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm font-medium transition-colors"
+              >
+                Login as Vendor (City Electrical)
+              </button>
+            </div>
           </div>
 
           {error && (
@@ -103,9 +138,9 @@ export default function LoginPage() {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  placeholder="admin@construction.com"
+                  placeholder="Enter your email"
                   className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  disabled={loading}
+                  required
                 />
               </div>
             </div>
@@ -123,7 +158,7 @@ export default function LoginPage() {
                   onChange={handleChange}
                   placeholder="••••••••"
                   className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  disabled={loading}
+                  required
                 />
               </div>
             </div>

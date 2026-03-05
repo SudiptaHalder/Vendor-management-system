@@ -5,50 +5,102 @@ import jwt from 'jsonwebtoken'
 
 const router = Router()
 
-// Simple login - no complex validation
+// Login endpoint - handles both admin and vendor login
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body
     
     console.log('🔐 Login attempt:', email)
 
-    // Find user
-    const user = await prisma.users.findUnique({
+    // First check if it's a regular user (admin)
+    let user = await prisma.users.findUnique({
       where: { email }
     })
 
-    if (!user || !user.password) {
-      console.log('❌ User not found:', email)
+    // If not a regular user, check if it's a vendor portal user
+    if (!user) {
+      console.log('👤 Not an admin user, checking vendor portal...')
+      
+      const vendorAccess = await prisma.vendor_portal_access.findUnique({
+        where: { email },
+        include: { vendor: true }
+      })
+
+      if (vendorAccess) {
+        console.log('✅ Vendor found:', vendorAccess.vendor.name)
+        
+        const isValid = await bcrypt.compare(password, vendorAccess.password || '')
+        if (!isValid) {
+          console.log('❌ Invalid password for vendor')
+          return res.status(401).json({ 
+            success: false, 
+            error: 'Invalid credentials' 
+          })
+        }
+
+        // Update last login
+        await prisma.vendor_portal_access.update({
+          where: { id: vendorAccess.id },
+          data: { lastLoginAt: new Date() }
+        })
+
+        const token = jwt.sign(
+          { 
+            vendorId: vendorAccess.vendorId,
+            email: vendorAccess.email,
+            type: 'vendor',
+            role: 'vendor',
+            accessLevel: vendorAccess.accessLevel
+          },
+          process.env.JWT_SECRET || 'dev-secret-key',
+          { expiresIn: '7d' }
+        )
+
+        console.log('✅ Vendor login successful:', vendorAccess.vendor.name)
+
+        return res.json({
+          success: true,
+          data: {
+            user: {
+              id: vendorAccess.vendorId,
+              email: vendorAccess.email,
+              name: vendorAccess.vendor.name,
+              type: 'vendor',
+              role: 'vendor'
+            },
+            token
+          }
+        })
+      }
+
       return res.status(401).json({ 
         success: false, 
         error: 'Invalid credentials' 
       })
     }
 
-    // Check password
-    const isValid = await bcrypt.compare(password, user.password)
+    // Regular user login
+    const isValid = await bcrypt.compare(password, user.password || '')
     if (!isValid) {
-      console.log('❌ Invalid password for:', email)
+      console.log('❌ Invalid password for admin')
       return res.status(401).json({ 
         success: false, 
         error: 'Invalid credentials' 
       })
     }
 
-    // Generate token
     const token = jwt.sign(
       { 
         userId: user.id, 
         email: user.email,
+        type: 'admin',
         role: user.role 
       },
       process.env.JWT_SECRET || 'dev-secret-key',
       { expiresIn: '7d' }
     )
 
-    console.log('✅ Login successful:', user.email)
-    console.log('✅ User ID:', user.id)
-    console.log('✅ Role:', user.role)
+    console.log('✅ Admin login successful:', user.email)
 
     res.json({
       success: true,
@@ -57,6 +109,7 @@ router.post('/login', async (req, res) => {
           id: user.id,
           email: user.email,
           name: user.name,
+          type: 'admin',
           role: user.role
         },
         token
@@ -82,14 +135,32 @@ router.get('/me', async (req, res) => {
     const token = authHeader.replace('Bearer ', '')
     const decoded: any = jwt.verify(token, process.env.JWT_SECRET || 'dev-secret-key')
     
-    const user = await prisma.users.findUnique({
-      where: { id: decoded.userId },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        role: true
+    if (decoded.type === 'vendor') {
+      const vendor = await prisma.vendors.findUnique({
+        where: { id: decoded.vendorId },
+        include: { portalAccess: true }
+      })
+
+      if (!vendor) {
+        return res.status(404).json({ error: 'Vendor not found' })
       }
+
+      return res.json({
+        success: true,
+        data: {
+          user: {
+            id: vendor.id,
+            email: decoded.email,
+            name: vendor.name,
+            type: 'vendor',
+            role: 'vendor'
+          }
+        }
+      })
+    }
+
+    const user = await prisma.users.findUnique({
+      where: { id: decoded.userId }
     })
 
     if (!user) {
@@ -98,9 +169,18 @@ router.get('/me', async (req, res) => {
 
     res.json({
       success: true,
-      data: { user }
+      data: {
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          type: 'admin',
+          role: user.role
+        }
+      }
     })
   } catch (error) {
+    console.error('Auth error:', error)
     res.status(401).json({ error: 'Invalid token' })
   }
 })

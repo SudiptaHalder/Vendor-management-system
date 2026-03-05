@@ -166,6 +166,9 @@ model users {
   @@index([email])
   @@index([roleId])
   @@map("users")
+
+  // Vendor Messages
+  vendorMessages     vendor_messages[] @relation("AdminMessages")
 }
 
 // ========================================
@@ -383,6 +386,11 @@ model vendors {
   @@index([companyId, name])
   @@index([email])
   @@map("vendors")
+
+  // Vendor Portal Relations
+  notifications      vendor_notifications[]
+  messages           vendor_messages[]
+  activityLogs       vendor_activity_logs[]
 }
 
 model vendor_ratings {
@@ -1723,3 +1731,17 @@ model vendor_activity_logs {
   @@index([vendorId, createdAt])
   @@map("vendor_activity_logs")
 }
+
+// Add these relations to the vendors model (find the vendors model and add these lines)
+// Look for the vendors model and add these inside the model vendors { ... } block
+
+  // Vendor Portal Relations
+  notifications      vendor_notifications[]
+  messages           vendor_messages[]
+  activityLogs       vendor_activity_logs[]
+
+// Add this to the users model (for admin messages)
+// Look for the users model and add this inside the model users { ... } block
+
+  // Vendor Messages
+  vendorMessages     vendor_messages[] @relation("AdminMessages")
