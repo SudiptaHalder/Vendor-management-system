@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "csv-parse": "^6.1.0",
     "date-fns": "^2.30.0",
     "lucide-react": "^0.309.0",
     "multer": "^2.0.2",
@@ -15,9 +16,11 @@
     "nodemailer": "^8.0.1",
     "react": "^18",
     "react-dom": "^18",
-    "react-dropzone": "^15.0.0"
+    "react-dropzone": "^15.0.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@types/csv-parse": "^1.1.12",
     "@types/multer": "^2.0.0",
     "@types/node": "^20",
     "@types/react": "^18",

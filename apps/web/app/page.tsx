@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import { Mail, Lock, ArrowRight, Loader2 } from 'lucide-react'
 import { api } from '@/lib/api'
 
@@ -15,7 +14,7 @@ export default function LoginPage() {
     password: ''
   })
 
-  // Check if already logged in
+  // Check if already logged in - redirect to admin dashboard
   useEffect(() => {
     const token = localStorage.getItem('token')
     const userStr = localStorage.getItem('user')
@@ -23,13 +22,8 @@ export default function LoginPage() {
     if (token && userStr) {
       try {
         const user = JSON.parse(userStr)
-        if (user.type === 'vendor') {
-          router.push('/vendor/dashboard')
-        } else {
-          router.push('/dashboard')
-        }
+        router.push('/dashboard')
       } catch (err) {
-        // Invalid user data, clear it
         localStorage.clear()
       }
     }
@@ -50,22 +44,12 @@ export default function LoginPage() {
       const response = await api.login(formData.email, formData.password)
       
       if (response.success) {
-        // Clear old data first
         localStorage.clear()
-        
-        // Store new data
         localStorage.setItem('token', response.data.token)
         localStorage.setItem('user', JSON.stringify(response.data.user))
-        
-        // ✅ Set cookie for middleware (7 days expiry)
         document.cookie = `token=${response.data.token}; path=/; max-age=604800; SameSite=Lax`
         
-        // Redirect based on user type
-        if (response.data.user.type === 'vendor') {
-          router.push('/vendor/dashboard')
-        } else {
-          router.push('/dashboard')
-        }
+        router.push('/dashboard')
       } else {
         setError(response.error || 'Invalid email or password')
       }
@@ -76,48 +60,18 @@ export default function LoginPage() {
     }
   }
 
-  const handleDemoLogin = (email: string, password: string) => {
-    setFormData({ email, password })
-    setTimeout(() => {
-      const form = document.querySelector('form')
-      if (form) form.requestSubmit()
-    }, 100)
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center p-4">
       <div className="max-w-md w-full">
-        <Link href="/" className="flex justify-center items-center space-x-2 mb-8">
-          <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-lg">
-            <span className="text-white font-bold text-2xl">VF</span>
-          </div>
-          <span className="text-3xl font-bold text-gray-900">
-            Vendor<span className="text-blue-600">Flow</span>
-          </span>
-        </Link>
-
-        <div className="bg-white rounded-2xl shadow-xl p-8">
+        <div className="bg-white rounded-2xl shadow-2xl p-8">
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-gray-900">Welcome back</h2>
-            <p className="text-gray-600 mt-2">Sign in to your account</p>
-          </div>
-
-          <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-            <p className="text-sm font-medium text-blue-800 mb-3">Demo Accounts</p>
-            <div className="space-y-2">
-              <button
-                onClick={() => handleDemoLogin('superadmin@vendorflow.com', 'Admin@123')}
-                className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium transition-colors"
-              >
-                Login as Super Admin
-              </button>
-              <button
-                onClick={() => handleDemoLogin('vendor.cityelectricalsupply@portal.com', 'vendor123')}
-                className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm font-medium transition-colors"
-              >
-                Login as Vendor (City Electrical)
-              </button>
+            <div className="flex justify-center mb-4">
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-lg">
+                <span className="text-white font-bold text-2xl">VF</span>
+              </div>
             </div>
+            <h2 className="text-2xl font-bold text-gray-900">VendorFlow Admin</h2>
+            <p className="text-gray-600 mt-2">Sign in to your account</p>
           </div>
 
           {error && (
@@ -138,7 +92,7 @@ export default function LoginPage() {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  placeholder="Enter your email"
+                  placeholder="superadmin@vendorflow.com"
                   className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   required
                 />
@@ -180,9 +134,9 @@ export default function LoginPage() {
           </form>
 
           <div className="mt-6 text-center">
-            <Link href="/" className="text-sm text-gray-500 hover:text-gray-700">
-              ← Back to home
-            </Link>
+            <p className="text-sm text-gray-500">
+              Demo: superadmin@vendorflow.com / Admin@123
+            </p>
           </div>
         </div>
       </div>

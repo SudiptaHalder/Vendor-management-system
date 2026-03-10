@@ -170,6 +170,9 @@ model users {
   @@index([email])
   @@index([roleId])
   @@map("users")
+
+  // Uploaded Data Relation
+  uploadedVendorData uploaded_vendor_data[]
 }
 
 // ========================================
@@ -393,6 +396,10 @@ model vendors {
   @@index([companyId, name])
   @@index([email])
   @@map("vendors")
+
+  // Uploaded Data Relations
+  uploadedData      uploaded_vendor_data[]
+  invitations       vendor_invitations[]
 }
 
 model vendor_ratings {
@@ -505,7 +512,60 @@ model vendor_activity_logs {
   @@index([vendorId, createdAt])
   @@map("vendor_activity_logs")
 }
-
+model uploaded_vendor_data {
+  id              String    @id @default(cuid())
+  supplierCode    String    // Unique code for vendor
+  supplierName    String    // Vendor name
+  plantCode       String?
+  poNumber        String    // Purchase Order Number
+  poCreateDate    DateTime? // PO Creation Date
+  poAmendDate     DateTime? // PO Amendment Date
+  materialCode    String?   // Material Code
+  materialDesc    String?   // Material Description
+  lineItem        Int?      // Line Item number
+  orderUnit       String?   // Order Unit
+  rate1           Decimal?  @db.Decimal(19,4) // Rate 1
+  rate2           Decimal?  @db.Decimal(19,4) // Rate 2
+  invoiceQuantity Decimal?  @db.Decimal(19,4) // Invoice Quantity
+  
+  // Relations
+  vendorId        String?
+  vendor          vendors?  @relation(fields: [vendorId], references: [id])
+  poId            String?
+  purchaseOrder   purchase_orders? @relation(fields: [poId], references: [id])
+  
+  // Metadata
+  uploadedById    String
+  uploadedBy      users     @relation(fields: [uploadedById], references: [id])
+  fileName        String
+  rowNumber       Int
+  createdAt       DateTime  @default(now())
+  
+  @@index([supplierCode])
+  @@index([poNumber])
+  @@index([vendorId])
+  @@map("uploaded_vendor_data")
+}
+// Add email tracking for vendor invitations
+model vendor_invitations {
+  id              String    @id @default(cuid())
+  vendorId        String
+  vendor          vendors   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  
+  email           String
+  tempPassword    String    // Hashed temporary password
+  invitationToken String    @unique
+  status          String    @default("pending") // pending, sent, accepted, expired
+  sentAt          DateTime?
+  acceptedAt      DateTime?
+  expiresAt       DateTime
+  
+  createdAt       DateTime  @default(now())
+  
+  @@index([vendorId])
+  @@index([invitationToken])
+  @@map("vendor_invitations")
+}
 // ========================================
 // PROCUREMENT - PURCHASE ORDERS
 // ========================================
@@ -574,6 +634,9 @@ model purchase_orders {
   @@index([companyId])
   @@index([orderDate])
   @@map("purchase_orders")
+
+  // Uploaded Data Relation
+  uploadedData      uploaded_vendor_data[]
 }
 
 model purchase_order_line_items {

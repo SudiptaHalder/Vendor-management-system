@@ -22,7 +22,7 @@ import {
   X
 } from 'lucide-react'
 import { getCurrentUser, clearAuth } from '@/lib/dev-auth'
-import NotificationBell from '@/components/NotificationBell' 
+
 interface NavbarProps {
   onMenuClick: () => void
 }
@@ -97,13 +97,12 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
 
   const handleLogout = () => {
     clearAuth()
-    router.push('/')
   }
 
-const handleNavigation = (path: string) => {
-  setIsProfileOpen(false)
-  router.push(path)
-}
+  const handleNavigation = (path: string) => {
+    setIsProfileOpen(false)
+    router.push(path)
+  }
 
   const quickFilters = [
     { name: 'Vendors', icon: Users, href: '/vendors', color: 'blue' },
@@ -216,8 +215,10 @@ const handleNavigation = (path: string) => {
               {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
             </button>
 
-            {/* Notifications */}
-            <NotificationBell />
+            {/* Notifications - Simple bell without component */}
+            <button className="p-2 text-gray-500 rounded-lg hover:bg-gray-100 relative">
+              <Bell size={18} />
+            </button>
 
             {/* User menu */}
             <div className="relative" ref={profileRef}>
@@ -240,7 +241,7 @@ const handleNavigation = (path: string) => {
                 <ChevronDown size={16} className="text-gray-500 hidden md:block flex-shrink-0" />
               </button>
 
-              {/* Profile dropdown - ALL LINKS NOW WORKING */}
+              {/* Profile dropdown */}
               {isProfileOpen && (
                 <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden z-50">
                   <div className="p-4 border-b border-gray-200 bg-gray-50">
@@ -256,51 +257,41 @@ const handleNavigation = (path: string) => {
                   </div>
                   
                   <div className="p-2">
-                    {/* Profile Link */}
                     <button
                       onClick={() => handleNavigation('/profile')}
                       className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100"
                     >
-                      <User size={16} className="flex-shrink-0" />
-                      <span className="truncate">Your Profile</span>
+                      <User size={16} />
+                      <span>Your Profile</span>
                     </button>
-
-                    {/* Settings Link */}
                     <button
                       onClick={() => handleNavigation('/settings')}
                       className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100"
                     >
-                      <Settings size={16} className="flex-shrink-0" />
-                      <span className="truncate">Settings</span>
+                      <Settings size={16} />
+                      <span>Settings</span>
                     </button>
-
-                    {/* Calendar Link */}
                     <button
-  onClick={() => handleNavigation('/calendar')}
-  className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100"
->
-  <Calendar size={16} className="flex-shrink-0" />
-  <span className="truncate">Calendar</span>
-</button>
-
-                    {/* Help & Support Link */}
+                      onClick={() => handleNavigation('/calendar')}
+                      className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100"
+                    >
+                      <Calendar size={16} />
+                      <span>Calendar</span>
+                    </button>
                     <button
                       onClick={() => handleNavigation('/support')}
                       className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100"
                     >
-                      <HelpCircle size={16} className="flex-shrink-0" />
-                      <span className="truncate">Help & Support</span>
+                      <HelpCircle size={16} />
+                      <span>Help & Support</span>
                     </button>
-
                     <div className="border-t border-gray-200 my-2"></div>
-
-                    {/* Logout Button */}
                     <button 
                       onClick={handleLogout}
                       className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-red-600 rounded-lg hover:bg-red-50"
                     >
-                      <LogOut size={16} className="flex-shrink-0" />
-                      <span className="truncate">Logout</span>
+                      <LogOut size={16} />
+                      <span>Logout</span>
                     </button>
                   </div>
                 </div>

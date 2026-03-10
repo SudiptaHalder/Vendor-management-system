@@ -1753,5 +1753,13 @@ export const api = {
       headers: getHeaders()
     })
     return handleResponse(response)
-  }
+  },
+async processVendorUpload(fileId: string, fileName: string) {
+  const response = await fetch(`${API_URL}/vendors/upload/process/${fileId}`, {
+    method: 'POST',
+    headers: getHeaders(),
+    body: JSON.stringify({ fileName })
+  })
+  return handleResponse(response)
+},
 }

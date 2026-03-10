@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import MainLayout from '@/components/layout/MainLayout'
-import AddVendorModal from '@/components/vendors/AddVendorModal'
+// import AddVendorModal from '@/components/vendors/AddVendorModal' // Commented out
 import { api } from '@/lib/api'
 import {
   Plus,
@@ -15,17 +15,19 @@ import {
   Filter,
   CheckCircle,
   Clock,
-  DollarSign,
+  Upload, // Added Upload icon
+  // DollarSign, // Removed
   Users
 } from 'lucide-react'
+import Link from 'next/link'
 
 interface Vendor {
   id: string
   name: string
   email: string | null
   phone: string | null
-  category: any | null  // Can be object or string
-  categoryName?: string // For display
+  category: any | null
+  categoryName?: string
   status: string
   contactPerson: string | null
   totalSpent?: number
@@ -37,7 +39,7 @@ export default function VendorsPage() {
   const [vendors, setVendors] = useState<Vendor[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+  // const [isAddModalOpen, setIsAddModalOpen] = useState(false) // Commented out
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
   const [categoryFilter, setCategoryFilter] = useState('all')
@@ -50,7 +52,6 @@ export default function VendorsPage() {
         // Process vendors to extract category name safely
         const processedVendors = response.data.map((vendor: any) => ({
           ...vendor,
-          // Safely get category name whether it's object, string, or null
           categoryName: vendor.category?.name || vendor.category || null
         }))
         setVendors(processedVendors)
@@ -84,7 +85,8 @@ export default function VendorsPage() {
 
   return (
     <MainLayout>
-      <AddVendorModal
+      {/* Add Vendor Modal - Commented out */}
+      {/* <AddVendorModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
         onSuccess={(newVendor) => {
@@ -94,7 +96,7 @@ export default function VendorsPage() {
           }, ...prev])
           setIsAddModalOpen(false)
         }}
-      />
+      /> */}
 
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
@@ -103,6 +105,13 @@ export default function VendorsPage() {
           <p className="text-gray-600 mt-1">Manage your vendor relationships</p>
         </div>
         <div className="flex items-center space-x-3">
+          <Link
+            href="/vendors/upload"
+            className="px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center space-x-2"
+          >
+            <Upload size={16} />
+            <span>Upload Data</span>
+          </Link>
           <button
             onClick={fetchVendors}
             className="px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center space-x-2"
@@ -110,18 +119,19 @@ export default function VendorsPage() {
             <RefreshCw size={16} />
             <span>Refresh</span>
           </button>
-          <button
+          {/* Add Vendor button - Commented out */}
+          {/* <button
             onClick={() => setIsAddModalOpen(true)}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center space-x-2"
           >
             <Plus size={18} />
             <span>Add Vendor</span>
-          </button>
+          </button> */}
         </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+      {/* Stats Cards - Removed Total Spent card */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
           <div className="flex items-center justify-between">
             <div>
@@ -156,17 +166,6 @@ export default function VendorsPage() {
             </div>
             <div className="p-3 bg-yellow-100 rounded-lg">
               <Clock className="w-5 h-5 text-yellow-600" />
-            </div>
-          </div>
-        </div>
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-500">Total Spent</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">$0</p>
-            </div>
-            <div className="p-3 bg-purple-100 rounded-lg">
-              <DollarSign className="w-5 h-5 text-purple-600" />
             </div>
           </div>
         </div>
@@ -215,7 +214,7 @@ export default function VendorsPage() {
         </div>
       )}
 
-      {/* Vendors Table */}
+      {/* Vendors Table - Removed Category column */}
       {loading ? (
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
           <div className="animate-spin w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
@@ -225,14 +224,14 @@ export default function VendorsPage() {
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
           <Building2 className="w-16 h-16 text-gray-400 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-gray-900 mb-2">No vendors yet</h3>
-          <p className="text-gray-500 mb-6">Get started by adding your first vendor.</p>
-          <button
-            onClick={() => setIsAddModalOpen(true)}
+          <p className="text-gray-500 mb-6">Vendors will appear here once added or uploaded.</p>
+          <Link
+            href="/vendors/upload"
             className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 inline-flex items-center space-x-2"
           >
-            <Plus size={18} />
-            <span>Add Your First Vendor</span>
-          </button>
+            <Upload size={18} />
+            <span>Upload Vendor Data</span>
+          </Link>
         </div>
       ) : (
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -242,7 +241,6 @@ export default function VendorsPage() {
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Vendor</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Contact</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Created</th>
                   <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
@@ -262,11 +260,12 @@ export default function VendorsPage() {
                           {vendor.email}
                         </div>
                       )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="text-sm text-gray-900">
-                        {vendor.categoryName || '—'}
-                      </span>
+                      {vendor.phone && (
+                        <div className="text-xs text-gray-500 flex items-center mt-1">
+                          <Phone size={12} className="mr-1" />
+                          {vendor.phone}
+                        </div>
+                      )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`px-2 py-1 text-xs font-medium rounded-full ${
