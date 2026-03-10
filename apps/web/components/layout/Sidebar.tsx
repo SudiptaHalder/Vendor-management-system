@@ -114,33 +114,33 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsO
   }, [pathname])
 
   // Fetch real data - with error handling
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const approvalsResponse = await api.getApprovals()
-        if (approvalsResponse?.success) {
-          setPendingApprovals(approvalsResponse.data?.length || 0)
-        }
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const approvalsResponse = await api.getApprovals()
+  //       if (approvalsResponse?.success) {
+  //         setPendingApprovals(approvalsResponse.data?.length || 0)
+  //       }
 
-        // Try to fetch payments, but don't error if it fails
-        try {
-          const paymentsResponse = await api.getPayments({ status: 'pending' })
-          if (paymentsResponse?.success) {
-            setPendingPaymentsCount(paymentsResponse.data?.length || 0)
-          }
-        } catch (paymentErr) {
-          console.log('Payments endpoint not available yet')
-          setPendingPaymentsCount(0)
-        }
-      } catch (err) {
-        console.error('Error fetching sidebar data:', err)
-      }
-    }
+  //       // Try to fetch payments, but don't error if it fails
+  //       try {
+  //         const paymentsResponse = await api.getPayments({ status: 'pending' })
+  //         if (paymentsResponse?.success) {
+  //           setPendingPaymentsCount(paymentsResponse.data?.length || 0)
+  //         }
+  //       } catch (paymentErr) {
+  //         console.log('Payments endpoint not available yet')
+  //         setPendingPaymentsCount(0)
+  //       }
+  //     } catch (err) {
+  //       console.error('Error fetching sidebar data:', err)
+  //     }
+  //   }
     
-    fetchData()
-    const interval = setInterval(fetchData, 30000)
-    return () => clearInterval(interval)
-  }, [])
+  //   fetchData()
+  //   const interval = setInterval(fetchData, 30000)
+  //   return () => clearInterval(interval)
+  // }, [])
 
   const getCurrentSectionFromPath = (path: string): string | null => {
     if (path.startsWith('/vendors')) return 'Vendors'

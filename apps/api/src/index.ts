@@ -24,6 +24,9 @@ import bidRoutes from './routes/bid.routes'
 // Vendor Upload Routes
 import vendorUploadRoutes from './routes/vendor/upload.routes'
 
+// Vendor Auth Routes (for vendor portal) - IMPORTANT: These need to be public
+import vendorAuthRoutes from './routes/vendor/auth.routes'
+
 // Middleware
 import { errorHandler } from './middleware/error.middleware'
 import { authMiddleware } from './middleware/auth.middleware'
@@ -66,14 +69,19 @@ const limiter = rateLimit({
 })
 app.use('/api/', limiter)
 
-// Public routes
+// ============= PUBLIC ROUTES (NO AUTH REQUIRED) =============
 app.use('/api/auth', authRoutes)
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() })
 })
 
-// Protected routes
+// Vendor public routes - THESE MUST BE BEFORE AUTH MIDDLEWARE
+app.use('/api/vendor', vendorAuthRoutes)  // <-- MOVED HERE before auth middleware
+
+// ============= AUTH MIDDLEWARE - ALL ROUTES BELOW REQUIRE AUTH =============
 app.use('/api/*', authMiddleware)
+
+// ============= PROTECTED ROUTES (AUTH REQUIRED) =============
 app.use('/api/vendors', vendorRoutes)
 app.use('/api/categories', categoryRoutes)
 app.use('/api/approvals', approvalRoutes)
@@ -98,6 +106,7 @@ app.listen(PORT, () => {
   console.log(`🚀 API server running on port ${PORT}`)
   console.log(`📝 Health: http://localhost:${PORT}/api/health`)
   console.log(`🔐 Login: POST http://localhost:${PORT}/api/auth/login`)
+  console.log(`🔑 Vendor Auth: http://localhost:${PORT}/api/vendor/verify-invitation`)
   console.log(`👥 Vendors: http://localhost:${PORT}/api/vendors`)
   console.log(`📁 Categories: http://localhost:${PORT}/api/categories`)
   console.log(`✅ Approvals: http://localhost:${PORT}/api/approvals`)

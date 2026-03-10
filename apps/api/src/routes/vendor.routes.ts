@@ -1,146 +1,207 @@
 import { Router } from 'express'
 import { prisma } from '@vendor-management/database'
-import { z } from 'zod'
 
 const router = Router()
 
-const createVendorSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  email: z.string().email().optional().or(z.literal('')),
-  phone: z.string().optional(),
-  website: z.string().optional(),
-  categoryId: z.string().optional(),
-  paymentTerms: z.string().optional().default('net30'),
-  currency: z.string().optional().default('USD'),
-  contactPerson: z.string().optional(),
-  contactPersonRole: z.string().optional(),
-  address: z.string().optional(),
-  city: z.string().optional(),
-  state: z.string().optional(),
-  country: z.string().optional().default('USA'),
-  postalCode: z.string().optional(),
-  taxId: z.string().optional(),
-  registrationNumber: z.string().optional(),
-  notes: z.string().optional(),
-  tags: z.array(z.string()).optional().default([])
-})
-
-// Get all vendors
-router.get('/', async (req, res, next) => {
+// GET all vendors
+router.get('/', async (req, res) => {
   try {
     console.log('👥 Fetching all vendors')
-
+    
     const vendors = await prisma.vendors.findMany({
       where: {
-        deletedAt: null
-      },
-      include: {
-        category: true
+        // Remove deletedAt since it doesn't exist
       },
       orderBy: {
         createdAt: 'desc'
       }
     })
 
-    console.log(`Found ${vendors.length} vendors`)
     res.json({
       success: true,
       data: vendors
     })
   } catch (error) {
     console.error('Error fetching vendors:', error)
-    next(error)
+    res.status(500).json({ error: 'Failed to fetch vendors' })
   }
 })
 
-// Create vendor - Status is PENDING by default
-router.post('/', async (req, res, next) => {
+// GET vendor by ID
+router.get('/:id', async (req, res) => {
   try {
-    console.log('👥 Creating vendor:', req.body)
-
-    const validated = createVendorSchema.parse(req.body)
+    const { id } = req.params
     
-    const vendor = await prisma.vendors.create({
-      data: {
-        name: validated.name,
-        email: validated.email || null,
-        phone: validated.phone || null,
-        website: validated.website || null,
-        categoryId: validated.categoryId || null,
-        paymentTerms: validated.paymentTerms,
-        currency: validated.currency,
-        contactPerson: validated.contactPerson || null,
-        contactPersonRole: validated.contactPersonRole || null,
-        address: validated.address || null,
-        city: validated.city || null,
-        state: validated.state || null,
-        country: validated.country,
-        postalCode: validated.postalCode || null,
-        taxId: validated.taxId || null,
-        registrationNumber: validated.registrationNumber || null,
-        notes: validated.notes || null,
-        tags: validated.tags || [],
-        status: 'pending', // IMPORTANT: Set to pending, not active
-        companyId: null
+    const vendor = await prisma.vendors.findUnique({
+      where: { id },
+      include: {
+        credentials: true,
+        uploadRecords: {
+          orderBy: { createdAt: 'desc' },
+          take: 10
+        },
+        purchaseOrders: {
+          orderBy: { createdAt: 'desc' },
+          take: 10
+        },
+        invitations: {
+          orderBy: { createdAt: 'desc' },
+          take: 5
+        }
       }
     })
 
-    // Update category vendor count
-    if (validated.categoryId) {
-      await prisma.categories.update({
-        where: { id: validated.categoryId },
-        data: {
-          vendorCount: {
-            increment: 1
-          }
-        }
-      })
+    if (!vendor) {
+      return res.status(404).json({ error: 'Vendor not found' })
     }
 
-    console.log('✅ Vendor created with status: pending', vendor.id)
-    res.status(201).json({
+    res.json({
       success: true,
       data: vendor
     })
   } catch (error) {
-    console.error('Error creating vendor:', error)
-    next(error)
+    console.error('Error fetching vendor:', error)
+    res.status(500).json({ error: 'Failed to fetch vendor' })
   }
 })
 
-// Delete vendor
-router.delete('/:id', async (req, res, next) => {
+// POST create new vendor
+router.post('/', async (req, res) => {
   try {
-    const vendorId = req.params.id
-
-    const vendor = await prisma.vendors.findUnique({
-      where: { id: vendorId }
-    })
-
-    if (vendor?.categoryId) {
-      await prisma.categories.update({
-        where: { id: vendor.categoryId },
-        data: {
-          vendorCount: {
-            decrement: 1
-          }
-        }
-      })
+    const { supplierCode, supplierName, email, plantCode, status } = req.body
+    
+    if (!supplierCode || !supplierName) {
+      return res.status(400).json({ error: 'Supplier code and name are required' })
     }
 
-    await prisma.vendors.update({
-      where: { id: vendorId },
-      data: { deletedAt: new Date() }
+    // Check if vendor already exists
+    const existingVendor = await prisma.vendors.findUnique({
+      where: { supplierCode }
     })
 
-    console.log('✅ Vendor deleted:', vendorId)
+    if (existingVendor) {
+      return res.status(400).json({ error: 'Vendor with this supplier code already exists' })
+    }
+
+    const vendor = await prisma.vendors.create({
+      data: {
+        supplierCode,
+        supplierName,
+        email,
+        plantCode,
+        status: status || 'pending'
+      }
+    })
+
     res.json({
       success: true,
-      message: 'Vendor deleted successfully'
+      data: vendor,
+      message: 'Vendor created successfully'
     })
   } catch (error) {
-    console.error('Error deleting vendor:', error)
-    next(error)
+    console.error('Error creating vendor:', error)
+    res.status(500).json({ error: 'Failed to create vendor' })
+  }
+})
+
+// PUT update vendor
+router.put('/:id', async (req, res) => {
+  try {
+    const { id } = req.params
+    const { supplierName, email, plantCode, status } = req.body
+
+    const vendor = await prisma.vendors.update({
+      where: { id },
+      data: {
+        supplierName,
+        email,
+        plantCode,
+        status
+      }
+    })
+
+    res.json({
+      success: true,
+      data: vendor,
+      message: 'Vendor updated successfully'
+    })
+  } catch (error) {
+    console.error('Error updating vendor:', error)
+    res.status(500).json({ error: 'Failed to update vendor' })
+  }
+})
+
+// DELETE vendor (soft delete - just mark as inactive)
+router.delete('/:id', async (req, res) => {
+  try {
+    const { id } = req.params
+
+    // Instead of deleting, just mark as inactive
+    const vendor = await prisma.vendors.update({
+      where: { id },
+      data: {
+        status: 'inactive'
+      }
+    })
+
+    res.json({
+      success: true,
+      message: 'Vendor deactivated successfully'
+    })
+  } catch (error) {
+    console.error('Error deactivating vendor:', error)
+    res.status(500).json({ error: 'Failed to deactivate vendor' })
+  }
+})
+
+// GET vendor by supplier code
+router.get('/code/:supplierCode', async (req, res) => {
+  try {
+    const { supplierCode } = req.params
+    
+    const vendor = await prisma.vendors.findUnique({
+      where: { supplierCode },
+      include: {
+        credentials: true,
+        uploadRecords: true,
+        purchaseOrders: true,
+        invitations: true
+      }
+    })
+
+    if (!vendor) {
+      return res.status(404).json({ error: 'Vendor not found' })
+    }
+
+    res.json({
+      success: true,
+      data: vendor
+    })
+  } catch (error) {
+    console.error('Error fetching vendor by code:', error)
+    res.status(500).json({ error: 'Failed to fetch vendor' })
+  }
+})
+
+// GET vendors by status
+router.get('/status/:status', async (req, res) => {
+  try {
+    const { status } = req.params
+    
+    const vendors = await prisma.vendors.findMany({
+      where: { status },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    })
+
+    res.json({
+      success: true,
+      data: vendors
+    })
+  } catch (error) {
+    console.error('Error fetching vendors by status:', error)
+    res.status(500).json({ error: 'Failed to fetch vendors' })
   }
 })
 

@@ -4,18 +4,10 @@
 
 generator client {
   provider = "prisma-client-js"
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 // ========================================
 // CORE TENANT & AUTH
@@ -78,10 +70,6 @@ model companies {
 
   @@index([subdomain])
   @@map("companies")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 model users {
   id           String    @id @default(cuid())
@@ -178,14 +166,11 @@ model users {
   @@index([companyId])
   @@index([email])
   @@index([roleId])
-  @@map("users")
+    // Upload tracking
+    uploadedVendorData vendor_upload_data[]  @@map("users")
 
   // Uploaded Data Relation
   uploadedVendorData uploaded_vendor_data[]
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 // ========================================
 // TEAMS & ROLES
@@ -210,10 +195,6 @@ model teams {
   @@unique([companyId, name])
   @@index([companyId])
   @@map("teams")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 model team_members {
   id           String    @id @default(cuid())
@@ -229,10 +210,6 @@ model team_members {
   @@index([teamId])
   @@index([userId])
   @@map("team_members")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 model roles {
   id           String    @id @default(cuid())
@@ -253,10 +230,6 @@ model roles {
   @@unique([companyId, name])
   @@index([companyId])
   @@map("roles")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 model permissions {
   id           String    @id @default(cuid())
@@ -276,10 +249,6 @@ model permissions {
   @@index([companyId])
   @@index([module])
   @@map("permissions")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 model role_permissions {
   id           String    @id @default(cuid())
@@ -290,10 +259,6 @@ model role_permissions {
 
   @@unique([roleId, permissionId])
   @@map("role_permissions")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 model team_permissions {
   id           String    @id @default(cuid())
@@ -304,10 +269,6 @@ model team_permissions {
 
   @@unique([teamId, permissionId])
   @@map("team_permissions")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 model team_roles {
   id           String    @id @default(cuid())
@@ -318,10 +279,6 @@ model team_roles {
 
   @@unique([teamId, roleId])
   @@map("team_roles")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 // ========================================
 // VENDOR MANAGEMENT
@@ -348,10 +305,6 @@ model categories {
   @@index([companyId])
   @@index([companyId, name])
   @@map("categories")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 model vendors {
   id           String    @id @default(cuid())
@@ -431,15 +384,10 @@ model vendors {
   @@index([companyId, categoryId])
   @@index([companyId, name])
   @@index([email])
-  @@map("vendors")
 
   // Uploaded Data Relations
   uploadedData      uploaded_vendor_data[]
   invitations       vendor_invitations[]
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 model vendor_ratings {
   id           String    @id @default(cuid())
@@ -456,10 +404,6 @@ model vendor_ratings {
   @@index([vendorId])
   @@index([userId])
   @@map("vendor_ratings")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 model vendor_portal_access {
   id           String    @id @default(cuid())
@@ -486,10 +430,6 @@ model vendor_portal_access {
   @@index([vendorId])
   @@index([email])
   @@map("vendor_portal_access")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 // ========================================
 // VENDOR COMMUNICATIONS & NOTIFICATIONS
@@ -514,10 +454,6 @@ model vendor_notifications {
   @@index([vendorId, isRead])
   @@index([createdAt])
   @@map("vendor_notifications")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 model vendor_messages {
   id              String    @id @default(cuid())
@@ -540,10 +476,6 @@ model vendor_messages {
   @@index([vendorId, isRead])
   @@index([createdAt])
   @@map("vendor_messages")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 model vendor_activity_logs {
   id              String    @id @default(cuid())
@@ -562,10 +494,6 @@ model vendor_activity_logs {
   @@index([vendorId])
   @@index([vendorId, createdAt])
   @@map("vendor_activity_logs")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 model uploaded_vendor_data {
   id              String    @id @default(cuid())
   supplierCode    String    // Unique code for vendor
@@ -599,10 +527,6 @@ model uploaded_vendor_data {
   @@index([poNumber])
   @@index([vendorId])
   @@map("uploaded_vendor_data")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 // Add email tracking for vendor invitations
 model vendor_invitations {
   id              String    @id @default(cuid())
@@ -622,10 +546,6 @@ model vendor_invitations {
   @@index([vendorId])
   @@index([invitationToken])
   @@map("vendor_invitations")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 // ========================================
 // PROCUREMENT - PURCHASE ORDERS
 // ========================================
@@ -693,14 +613,11 @@ model purchase_orders {
   @@index([status])
   @@index([companyId])
   @@index([orderDate])
-  @@map("purchase_orders")
+    // Upload tracking
+    uploadRecords    vendor_upload_data[]  @@map("purchase_orders")
 
   // Uploaded Data Relation
   uploadedData      uploaded_vendor_data[]
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 model purchase_order_line_items {
   id              String    @id @default(cuid())
@@ -735,11 +652,8 @@ model purchase_order_line_items {
   invoiceLines    invoice_line_items[]
 
   @@index([purchaseOrderId])
-  @@map("purchase_order_line_items")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
+    // Upload tracking
+    uploadRecords    vendor_upload_data[]  @@map("purchase_order_line_items")
 
 // ========================================
 // PROCUREMENT - RFQs & QUOTES
@@ -788,10 +702,6 @@ model rfqs {
   @@index([companyId])
   @@index([deadline])
   @@map("rfqs")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 model rfq_line_items {
   id              String    @id @default(cuid())
@@ -810,10 +720,6 @@ model rfq_line_items {
 
   @@index([rfqId])
   @@map("rfq_line_items")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 model rfq_recipients {
   id              String    @id @default(cuid())
@@ -835,10 +741,6 @@ model rfq_recipients {
   @@index([rfqId])
   @@index([vendorId])
   @@map("rfq_recipients")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 model quotes {
   id              String    @id @default(cuid())
@@ -887,10 +789,6 @@ model quotes {
   @@index([status])
   @@index([companyId])
   @@map("quotes")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 model quote_line_items {
   id              String    @id @default(cuid())
@@ -910,10 +808,6 @@ model quote_line_items {
 
   @@index([quoteId])
   @@map("quote_line_items")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 // ========================================
 // PROCUREMENT - BIDS
@@ -957,10 +851,6 @@ model bids {
   @@index([closeDate])
   @@index([companyId])
   @@map("bids")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 model bid_submissions {
   id              String    @id @default(cuid())
@@ -994,10 +884,6 @@ model bid_submissions {
   @@index([vendorId])
   @@index([status])
   @@map("bid_submissions")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 // ========================================
 // GOODS RECEIPTS
@@ -1034,10 +920,6 @@ model goods_receipts {
   @@index([purchaseOrderId])
   @@index([status])
   @@map("goods_receipts")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 model goods_receipt_line_items {
   id              String    @id @default(cuid())
@@ -1057,10 +939,6 @@ model goods_receipt_line_items {
   @@index([goodsReceiptId])
   @@index([poLineItemId])
   @@map("goods_receipt_line_items")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 // ========================================
 // CONTRACTS
@@ -1134,10 +1012,6 @@ model contracts {
   @@index([contractNumber])
   @@index([startDate, endDate])
   @@map("contracts")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 model contract_amendments {
   id              String    @id @default(cuid())
@@ -1168,10 +1042,6 @@ model contract_amendments {
   @@index([contractId])
   @@index([amendmentNumber])
   @@map("contract_amendments")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 // ========================================
 // PROJECTS
@@ -1230,10 +1100,6 @@ model projects {
   @@index([status])
   @@index([managerId])
   @@map("projects")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 model project_vendors {
   id              String    @id @default(cuid())
@@ -1252,10 +1118,6 @@ model project_vendors {
   @@index([projectId])
   @@index([vendorId])
   @@map("project_vendors")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 // ========================================
 // WORK ORDERS
@@ -1327,10 +1189,6 @@ model work_orders {
   @@index([assignedToId])
   @@index([dueDate])
   @@map("work_orders")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 // ========================================
 // SCHEDULES
@@ -1359,10 +1217,6 @@ model schedules {
   @@index([companyId])
   @@index([projectId])
   @@map("schedules")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 model schedule_items {
   id              String    @id @default(cuid())
@@ -1392,10 +1246,6 @@ model schedule_items {
   @@index([assignedToId])
   @@index([startTime, endTime])
   @@map("schedule_items")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 // ========================================
 // RESOURCES
@@ -1438,10 +1288,6 @@ model resources {
   @@index([type])
   @@index([status])
   @@map("resources")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 model resource_assignments {
   id              String    @id @default(cuid())
@@ -1471,10 +1317,6 @@ model resource_assignments {
   @@index([projectId])
   @@index([workOrderId])
   @@map("resource_assignments")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 // ========================================
 // FINANCE - INVOICES, PAYMENTS, EXPENSES, BUDGET
@@ -1541,10 +1383,6 @@ model invoices {
   @@index([status])
   @@index([dueDate])
   @@map("invoices")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 model invoice_line_items {
   id              String    @id @default(cuid())
@@ -1571,10 +1409,6 @@ model invoice_line_items {
   @@index([invoiceId])
   @@index([poLineItemId])
   @@map("invoice_line_items")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 model payments {
   id              String    @id @default(cuid())
@@ -1617,10 +1451,6 @@ model payments {
   @@index([status])
   @@index([paymentDate])
   @@map("payments")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 model expenses {
   id              String    @id @default(cuid())
@@ -1668,10 +1498,6 @@ model expenses {
   @@index([status])
   @@index([expenseDate])
   @@map("expenses")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 model budget_items {
   id              String    @id @default(cuid())
@@ -1712,10 +1538,6 @@ model budget_items {
   @@index([fiscalYear])
   @@index([category])
   @@map("budget_items")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 // ========================================
 // DOCUMENTS
@@ -1759,10 +1581,6 @@ model documents {
   @@index([companyId, vendorId])
   @@index([companyId, category])
   @@map("documents")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 // ========================================
 // REPORTS
@@ -1802,10 +1620,6 @@ model reports {
   @@index([type])
   @@index([createdById])
   @@map("reports")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 // ========================================
 // INTEGRATIONS
@@ -1841,10 +1655,6 @@ model integrations {
   @@index([companyId])
   @@index([provider])
   @@map("integrations")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 // ========================================
 // ACTIVITY & NOTIFICATIONS
@@ -1880,10 +1690,6 @@ model activity_logs {
   @@index([companyId, userId])
   @@index([companyId, createdAt])
   @@map("activity_logs")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 model notifications {
   id              String    @id @default(cuid())
@@ -1916,10 +1722,6 @@ model notifications {
   @@index([companyId, createdAt])
   @@index([companyId, scheduledFor])
   @@map("notifications")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 model demo_requests {
   id            String    @id @default(cuid())
@@ -1949,10 +1751,6 @@ model demo_requests {
   @@index([status])
   @@index([createdAt])
   @@map("demo_requests")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 
 // ========================================
@@ -2010,10 +1808,6 @@ model vendor_upload_data {
   @@index([vendorId])
   @@index([status])
   @@map("vendor_upload_data")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 // Vendor credentials for login (supplier code as username)
 model vendor_credentials {
@@ -2044,10 +1838,6 @@ model vendor_credentials {
   @@index([username])
   @@index([vendorId])
   @@map("vendor_credentials")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}
 
 // Vendor invitations (for email sending)
 model vendor_invitations {
@@ -2071,7 +1861,3 @@ model vendor_invitations {
   @@index([invitationToken])
   @@index([status])
   @@map("vendor_invitations")
-    // Upload and auth relations
-    uploadRecords    vendor_upload_data[]
-    credentials      vendor_credentials?
-    invitations      vendor_invitations[]}

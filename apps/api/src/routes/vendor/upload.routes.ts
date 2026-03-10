@@ -9,18 +9,23 @@ import XLSX from 'xlsx'
 
 const router = Router()
 
+// Ensure upload directory exists
+const uploadDir = path.join(__dirname, '../../uploads')
+console.log('📁 Upload directory:', uploadDir)
+
+if (!fs.existsSync(uploadDir)) {
+  console.log('📁 Creating upload directory...')
+  fs.mkdirSync(uploadDir, { recursive: true })
+}
+
 // Configure multer for file upload
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const uploadDir = path.join(__dirname, '../../../uploads')
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true })
-    }
     cb(null, uploadDir)
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname))
+    cb(null, 'file-' + uniqueSuffix + path.extname(file.originalname))
   }
 })
 
@@ -34,65 +39,109 @@ const generateTempPassword = () => {
   return crypto.randomBytes(4).toString('hex') // 8 character password
 }
 
+// Safe date parser for mm/dd/yyyy format
+const parseMMDDYYYY = (dateStr: any): Date | null => {
+  if (!dateStr) return null;
+  
+  try {
+    // Handle Excel serial numbers
+    if (typeof dateStr === 'number') {
+      const date = new Date((dateStr - 25569) * 86400 * 1000);
+      if (!isNaN(date.getTime())) {
+        const year = date.getFullYear();
+        if (year >= 2000 && year <= 2100) {
+          return date;
+        }
+      }
+      return null;
+    }
+    
+    // Convert to string and clean
+    const cleanStr = dateStr.toString().trim();
+    
+    // Try mm/dd/yyyy format
+    const parts = cleanStr.split('/');
+    if (parts.length === 3) {
+      const month = parseInt(parts[0]);
+      const day = parseInt(parts[1]);
+      let year = parseInt(parts[2]);
+      
+      // Handle 2-digit years (24 -> 2024)
+      if (year < 100) {
+        year = 2000 + year;
+      }
+      
+      // Validate ranges
+      if (month >= 1 && month <= 12 && 
+          day >= 1 && day <= 31 && 
+          year >= 2000 && year <= 2100) {
+        return new Date(year, month - 1, day);
+      }
+    }
+    
+    return null;
+    
+  } catch (e) {
+    return null;
+  }
+}
+
 // Parse Excel file
 const parseExcel = (filePath: string) => {
   try {
     const workbook = XLSX.readFile(filePath)
     const sheetName = workbook.SheetNames[0]
     const worksheet = workbook.Sheets[sheetName]
-    const data = XLSX.utils.sheet_to_json(worksheet, { header: 1 })
+    
+    // Get data as array of arrays
+    const data = XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as any[][]
     
     if (data.length < 2) {
       throw new Error('File has no data rows')
     }
     
-    // Get headers from first row
+    // First row contains headers
     const headers = data[0] as string[]
+    console.log('📋 Found headers:', headers.filter(h => h).map(h => `"${h}"`))
+    
+    // Data starts from row 2
     const rows = data.slice(1) as any[][]
     
     // Convert to array of objects
-    const records = rows.map(row => {
+    const records = []
+    for (const row of rows) {
+      // Skip empty rows
+      if (!row.some(cell => cell !== null && cell !== undefined && cell !== '')) {
+        continue
+      }
+      
       const record: any = {}
       headers.forEach((header, index) => {
-        record[header] = row[index]?.toString() || ''
+        if (header && header.toString().trim()) {
+          const cleanHeader = header.toString().trim()
+          let value = row[index]
+          
+          if (value === null || value === undefined) {
+            value = ''
+          } else if (typeof value === 'object') {
+            value = value.toString()
+          } else {
+            value = value.toString().trim()
+          }
+          
+          record[cleanHeader] = value
+        }
       })
-      return record
-    }).filter(record => Object.values(record).some(val => val !== ''))
+      
+      if (Object.values(record).some(val => val !== '')) {
+        records.push(record)
+      }
+    }
     
+    console.log(`📊 Parsed ${records.length} records`)
     return records
   } catch (error) {
     console.error('Excel parsing error:', error)
-    throw error
-  }
-}
-
-// Parse TSV/CSV file
-const parseTSV = (filePath: string) => {
-  try {
-    const content = fs.readFileSync(filePath, 'utf-8')
-    const lines = content.split('\n').filter(line => line.trim())
-    
-    if (lines.length < 2) {
-      throw new Error('File has no data rows')
-    }
-    
-    const headers = lines[0].split('\t').map(h => h.trim())
-    
-    const records = []
-    for (let i = 1; i < lines.length; i++) {
-      if (!lines[i].trim()) continue
-      
-      const values = lines[i].split('\t').map(v => v.trim())
-      const record: any = {}
-      headers.forEach((header, index) => {
-        record[header] = values[index] || ''
-      })
-      records.push(record)
-    }
-    
-    return records
-  } catch (error) {
-    console.error('TSV parsing error:', error)
     throw error
   }
 }
@@ -106,9 +155,9 @@ router.post('/', upload.single('file'), async (req, res) => {
       return res.status(400).json({ error: 'No file uploaded' })
     }
 
-    console.log('File uploaded:', req.file.originalname)
+    console.log('✅ File uploaded successfully:', req.file.originalname)
     
-    const fileId = path.basename(req.file.path)
+    const fileId = req.file.filename
     res.json({ 
       success: true, 
       fileId,
@@ -117,7 +166,7 @@ router.post('/', upload.single('file'), async (req, res) => {
       fileSize: req.file.size
     })
   } catch (error) {
-    console.error('Upload error:', error)
+    console.error('❌ Upload error:', error)
     res.status(500).json({ error: 'Upload failed: ' + (error as Error).message })
   }
 })
@@ -126,28 +175,18 @@ router.post('/', upload.single('file'), async (req, res) => {
 router.post('/process/:fileId', async (req, res) => {
   const { fileId } = req.params
   const { fileName } = req.body
-  const filePath = path.join(__dirname, '../../../uploads', fileId)
+  const filePath = path.join(__dirname, '../../uploads', fileId)
+
+  console.log('⚙️ Processing file:', fileName)
 
   try {
-    console.log('⚙️ Processing file:', fileName)
-    
     if (!fs.existsSync(filePath)) {
       return res.status(404).json({ error: 'File not found' })
     }
 
-    // Parse based on file extension
-    let records = []
-    const ext = path.extname(fileName).toLowerCase()
-    
-    console.log('File extension:', ext)
-    
-    if (ext === '.xlsx' || ext === '.xls') {
-      records = parseExcel(filePath)
-    } else {
-      records = parseTSV(filePath)
-    }
-    
-    console.log(`Parsed ${records.length} records`)
+    // Parse Excel file
+    const records = parseExcel(filePath)
+    console.log(`✅ Parsed ${records.length} records`)
 
     const summary = {
       totalRows: records.length,
@@ -159,167 +198,179 @@ router.post('/process/:fileId', async (req, res) => {
       errors: [] as string[]
     }
 
-    const vendorMap = new Map() // supplierCode -> vendorId
-    const poMap = new Map() // poNumber -> poId
-
     // Get current user ID from request
-    const userId = (req as any).user?.id
+    const userId = (req as any).user?.id || (req as any).user?.userId
     if (!userId) {
       return res.status(401).json({ error: 'User not authenticated' })
     }
 
+    console.log(`📝 Processing ${records.length} records...`)
+
     // Process each record
     for (const [index, record] of records.entries()) {
       try {
-        const supplierCode = record['Supplier Code']?.trim()
+        // Extract data matching your EXACT Excel headers
+        const email = record['Email']?.trim()
+        const supplierCode = record['Supplier Code']?.toString().trim()
         const supplierName = record['Supplier Name']?.trim()
-        const poNumber = record['PO Nor']?.trim()
+        const plantCode = record['Plant code']?.toString().trim()
+        const poNumber = record['PO No.']?.toString().trim()
+        
+        // Parse dates using mm/dd/yyyy format
+        const poCreateDate = parseMMDDYYYY(record['PO Creat. Date'])
+        const poAmendDate = parseMMDDYYYY(record['PO Amendt. Date'])
+        
+        const materialCode = record['Material Code']?.toString().trim()
+        const materialDesc = record['Material Description']?.trim()
+        const lineItem = record['Line Item'] ? parseInt(record['Line Item']) : null
+        const orderUnit = record['Order Unit']?.trim()
+        
+        // Handle Rate (remove commas and convert to number)
+        const rateStr = record['Rate']?.toString().replace(/,/g, '') || '0'
+        const rate = parseFloat(rateStr) || 0
+        
+        // Handle Invoice Quantity
+        const quantityStr = record['Invoice Quantity']?.toString().replace(/,/g, '') || '0'
+        const quantity = parseFloat(quantityStr) || 0
         
         if (!supplierCode || !supplierName) {
           summary.errors.push(`Row ${index + 2}: Missing supplier code or name`)
           continue
         }
 
-        // Check if vendor exists
-        let vendorId = vendorMap.get(supplierCode)
-        
-        if (!vendorId) {
-          const existingVendor = await prisma.vendors.findFirst({
-            where: {
-              OR: [
-                { registrationNumber: supplierCode },
-                { name: { contains: supplierName, mode: 'insensitive' } }
-              ]
+        // ========== VENDOR: Create or Update ==========
+        let vendor = await prisma.vendors.findUnique({
+          where: { supplierCode }
+        })
+
+        if (!vendor) {
+          // Create new vendor
+          vendor = await prisma.vendors.create({
+            data: {
+              supplierCode,
+              supplierName,
+              email: email || `${supplierCode.toLowerCase()}@vendorflow.com`,
+              plantCode,
+              status: 'active'
             }
           })
+          summary.vendorsCreated++
 
-          if (existingVendor) {
-            vendorId = existingVendor.id
-            summary.vendorsUpdated++
-          } else {
-            // Create new vendor
-            const newVendor = await prisma.vendors.create({
-              data: {
-                name: supplierName,
-                registrationNumber: supplierCode,
-                status: 'pending',
-                tags: ['imported']
-              }
-            })
-            vendorId = newVendor.id
-            summary.vendorsCreated++
-
-            // Generate temp password and create invitation
-            const tempPassword = generateTempPassword()
-            const hashedPassword = await bcrypt.hash(tempPassword, 10)
-            const invitationToken = crypto.randomBytes(32).toString('hex')
-            
-            // Create vendor email
-            const vendorEmail = `${supplierCode.toLowerCase()}@vendorflow.com`
-            
-            console.log(`Vendor ${supplierName} created with temp password: ${tempPassword}`)
-            
-            await prisma.vendor_invitations.create({
-              data: {
-                vendorId: newVendor.id,
-                email: vendorEmail,
-                tempPassword: hashedPassword,
-                invitationToken,
-                expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
-              }
-            })
-            summary.invitationsSent++
-          }
-          vendorMap.set(supplierCode, vendorId)
+          // Generate temp password and invitation for new vendor
+          const tempPassword = generateTempPassword()
+          const hashedPassword = await bcrypt.hash(tempPassword, 10)
+          const invitationToken = crypto.randomBytes(32).toString('hex')
+          
+          await prisma.vendor_invitations.create({
+            data: {
+              vendorId: vendor.id,
+              email: email || `${supplierCode.toLowerCase()}@vendorflow.com`,
+              username: supplierCode,
+              tempPassword: hashedPassword,
+              invitationToken,
+              expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+            }
+          })
+          summary.invitationsSent++
+          console.log(`✅ New vendor created: ${supplierName}`)
+        } else {
+          summary.vendorsUpdated++
         }
 
-        // Handle Purchase Order
+        // ========== PURCHASE ORDER: Create if doesn't exist ==========
         if (poNumber) {
-          let poId = poMap.get(poNumber)
-          
-          if (!poId) {
-            // Check if PO exists
-            const existingPO = await prisma.purchase_orders.findUnique({
-              where: { poNumber }
+          let purchaseOrder = await prisma.purchase_orders.findUnique({
+            where: { poNumber }
+          })
+
+          if (!purchaseOrder) {
+            // Create PO without title field (matches your schema)
+            purchaseOrder = await prisma.purchase_orders.create({
+              data: {
+                poNumber,
+                vendorId: vendor.id,
+                poCreateDate: poCreateDate,
+                poAmendDate: poAmendDate,
+                status: 'draft',
+                createdAt: new Date(),
+                updatedAt: new Date()
+              }
+            })
+            summary.purchaseOrders++
+            console.log(`✅ New PO created: ${poNumber}`)
+          }
+
+          // ========== LINE ITEM: Create if doesn't exist ==========
+          if (materialCode && quantity > 0) {
+            // Check if line item already exists
+            const existingItem = await prisma.purchase_order_line_items.findFirst({
+              where: {
+                purchaseOrderId: purchaseOrder.id,
+                sku: materialCode,
+                lineNumber: lineItem || 1
+              }
             })
 
-            if (existingPO) {
-              poId = existingPO.id
-            } else {
-              // Parse dates
-              let poCreateDate = null
-              let poAmendDate = null
-              
-              if (record['PO Creat. Date']) {
-                poCreateDate = new Date(record['PO Creat. Date'])
-              }
-              if (record['PO Amendt. Date']) {
-                poAmendDate = new Date(record['PO Amendt. Date'])
-              }
-
-              // Create new PO
-              const newPO = await prisma.purchase_orders.create({
+            if (!existingItem) {
+              await prisma.purchase_order_line_items.create({
                 data: {
-                  poNumber,
-                  vendorId,
-                  title: `Purchase Order ${poNumber}`,
-                  orderDate: poCreateDate || new Date(),
-                  expectedDate: poAmendDate,
-                  status: 'draft',
-                  createdById: userId
+                  purchaseOrderId: purchaseOrder.id,
+                  lineNumber: lineItem || 1,
+                  description: materialDesc || '',
+                  sku: materialCode,
+                  quantity: quantity,
+                  unit: orderUnit || 'EA',
+                  unitPrice: rate,
+                  total: rate * quantity
                 }
               })
-              poId = newPO.id
-              summary.purchaseOrders++
+              summary.lineItems++
             }
-            poMap.set(poNumber, poId)
-          }
-
-          // Create line item if material exists
-          if (record['Material Code']) {
-            const rate1 = parseFloat(record['Rate 1']) || 0
-            const quantity = parseFloat(record['Invoice Quantity']) || 0
-            
-            await prisma.purchase_order_line_items.create({
-              data: {
-                purchaseOrderId: poId,
-                lineNumber: parseInt(record['Line Item']) || 1,
-                description: record['Material Description'] || '',
-                sku: record['Material Code'],
-                quantity: quantity,
-                unit: record['Order Unit'] || 'EA',
-                unitPrice: rate1,
-                total: rate1 * quantity
-              }
-            })
-            summary.lineItems++
           }
         }
 
-        // Store raw data
-        await prisma.uploaded_vendor_data.create({
-          data: {
+        // ========== RAW DATA: Store for audit ==========
+        // Check if this exact row already exists
+        const existingUpload = await prisma.vendor_upload_data.findFirst({
+          where: {
             supplierCode,
-            supplierName,
-            plantCode: record['Plant code'],
             poNumber,
-            poCreateDate: record['PO Creat. Date'] ? new Date(record['PO Creat. Date']) : null,
-            poAmendDate: record['PO Amendt. Date'] ? new Date(record['PO Amendt. Date']) : null,
-            materialCode: record['Material Code'],
-            materialDesc: record['Material Description'],
-            lineItem: parseInt(record['Line Item']) || null,
-            orderUnit: record['Order Unit'],
-            rate1: parseFloat(record['Rate 1']) || null,
-            rate2: parseFloat(record['Rate 2']) || null,
-            invoiceQuantity: parseFloat(record['Invoice Quantity']) || null,
-            vendorId,
-            uploadedById: userId,
-            fileName: fileName,
-            rowNumber: index + 2
+            materialCode,
+            lineItem: lineItem || null
           }
         })
 
+        if (!existingUpload) {
+          await prisma.vendor_upload_data.create({
+            data: {
+              email,
+              supplierCode,
+              supplierName,
+              plantCode,
+              poNumber,
+              poCreateDate,
+              poAmendDate,
+              materialCode,
+              materialDesc,
+              lineItem,
+              orderUnit,
+              rate,
+              invoiceQuantity: quantity,
+              vendorId: vendor.id,
+              uploadedById: userId,
+              fileName: fileName,
+              rowNumber: index + 2,
+              status: 'processed'
+            }
+          })
+        }
+
+        if ((index + 1) % 10 === 0) {
+          console.log(`✅ Processed ${index + 1}/${records.length} records`)
+        }
+
       } catch (err: any) {
+        console.error(`Error processing row ${index + 2}:`, err)
         summary.errors.push(`Row ${index + 2}: ${err.message}`)
       }
     }
@@ -327,10 +378,12 @@ router.post('/process/:fileId', async (req, res) => {
     // Clean up uploaded file
     try {
       fs.unlinkSync(filePath)
+      console.log('✅ Cleaned up file:', filePath)
     } catch (err) {
       console.log('Could not delete temp file:', err)
     }
 
+    console.log('📊 Upload Summary:', summary)
     res.json({
       success: true,
       data: summary
@@ -347,7 +400,7 @@ router.get('/vendor/:supplierCode', async (req, res) => {
   try {
     const { supplierCode } = req.params
     
-    const vendorData = await prisma.uploaded_vendor_data.findMany({
+    const vendorData = await prisma.vendor_upload_data.findMany({
       where: { supplierCode },
       include: {
         vendor: true,
@@ -372,7 +425,7 @@ router.get('/vendor/:supplierCode', async (req, res) => {
   }
 })
 
-// Get purchase order details
+// Get purchase order details by PO number
 router.get('/po/:poNumber', async (req, res) => {
   try {
     const { poNumber } = req.params
@@ -381,11 +434,7 @@ router.get('/po/:poNumber', async (req, res) => {
       where: { poNumber },
       include: {
         vendor: true,
-        lineItems: {
-          orderBy: {
-            lineNumber: 'asc'
-          }
-        }
+        lineItems: true
       }
     })
 

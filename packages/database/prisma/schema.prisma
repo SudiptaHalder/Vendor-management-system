@@ -1,5 +1,5 @@
 // ========================================
-// VENDORFLOW - COMPLETE PRODUCTION SCHEMA - FIXED
+// VENDORFLOW - MINIMAL SCHEMA (FIXED)
 // ========================================
 
 generator client {
@@ -12,1791 +12,213 @@ datasource db {
 }
 
 // ========================================
-// CORE TENANT & AUTH
+// ADMIN USERS (for uploading)
 // ========================================
-
-model companies {
-  id           String    @id @default(cuid())
-  name         String
-  subdomain    String?   @unique
-  logo        String?
-  website     String?
-  phone       String?
-  email       String?
-  address     String?
-  city        String?
-  state       String?
-  country     String?
-  postalCode  String?
-  taxId       String?
-  registrationNumber String?
-  
-  plan         String    @default("free")
-  planStatus   String    @default("active")
-  trialEndsAt  DateTime?
-  subscriptionId String?
-  
-  settings     Json?
-  features     Json?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  deletedAt    DateTime?
-
-  // Relations
-  users           users[]
-  teams           teams[]
-  roles           roles[]
-  permissions     permissions[]
-  vendors         vendors[]
-  categories      categories[]
-  contracts       contracts[]
-  workOrders      work_orders[]
-  invoices        invoices[]
-  payments        payments[]
-  expenses        expenses[]
-  budgetItems     budget_items[]
-  documents       documents[]
-  activityLogs    activity_logs[]
-  notifications   notifications[]
-  purchaseOrders  purchase_orders[]
-  rfqs            rfqs[]
-  quotes          quotes[]
-  bids            bids[]
-  bidSubmissions  bid_submissions[]
-  goodsReceipts   goods_receipts[]
-  projects        projects[]
-  schedules       schedules[]
-  resources       resources[]
-  reports         reports[]
-  integrations    integrations[]
-
-  @@index([subdomain])
-  @@map("companies")
-}
 
 model users {
   id           String    @id @default(cuid())
   email        String    @unique
   password     String?
   name         String?
-  firstName    String?
-  lastName     String?
-  avatarUrl    String?
-  phone        String?
-  title        String?
-  department   String?
-  
-  role         String    @default("member")
+  role         String    @default("admin")
   isActive     Boolean   @default(true)
-  emailVerified DateTime?
-  twoFactorEnabled Boolean @default(false)
-  twoFactorSecret String?
-  
-  preferences  Json?
-  notificationSettings Json?
-  
-  lastLoginAt  DateTime?
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
-  deletedAt    DateTime?
 
-  companyId    String?
-  company      companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
-  roleId       String?
-  userRole     roles?    @relation(fields: [roleId], references: [id], onDelete: SetNull)
-  teams        team_members[]
-  
-  // Created/Assigned Relations
-  createdWorkOrders     work_orders[] @relation("WorkOrderCreatedBy")
-  assignedWorkOrders    work_orders[] @relation("WorkOrderAssignedTo")
-  createdInvoices       invoices[] @relation("InvoiceCreatedBy")
-  approvedInvoices      invoices[] @relation("InvoiceApprovedBy")
-  createdExpenses       expenses[] @relation("ExpenseCreatedBy")
-  approvedExpenses      expenses[] @relation("ExpenseApprovedBy")
-  createdPayments       payments[] @relation("PaymentCreatedBy")
-  uploadedDocuments     documents[]
-  activityLogs          activity_logs[]
-  notifications         notifications[]
-  
-  // Procurement Relations
-  createdPurchaseOrders purchase_orders[] @relation("PurchaseOrderCreatedBy")
-  approvedPurchaseOrders purchase_orders[] @relation("PurchaseOrderApprovedBy")
-  createdRFQs           rfqs[]
-  createdQuotes         quotes[] @relation("QuoteCreatedBy")
-  createdBids           bids[]
-  awardedBids           bid_submissions[] @relation("BidAwardedBy")
-  
-  // Contract Relations
-  createdContracts      contracts[] @relation("ContractCreatedBy")
-  approvedContracts     contracts[] @relation("ContractApprovedBy")
-  signedContracts       contracts[] @relation("ContractSignedBy")
-  createdAmendments     contract_amendments[] @relation("AmendmentCreatedBy")
-  approvedAmendments    contract_amendments[] @relation("AmendmentApprovedBy")
-  
-  // Project Relations
-  createdProjects       projects[] @relation("ProjectCreatedBy")
-  assignedProjects      projects[] @relation("ProjectAssignedTo")
-  createdSchedules      schedules[] @relation("ScheduleCreatedBy")
-  assignedScheduleItems schedule_items[] @relation("ScheduleItemAssignedTo")
-  createdResources      resources[] @relation("ResourceCreatedBy")
-  assignedResources     resource_assignments[] @relation("ResourceAssignedTo")
-  
-  // Budget Relations
-  createdBudgetItems    budget_items[] @relation("BudgetItemCreatedBy")
-  approvedBudgetItems   budget_items[] @relation("BudgetItemApprovedBy")
-  
-  // Report Relations
-  createdReports        reports[] @relation("ReportCreatedBy")
-  
-  // Team Relations
-  createdTeams          teams[] @relation("TeamCreatedBy")
-  
-  // Vendor Relations
-  givenRatings          vendor_ratings[] @relation("VendorRatingGivenBy")
-  
-  // Goods Receipt Relations
-  inspectedReceipts     goods_receipts[] @relation("GoodsReceiptInspectedBy")
-  receivedReceipts      goods_receipts[] @relation("GoodsReceiptReceivedBy")
-  
-  // Work Order Relations
-    // Demo Requests
-    assignedDemoRequests demo_requests[] @relation("DemoRequestAssignedTo")
-  approvedWorkOrders    work_orders[] @relation("WorkOrderApprovedBy")
-  
-  // Vendor Messages - Admin can send/receive messages
-  vendorMessages        vendor_messages[] @relation("AdminMessages")
+  // Relations
+  uploadedFiles vendor_upload_data[]
 
-  @@index([companyId])
   @@index([email])
-  @@index([roleId])
   @@map("users")
-
-  // Uploaded Data Relation
-  uploadedVendorData uploaded_vendor_data[]
 }
 
 // ========================================
-// TEAMS & ROLES
+// VENDORS (created from uploads)
 // ========================================
-
-model teams {
-  id           String    @id @default(cuid())
-  companyId    String
-  company      companies @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  name         String
-  description  String?
-  createdById  String
-  createdBy    users     @relation("TeamCreatedBy", fields: [createdById], references: [id])
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  deletedAt    DateTime?
-
-  members      team_members[]
-  permissions  team_permissions[]
-  roles        team_roles[]
-
-  @@unique([companyId, name])
-  @@index([companyId])
-  @@map("teams")
-}
-
-model team_members {
-  id           String    @id @default(cuid())
-  teamId       String
-  team         teams     @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  userId       String
-  user         users     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  roleId       String?
-  role         roles?    @relation(fields: [roleId], references: [id], onDelete: SetNull)
-  joinedAt     DateTime  @default(now())
-
-  @@unique([teamId, userId])
-  @@index([teamId])
-  @@index([userId])
-  @@map("team_members")
-}
-
-model roles {
-  id           String    @id @default(cuid())
-  companyId    String
-  company      companies @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  name         String
-  description  String?
-  isSystem     Boolean   @default(false)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  deletedAt    DateTime?
-
-  users        users[]
-  teamMembers  team_members[]
-  teams        team_roles[]
-  permissions  role_permissions[]
-
-  @@unique([companyId, name])
-  @@index([companyId])
-  @@map("roles")
-}
-
-model permissions {
-  id           String    @id @default(cuid())
-  companyId    String
-  company      companies @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  name         String
-  module       String
-  action       String
-  description  String?
-  isSystem     Boolean   @default(false)
-  createdAt    DateTime  @default(now())
-
-  roles        role_permissions[]
-  teams        team_permissions[]
-
-  @@unique([companyId, name])
-  @@index([companyId])
-  @@index([module])
-  @@map("permissions")
-}
-
-model role_permissions {
-  id           String    @id @default(cuid())
-  roleId       String
-  role         roles     @relation(fields: [roleId], references: [id], onDelete: Cascade)
-  permissionId String
-  permission   permissions @relation(fields: [permissionId], references: [id], onDelete: Cascade)
-
-  @@unique([roleId, permissionId])
-  @@map("role_permissions")
-}
-
-model team_permissions {
-  id           String    @id @default(cuid())
-  teamId       String
-  team         teams     @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  permissionId String
-  permission   permissions @relation(fields: [permissionId], references: [id], onDelete: Cascade)
-
-  @@unique([teamId, permissionId])
-  @@map("team_permissions")
-}
-
-model team_roles {
-  id           String    @id @default(cuid())
-  teamId       String
-  team         teams     @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  roleId       String
-  role         roles     @relation(fields: [roleId], references: [id], onDelete: Cascade)
-
-  @@unique([teamId, roleId])
-  @@map("team_roles")
-}
-
-// ========================================
-// VENDOR MANAGEMENT
-// ========================================
-
-model categories {
-  id           String    @id @default(cuid())
-  companyId    String?
-  company      companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
-
-  name         String
-  description  String?
-  color        String    @default("blue")
-  icon         String?   @default("Package")
-  vendorCount  Int       @default(0)
-
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  deletedAt    DateTime?
-
-  vendors      vendors[]
-
-  @@unique([companyId, name])
-  @@index([companyId])
-  @@index([companyId, name])
-  @@map("categories")
-}
 
 model vendors {
-  id           String    @id @default(cuid())
-  companyId    String?
-  company      companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
-  categoryId   String?
-  category     categories? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-
-  name         String
-  email        String?
-  phone        String?
-  website      String?
-  taxId        String?
-  registrationNumber String?
-  
-  status       String    @default("pending")
-  rating       Int?      @default(0)
-  reviewCount  Int?      @default(0)
-
-  address      String?
-  city         String?
-  state        String?
-  country      String?
-  postalCode   String?
-
-  contactPerson      String?
-  contactPersonRole  String?
-  contactPersonEmail String?
-  contactPersonPhone String?
-  
-  businessType String?
-  yearEstablished Int?
-  employeeCount Int?
-  annualRevenue Decimal? @db.Decimal(19, 2)
-  
-  paymentTerms String?   @default("net30")
-  currency     String?   @default("USD")
-  creditLimit  Decimal?  @db.Decimal(19, 2)
-  
-  notes        String?
-  tags         String[]
-  
-  insuranceExpiry DateTime?
-  licenseExpiry  DateTime?
-  certified      Boolean   @default(false)
-  preferred      Boolean   @default(false)
-  
-  portalEnabled  Boolean   @default(false)
-  portalAccess   vendor_portal_access?
-  portalUserId   String?
-  lastPortalLogin DateTime?
-
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  deletedAt    DateTime?
-
-  // Existing Relations
-  contracts       contracts[]
-  workOrders      work_orders[]
-  invoices        invoices[]
-  documents       documents[]
-  purchaseOrders  purchase_orders[]
-  rfqRecipients   rfq_recipients[]
-  quotes          quotes[]
-  bidSubmissions  bid_submissions[]
-  projects        project_vendors[]
-  expenses        expenses[]
-  ratings         vendor_ratings[]
-  
-  // NEW: Vendor Portal Relations
-  notifications   vendor_notifications[]
-  messages        vendor_messages[]
-  activityLogs    vendor_activity_logs[]
-
-  @@index([companyId])
-  @@index([companyId, status])
-  @@index([companyId, categoryId])
-  @@index([companyId, name])
-  @@index([email])
-  @@map("vendors")
-
-  // Uploaded Data Relations
-  uploadedData      uploaded_vendor_data[]
-  invitations       vendor_invitations[]
-}
-
-model vendor_ratings {
-  id           String    @id @default(cuid())
-  vendorId     String
-  vendor       vendors   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
-  userId       String
-  user         users     @relation("VendorRatingGivenBy", fields: [userId], references: [id], onDelete: SetNull)
-  
-  rating       Int
-  comment      String?
-  category     String?
-  createdAt    DateTime  @default(now())
-
-  @@index([vendorId])
-  @@index([userId])
-  @@map("vendor_ratings")
-}
-
-model vendor_portal_access {
-  id           String    @id @default(cuid())
-  vendorId     String    @unique
-  vendor       vendors   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
-  
-  email        String    @unique
-  password     String?
-  lastLoginAt  DateTime?
-  isActive     Boolean   @default(true)
-  accessLevel  String    @default("standard")
-  
-  canViewInvoices  Boolean @default(true)
-  canSubmitInvoices Boolean @default(true)
-  canViewPayments  Boolean @default(true)
-  canViewPOs       Boolean @default(true)
-  canSubmitQuotes  Boolean @default(false)
-  canViewContracts Boolean @default(true)
-  canUploadDocs    Boolean @default(true)
-  
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  
-  @@index([vendorId])
-  @@index([email])
-  @@map("vendor_portal_access")
-}
-
-// ========================================
-// VENDOR COMMUNICATIONS & NOTIFICATIONS
-// ========================================
-
-model vendor_notifications {
   id              String    @id @default(cuid())
-  vendorId        String
-  vendor          vendors   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
-  
-  type            String    // invoice_created, invoice_paid, order_created, order_shipped, profile_updated, message
-  title           String
-  message         String
-  data            Json?     // Additional data like invoiceId, orderId etc.
-  
-  isRead          Boolean   @default(false)
-  readAt          DateTime?
-  
-  createdAt       DateTime  @default(now())
-  
-  @@index([vendorId])
-  @@index([vendorId, isRead])
-  @@index([createdAt])
-  @@map("vendor_notifications")
-}
-
-model vendor_messages {
-  id              String    @id @default(cuid())
-  vendorId        String
-  vendor          vendors   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
-  adminId         String?
-  admin           users?    @relation("AdminMessages", fields: [adminId], references: [id], onDelete: SetNull)
-  
-  subject         String
-  message         String
-  attachments     String[]  // URLs to attachments
-  
-  isFromVendor    Boolean   @default(true) // true = vendor to admin, false = admin to vendor
-  isRead          Boolean   @default(false)
-  readAt          DateTime?
-  
-  createdAt       DateTime  @default(now())
-  
-  @@index([vendorId])
-  @@index([vendorId, isRead])
-  @@index([createdAt])
-  @@map("vendor_messages")
-}
-
-model vendor_activity_logs {
-  id              String    @id @default(cuid())
-  vendorId        String
-  vendor          vendors   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
-  
-  action          String    // invoice_submitted, invoice_viewed, profile_updated, document_uploaded, etc.
-  entityType      String    // invoice, order, document, profile
-  entityId        String?
-  details         Json?
-  ipAddress       String?
-  userAgent       String?
-  
-  createdAt       DateTime  @default(now())
-  
-  @@index([vendorId])
-  @@index([vendorId, createdAt])
-  @@map("vendor_activity_logs")
-}
-model uploaded_vendor_data {
-  id              String    @id @default(cuid())
-  supplierCode    String    // Unique code for vendor
-  supplierName    String    // Vendor name
+  supplierCode    String    @unique
+  supplierName    String
+  email           String?
   plantCode       String?
-  poNumber        String    // Purchase Order Number
-  poCreateDate    DateTime? // PO Creation Date
-  poAmendDate     DateTime? // PO Amendment Date
-  materialCode    String?   // Material Code
-  materialDesc    String?   // Material Description
-  lineItem        Int?      // Line Item number
-  orderUnit       String?   // Order Unit
-  rate1           Decimal?  @db.Decimal(19,4) // Rate 1
-  rate2           Decimal?  @db.Decimal(19,4) // Rate 2
-  invoiceQuantity Decimal?  @db.Decimal(19,4) // Invoice Quantity
-  
-  // Relations
-  vendorId        String?
-  vendor          vendors?  @relation(fields: [vendorId], references: [id])
-  poId            String?
-  purchaseOrder   purchase_orders? @relation(fields: [poId], references: [id])
-  
-  // Metadata
-  uploadedById    String
-  uploadedBy      users     @relation(fields: [uploadedById], references: [id])
-  fileName        String
-  rowNumber       Int
+  status          String    @default("active")
   createdAt       DateTime  @default(now())
-  
-  @@index([supplierCode])
-  @@index([poNumber])
-  @@index([vendorId])
-  @@map("uploaded_vendor_data")
+  updatedAt       DateTime  @updatedAt
+  // Relations
+  credentials     vendor_credentials?
+  uploadRecords   vendor_upload_data[]
+  purchaseOrders  purchase_orders[]
+  invitations     vendor_invitations[]
 }
-// Add email tracking for vendor invitations
-model vendor_invitations {
+
+// ========================================
+// VENDOR CREDENTIALS (for login)
+// ========================================
+
+model vendor_credentials {
   id              String    @id @default(cuid())
-  vendorId        String
+  vendorId        String    @unique
   vendor          vendors   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
   
-  email           String
-  tempPassword    String    // Hashed temporary password
-  invitationToken String    @unique
-  status          String    @default("pending") // pending, sent, accepted, expired
-  sentAt          DateTime?
-  acceptedAt      DateTime?
-  expiresAt       DateTime
+  // Login credentials
+  username        String    @unique
+  password        String
+  tempPassword    String?
+  
+  // Status
+  isActive        Boolean   @default(true)
+  isTempPassword  Boolean   @default(true)
+  lastLoginAt     DateTime?
+  passwordChangedAt DateTime?
+  
+  // Invitation
+  invitationSent  Boolean   @default(false)
+  invitationToken String?   @unique
   
   createdAt       DateTime  @default(now())
-  
+  updatedAt       DateTime  @updatedAt
+
+  @@index([username])
   @@index([vendorId])
-  @@index([invitationToken])
-  @@map("vendor_invitations")
+  @@map("vendor_credentials")
 }
+
 // ========================================
-// PROCUREMENT - PURCHASE ORDERS
+// PURCHASE ORDERS (from Excel)
 // ========================================
 
 model purchase_orders {
   id              String    @id @default(cuid())
+  
+  // PO Info
   poNumber        String    @unique
   vendorId        String
-  vendor          vendors   @relation(fields: [vendorId], references: [id], onDelete: Restrict)
-  contractId      String?
-  contract        contracts? @relation(fields: [contractId], references: [id], onDelete: SetNull)
-  projectId       String?
-  project         projects? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  vendor          vendors   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
   
-  title           String
-  description     String?
+  // Dates
+  poCreateDate    DateTime?
+  poAmendDate     DateTime?
+  
+  // Status
   status          String    @default("draft")
-  priority        String    @default("medium")
   
-  orderDate       DateTime  @default(now())
-  expectedDate    DateTime?
-  shippedDate     DateTime?
-  deliveredDate   DateTime?
-  cancelledDate   DateTime?
-  
-  shippingAddress String?
-  shippingMethod  String?
-  trackingNumber  String?
-  
-  subtotal        Decimal   @db.Decimal(19,4)
-  taxAmount       Decimal   @db.Decimal(19,4) @default(0)
-  taxRate         Decimal?  @db.Decimal(5,2)
-  discount        Decimal   @db.Decimal(19,4) @default(0)
-  discountType    String?
-  shippingCost    Decimal   @db.Decimal(19,4) @default(0)
-  total           Decimal   @db.Decimal(19,4)
-  currency        String    @default("USD")
-  
-  notes           String?
-  terms           String?
-  internalNotes   String?
-  
-  approvalStatus  String    @default("pending")
-  approvedById    String?
-  approvedBy      users?    @relation("PurchaseOrderApprovedBy", fields: [approvedById], references: [id])
-  approvedAt      DateTime?
-  rejectionReason String?
-  
-  createdById     String
-  createdBy       users     @relation("PurchaseOrderCreatedBy", fields: [createdById], references: [id])
+  // Tracking
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
-  deletedAt       DateTime?
-  
-  companyId       String?
-  company         companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
-  
+
+  // Relations
   lineItems       purchase_order_line_items[]
-  rfqs            rfqs[]
-  receipts        goods_receipts[]
-  invoices        invoices[]
+  uploadRecords   vendor_upload_data[]
 
   @@index([poNumber])
   @@index([vendorId])
-  @@index([status])
-  @@index([companyId])
-  @@index([orderDate])
   @@map("purchase_orders")
-
-  // Uploaded Data Relation
-  uploadedData      uploaded_vendor_data[]
 }
+
+// ========================================
+// PURCHASE ORDER LINE ITEMS (from Excel)
+// ========================================
 
 model purchase_order_line_items {
   id              String    @id @default(cuid())
+  
+  // PO Reference
   purchaseOrderId String
   purchaseOrder   purchase_orders @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
   
-  lineNumber      Int
-  description     String
-  sku             String?
-  manufacturer    String?
+  // Item Details
+  lineNumber      Int?
+  materialCode    String?
+  materialDesc    String?
+  orderUnit       String?
+  rate            Decimal?  @db.Decimal(19,4)
+  invoiceQuantity Decimal?  @db.Decimal(19,4)
   
-  quantity        Decimal   @db.Decimal(19,4)
-  unit            String?
-  unitPrice       Decimal   @db.Decimal(19,4)
-  total           Decimal   @db.Decimal(19,4)
-  
-  discountPercent Decimal?  @db.Decimal(5,2) @default(0)
-  discountAmount  Decimal?  @db.Decimal(19,4) @default(0)
-  taxRate         Decimal?  @db.Decimal(5,2) @default(0)
-  taxAmount       Decimal?  @db.Decimal(19,4) @default(0)
-  
-  receivedQuantity Decimal? @db.Decimal(19,4) @default(0)
-  backorderQuantity Decimal? @db.Decimal(19,4) @default(0)
-  
-  notes           String?
-  expectedDate    DateTime?
-  
+  // Tracking
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
   
-  receipts        goods_receipt_line_items[]
-  invoiceLines    invoice_line_items[]
+  // Relations
+  uploadRecords   vendor_upload_data[]
 
   @@index([purchaseOrderId])
   @@map("purchase_order_line_items")
 }
 
 // ========================================
-// PROCUREMENT - RFQs & QUOTES
+// RAW UPLOAD DATA (audit trail)
 // ========================================
 
-model rfqs {
+model vendor_upload_data {
   id              String    @id @default(cuid())
-  rfqNumber       String    @unique
-  purchaseOrderId String?
-  purchaseOrder   purchase_orders? @relation(fields: [purchaseOrderId], references: [id], onDelete: SetNull)
-  projectId       String?
-  project         projects? @relation(fields: [projectId], references: [id], onDelete: SetNull)
   
-  title           String
-  description     String?
-  status          String    @default("draft")
+  // Who uploaded
+  uploadedById    String
+  uploadedBy      users     @relation(fields: [uploadedById], references: [id])
   
-  issueDate       DateTime  @default(now())
-  deadline        DateTime?
-  expectedDeliveryDate DateTime?
-  awardedDate     DateTime?
+  // File info
+  fileName        String
+  rowNumber       Int
+  uploadedAt      DateTime  @default(now())
   
-  requirements    String?
-  specifications  String?
-  deliveryTerms   String?
-  paymentTerms    String?
+  // Status
+  status          String    @default("processed")
+  errorMessage    String?
   
-  notes           String?
-  internalNotes   String?
+  // Raw Excel data
+  email           String?
+  supplierCode    String
+  supplierName    String
+  plantCode       String?
+  poNumber        String
+  poCreateDate    DateTime?
+  poAmendDate     DateTime?
+  materialCode    String?
+  materialDesc    String?
+  lineItem        Int?
+  orderUnit       String?
+  rate            Decimal?  @db.Decimal(19,4)
+  invoiceQuantity Decimal?  @db.Decimal(19,4)
   
-  createdById     String
-  createdBy       users     @relation(fields: [createdById], references: [id])
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  deletedAt       DateTime?
-  
-  companyId       String?
-  company         companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
-  
-  lineItems       rfq_line_items[]
-  recipients      rfq_recipients[]
-  quotes          quotes[]
+  // Relations to created records
+  vendorId        String?
+  vendor          vendors?         @relation(fields: [vendorId], references: [id])
+  poId            String?
+  purchaseOrder   purchase_orders? @relation(fields: [poId], references: [id])
+  lineItemId      String?
+  poLineItem      purchase_order_line_items? @relation(fields: [lineItemId], references: [id])
 
-  @@index([rfqNumber])
-  @@index([status])
-  @@index([companyId])
-  @@index([deadline])
-  @@map("rfqs")
+  @@index([supplierCode])
+  @@index([poNumber])
+  @@index([vendorId])
+  @@index([uploadedAt])
+  @@map("vendor_upload_data")
 }
 
-model rfq_line_items {
-  id              String    @id @default(cuid())
-  rfqId           String
-  rfq             rfqs      @relation(fields: [rfqId], references: [id], onDelete: Cascade)
-  
-  lineNumber      Int
-  description     String
-  quantity        Decimal   @db.Decimal(19,4)
-  unit            String?
-  notes           String?
-  specifications  String?
-  
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+// ========================================
+// VENDOR INVITATIONS (email tracking)
+// ========================================
 
-  @@index([rfqId])
-  @@map("rfq_line_items")
-}
-
-model rfq_recipients {
+model vendor_invitations {
   id              String    @id @default(cuid())
-  rfqId           String
-  rfq             rfqs      @relation(fields: [rfqId], references: [id], onDelete: Cascade)
   vendorId        String
-  vendor          vendors   @relation(fields: [vendorId], references: [id], onDelete: Restrict)
+  vendor          vendors   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  
+  email           String
+  username        String
+  tempPassword    String
+  invitationToken String    @unique
   
   status          String    @default("pending")
   sentAt          DateTime?
-  viewedAt        DateTime?
-  respondedAt     DateTime?
-  declinedReason  String?
+  acceptedAt      DateTime?
+  expiresAt       DateTime
   
   createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
 
-  @@unique([rfqId, vendorId])
-  @@index([rfqId])
   @@index([vendorId])
-  @@map("rfq_recipients")
-}
-
-model quotes {
-  id              String    @id @default(cuid())
-  quoteNumber     String    @unique
-  rfqId           String
-  rfq             rfqs      @relation(fields: [rfqId], references: [id], onDelete: Restrict)
-  vendorId        String
-  vendor          vendors   @relation(fields: [vendorId], references: [id], onDelete: Restrict)
-  
-  status          String    @default("submitted")
-  validUntil      DateTime?
-  submittedAt     DateTime  @default(now())
-  
-  subtotal        Decimal   @db.Decimal(19,4)
-  taxAmount       Decimal   @db.Decimal(19,4) @default(0)
-  taxRate         Decimal?  @db.Decimal(5,2)
-  discount        Decimal   @db.Decimal(19,4) @default(0)
-  discountType    String?
-  shippingCost    Decimal   @db.Decimal(19,4) @default(0)
-  total           Decimal   @db.Decimal(19,4)
-  currency        String    @default("USD")
-  
-  notes           String?
-  terms           String?
-  deliveryTime    Int?
-  warranty        String?
-  
-  attachmentUrls  String[]
-  
-  createdById     String?
-  createdBy       users?    @relation("QuoteCreatedBy", fields: [createdById], references: [id])
-  
-  lineItems       quote_line_items[]
-  contract        contracts?
-  
-  companyId       String?
-  company         companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
-  
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  deletedAt       DateTime?
-
-  @@index([quoteNumber])
-  @@index([rfqId])
-  @@index([vendorId])
+  @@index([invitationToken])
   @@index([status])
-  @@index([companyId])
-  @@map("quotes")
-}
-
-model quote_line_items {
-  id              String    @id @default(cuid())
-  quoteId         String
-  quote           quotes    @relation(fields: [quoteId], references: [id], onDelete: Cascade)
-  
-  lineNumber      Int
-  description     String
-  quantity        Decimal   @db.Decimal(19,4)
-  unit            String?
-  unitPrice       Decimal   @db.Decimal(19,4)
-  total           Decimal   @db.Decimal(19,4)
-  notes           String?
-  
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-
-  @@index([quoteId])
-  @@map("quote_line_items")
-}
-
-// ========================================
-// PROCUREMENT - BIDS
-// ========================================
-
-model bids {
-  id              String    @id @default(cuid())
-  bidNumber       String    @unique
-  
-  title           String
-  description     String?
-  type            String    @default("public_tender")
-  status          String    @default("draft")
-  
-  openDate        DateTime  @default(now())
-  closeDate       DateTime
-  awardDate       DateTime?
-  
-  estimatedValue  Decimal?  @db.Decimal(19,4)
-  currency        String    @default("USD")
-  
-  requirements    String?
-  evaluationCriteria String?
-  eligibilityCriteria String?
-  
-  documentUrls    String[]
-  
-  createdById     String
-  createdBy       users     @relation(fields: [createdById], references: [id])
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  deletedAt       DateTime?
-  
-  companyId       String?
-  company         companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
-  
-  submissions     bid_submissions[]
-
-  @@index([bidNumber])
-  @@index([status])
-  @@index([closeDate])
-  @@index([companyId])
-  @@map("bids")
-}
-
-model bid_submissions {
-  id              String    @id @default(cuid())
-  submissionNumber String   @unique
-  bidId           String
-  bid             bids      @relation(fields: [bidId], references: [id], onDelete: Cascade)
-  vendorId        String
-  vendor          vendors   @relation(fields: [vendorId], references: [id], onDelete: Restrict)
-  
-  amount          Decimal   @db.Decimal(19,4)
-  currency        String    @default("USD")
-  documents       String[]
-  notes           String?
-  
-  status          String    @default("submitted")
-  submittedAt     DateTime  @default(now())
-  
-  evaluatorNotes  String?
-  score           Int?
-  rank            Int?
-  
-  awardedAt       DateTime?
-  awardedById     String?
-  awardedBy       users?    @relation("BidAwardedBy", fields: [awardedById], references: [id])
-  
-  companyId       String?
-  company         companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
-
-  @@index([submissionNumber])
-  @@index([bidId])
-  @@index([vendorId])
-  @@index([status])
-  @@map("bid_submissions")
-}
-
-// ========================================
-// GOODS RECEIPTS
-// ========================================
-
-model goods_receipts {
-  id              String    @id @default(cuid())
-  receiptNumber   String    @unique
-  purchaseOrderId String
-  purchaseOrder   purchase_orders @relation(fields: [purchaseOrderId], references: [id], onDelete: Restrict)
-  
-  receivedDate    DateTime  @default(now())
-  status          String    @default("pending")
-  notes           String?
-  
-  inspectedById   String?
-  inspectedBy     users?    @relation("GoodsReceiptInspectedBy", fields: [inspectedById], references: [id])
-  inspectedAt     DateTime?
-  inspectionNotes String?
-  
-  receivedById    String
-  receivedBy      users     @relation("GoodsReceiptReceivedBy", fields: [receivedById], references: [id])
-  
-  lineItems       goods_receipt_line_items[]
-  
-  companyId       String?
-  company         companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
-  
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  deletedAt       DateTime?
-
-  @@index([receiptNumber])
-  @@index([purchaseOrderId])
-  @@index([status])
-  @@map("goods_receipts")
-}
-
-model goods_receipt_line_items {
-  id              String    @id @default(cuid())
-  goodsReceiptId  String
-  goodsReceipt    goods_receipts @relation(fields: [goodsReceiptId], references: [id], onDelete: Cascade)
-  poLineItemId    String
-  poLineItem      purchase_order_line_items @relation(fields: [poLineItemId], references: [id], onDelete: Restrict)
-  
-  quantity        Decimal   @db.Decimal(19,4)
-  acceptedQuantity Decimal? @db.Decimal(19,4)
-  rejectedQuantity Decimal? @db.Decimal(19,4)
-  rejectionReason String?
-  notes           String?
-  
-  createdAt       DateTime  @default(now())
-
-  @@index([goodsReceiptId])
-  @@index([poLineItemId])
-  @@map("goods_receipt_line_items")
-}
-
-// ========================================
-// CONTRACTS
-// ========================================
-
-model contracts {
-  id              String    @id @default(cuid())
-  contractNumber  String    @unique
-  companyId       String?
-  company         companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
-  vendorId        String
-  vendor          vendors   @relation(fields: [vendorId], references: [id], onDelete: Restrict)
-  quoteId         String?   @unique
-  quote           quotes?   @relation(fields: [quoteId], references: [id], onDelete: SetNull)
-  projectId       String?
-  project         projects? @relation(fields: [projectId], references: [id], onDelete: SetNull)
-
-  title           String
-  description     String?
-  type            String    @default("purchase_contract")
-  status          String    @default("draft")
-
-  startDate       DateTime?
-  endDate         DateTime?
-  signedDate      DateTime?
-  effectiveDate   DateTime?
-  terminationDate DateTime?
-  renewalDate     DateTime?
-
-  signedByVendor  Boolean   @default(false)
-  signedByCompany Boolean   @default(false)
-  signedByVendorId String?
-  signedByCompanyId String?
-  signedByVendorAt DateTime?
-  signedByCompanyAt DateTime?
-  signedByVendorUser String?
-  signedByCompanyUserId String?
-  signedByCompanyUser users? @relation("ContractSignedBy", fields: [signedByCompanyUserId], references: [id])
-
-  value           Decimal?  @db.Decimal(19, 4)
-  currency        String?   @default("USD")
-  paymentTerms    String?
-  billingCycle    String?
-  autoRenew       Boolean   @default(false)
-  renewalTerms    String?
-
-  documentUrl     String?
-  terms           String?
-  specialTerms    String?
-
-  approvalStatus  String    @default("pending")
-  approvedById    String?
-  approvedBy      users?    @relation("ContractApprovedBy", fields: [approvedById], references: [id])
-  approvedAt      DateTime?
-  rejectionReason String?
-
-  createdById     String
-  createdBy       users     @relation("ContractCreatedBy", fields: [createdById], references: [id])
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  deletedAt       DateTime?
-
-  workOrders      work_orders[]
-  invoices        invoices[]
-  purchaseOrders  purchase_orders[]
-  amendments      contract_amendments[]
-
-  @@index([companyId])
-  @@index([companyId, vendorId])
-  @@index([companyId, status])
-  @@index([contractNumber])
-  @@index([startDate, endDate])
-  @@map("contracts")
-}
-
-model contract_amendments {
-  id              String    @id @default(cuid())
-  amendmentNumber String    @unique
-  contractId      String
-  contract        contracts @relation(fields: [contractId], references: [id], onDelete: Cascade)
-
-  title           String
-  description     String?
-  effectiveDate   DateTime
-  
-  valueChange     Decimal?  @db.Decimal(19, 4)
-  valueChangeType String?
-  termsChange     String?
-  dateChange      Json?
-  
-  documentUrl     String?
-
-  status          String    @default("draft")
-  approvedById    String?
-  approvedBy      users?    @relation("AmendmentApprovedBy", fields: [approvedById], references: [id])
-  approvedAt      DateTime?
-
-  createdById     String
-  createdBy       users     @relation("AmendmentCreatedBy", fields: [createdById], references: [id])
-  createdAt       DateTime  @default(now())
-
-  @@index([contractId])
-  @@index([amendmentNumber])
-  @@map("contract_amendments")
-}
-
-// ========================================
-// PROJECTS
-// ========================================
-
-model projects {
-  id              String    @id @default(cuid())
-  projectNumber   String    @unique
-  companyId       String?
-  company         companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
-
-  name            String
-  description     String?
-  status          String    @default("planning")
-  priority        String    @default("medium")
-  
-  startDate       DateTime?
-  endDate         DateTime?
-  actualStartDate DateTime?
-  actualEndDate   DateTime?
-  
-  location        String?
-  address         String?
-  city            String?
-  state           String?
-  country         String?
-  
-  budget          Decimal?  @db.Decimal(19, 2)
-  actualCost      Decimal?  @db.Decimal(19, 2) @default(0)
-  currency        String    @default("USD")
-  
-  progressPercent Int?      @default(0)
-  
-  managerId       String?
-  manager         users?    @relation("ProjectAssignedTo", fields: [managerId], references: [id])
-  
-  createdById     String
-  createdBy       users     @relation("ProjectCreatedBy", fields: [createdById], references: [id])
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  deletedAt       DateTime?
-
-  vendors         project_vendors[]
-  workOrders      work_orders[]
-  purchaseOrders  purchase_orders[]
-  rfqs            rfqs[]
-  contracts       contracts[]
-  schedules       schedules[]
-  resources       resource_assignments[]
-  invoices        invoices[]
-  expenses        expenses[]
-  budgetItems     budget_items[]
-
-  @@index([projectNumber])
-  @@index([companyId])
-  @@index([status])
-  @@index([managerId])
-  @@map("projects")
-}
-
-model project_vendors {
-  id              String    @id @default(cuid())
-  projectId       String
-  project         projects  @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  vendorId        String
-  vendor          vendors   @relation(fields: [vendorId], references: [id], onDelete: Restrict)
-  
-  role            String?
-  contractValue   Decimal?  @db.Decimal(19, 2)
-  startDate       DateTime?
-  endDate         DateTime?
-  status          String    @default("active")
-
-  @@unique([projectId, vendorId])
-  @@index([projectId])
-  @@index([vendorId])
-  @@map("project_vendors")
-}
-
-// ========================================
-// WORK ORDERS
-// ========================================
-
-model work_orders {
-  id              String    @id @default(cuid())
-  workOrderNumber String    @unique
-  companyId       String?
-  company         companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
-  projectId       String?
-  project         projects? @relation(fields: [projectId], references: [id], onDelete: SetNull)
-  vendorId        String
-  vendor          vendors   @relation(fields: [vendorId], references: [id], onDelete: Restrict)
-  contractId      String?
-  contract        contracts? @relation(fields: [contractId], references: [id], onDelete: SetNull)
-
-  title           String
-  description     String?
-  status          String    @default("pending")
-  priority        String    @default("medium")
-  type            String    @default("maintenance")
-
-  assignedById    String?
-  assignedToId    String?
-  assignedBy      users?    @relation("WorkOrderCreatedBy", fields: [assignedById], references: [id])
-  assignedTo      users?    @relation("WorkOrderAssignedTo", fields: [assignedToId], references: [id])
-
-  requestedDate   DateTime  @default(now())
-  scheduledDate   DateTime?
-  startDate       DateTime?
-  completedDate   DateTime?
-  dueDate         DateTime?
-  
-  estimatedHours  Decimal?  @db.Decimal(10, 2)
-  actualHours     Decimal?  @db.Decimal(10, 2) @default(0)
-
-  location        String?
-  siteContact     String?
-  sitePhone       String?
-
-  estimatedCost   Decimal?  @db.Decimal(19, 2)
-  actualCost      Decimal?  @db.Decimal(19, 2) @default(0)
-  currency        String?   @default("USD")
-
-  completionNotes String?
-  completedBy     String?
-  completedAt     DateTime?
-  
-  approvalStatus  String    @default("pending")
-  approvedById    String?
-  approvedBy      users?    @relation("WorkOrderApprovedBy", fields: [approvedById], references: [id])
-  approvedAt      DateTime?
-
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  deletedAt       DateTime?
-
-  invoices        invoices[]
-  schedules       schedule_items[]
-  resources       resource_assignments[]
-  expenses        expenses[]
-
-  @@index([workOrderNumber])
-  @@index([companyId])
-  @@index([projectId])
-  @@index([vendorId])
-  @@index([status])
-  @@index([assignedToId])
-  @@index([dueDate])
-  @@map("work_orders")
-}
-
-// ========================================
-// SCHEDULES
-// ========================================
-
-model schedules {
-  id              String    @id @default(cuid())
-  scheduleNumber  String?   @unique
-  name            String
-  description     String?
-  type            String    @default("project")
-  status          String    @default("active")
-  startDate       DateTime
-  endDate         DateTime?
-  projectId       String?
-  project         projects? @relation(fields: [projectId], references: [id], onDelete: SetNull)
-  createdById     String
-  createdBy       users     @relation("ScheduleCreatedBy", fields: [createdById], references: [id])
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  deletedAt       DateTime?
-  companyId       String?
-  company         companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
-  items           schedule_items[]
-
-  @@index([companyId])
-  @@index([projectId])
-  @@map("schedules")
-}
-
-model schedule_items {
-  id              String    @id @default(cuid())
-  scheduleId      String
-  schedule        schedules @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
-  workOrderId     String?
-  workOrder       work_orders? @relation(fields: [workOrderId], references: [id], onDelete: SetNull)
-  
-  title           String
-  description     String?
-  
-  startTime       DateTime
-  endTime         DateTime
-  isAllDay        Boolean   @default(false)
-  
-  location        String?
-  status          String    @default("scheduled")
-  
-  assignedToId    String?
-  assignedTo      users?    @relation("ScheduleItemAssignedTo", fields: [assignedToId], references: [id])
-  
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-
-  @@index([scheduleId])
-  @@index([workOrderId])
-  @@index([assignedToId])
-  @@index([startTime, endTime])
-  @@map("schedule_items")
-}
-
-// ========================================
-// RESOURCES
-// ========================================
-
-model resources {
-  id              String    @id @default(cuid())
-  companyId       String?
-  company         companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
-  
-  name            String
-  type            String
-  category        String?
-  description     String?
-  
-  status          String    @default("available")
-  location        String?
-  
-  model           String?
-  serialNumber    String?
-  capacity        String?
-  
-  lastMaintenance DateTime?
-  nextMaintenance DateTime?
-  maintenanceInterval Int?
-  
-  hourlyRate      Decimal?  @db.Decimal(19, 2)
-  dailyRate       Decimal?  @db.Decimal(19, 2)
-  purchaseCost    Decimal?  @db.Decimal(19, 2)
-  
-  createdById     String
-  createdBy       users     @relation("ResourceCreatedBy", fields: [createdById], references: [id])
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  deletedAt       DateTime?
-
-  assignments     resource_assignments[]
-
-  @@index([companyId])
-  @@index([type])
-  @@index([status])
-  @@map("resources")
-}
-
-model resource_assignments {
-  id              String    @id @default(cuid())
-  resourceId      String
-  resource        resources @relation(fields: [resourceId], references: [id], onDelete: Restrict)
-  projectId       String?
-  project         projects? @relation(fields: [projectId], references: [id], onDelete: SetNull)
-  workOrderId     String?
-  workOrder       work_orders? @relation(fields: [workOrderId], references: [id], onDelete: SetNull)
-  
-  assignedFrom    DateTime
-  assignedTo      DateTime?
-  quantity        Int       @default(1)
-  
-  status          String    @default("active")
-  
-  assignedById    String
-  assignedBy      users     @relation("ResourceAssignedTo", fields: [assignedById], references: [id])
-  assignedAt      DateTime  @default(now())
-  
-  notes           String?
-  
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-
-  @@index([resourceId])
-  @@index([projectId])
-  @@index([workOrderId])
-  @@map("resource_assignments")
-}
-
-// ========================================
-// FINANCE - INVOICES, PAYMENTS, EXPENSES, BUDGET
-// ========================================
-
-model invoices {
-  id              String    @id @default(cuid())
-  invoiceNumber   String    @unique
-  companyId       String?
-  company         companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
-  vendorId        String
-  vendor          vendors   @relation(fields: [vendorId], references: [id], onDelete: Restrict)
-  workOrderId     String?
-  workOrder       work_orders? @relation(fields: [workOrderId], references: [id], onDelete: SetNull)
-  contractId      String?
-  contract        contracts? @relation(fields: [contractId], references: [id], onDelete: SetNull)
-  purchaseOrderId String?
-  purchaseOrder   purchase_orders? @relation(fields: [purchaseOrderId], references: [id], onDelete: SetNull)
-  projectId       String?
-  project         projects? @relation(fields: [projectId], references: [id], onDelete: SetNull)
-
-  reference       String?
-  status          String    @default("draft")
-  type            String    @default("service")
-
-  issueDate       DateTime  @default(now())
-  dueDate         DateTime?
-  paidDate        DateTime?
-  lastReminder    DateTime?
-
-  subtotal        Decimal   @db.Decimal(19, 4)
-  taxAmount       Decimal   @db.Decimal(19, 4) @default(0)
-  taxRate         Decimal?  @db.Decimal(5, 2)
-  discount        Decimal   @db.Decimal(19, 4) @default(0)
-  discountType    String?
-  shippingCost    Decimal   @db.Decimal(19, 4) @default(0)
-  total           Decimal   @db.Decimal(19, 4)
-  balance         Decimal   @db.Decimal(19, 4)
-  currency        String    @default("USD")
-
-  paymentTerms    String?   @default("net30")
-  paymentMethod   String?
-  paymentInstructions String?
-  notes           String?
-
-  approvalStatus  String    @default("pending")
-  approvedById    String?
-  approvedBy      users?    @relation("InvoiceApprovedBy", fields: [approvedById], references: [id])
-  approvedAt      DateTime?
-  rejectionReason String?
-
-  createdById     String
-  createdBy       users     @relation("InvoiceCreatedBy", fields: [createdById], references: [id])
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  deletedAt       DateTime?
-
-  payments        payments[]
-  lineItems       invoice_line_items[]
-
-  @@index([invoiceNumber])
-  @@index([companyId])
-  @@index([vendorId])
-  @@index([status])
-  @@index([dueDate])
-  @@map("invoices")
-}
-
-model invoice_line_items {
-  id              String    @id @default(cuid())
-  invoiceId       String
-  invoice         invoices  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
-
-  lineNumber      Int
-  description     String
-  quantity        Decimal   @db.Decimal(10, 2)
-  unit            String?
-  unitPrice       Decimal   @db.Decimal(19, 4)
-  discountPercent Decimal?  @db.Decimal(5, 2) @default(0)
-  discountAmount  Decimal?  @db.Decimal(19, 4) @default(0)
-  taxRate         Decimal?  @db.Decimal(5, 2) @default(0)
-  taxAmount       Decimal?  @db.Decimal(19, 4) @default(0)
-  total           Decimal   @db.Decimal(19, 4)
-  
-  poLineItemId    String?
-  poLineItem      purchase_order_line_items? @relation(fields: [poLineItemId], references: [id], onDelete: SetNull)
-
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-
-  @@index([invoiceId])
-  @@index([poLineItemId])
-  @@map("invoice_line_items")
-}
-
-model payments {
-  id              String    @id @default(cuid())
-  paymentNumber   String    @unique
-  companyId       String?
-  company         companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
-  invoiceId       String
-  invoice         invoices  @relation(fields: [invoiceId], references: [id], onDelete: Restrict)
-
-  amount          Decimal   @db.Decimal(19, 4)
-  currency        String    @default("USD")
-  method          String
-  status          String    @default("pending")
-  
-  transactionId   String?
-  paymentDate     DateTime  @default(now())
-  processedDate   DateTime?
-  settlementDate  DateTime?
-  notes           String?
-
-  bankName        String?
-  accountNumber   String?
-  routingNumber   String?
-  checkNumber     String?
-  reference       String?
-
-  cardLast4       String?
-  cardBrand       String?
-  authorizationCode String?
-
-  createdById     String
-  createdBy       users     @relation("PaymentCreatedBy", fields: [createdById], references: [id])
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  deletedAt       DateTime?
-
-  @@index([paymentNumber])
-  @@index([companyId])
-  @@index([invoiceId])
-  @@index([status])
-  @@index([paymentDate])
-  @@map("payments")
-}
-
-model expenses {
-  id              String    @id @default(cuid())
-  expenseNumber   String    @unique
-  companyId       String?
-  company         companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
-  vendorId        String?
-  vendor          vendors?  @relation(fields: [vendorId], references: [id], onDelete: SetNull)
-  projectId       String?
-  project         projects? @relation(fields: [projectId], references: [id], onDelete: SetNull)
-  workOrderId     String?
-  workOrder       work_orders? @relation(fields: [workOrderId], references: [id], onDelete: SetNull)
-
-  category        String
-  description     String
-  amount          Decimal   @db.Decimal(19, 4)
-  currency        String    @default("USD")
-  expenseDate     DateTime  @default(now())
-  
-  receiptUrl      String?
-  receiptNumber   String?
-  
-  isBillable      Boolean   @default(false)
-  billableClient  String?
-  
-  status          String    @default("draft")
-  
-  notes           String?   // Additional notes or comments
-  
-  approvedById    String?
-  approvedBy      users?    @relation("ExpenseApprovedBy", fields: [approvedById], references: [id])
-  approvedAt      DateTime?
-  rejectionReason String?
-  
-  createdById     String
-  createdBy       users     @relation("ExpenseCreatedBy", fields: [createdById], references: [id])
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  deletedAt       DateTime?
-
-  @@index([expenseNumber])
-  @@index([companyId])
-  @@index([vendorId])
-  @@index([projectId])
-  @@index([status])
-  @@index([expenseDate])
-  @@map("expenses")
-}
-
-model budget_items {
-  id              String    @id @default(cuid())
-  companyId       String?
-  company         companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
-  projectId       String?
-  project         projects? @relation(fields: [projectId], references: [id], onDelete: SetNull)
-
-  fiscalYear      Int
-  category        String
-  description     String
-  
-  plannedAmount   Decimal   @db.Decimal(19, 4)
-  actualAmount    Decimal   @db.Decimal(19, 4) @default(0)
-  committedAmount Decimal   @db.Decimal(19, 4) @default(0)
-  variance        Decimal?  @db.Decimal(19, 4)
-  variancePercent Decimal?  @db.Decimal(5, 2)
-  
-  currency        String    @default("USD")
-  
-  periodStart     DateTime
-  periodEnd       DateTime
-  
-  status          String    @default("active")
-  
-  approvedById    String?
-  approvedBy      users?    @relation("BudgetItemApprovedBy", fields: [approvedById], references: [id])
-  approvedAt      DateTime?
-  
-  createdById     String
-  createdBy       users     @relation("BudgetItemCreatedBy", fields: [createdById], references: [id])
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  deletedAt       DateTime?
-
-  @@index([companyId])
-  @@index([projectId])
-  @@index([fiscalYear])
-  @@index([category])
-  @@map("budget_items")
-}
-
-// ========================================
-// DOCUMENTS
-// ========================================
-
-model documents {
-  id              String    @id @default(cuid())
-  companyId       String?
-  company         companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
-
-  entityType      String
-  entityId        String
-
-  name            String
-  description     String?
-  fileUrl         String
-  fileName        String
-  fileSize        Int
-  fileType        String
-  category        String?
-  
-  version         Int       @default(1)
-  isLatest        Boolean   @default(true)
-
-  uploadedById    String
-  uploadedBy      users     @relation(fields: [uploadedById], references: [id], onDelete: Restrict)
-  uploadedAt      DateTime  @default(now())
-
-  expiryDate      DateTime?
-  isConfidential  Boolean   @default(false)
-
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  deletedAt       DateTime?
-
-  vendorId        String?
-  vendor          vendors?  @relation(fields: [vendorId], references: [id], onDelete: SetNull)
-
-  @@index([companyId])
-  @@index([companyId, entityType, entityId])
-  @@index([companyId, vendorId])
-  @@index([companyId, category])
-  @@map("documents")
-}
-
-// ========================================
-// REPORTS
-// ========================================
-
-model reports {
-  id              String    @id @default(cuid())
-  reportNumber    String    @unique
-  companyId       String?
-  company         companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
-
-  name            String
-  description     String?
-  type            String
-  category        String
-  
-  parameters      Json?
-  data            Json?
-  
-  isScheduled     Boolean   @default(false)
-  schedule        String?
-  lastRunAt       DateTime?
-  nextRunAt       DateTime?
-  
-  format          String    @default("json")
-  
-  status          String    @default("draft")
-  
-  createdById     String
-  createdBy       users     @relation("ReportCreatedBy", fields: [createdById], references: [id])
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  deletedAt       DateTime?
-
-  @@index([reportNumber])
-  @@index([companyId])
-  @@index([type])
-  @@index([createdById])
-  @@map("reports")
-}
-
-// ========================================
-// INTEGRATIONS
-// ========================================
-
-model integrations {
-  id              String    @id @default(cuid())
-  companyId       String?
-  company         companies? @relation(fields: [companyId], references: [id], onDelete: Cascade)
-
-  name            String
-  provider        String
-  type            String
-  
-  apiKey          String?
-  apiSecret       String?
-  accessToken     String?
-  refreshToken    String?
-  tokenExpiresAt  DateTime?
-  
-  settings        Json?
-  isActive        Boolean   @default(true)
-  
-  lastSyncAt      DateTime?
-  syncStatus      String    @default("idle")
-  errorMessage    String?
-  
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  deletedAt       DateTime?
-
-  @@unique([companyId, provider])
-  @@index([companyId])
-  @@index([provider])
-  @@map("integrations")
-}
-
-// ========================================
-// ACTIVITY & NOTIFICATIONS
-// ========================================
-
-model activity_logs {
-  id              String    @id @default(cuid())
-  companyId       String?
-  company         companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
-
-  action          String
-  entityType      String
-  entityId        String
-  entityName      String?
-
-  userId          String
-  user            users     @relation(fields: [userId], references: [id], onDelete: Restrict)
-  userEmail       String
-  userName        String?
-
-  oldData         Json?
-  newData         Json?
-  changes         Json?
-  
-  ipAddress       String?
-  userAgent       String?
-  sessionId       String?
-
-  createdAt       DateTime  @default(now())
-
-  @@index([companyId])
-  @@index([companyId, entityType, entityId])
-  @@index([companyId, userId])
-  @@index([companyId, createdAt])
-  @@map("activity_logs")
-}
-
-model notifications {
-  id              String    @id @default(cuid())
-  companyId       String?
-  company         companies? @relation(fields: [companyId], references: [id], onDelete: SetNull)
-
-  userId          String
-  user            users     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  type            String
-  title           String
-  message         String
-  status          String    @default("unread")
-  priority        String    @default("normal")
-
-  entityType      String?
-  entityId        String?
-  actionUrl       String?
-
-  actions         Json?
-
-  createdAt       DateTime  @default(now())
-  readAt          DateTime?
-  dismissedAt     DateTime?
-  scheduledFor    DateTime?
-
-  @@index([companyId])
-  @@index([companyId, userId])
-  @@index([companyId, userId, status])
-  @@index([companyId, createdAt])
-  @@index([companyId, scheduledFor])
-  @@map("notifications")
-}
-
-model demo_requests {
-  id            String    @id @default(cuid())
-  requestNumber String    @unique
-  
-  fullName      String
-  email         String
-  companyName   String
-  phone         String?
-  companySize   String?
-  interests     String[]   // Array of selected interests
-  preferredDate DateTime?
-  preferredTime String?
-  status        String    @default("pending") // pending, contacted, converted, closed
-  notes         String?
-  
-  ipAddress     String?
-  userAgent     String?
-  
-  assignedToId  String?
-  assignedTo    users?    @relation("DemoRequestAssignedTo", fields: [assignedToId], references: [id])
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  
-  @@index([email])
-  @@index([status])
-  @@index([createdAt])
-  @@map("demo_requests")
+  @@map("vendor_invitations")
 }

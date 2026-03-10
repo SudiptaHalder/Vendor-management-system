@@ -10,116 +10,154 @@ router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body
     
-    console.log('🔐 Login attempt:', email)
+    console.log('='.repeat(50))
+    console.log('🔐 Login attempt at:', new Date().toISOString())
+    console.log('📧 Email:', email)
+    console.log('🔑 Password provided:', !!password)
+    console.log('📍 Headers:', req.headers)
+    console.log('='.repeat(50))
 
     // First check if it's a regular user (admin)
+    console.log('🔍 Checking users table...')
     let user = await prisma.users.findUnique({
       where: { email }
     })
 
-    // If not a regular user, check if it's a vendor portal user
-    if (!user) {
-      console.log('👤 Not an admin user, checking vendor portal...')
+    if (user) {
+      console.log('✅ User found in database')
+      console.log('User ID:', user.id)
+      console.log('User role:', user.role)
+      console.log('Password hash exists:', !!user.password)
+      console.log('Password hash:', user.password)
       
-      const vendorAccess = await prisma.vendor_portal_access.findUnique({
-        where: { email },
-        include: { vendor: true }
-      })
-
-      if (vendorAccess) {
-        console.log('✅ Vendor found:', vendorAccess.vendor.name)
-        
-        const isValid = await bcrypt.compare(password, vendorAccess.password || '')
-        if (!isValid) {
-          console.log('❌ Invalid password for vendor')
-          return res.status(401).json({ 
-            success: false, 
-            error: 'Invalid credentials' 
-          })
-        }
-
-        // Update last login
-        await prisma.vendor_portal_access.update({
-          where: { id: vendorAccess.id },
-          data: { lastLoginAt: new Date() }
-        })
-
-        const token = jwt.sign(
-          { 
-            vendorId: vendorAccess.vendorId,
-            email: vendorAccess.email,
-            type: 'vendor',
-            role: 'vendor',
-            accessLevel: vendorAccess.accessLevel
-          },
-          process.env.JWT_SECRET || 'dev-secret-key',
-          { expiresIn: '7d' }
-        )
-
-        console.log('✅ Vendor login successful:', vendorAccess.vendor.name)
-
-        return res.json({
-          success: true,
-          data: {
-            user: {
-              id: vendorAccess.vendorId,
-              email: vendorAccess.email,
-              name: vendorAccess.vendor.name,
-              type: 'vendor',
-              role: 'vendor'
-            },
-            token
-          }
+      const isValid = await bcrypt.compare(password, user.password || '')
+      console.log('Password comparison result:', isValid)
+      
+      if (!isValid) {
+        console.log('❌ Password invalid for admin')
+        return res.status(401).json({ 
+          success: false, 
+          error: 'Invalid credentials' 
         })
       }
 
-      return res.status(401).json({ 
-        success: false, 
-        error: 'Invalid credentials' 
-      })
-    }
-
-    // Regular user login
-    const isValid = await bcrypt.compare(password, user.password || '')
-    if (!isValid) {
-      console.log('❌ Invalid password for admin')
-      return res.status(401).json({ 
-        success: false, 
-        error: 'Invalid credentials' 
-      })
-    }
-
-    const token = jwt.sign(
-      { 
-        userId: user.id, 
-        email: user.email,
-        type: 'admin',
-        role: user.role 
-      },
-      process.env.JWT_SECRET || 'dev-secret-key',
-      { expiresIn: '7d' }
-    )
-
-    console.log('✅ Admin login successful:', user.email)
-
-    res.json({
-      success: true,
-      data: {
-        user: {
-          id: user.id,
+      console.log('✅ Password valid, generating token...')
+      
+      const token = jwt.sign(
+        { 
+          userId: user.id, 
           email: user.email,
-          name: user.name,
           type: 'admin',
-          role: user.role
+          role: user.role 
         },
-        token
+        process.env.JWT_SECRET || 'dev-secret-key',
+        { expiresIn: '7d' }
+      )
+
+      console.log('✅ Admin login successful:', user.email)
+      console.log('Token generated:', token.substring(0, 20) + '...')
+
+      return res.json({
+        success: true,
+        data: {
+          user: {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            type: 'admin',
+            role: user.role
+          },
+          token
+        }
+      })
+    }
+
+    console.log('❌ User not found in users table')
+    
+    // If not a regular user, check if it's a vendor portal user
+    console.log('👤 Checking vendor credentials...')
+    
+    const vendorCredential = await prisma.vendor_credentials.findFirst({
+      where: {
+        OR: [
+          { username: email },
+          { vendor: { email: email } }
+        ]
+      },
+      include: { 
+        vendor: true 
       }
     })
+
+    if (vendorCredential) {
+      console.log('✅ Vendor found:', vendorCredential.vendor.supplierName)
+      
+      // Check password (try both regular and temp password)
+      const isValid = await bcrypt.compare(password, vendorCredential.password || '')
+      const isTempValid = vendorCredential.tempPassword ? 
+        await bcrypt.compare(password, vendorCredential.tempPassword) : false
+
+      console.log('Password valid:', isValid)
+      console.log('Temp password valid:', isTempValid)
+
+      if (!isValid && !isTempValid) {
+        console.log('❌ Invalid password for vendor')
+        return res.status(401).json({ 
+          success: false, 
+          error: 'Invalid credentials' 
+        })
+      }
+
+      // Update last login
+      await prisma.vendor_credentials.update({
+        where: { id: vendorCredential.id },
+        data: { 
+          lastLoginAt: new Date(),
+          isTempPassword: isTempValid ? true : vendorCredential.isTempPassword
+        }
+      })
+
+      const token = jwt.sign(
+        { 
+          vendorId: vendorCredential.vendorId,
+          email: vendorCredential.username,
+          type: 'vendor',
+          role: 'vendor'
+        },
+        process.env.JWT_SECRET || 'dev-secret-key',
+        { expiresIn: '7d' }
+      )
+
+      console.log('✅ Vendor login successful:', vendorCredential.vendor.supplierName)
+
+      return res.json({
+        success: true,
+        data: {
+          user: {
+            id: vendorCredential.vendorId,
+            email: vendorCredential.username,
+            name: vendorCredential.vendor.supplierName,
+            type: 'vendor',
+            role: 'vendor'
+          },
+          token
+        }
+      })
+    }
+
+    console.log('❌ No user or vendor found with email:', email)
+    return res.status(401).json({ 
+      success: false, 
+      error: 'Invalid credentials' 
+    })
+
   } catch (error) {
-    console.error('Login error:', error)
+    console.error('💥 Login error:', error)
+    console.error('Error stack:', error.stack)
     res.status(500).json({ 
       success: false, 
-      error: 'Login failed' 
+      error: 'Login failed',
+      details: error.message 
     })
   }
 })
@@ -138,7 +176,7 @@ router.get('/me', async (req, res) => {
     if (decoded.type === 'vendor') {
       const vendor = await prisma.vendors.findUnique({
         where: { id: decoded.vendorId },
-        include: { portalAccess: true }
+        include: { credentials: true }
       })
 
       if (!vendor) {
@@ -150,8 +188,8 @@ router.get('/me', async (req, res) => {
         data: {
           user: {
             id: vendor.id,
-            email: decoded.email,
-            name: vendor.name,
+            email: vendor.credentials?.username || vendor.email,
+            name: vendor.supplierName,
             type: 'vendor',
             role: 'vendor'
           }
