@@ -2,55 +2,43 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import VendorLayout from '@/components/vendor/VendorLayout'
 import {
   Package,
-  Clock,
-  CheckCircle,
-  FileText,
-  Eye,
   Calendar,
-  Truck,
-  ClipboardList,
-  FileSignature,
-  MessageSquare,
-  ChevronRight
+  RefreshCw,
+  Eye,
+  FileText,
+  X
 } from 'lucide-react'
-
-interface PurchaseOrder {
-  id: string
-  poNumber: string
-  poCreateDate: string | null
-  poAmendDate: string | null
-  vendorId: string
-  status: string
-  lineItems: LineItem[]
-}
 
 interface LineItem {
   id: string
   materialCode: string
   materialDesc: string
   orderUnit: string
-  rate: number
-  invoiceQuantity: number
+  rate: number | string
+  invoiceQuantity: number | string
   lineNumber: number
+}
+
+interface PurchaseOrder {
+  id: string
+  poNumber: string
+  poCreateDate: string | null
+  poAmendDate: string | null
+  status: string
+  lineItems: LineItem[]
 }
 
 export default function VendorDashboard() {
   const router = useRouter()
   const [vendor, setVendor] = useState<any>(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
   const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>([])
   const [selectedPO, setSelectedPO] = useState<PurchaseOrder | null>(null)
-  const [stats, setStats] = useState({
-    totalOrders: 0,
-    pendingOrders: 0,
-    completedOrders: 0,
-    openQuotes: 0,
-    pendingBids: 0
-  })
+  const [showDetails, setShowDetails] = useState(false)
 
   useEffect(() => {
     // Check vendor auth
@@ -65,63 +53,39 @@ export default function VendorDashboard() {
     try {
       const vendorData = JSON.parse(vendorStr)
       setVendor(vendorData)
-      fetchPurchaseOrders(vendorData.code)
+      fetchPurchaseOrders(token)
     } catch (err) {
       router.push('/vendor-login')
     }
   }, [router])
 
-  const fetchPurchaseOrders = async (supplierCode: string) => {
+  const fetchPurchaseOrders = async (token: string) => {
     setLoading(true)
+    setError('')
     try {
-      // Fetch from your API
-      const response = await fetch(`http://localhost:3001/api/vendors/upload/vendor/${supplierCode}`)
+      console.log('Fetching purchase orders...')
+      
+      const response = await fetch(`http://localhost:3001/api/vendor/purchase-orders`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      
       const data = await response.json()
+      console.log('API Response:', data)
       
       if (data.success) {
-        // Group by PO number
-        const poMap = new Map()
-        data.data.forEach((item: any) => {
-          if (!poMap.has(item.poNumber)) {
-            poMap.set(item.poNumber, {
-              id: item.id,
-              poNumber: item.poNumber,
-              poCreateDate: item.poCreateDate,
-              poAmendDate: item.poAmendDate,
-              vendorId: item.vendorId,
-              status: item.purchaseOrder?.status || 'pending',
-              lineItems: []
-            })
-          }
-          
-          // Add line item
-          if (item.materialCode) {
-            poMap.get(item.poNumber).lineItems.push({
-              id: item.id,
-              materialCode: item.materialCode,
-              materialDesc: item.materialDesc,
-              orderUnit: item.orderUnit,
-              rate: item.rate,
-              invoiceQuantity: item.invoiceQuantity,
-              lineNumber: item.lineItem
-            })
-          }
-        })
-
-        const orders = Array.from(poMap.values())
-        setPurchaseOrders(orders)
-        
-        // Update stats
-        setStats({
-          totalOrders: orders.length,
-          pendingOrders: orders.filter(o => o.status === 'pending').length,
-          completedOrders: orders.filter(o => o.status === 'completed').length,
-          openQuotes: 3,
-          pendingBids: 2
-        })
+        setPurchaseOrders(data.data)
+      } else {
+        setError('Failed to fetch purchase orders')
       }
     } catch (err) {
       console.error('Error fetching purchase orders:', err)
+      setError('Error connecting to server')
     } finally {
       setLoading(false)
     }
@@ -130,6 +94,36 @@ export default function VendorDashboard() {
   const formatDate = (dateStr: string | null) => {
     if (!dateStr) return 'N/A'
     return new Date(dateStr).toLocaleDateString()
+  }
+
+  // Helper function to convert rate to number
+  const parseRate = (rate: any): number => {
+    if (!rate) return 0
+    if (typeof rate === 'number') return rate
+    if (typeof rate === 'string') {
+      return parseFloat(rate.replace(/,/g, '')) || 0
+    }
+    return 0
+  }
+
+  // Helper function to convert quantity to number
+  const parseQuantity = (qty: any): number => {
+    if (!qty) return 0
+    if (typeof qty === 'number') return qty
+    if (typeof qty === 'string') {
+      return parseFloat(qty) || 0
+    }
+    return 0
+  }
+
+  const viewPODetails = (po: PurchaseOrder) => {
+    setSelectedPO(po)
+    setShowDetails(true)
+  }
+
+  const closeDetails = () => {
+    setShowDetails(false)
+    setSelectedPO(null)
   }
 
   if (loading) {
@@ -146,134 +140,153 @@ export default function VendorDashboard() {
     <VendorLayout>
       {/* Welcome Section */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">
-          Welcome back, {vendor?.name}! 👋
-        </h1>
-        <p className="text-gray-600 mt-1">View and manage your purchase orders</p>
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">
+              Welcome back, {vendor?.name}! 👋
+            </h1>
+            <p className="text-gray-600 mt-1">Supplier Code: {vendor?.code}</p>
+          </div>
+          <button
+            onClick={() => fetchPurchaseOrders(localStorage.getItem('vendorToken') || '')}
+            className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg"
+          >
+            <RefreshCw size={20} />
+          </button>
+        </div>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+      {/* Summary Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs text-gray-500">Total Orders</p>
-              <p className="text-xl font-bold text-gray-900">{stats.totalOrders}</p>
+              <p className="text-xs text-gray-500">Total Purchase Orders</p>
+              <p className="text-2xl font-bold text-gray-900">{purchaseOrders.length}</p>
             </div>
-            <div className="p-2 bg-green-100 rounded-lg">
-              <Package className="w-4 h-4 text-green-600" />
+            <div className="p-3 bg-green-100 rounded-lg">
+              <Package className="w-5 h-5 text-green-600" />
             </div>
           </div>
         </div>
-
         <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs text-gray-500">Pending</p>
-              <p className="text-xl font-bold text-yellow-600">{stats.pendingOrders}</p>
+              <p className="text-xs text-gray-500">Total Line Items</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {purchaseOrders.reduce((sum, po) => sum + po.lineItems.length, 0)}
+              </p>
             </div>
-            <div className="p-2 bg-yellow-100 rounded-lg">
-              <Clock className="w-4 h-4 text-yellow-600" />
+            <div className="p-3 bg-blue-100 rounded-lg">
+              <FileText className="w-5 h-5 text-blue-600" />
             </div>
           </div>
         </div>
-
         <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs text-gray-500">Completed</p>
-              <p className="text-xl font-bold text-green-600">{stats.completedOrders}</p>
+              <p className="text-xs text-gray-500">Last Updated</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {new Date().toLocaleDateString()}
+              </p>
             </div>
-            <div className="p-2 bg-green-100 rounded-lg">
-              <CheckCircle className="w-4 h-4 text-green-600" />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-xs text-gray-500">Open Quotes</p>
-              <p className="text-xl font-bold text-purple-600">{stats.openQuotes}</p>
-            </div>
-            <div className="p-2 bg-purple-100 rounded-lg">
-              <FileSignature className="w-4 h-4 text-purple-600" />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-xs text-gray-500">Pending Bids</p>
-              <p className="text-xl font-bold text-orange-600">{stats.pendingBids}</p>
-            </div>
-            <div className="p-2 bg-orange-100 rounded-lg">
-              <MessageSquare className="w-4 h-4 text-orange-600" />
+            <div className="p-3 bg-purple-100 rounded-lg">
+              <Calendar className="w-5 h-5 text-purple-600" />
             </div>
           </div>
         </div>
       </div>
 
-      {/* Two Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Purchase Orders List */}
-        <div className="lg:col-span-1 bg-white rounded-xl shadow-sm border border-gray-200">
-          <div className="px-4 py-3 border-b border-gray-200 bg-gray-50 rounded-t-xl">
-            <h3 className="font-semibold text-gray-900">Purchase Orders</h3>
-          </div>
-          <div className="divide-y divide-gray-200 max-h-96 overflow-y-auto">
-            {purchaseOrders.map((po) => (
-              <button
-                key={po.id}
-                onClick={() => setSelectedPO(po)}
-                className={`w-full px-4 py-3 text-left hover:bg-gray-50 transition flex items-center justify-between ${
-                  selectedPO?.id === po.id ? 'bg-green-50 border-l-4 border-green-500' : ''
-                }`}
+      {/* Purchase Orders Table - Only 3 Columns */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+          <h3 className="text-lg font-semibold text-gray-900">Purchase Orders</h3>
+          <p className="text-sm text-gray-500 mt-1">Click on any row to view complete details</p>
+        </div>
+        
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">PO Number</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Created Date</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Amended Date</th>
+                <th className="px-6 py-3 text-center text-xs font-medium text-gray-600 uppercase tracking-wider">Action</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {purchaseOrders.map((po) => (
+                <tr 
+                  key={po.id} 
+                  className="hover:bg-gray-50 cursor-pointer transition"
+                  onClick={() => viewPODetails(po)}
+                >
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className="font-medium text-gray-900">{po.poNumber}</span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className="text-gray-600">{formatDate(po.poCreateDate)}</span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className="text-gray-600">{formatDate(po.poAmendDate)}</span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-center">
+                    <button 
+                      className="text-green-600 hover:text-green-800"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        viewPODetails(po)
+                      }}
+                    >
+                      <Eye size={18} />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+              
+              {purchaseOrders.length === 0 && (
+                <tr>
+                  <td colSpan={4} className="px-6 py-12 text-center text-gray-500">
+                    <Package size={48} className="mx-auto mb-3 text-gray-300" />
+                    <p>No purchase orders found</p>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Modal for PO Details */}
+      {showDetails && selectedPO && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-xl max-w-4xl w-full max-h-[80vh] overflow-y-auto">
+            <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-green-600 text-white rounded-t-xl">
+              <h3 className="text-lg font-semibold">PO Details: {selectedPO.poNumber}</h3>
+              <button 
+                onClick={closeDetails}
+                className="p-1 hover:bg-green-700 rounded-lg transition"
               >
-                <div>
-                  <p className="font-medium text-gray-900">PO: {po.poNumber}</p>
-                  <p className="text-xs text-gray-500 mt-1">
-                    Created: {formatDate(po.poCreateDate)}
-                  </p>
-                  {po.poAmendDate && (
-                    <p className="text-xs text-gray-500">
-                      Amended: {formatDate(po.poAmendDate)}
-                    </p>
-                  )}
-                </div>
-                <ChevronRight size={16} className="text-gray-400" />
+                <X size={20} />
               </button>
-            ))}
-            {purchaseOrders.length === 0 && (
-              <div className="px-4 py-8 text-center text-gray-500">
-                No purchase orders found
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Line Items Details */}
-        <div className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200">
-          <div className="px-4 py-3 border-b border-gray-200 bg-gray-50 rounded-t-xl">
-            <h3 className="font-semibold text-gray-900">
-              {selectedPO ? `PO Details: ${selectedPO.poNumber}` : 'Select a Purchase Order'}
-            </h3>
-          </div>
-          
-          {selectedPO ? (
-            <div className="p-4">
-              {/* PO Header Info */}
-              <div className="grid grid-cols-2 gap-4 mb-4 p-3 bg-gray-50 rounded-lg">
-                <div>
+            </div>
+            
+            <div className="p-6">
+              {/* PO Header Information */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div className="bg-gray-50 p-3 rounded-lg">
+                  <p className="text-xs text-gray-500">PO Number</p>
+                  <p className="text-sm font-semibold text-gray-900">{selectedPO.poNumber}</p>
+                </div>
+                <div className="bg-gray-50 p-3 rounded-lg">
                   <p className="text-xs text-gray-500">Created Date</p>
-                  <p className="text-sm font-medium">{formatDate(selectedPO.poCreateDate)}</p>
+                  <p className="text-sm font-semibold text-gray-900">{formatDate(selectedPO.poCreateDate)}</p>
                 </div>
-                <div>
+                <div className="bg-gray-50 p-3 rounded-lg">
                   <p className="text-xs text-gray-500">Amended Date</p>
-                  <p className="text-sm font-medium">{formatDate(selectedPO.poAmendDate)}</p>
+                  <p className="text-sm font-semibold text-gray-900">{formatDate(selectedPO.poAmendDate)}</p>
                 </div>
-                <div>
+                <div className="bg-gray-50 p-3 rounded-lg">
                   <p className="text-xs text-gray-500">Status</p>
                   <span className={`inline-block px-2 py-1 text-xs font-medium rounded-full mt-1 ${
                     selectedPO.status === 'completed' 
@@ -285,70 +298,74 @@ export default function VendorDashboard() {
                 </div>
               </div>
 
-              {/* Line Items Table */}
-              <h4 className="font-medium text-gray-700 mb-2">Line Items</h4>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500">Line</th>
-                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500">Material Code</th>
-                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500">Description</th>
-                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500">Unit</th>
-                      <th className="px-3 py-2 text-right text-xs font-medium text-gray-500">Rate</th>
-                      <th className="px-3 py-2 text-right text-xs font-medium text-gray-500">Quantity</th>
-                      <th className="px-3 py-2 text-right text-xs font-medium text-gray-500">Total</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200">
-                    {selectedPO.lineItems.map((item) => (
-                      <tr key={item.id} className="hover:bg-gray-50">
-                        <td className="px-3 py-2 text-gray-600">{item.lineNumber || '-'}</td>
-                        <td className="px-3 py-2 font-mono text-xs text-gray-900">{item.materialCode}</td>
-                        <td className="px-3 py-2 text-gray-900">{item.materialDesc}</td>
-                        <td className="px-3 py-2 text-gray-600">{item.orderUnit || 'EA'}</td>
-                        <td className="px-3 py-2 text-right text-gray-900">${item.rate?.toFixed(2)}</td>
-                        <td className="px-3 py-2 text-right text-gray-900">{item.invoiceQuantity}</td>
-                        <td className="px-3 py-2 text-right font-medium text-gray-900">
-                          ${(item.rate * item.invoiceQuantity).toFixed(2)}
-                        </td>
-                      </tr>
-                    ))}
-                    {selectedPO.lineItems.length === 0 && (
-                      <tr>
-                        <td colSpan={7} className="px-3 py-4 text-center text-gray-500">
-                          No line items found
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
+              {/* Line Items Section */}
+              <h4 className="text-md font-semibold text-gray-900 mb-3 flex items-center">
+                <FileText size={16} className="mr-2" />
+                Line Items ({selectedPO.lineItems.length})
+              </h4>
 
-              {/* PO Summary */}
+              {selectedPO.lineItems.length > 0 ? (
+                <div className="overflow-x-auto border border-gray-200 rounded-lg">
+                  <table className="w-full text-sm">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">Line</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">Material Code</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">Description</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">Unit</th>
+                        <th className="px-4 py-3 text-right text-xs font-medium text-gray-500">Rate</th>
+                        <th className="px-4 py-3 text-right text-xs font-medium text-gray-500">Quantity</th>
+                        <th className="px-4 py-3 text-right text-xs font-medium text-gray-500">Total</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {selectedPO.lineItems.map((item, idx) => {
+                        const rate = parseRate(item.rate)
+                        const qty = parseQuantity(item.invoiceQuantity)
+                        const total = rate * qty
+                        
+                        return (
+                          <tr key={item.id || idx} className="hover:bg-gray-50">
+                            <td className="px-4 py-3 text-gray-600">{item.lineNumber || idx + 1}</td>
+                            <td className="px-4 py-3 font-mono text-xs text-gray-900">{item.materialCode}</td>
+                            <td className="px-4 py-3 text-gray-900">{item.materialDesc}</td>
+                            <td className="px-4 py-3 text-gray-600">{item.orderUnit || 'EA'}</td>
+                            <td className="px-4 py-3 text-right text-gray-900">${rate.toFixed(2)}</td>
+                            <td className="px-4 py-3 text-right text-gray-900">{qty}</td>
+                            <td className="px-4 py-3 text-right font-medium text-gray-900">${total.toFixed(2)}</td>
+                          </tr>
+                        )
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="text-center py-8 text-gray-500 bg-gray-50 rounded-lg">
+                  No line items found for this purchase order
+                </div>
+              )}
+
+              {/* PO Total */}
               {selectedPO.lineItems.length > 0 && (
-                <div className="mt-4 p-3 bg-gray-50 rounded-lg">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium text-gray-700">Total Items:</span>
-                    <span className="text-sm font-bold text-gray-900">{selectedPO.lineItems.length}</span>
-                  </div>
-                  <div className="flex justify-between items-center mt-1">
-                    <span className="text-sm font-medium text-gray-700">Total Value:</span>
-                    <span className="text-sm font-bold text-green-600">
-                      ${selectedPO.lineItems.reduce((sum, item) => sum + (item.rate * item.invoiceQuantity), 0).toFixed(2)}
-                    </span>
+                <div className="mt-4 flex justify-end">
+                  <div className="bg-green-50 p-3 rounded-lg w-64">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm font-medium text-gray-700">PO Total:</span>
+                      <span className="text-lg font-bold text-green-600">
+                        ${selectedPO.lineItems.reduce((sum, item) => {
+                          const rate = parseRate(item.rate)
+                          const qty = parseQuantity(item.invoiceQuantity)
+                          return sum + (rate * qty)
+                        }, 0).toFixed(2)}
+                      </span>
+                    </div>
                   </div>
                 </div>
               )}
             </div>
-          ) : (
-            <div className="p-8 text-center text-gray-500">
-              <Package size={48} className="mx-auto mb-3 text-gray-300" />
-              <p>Select a purchase order to view details</p>
-            </div>
-          )}
+          </div>
         </div>
-      </div>
+      )}
     </VendorLayout>
   )
 }

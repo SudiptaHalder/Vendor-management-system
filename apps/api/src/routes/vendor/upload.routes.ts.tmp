@@ -1,0 +1,56 @@
+// Replace your existing parseExcelDate function with this debug version:
+
+const parseExcelDate = (dateValue: any): Date | null => {
+  console.log(`[DATE PARSER] Input:`, dateValue, `Type:`, typeof dateValue);
+  
+  if (!dateValue && dateValue !== 0) {
+    console.log(`[DATE PARSER] Empty value, returning null`);
+    return null;
+  }
+  
+  try {
+    // Handle Excel serial numbers
+    if (typeof dateValue === 'number') {
+      console.log(`[DATE PARSER] Processing Excel serial:`, dateValue);
+      const excelEpoch = new Date(1899, 11, 31);
+      const days = dateValue - 1;
+      const date = new Date(excelEpoch.getTime() + days * 24 * 60 * 60 * 1000);
+      
+      const year = date.getFullYear();
+      console.log(`[DATE PARSER] Converted to:`, date.toISOString(), `Year:`, year);
+      
+      if (year >= 2000 && year <= 2100) {
+        console.log(`[DATE PARSER] ✅ Valid date:`, date);
+        return date;
+      } else {
+        console.log(`[DATE PARSER] ❌ Year out of range:`, year);
+        return null;
+      }
+    }
+    
+    // Handle string dates
+    if (typeof dateValue === 'string') {
+      console.log(`[DATE PARSER] Processing string:`, dateValue);
+      const parts = dateValue.split('/');
+      if (parts.length === 3) {
+        const month = parseInt(parts[0]);
+        const day = parseInt(parts[1]);
+        let year = parseInt(parts[2]);
+        
+        if (year < 100) year = 2000 + year;
+        
+        if (month >= 1 && month <= 12 && day >= 1 && day <= 31 && year >= 2000 && year <= 2100) {
+          const date = new Date(year, month - 1, day);
+          console.log(`[DATE PARSER] ✅ Valid string date:`, date);
+          return date;
+        }
+      }
+    }
+    
+    console.log(`[DATE PARSER] ❌ Could not parse`);
+    return null;
+  } catch (e) {
+    console.log(`[DATE PARSER] ❌ Error:`, e);
+    return null;
+  }
+}
