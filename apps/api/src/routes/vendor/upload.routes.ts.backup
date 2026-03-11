@@ -39,45 +39,80 @@ const generateTempPassword = () => {
   return crypto.randomBytes(4).toString('hex') // 8 character password
 }
 
-// Excel date parser for serial numbers
+// Excel date parser with debug logging
 const parseExcelDate = (dateValue: any): Date | null => {
-  if (!dateValue && dateValue !== 0) return null;
+  console.log('='.repeat(30))
+  console.log('🔍 DATE PARSER INPUT:', dateValue)
+  console.log('📊 TYPE:', typeof dateValue)
+  
+  if (!dateValue && dateValue !== 0) {
+    console.log('❌ Empty value, returning null')
+    return null
+  }
   
   try {
-    // Handle Excel serial numbers (days since 1900-01-01)
+    // Handle Excel serial numbers
     if (typeof dateValue === 'number') {
-      // Excel incorrectly treats 1900 as leap year, so adjust
-      const excelEpoch = new Date(1899, 11, 31); // Dec 31, 1899
-      const days = dateValue - 1; // Excel serial numbers start at 1 for 1900-01-01
-      const date = new Date(excelEpoch.getTime() + days * 24 * 60 * 60 * 1000);
+      console.log('📅 Processing Excel serial number:', dateValue)
       
-      // Validate the date is reasonable (between 2000 and 2100)
-      const year = date.getFullYear();
+      // Excel serial number (days since 1900-01-01)
+      const excelEpoch = new Date(1899, 11, 31) // Dec 31, 1899
+      const days = dateValue - 1 // Excel serial numbers start at 1 for 1900-01-01
+      const date = new Date(excelEpoch.getTime() + days * 24 * 60 * 60 * 1000)
+      
+      console.log('   Calculated date:', date)
+      console.log('   ISO string:', date.toISOString())
+      console.log('   Local date:', date.toLocaleDateString())
+      
+      const year = date.getFullYear()
+      console.log('   Year:', year)
+      
       if (year >= 2000 && year <= 2100) {
-        return date;
+        console.log('✅ Valid date, returning:', date)
+        return date
+      } else {
+        console.log('❌ Year out of range (2000-2100):', year)
+        return null
       }
     }
     
-    // Handle string dates in mm/dd/yyyy format
+    // Handle string dates
     if (typeof dateValue === 'string') {
-      const parts = dateValue.split('/');
+      console.log('📅 Processing string date:', dateValue)
+      
+      // Try mm/dd/yyyy format
+      const parts = dateValue.split('/')
       if (parts.length === 3) {
-        const month = parseInt(parts[0]);
-        const day = parseInt(parts[1]);
-        let year = parseInt(parts[2]);
+        const month = parseInt(parts[0])
+        const day = parseInt(parts[1])
+        let year = parseInt(parts[2])
         
-        if (year < 100) year = 2000 + year;
+        console.log('   Parsed as:', { month, day, year })
         
-        if (month >= 1 && month <= 12 && day >= 1 && day <= 31 && year >= 2000 && year <= 2100) {
-          return new Date(year, month - 1, day);
+        if (year < 100) {
+          year = 2000 + year
+          console.log('   Converted 2-digit year to:', year)
         }
+        
+        if (month >= 1 && month <= 12 && 
+            day >= 1 && day <= 31 && 
+            year >= 2000 && year <= 2100) {
+          const date = new Date(year, month - 1, day)
+          console.log('✅ Valid string date:', date)
+          return date
+        } else {
+          console.log('❌ Invalid date range')
+        }
+      } else {
+        console.log('❌ Not in mm/dd/yyyy format')
       }
     }
     
-    return null;
+    console.log('❌ Could not parse date')
+    return null
   } catch (e) {
-    console.log('Error parsing date:', dateValue);
-    return null;
+    console.log('❌ Error parsing date:', e)
+    return null
   }
 }
 
@@ -204,14 +239,16 @@ router.post('/process/:fileId', async (req, res) => {
     // Process each record
     for (const [index, record] of records.entries()) {
       try {
-        // Extract data matching your Excel headers
+        // Extract data
         const email = record['Email']?.trim()
         const supplierCode = record['Supplier Code']?.toString().trim()
         const supplierName = record['Supplier Name']?.trim()
         const plantCode = record['Plant code']?.toString().trim()
         const poNumber = record['PO No.']?.toString().trim()
         
-        // Parse dates using Excel serial number parser
+        // Parse dates with debug
+        console.log(`\n--- Row ${index + 2} ---`)
+        console.log(`PO Number: ${poNumber}`)
         const poCreateDate = parseExcelDate(record['PO Creat. Date'])
         const poAmendDate = parseExcelDate(record['PO Amendt. Date'])
         
@@ -220,11 +257,11 @@ router.post('/process/:fileId', async (req, res) => {
         const lineItem = record['Line Item'] ? parseInt(record['Line Item']) : null
         const orderUnit = record['Order Unit']?.trim()
         
-        // Handle Rate (remove commas and convert to number)
+        // Handle Rate
         const rateStr = record['Rate']?.toString().replace(/,/g, '') || '0'
         const rate = parseFloat(rateStr) || 0
         
-        // Handle Invoice Quantity
+        // Handle Quantity
         const quantityStr = record['Invoice Quantity']?.toString().replace(/,/g, '') || '0'
         const quantity = parseFloat(quantityStr) || 0
         
@@ -239,7 +276,6 @@ router.post('/process/:fileId', async (req, res) => {
         })
 
         if (!vendor) {
-          // Create new vendor
           vendor = await prisma.vendors.create({
             data: {
               supplierCode,
@@ -251,7 +287,6 @@ router.post('/process/:fileId', async (req, res) => {
           })
           summary.vendorsCreated++
 
-          // Generate temp password and invitation for new vendor
           const tempPassword = generateTempPassword()
           const hashedPassword = await bcrypt.hash(tempPassword, 10)
           const invitationToken = crypto.randomBytes(32).toString('hex')
@@ -272,14 +307,14 @@ router.post('/process/:fileId', async (req, res) => {
           summary.vendorsUpdated++
         }
 
-        // ========== PURCHASE ORDER: Create if doesn't exist ==========
+        // ========== PURCHASE ORDER ==========
         if (poNumber) {
           let purchaseOrder = await prisma.purchase_orders.findUnique({
             where: { poNumber }
           })
 
           if (!purchaseOrder) {
-            // Create PO with dates
+            console.log(`📦 Creating PO: ${poNumber} with date:`, poCreateDate)
             purchaseOrder = await prisma.purchase_orders.create({
               data: {
                 poNumber,
@@ -290,12 +325,10 @@ router.post('/process/:fileId', async (req, res) => {
               }
             })
             summary.purchaseOrders++
-            console.log(`✅ New PO created: ${poNumber} with date: ${poCreateDate}`)
           }
 
-          // ========== LINE ITEM: Create if doesn't exist ==========
+          // ========== LINE ITEM ==========
           if (materialCode) {
-            // Check if line item already exists
             const existingItem = await prisma.purchase_order_line_items.findFirst({
               where: {
                 purchaseOrderId: purchaseOrder.id,
@@ -321,8 +354,7 @@ router.post('/process/:fileId', async (req, res) => {
           }
         }
 
-        // ========== RAW DATA: Store for audit ==========
-        // Check if this exact row already exists
+        // ========== RAW DATA ==========
         const existingUpload = await prisma.vendor_upload_data.findFirst({
           where: {
             supplierCode,
@@ -375,7 +407,7 @@ router.post('/process/:fileId', async (req, res) => {
       console.log('Could not delete temp file:', err)
     }
 
-    console.log('📊 Upload Summary:', summary)
+    console.log('�� Upload Summary:', summary)
     res.json({
       success: true,
       data: summary

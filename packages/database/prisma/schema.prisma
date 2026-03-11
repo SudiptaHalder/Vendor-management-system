@@ -45,11 +45,108 @@ model vendors {
   status          String    @default("active")
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
+  
   // Relations
   credentials     vendor_credentials?
   uploadRecords   vendor_upload_data[]
   purchaseOrders  purchase_orders[]
   invitations     vendor_invitations[]
+  masterData      VendorMaster?  // Add this line for the reverse relation
+}
+
+model VendorMaster {
+  id                    String    @id @default(cuid())
+  supplierCode          String    @unique
+  supplierName          String
+  companyCode           String?
+  supplierAcctGroup     String?
+  countryName           String?
+  city                  String?
+  bankName              String?
+  bankAccount           String?
+  taxNumber             String?
+  postingBlock          Boolean?   @default(false)
+  purchasingBlock       Boolean?   @default(false)
+  paymentMethods        String?
+  deletionFlag          Boolean?   @default(false)
+  createdBy             String?
+  accountHolder         String?
+  accountingClerk       String?
+  accountingClerkTel    String?
+  address               String?
+  alternativePayee      String?
+  alternativePayeeCC    String?
+  authorization         String?
+  automaticPO           Boolean?   @default(false)
+  bankControlKey        String?
+  bankCountry           String?
+  bankKey               String?
+  bpBankAccount         String?
+  bpPOBoxDvtgCity       String?
+  bpType                String?
+  branchCode            String?
+  branchDescription     String?
+  businessPartner       String?
+  checkDoubleInvoice    Boolean?   @default(false)
+  clerkFaxNo            String?
+  countryKey            String?
+  createdOn             DateTime?
+  defaultBranch         String?
+  email                 String?
+  faxNumber             String?
+  grBasedInvVerif       Boolean?   @default(false)
+  iban                  String?
+  incoterms             String?
+  incotermsPart2        String?
+  internetAdd           String?
+  itemPaymentBlock      Boolean?   @default(false)
+  liableForVAT          Boolean?   @default(true)
+  minorityIndicator     String?
+  naturalPerson         Boolean?   @default(false)
+  orderCurrency         String?
+  paymentBlock          Boolean?   @default(false)
+  planningGroup         String?
+  postalCode            String?
+  previousAccountNo     String?
+  purchOrganization     String?
+  purchasingGroup       String?
+  reconAccount          String?
+  referenceDetails      String?
+  region                String?
+  releaseGroup          String?
+  searchTerm1           String?
+  searchTerm2           String?
+  sortKey               String?
+  street                String?
+  street2               String?
+  street3               String?
+  street4               String?
+  street5               String?
+  supplierFullName      String?
+  swiftBic              String?
+  taxNumber1            String?
+  taxNumber2            String?
+  taxNumber3            String?
+  taxNumber4            String?
+  taxNumber5            String?
+  taxNumberAtAuth       String?
+  taxNumberCategory     String?
+  taxNumberType         String?
+  taxType               String?
+  taxTypeName           String?
+  telephone1            String?
+  telephone2            String?
+  termsOfPaytsKeyCoCode String?
+  termsOfPaytsKeyPO     String?
+  tradingPartnerNo      String?
+  wTaxCRKey             String?
+  
+  // Relations
+  vendor                vendors   @relation(fields: [supplierCode], references: [supplierCode])
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@map("vendor_master")
 }
 
 // ========================================

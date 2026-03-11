@@ -44,42 +44,58 @@ export default function VendorsPage() {
   const [statusFilter, setStatusFilter] = useState('all')
   const [categoryFilter, setCategoryFilter] = useState('all')
 
-  const fetchVendors = async () => {
-    setLoading(true)
-    try {
-      const response = await api.getVendors()
-      if (response.success) {
-        // Process vendors to extract category name safely
-        const processedVendors = response.data.map((vendor: any) => ({
-          ...vendor,
-          categoryName: vendor.category?.name || vendor.category || null
-        }))
-        setVendors(processedVendors)
-      } else {
-        setError('Failed to load vendors')
-      }
-    } catch (err) {
+const fetchVendors = async () => {
+  setLoading(true)
+  try {
+    const response = await api.getVendors()
+    if (response.success) {
+      // Map supplierName to name for the frontend
+      const processedVendors = response.data.map((vendor: any) => ({
+        id: vendor.id,
+        name: vendor.supplierName || vendor.name || '', // Use supplierName first
+        supplierName: vendor.supplierName,
+        email: vendor.email || '',
+        phone: vendor.phone || null,
+        category: vendor.category || null,
+        categoryName: vendor.category?.name || vendor.category || null,
+        status: vendor.status || 'pending',
+        contactPerson: vendor.contactPerson || vendor.supplierName || '',
+        totalSpent: vendor.totalSpent,
+        lastOrder: vendor.lastOrder,
+        createdAt: vendor.createdAt
+      }))
+      setVendors(processedVendors)
+    } else {
       setError('Failed to load vendors')
-    } finally {
-      setLoading(false)
     }
+  } catch (err) {
+    setError('Failed to load vendors')
+  } finally {
+    setLoading(false)
   }
+}
 
   useEffect(() => {
     fetchVendors()
   }, [])
 
-  const filteredVendors = vendors.filter(vendor => {
-    const matchesSearch = 
-      vendor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      vendor.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      vendor.contactPerson?.toLowerCase().includes(searchTerm.toLowerCase())
-    
-    const matchesStatus = statusFilter === 'all' || vendor.status === statusFilter
-    const matchesCategory = categoryFilter === 'all' || vendor.categoryName === categoryFilter
-    
-    return matchesSearch && matchesStatus && matchesCategory
-  })
+const filteredVendors = vendors.filter(vendor => {
+  // Safe null handling
+  const vendorName = vendor.name || ''
+  const vendorEmail = vendor.email || ''
+  const vendorContact = vendor.contactPerson || ''
+  const searchLower = searchTerm.toLowerCase()
+  
+  const matchesSearch = 
+    vendorName.toLowerCase().includes(searchLower) ||
+    vendorEmail.toLowerCase().includes(searchLower) ||
+    vendorContact.toLowerCase().includes(searchLower)
+  
+  const matchesStatus = statusFilter === 'all' || vendor.status === statusFilter
+  const matchesCategory = categoryFilter === 'all' || vendor.categoryName === categoryFilter
+  
+  return matchesSearch && matchesStatus && matchesCategory
+})
 
   const categories = Array.from(new Set(vendors.map(v => v.categoryName).filter(Boolean))) as string[]
 

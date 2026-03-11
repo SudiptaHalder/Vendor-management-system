@@ -39,80 +39,40 @@ const generateTempPassword = () => {
   return crypto.randomBytes(4).toString('hex') // 8 character password
 }
 
-// Excel date parser with debug logging
+// Excel date parser
 const parseExcelDate = (dateValue: any): Date | null => {
-  console.log('='.repeat(30))
-  console.log('🔍 DATE PARSER INPUT:', dateValue)
-  console.log('📊 TYPE:', typeof dateValue)
-  
-  if (!dateValue && dateValue !== 0) {
-    console.log('❌ Empty value, returning null')
-    return null
-  }
+  if (!dateValue && dateValue !== 0) return null;
   
   try {
-    // Handle Excel serial numbers
     if (typeof dateValue === 'number') {
-      console.log('📅 Processing Excel serial number:', dateValue)
+      const excelEpoch = new Date(1899, 11, 31);
+      const days = dateValue - 1;
+      const date = new Date(excelEpoch.getTime() + days * 24 * 60 * 60 * 1000);
       
-      // Excel serial number (days since 1900-01-01)
-      const excelEpoch = new Date(1899, 11, 31) // Dec 31, 1899
-      const days = dateValue - 1 // Excel serial numbers start at 1 for 1900-01-01
-      const date = new Date(excelEpoch.getTime() + days * 24 * 60 * 60 * 1000)
-      
-      console.log('   Calculated date:', date)
-      console.log('   ISO string:', date.toISOString())
-      console.log('   Local date:', date.toLocaleDateString())
-      
-      const year = date.getFullYear()
-      console.log('   Year:', year)
-      
+      const year = date.getFullYear();
       if (year >= 2000 && year <= 2100) {
-        console.log('✅ Valid date, returning:', date)
-        return date
-      } else {
-        console.log('❌ Year out of range (2000-2100):', year)
-        return null
+        return date;
       }
+      return null;
     }
     
-    // Handle string dates
     if (typeof dateValue === 'string') {
-      console.log('📅 Processing string date:', dateValue)
-      
-      // Try mm/dd/yyyy format
-      const parts = dateValue.split('/')
+      const parts = dateValue.split('/');
       if (parts.length === 3) {
-        const month = parseInt(parts[0])
-        const day = parseInt(parts[1])
-        let year = parseInt(parts[2])
+        const month = parseInt(parts[0]);
+        const day = parseInt(parts[1]);
+        let year = parseInt(parts[2]);
         
-        console.log('   Parsed as:', { month, day, year })
+        if (year < 100) year = 2000 + year;
         
-        if (year < 100) {
-          year = 2000 + year
-          console.log('   Converted 2-digit year to:', year)
+        if (month >= 1 && month <= 12 && day >= 1 && day <= 31 && year >= 2000 && year <= 2100) {
+          return new Date(year, month - 1, day);
         }
-        
-        if (month >= 1 && month <= 12 && 
-            day >= 1 && day <= 31 && 
-            year >= 2000 && year <= 2100) {
-          const date = new Date(year, month - 1, day)
-          console.log('✅ Valid string date:', date)
-          return date
-        } else {
-          console.log('❌ Invalid date range')
-        }
-      } else {
-        console.log('❌ Not in mm/dd/yyyy format')
       }
     }
-    
-    console.log('❌ Could not parse date')
-    return null
+    return null;
   } catch (e) {
-    console.log('❌ Error parsing date:', e)
-    return null
+    return null;
   }
 }
 
@@ -123,24 +83,19 @@ const parseExcel = (filePath: string) => {
     const sheetName = workbook.SheetNames[0]
     const worksheet = workbook.Sheets[sheetName]
     
-    // Get data as array of arrays
     const data = XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as any[][]
     
     if (data.length < 2) {
       throw new Error('File has no data rows')
     }
     
-    // First row contains headers
     const headers = data[0] as string[]
     console.log('📋 Found headers:', headers.filter(h => h).map(h => `"${h}"`))
     
-    // Data starts from row 2
     const rows = data.slice(1) as any[][]
     
-    // Convert to array of objects
     const records = []
     for (const row of rows) {
-      // Skip empty rows
       if (!row.some(cell => cell !== null && cell !== undefined && cell !== '')) {
         continue
       }
@@ -214,7 +169,6 @@ router.post('/process/:fileId', async (req, res) => {
       return res.status(404).json({ error: 'File not found' })
     }
 
-    // Parse Excel file
     const records = parseExcel(filePath)
     console.log(`✅ Parsed ${records.length} records`)
 
@@ -228,7 +182,6 @@ router.post('/process/:fileId', async (req, res) => {
       errors: [] as string[]
     }
 
-    // Get current user ID from request
     const userId = (req as any).user?.id || (req as any).user?.userId
     if (!userId) {
       return res.status(401).json({ error: 'User not authenticated' })
@@ -236,7 +189,6 @@ router.post('/process/:fileId', async (req, res) => {
 
     console.log(`📝 Processing ${records.length} records...`)
 
-    // Process each record
     for (const [index, record] of records.entries()) {
       try {
         // Extract data
@@ -246,9 +198,6 @@ router.post('/process/:fileId', async (req, res) => {
         const plantCode = record['Plant code']?.toString().trim()
         const poNumber = record['PO No.']?.toString().trim()
         
-        // Parse dates with debug
-        console.log(`\n--- Row ${index + 2} ---`)
-        console.log(`PO Number: ${poNumber}`)
         const poCreateDate = parseExcelDate(record['PO Creat. Date'])
         const poAmendDate = parseExcelDate(record['PO Amendt. Date'])
         
@@ -257,11 +206,9 @@ router.post('/process/:fileId', async (req, res) => {
         const lineItem = record['Line Item'] ? parseInt(record['Line Item']) : null
         const orderUnit = record['Order Unit']?.trim()
         
-        // Handle Rate
         const rateStr = record['Rate']?.toString().replace(/,/g, '') || '0'
         const rate = parseFloat(rateStr) || 0
         
-        // Handle Quantity
         const quantityStr = record['Invoice Quantity']?.toString().replace(/,/g, '') || '0'
         const quantity = parseFloat(quantityStr) || 0
         
@@ -270,12 +217,13 @@ router.post('/process/:fileId', async (req, res) => {
           continue
         }
 
-        // ========== VENDOR: Create or Update ==========
+        // ========== VENDOR: CREATE OR UPDATE (WITH EMAIL UPDATE) ==========
         let vendor = await prisma.vendors.findUnique({
           where: { supplierCode }
         })
 
         if (!vendor) {
+          // Create new vendor
           vendor = await prisma.vendors.create({
             data: {
               supplierCode,
@@ -286,7 +234,9 @@ router.post('/process/:fileId', async (req, res) => {
             }
           })
           summary.vendorsCreated++
+          console.log(`✅ New vendor created: ${supplierName} (${supplierCode}) with email: ${vendor.email}`)
 
+          // Generate temp password and invitation for new vendor
           const tempPassword = generateTempPassword()
           const hashedPassword = await bcrypt.hash(tempPassword, 10)
           const invitationToken = crypto.randomBytes(32).toString('hex')
@@ -302,19 +252,46 @@ router.post('/process/:fileId', async (req, res) => {
             }
           })
           summary.invitationsSent++
-          console.log(`✅ New vendor created: ${supplierName}`)
         } else {
-          summary.vendorsUpdated++
+          // Check if email needs to be updated
+          const updates: any = {}
+          
+          if (vendor.email !== email) {
+            updates.email = email
+            console.log(`📧 Email change detected for ${supplierCode}: "${vendor.email}" -> "${email}"`)
+          }
+          
+          // Also check if other fields need updating
+          if (vendor.supplierName !== supplierName) {
+            updates.supplierName = supplierName
+            console.log(`📝 Name change detected for ${supplierCode}: "${vendor.supplierName}" -> "${supplierName}"`)
+          }
+          
+          if (vendor.plantCode !== plantCode) {
+            updates.plantCode = plantCode
+            console.log(`🏭 Plant code change detected for ${supplierCode}: "${vendor.plantCode}" -> "${plantCode}"`)
+          }
+          
+          // Apply updates if any
+          if (Object.keys(updates).length > 0) {
+            await prisma.vendors.update({
+              where: { id: vendor.id },
+              data: updates
+            })
+            summary.vendorsUpdated++
+            console.log(`🔄 Updated vendor ${supplierCode} with ${Object.keys(updates).length} change(s)`)
+          } else {
+            console.log(`⏭️ Vendor ${supplierCode} unchanged`)
+          }
         }
 
-        // ========== PURCHASE ORDER ==========
+        // ========== PURCHASE ORDER: Create if doesn't exist ==========
         if (poNumber) {
           let purchaseOrder = await prisma.purchase_orders.findUnique({
             where: { poNumber }
           })
 
           if (!purchaseOrder) {
-            console.log(`📦 Creating PO: ${poNumber} with date:`, poCreateDate)
             purchaseOrder = await prisma.purchase_orders.create({
               data: {
                 poNumber,
@@ -325,9 +302,10 @@ router.post('/process/:fileId', async (req, res) => {
               }
             })
             summary.purchaseOrders++
+            console.log(`✅ New PO created: ${poNumber}`)
           }
 
-          // ========== LINE ITEM ==========
+          // ========== LINE ITEM: Create if doesn't exist ==========
           if (materialCode) {
             const existingItem = await prisma.purchase_order_line_items.findFirst({
               where: {
@@ -350,44 +328,34 @@ router.post('/process/:fileId', async (req, res) => {
                 }
               })
               summary.lineItems++
+              console.log(`✅ New line item: ${materialCode} for PO ${poNumber}`)
             }
           }
         }
 
-        // ========== RAW DATA ==========
-        const existingUpload = await prisma.vendor_upload_data.findFirst({
-          where: {
+        // ========== RAW DATA: Store for audit ==========
+        await prisma.vendor_upload_data.create({
+          data: {
+            email,
             supplierCode,
+            supplierName,
+            plantCode,
             poNumber,
+            poCreateDate,
+            poAmendDate,
             materialCode,
-            lineItem: lineItem || null
+            materialDesc,
+            lineItem,
+            orderUnit,
+            rate,
+            invoiceQuantity: quantity,
+            vendorId: vendor.id,
+            uploadedById: userId,
+            fileName: fileName,
+            rowNumber: index + 2,
+            status: 'processed'
           }
         })
-
-        if (!existingUpload) {
-          await prisma.vendor_upload_data.create({
-            data: {
-              email,
-              supplierCode,
-              supplierName,
-              plantCode,
-              poNumber,
-              poCreateDate,
-              poAmendDate,
-              materialCode,
-              materialDesc,
-              lineItem,
-              orderUnit,
-              rate,
-              invoiceQuantity: quantity,
-              vendorId: vendor.id,
-              uploadedById: userId,
-              fileName: fileName,
-              rowNumber: index + 2,
-              status: 'processed'
-            }
-          })
-        }
 
         if ((index + 1) % 10 === 0) {
           console.log(`✅ Processed ${index + 1}/${records.length} records`)
@@ -407,7 +375,16 @@ router.post('/process/:fileId', async (req, res) => {
       console.log('Could not delete temp file:', err)
     }
 
-    console.log('�� Upload Summary:', summary)
+    console.log('📊 Upload Summary:', {
+      totalRows: summary.totalRows,
+      vendorsCreated: summary.vendorsCreated,
+      vendorsUpdated: summary.vendorsUpdated,
+      newPOs: summary.purchaseOrders,
+      newLineItems: summary.lineItems,
+      invitationsSent: summary.invitationsSent,
+      errors: summary.errors.length
+    })
+
     res.json({
       success: true,
       data: summary
