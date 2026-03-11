@@ -1,5 +1,5 @@
 // ========================================
-// VENDORFLOW - MINIMAL SCHEMA (FIXED)
+// VENDORFLOW - COMPLETE SCHEMA
 // ========================================
 
 generator client {
@@ -26,7 +26,8 @@ model users {
   updatedAt    DateTime  @updatedAt
 
   // Relations
-  uploadedFiles vendor_upload_data[]
+  uploadedFiles           vendor_upload_data[]
+  createdPurchaseOrders   purchase_orders[] @relation("POCreatedBy")
 
   @@index([email])
   @@map("users")
@@ -51,8 +52,14 @@ model vendors {
   uploadRecords   vendor_upload_data[]
   purchaseOrders  purchase_orders[]
   invitations     vendor_invitations[]
-  masterData      VendorMaster?  // Add this line for the reverse relation
+  masterData      VendorMaster?
+
+  @@map("vendors")
 }
+
+// ========================================
+// VENDOR MASTER DATA (detailed vendor info)
+// ========================================
 
 model VendorMaster {
   id                    String    @id @default(cuid())
@@ -182,39 +189,106 @@ model vendor_credentials {
 }
 
 // ========================================
-// PURCHASE ORDERS (from Excel)
+// PURCHASE ORDERS (enhanced)
 // ========================================
 
 model purchase_orders {
   id              String    @id @default(cuid())
   
-  // PO Info
+  // PO Basic Info
   poNumber        String    @unique
+  poType          String?   // Standard, Contract, etc.
+  plantCode       String?   // Plant location
   vendorId        String
-  vendor          vendors   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  vendor          vendors   @relation(fields: [vendorId], references: [id], onDelete: Restrict)
   
   // Dates
   poCreateDate    DateTime?
   poAmendDate     DateTime?
+  expectedDate    DateTime?
+  deliveredDate   DateTime?
   
   // Status
-  status          String    @default("draft")
+  status          String    @default("draft") // draft, pending, approved, completed, cancelled
+  
+  // Financial
+  subtotal        Decimal?  @db.Decimal(19,4)
+  taxAmount       Decimal?  @db.Decimal(19,4)
+  totalAmount     Decimal?  @db.Decimal(19,4)
+  currency        String?   @default("INR")
+  
+  // Tracking
+  createdById     String?
+  createdBy       users?    @relation("POCreatedBy", fields: [createdById], references: [id])
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relations
+  lineItems       po_line_items[]
+  legacyLineItems purchase_order_line_items[]
+  uploadRecords   vendor_upload_data[]
+
+  @@index([poNumber])
+  @@index([vendorId])
+  @@index([status])
+  @@map("purchase_orders")
+}
+
+// ========================================
+// PURCHASE ORDER LINE ITEMS (enhanced)
+// ========================================
+
+model po_line_items {
+  id              String    @id @default(cuid())
+  
+  // PO Reference
+  purchaseOrderId String
+  purchaseOrder   purchase_orders @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
+  
+  // Line Item Details
+  lineNumber      Int       @default(1)
+  materialCode    String?
+  materialDesc    String?
+  uom             String?   // Unit of Measure (EA, KG, etc.)
+  
+  // Quantities
+  quantity        Decimal?  @db.Decimal(19,4)
+  receivedQty     Decimal?  @db.Decimal(19,4) @default(0)
+  pendingQty      Decimal?  @db.Decimal(19,4) @default(0)
+  
+  // Pricing
+  unitPrice       Decimal?  @db.Decimal(19,4)
+  discountPercent Decimal?  @db.Decimal(5,2) @default(0)
+  discountAmount  Decimal?  @db.Decimal(19,4) @default(0)
+  taxableValue    Decimal?  @db.Decimal(19,4)
+  
+  // Tax Details
+  gstPercent      Decimal?  @db.Decimal(5,2)  // Total GST percentage
+  sgstPercent     Decimal?  @db.Decimal(5,2)  // State GST
+  cgstPercent     Decimal?  @db.Decimal(5,2)  // Central GST
+  igstPercent     Decimal?  @db.Decimal(5,2)  // Integrated GST
+  gstAmount       Decimal?  @db.Decimal(19,4)
+  
+  // Total
+  totalAmount     Decimal?  @db.Decimal(19,4) // (taxableValue + gstAmount) or (quantity * unitPrice)
+  
+  // Delivery
+  expectedDate    DateTime?
+  deliveredDate   DateTime?
+  
+  // Status
+  status          String    @default("pending") // pending, partial, completed
   
   // Tracking
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 
-  // Relations
-  lineItems       purchase_order_line_items[]
-  uploadRecords   vendor_upload_data[]
-
-  @@index([poNumber])
-  @@index([vendorId])
-  @@map("purchase_orders")
+  @@index([purchaseOrderId])
+  @@map("po_line_items")
 }
 
 // ========================================
-// PURCHASE ORDER LINE ITEMS (from Excel)
+// LEGACY PURCHASE ORDER LINE ITEMS (for backward compatibility)
 // ========================================
 
 model purchase_order_line_items {

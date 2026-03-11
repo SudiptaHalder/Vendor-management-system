@@ -68,15 +68,14 @@ export default function VendorLayout({ children }: VendorLayoutProps) {
       icon: LayoutDashboard
     },
     {
-      name: 'Purchase Orders',
-      icon: ShoppingCart,
-      submenu: [
-        { name: 'All Orders', href: '/vendor/purchase-orders', icon: Package },
-        { name: 'Pending', href: '/vendor/purchase-orders?status=pending', icon: Clock },
-        { name: 'Completed', href: '/vendor/purchase-orders?status=completed', icon: CheckCircle },
-        { name: 'Track Shipment', href: '/vendor/tracking', icon: Truck }
-      ]
-    },
+  name: 'Purchase Orders',
+  icon: ShoppingCart,
+  submenu: [
+    { name: 'All Orders', href: '/vendor/purchase-orders', icon: Package },
+    { name: 'Pending', href: '/vendor/purchase-orders?status=pending', icon: Clock },
+    { name: 'Completed', href: '/vendor/purchase-orders?status=completed', icon: CheckCircle }
+  ]
+},
     {
       name: 'Quotes & Bids',
       icon: FileSignature,

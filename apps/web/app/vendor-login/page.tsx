@@ -27,7 +27,8 @@ export default function VendorLoginPage() {
     setError('')
 
     try {
-      const response = await fetch('http://localhost:3001/api/vendor/login', {
+      const response = await 
+fetch('http://localhost:3001/api/vendor/public/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })

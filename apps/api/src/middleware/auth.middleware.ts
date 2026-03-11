@@ -21,13 +21,26 @@ export const authMiddleware = async (
     console.log('🔒 Auth Middleware - Request:', {
       method: req.method,
       path: req.path,
+      originalUrl: req.originalUrl,
       timestamp: new Date().toISOString()
     })
 
-    // Skip auth for login and health check
-    if (req.path === '/api/auth/login' || 
-        req.path === '/api/auth/me' || 
-        req.path === '/api/health') {
+    // PUBLIC PATHS - No authentication required
+    const publicPaths = [
+      '/api/auth/login',
+      '/api/auth/me',
+      '/api/health',
+      '/api/vendor/public/login',
+      '/api/vendor/public/verify-invitation',
+      '/api/vendor/public/set-password'
+    ]
+
+    // Check if current path starts with any public path
+    const isPublicPath = publicPaths.some(path => 
+      req.path.startsWith(path) || req.originalUrl.startsWith(path)
+    )
+
+    if (isPublicPath) {
       console.log('✅ Skipping auth for public path:', req.path)
       return next()
     }
@@ -45,28 +58,37 @@ export const authMiddleware = async (
     const token = authHeader.replace('Bearer ', '')
     console.log('Token extracted, length:', token.length)
     
-    // ✅ DEVELOPMENT MODE: Accept mock token
-    if (process.env.NODE_ENV === 'development' && token === 'dev-mock-token-12345') {
-      console.log('🔧 Dev mode: Using mock authentication')
-      const devUser = {
-        id: 'cmlictvjl000311zcsn7ze0wi',
-        email: 'admin@construction.com',
-        name: 'John Admin',
-        role: 'admin',
-        companyId: 'cmlictvjk000111zclu3i9hi4'
-      }
-      req.user = devUser
-      return next()
-    }
-
-    // Production mode: Verify JWT
     try {
       console.log('🔑 Verifying JWT token...')
       const decoded: any = jwt.verify(token, process.env.JWT_SECRET || 'dev-secret-key')
       console.log('✅ Token verified successfully')
       console.log('📦 Decoded payload:', JSON.stringify(decoded, null, 2))
       
-      // Try to find user by either userId or id field
+      // Check if it's a vendor token
+      if (decoded.type === 'vendor') {
+        console.log('🔍 Vendor token detected, looking up vendor...')
+        
+        const vendor = await prisma.vendors.findUnique({
+          where: { id: decoded.vendorId }
+        })
+
+        if (!vendor) {
+          console.log('❌ Vendor not found for ID:', decoded.vendorId)
+          return res.status(401).json({ error: 'Vendor not found' })
+        }
+
+        console.log('✅ Vendor found:', { id: vendor.id, name: vendor.supplierName })
+        
+        // Attach vendor to request
+        ;(req as any).vendor = vendor
+        ;(req as any).user = { type: 'vendor', id: vendor.id }
+        console.log('🎉 Vendor authentication successful')
+        console.log('='.repeat(50))
+        return next()
+      }
+      
+      // It's an admin token
+      console.log('�� Admin token detected, looking up user...')
       const userId = decoded.userId || decoded.id
       console.log('🔍 Looking for user with ID:', userId)
       
@@ -83,9 +105,10 @@ export const authMiddleware = async (
 
       // Attach user to request
       req.user = user
-      console.log('🎉 Authentication successful, proceeding to next middleware')
+      console.log('🎉 Admin authentication successful')
       console.log('='.repeat(50))
       next()
+      
     } catch (jwtError) {
       console.error('❌ JWT verification error:', jwtError)
       return res.status(401).json({ error: 'Invalid token' })
