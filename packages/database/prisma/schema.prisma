@@ -393,3 +393,17 @@ model vendor_invitations {
   @@index([status])
   @@map("vendor_invitations")
 }
+model portal_settings {
+  id                  String    @id @default(cuid())
+  companyId           String?   // If you have multi-tenant
+  portalEnabled       Boolean   @default(true)
+  selfRegistration    Boolean   @default(true)
+  invoiceSubmission   Boolean   @default(true)
+  paymentTracking     Boolean   @default(true)
+  documentUpload      Boolean   @default(true)
+  messaging           Boolean   @default(false)
+  updatedAt           DateTime  @updatedAt
+  updatedBy           String?
+
+  @@map("portal_settings")
+}

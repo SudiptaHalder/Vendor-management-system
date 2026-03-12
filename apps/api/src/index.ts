@@ -153,7 +153,7 @@ import vendorAuthRoutes from './routes/vendor/auth.routes'
 // Middleware
 import { errorHandler } from './middleware/error.middleware'
 import { authMiddleware } from './middleware/auth.middleware'
-
+import vendorManagementRoutes from './routes/vendor/management.routes'
 dotenv.config()
 
 const app = express()
@@ -186,11 +186,16 @@ app.use(compression())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
+// Find this section and update it
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100
-})
-app.use('/api/', limiter)
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 200, // Increase from 100 to 200
+  message: 'Too many requests from this IP, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+app.use('/api/', limiter);
 
 // ============= PUBLIC ROUTES (NO AUTH REQUIRED) =============
 app.use('/api/auth', authRoutes)
@@ -219,7 +224,7 @@ app.use('/api/bids', bidRoutes)
 // Vendor Upload Routes - Organized by type
 app.use('/api/vendors/upload/po', vendorUploadRoutes)        // For PO uploads
 app.use('/api/vendors/upload/master', vendorMasterUploadRoutes) // For master data uploads
-
+app.use('/api/vendor-management', vendorManagementRoutes)
 // Protected vendor routes (require auth)
 app.use('/api/vendor', vendorAuthRoutes)
 
