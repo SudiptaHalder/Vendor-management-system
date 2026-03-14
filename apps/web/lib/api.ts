@@ -1,3 +1,4 @@
+import { API_CONFIG } from './config';
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'
 
 const getToken = () => {
@@ -50,14 +51,16 @@ const handleResponse = async (response: Response) => {
 
 export const api = {
   // ============ AUTH ============
-  async login(email: string, password: string) {
-    const response = await fetch(`${API_URL}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
-    })
-    return handleResponse(response)
-  },
+ async login(email: string, password: string) {
+  // Use the full URL from config
+  const url = `${API_CONFIG.baseURL}${API_CONFIG.endpoints.auth.login}`;
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password })
+  })
+  return handleResponse(response)
+},
 
   async logout() {
     localStorage.clear()
