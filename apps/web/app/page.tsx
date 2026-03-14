@@ -1,142 +1,92 @@
-'use client'
+// 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { Mail, Lock, ArrowRight, Loader2 } from 'lucide-react'
-import { api } from '@/lib/api'
+// import { useEffect } from 'react'
+// import { useRouter } from 'next/navigation'
 
-export default function LoginPage() {
-  const router = useRouter()
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  })
+// export default function LoginRedirectPage() {
+//   const router = useRouter()
 
-  // Check if already logged in - redirect to admin dashboard
-  useEffect(() => {
-    const token = localStorage.getItem('token')
-    const userStr = localStorage.getItem('user')
+//   useEffect(() => {
+//     // Check if there's a vendor token
+//     const vendorToken = localStorage.getItem('vendorToken')
+//     const adminToken = localStorage.getItem('token')
     
-    if (token && userStr) {
-      try {
-        const user = JSON.parse(userStr)
-        router.push('/dashboard')
-      } catch (err) {
-        localStorage.clear()
-      }
-    }
-  }, [router])
+//     if (vendorToken) {
+//       // If vendor token exists, go to vendor dashboard
+//       router.push('/vendor/dashboard')
+//     } else if (adminToken) {
+//       // If admin token exists, go to admin dashboard
+//       router.push('/dashboard')
+//     } else {
+//       // No token, go to admin login (you can change this to vendor-login if preferred)
+//       router.push('/admin-login')
+//     }
+//   }, [router])
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
-    setError('')
-  }
+//   return (
+//     <div className="min-h-screen flex items-center justify-center">
+//       <div className="text-center">
+//         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+//         <p className="text-gray-600">Redirecting to login...</p>
+//       </div>
+//     </div>
+//   )
+// }
+// apps/web/app/page.tsx
+import Link from 'next/link'
+import { Building2, Users, ArrowRight } from 'lucide-react'
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
-
-    try {
-      const response = await api.login(formData.email, formData.password)
-      
-      if (response.success) {
-        localStorage.clear()
-        localStorage.setItem('token', response.data.token)
-        localStorage.setItem('user', JSON.stringify(response.data.user))
-        document.cookie = `token=${response.data.token}; path=/; max-age=604800; SameSite=Lax`
-        
-        router.push('/dashboard')
-      } else {
-        setError(response.error || 'Invalid email or password')
-      }
-    } catch (err: any) {
-      setError(err.message || 'Network error. Please try again.')
-    } finally {
-      setLoading(false)
-    }
-  }
-
+export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center p-4">
-      <div className="max-w-md w-full">
-        <div className="bg-white rounded-2xl shadow-2xl p-8">
-          <div className="text-center mb-8">
-            <div className="flex justify-center mb-4">
-              <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-lg">
-                <span className="text-white font-bold text-2xl">VF</span>
-              </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="text-center">
+          <div className="flex justify-center mb-8">
+            <div className="w-20 h-20 bg-gradient-to-r from-blue-600 to-green-600 rounded-2xl flex items-center justify-center shadow-2xl">
+              <span className="text-white font-bold text-3xl">VF</span>
             </div>
-            <h2 className="text-2xl font-bold text-gray-900">VendorFlow Admin</h2>
-            <p className="text-gray-600 mt-2">Sign in to your account</p>
           </div>
-
-          {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm">
-              {error}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Email
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="superadmin@vendorflow.com"
-                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  required
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Password
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-                <input
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  placeholder="••••••••"
-                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  required
-                />
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-2 px-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 font-medium flex items-center justify-center disabled:opacity-50"
+          <h1 className="text-5xl font-bold text-white mb-4">
+            Vendor Management System
+          </h1>
+          <p className="text-xl text-gray-300 mb-12 max-w-2xl mx-auto">
+            Choose your portal to continue
+          </p>
+          
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {/* Admin Portal Card */}
+            <Link
+              href="/admin-login"
+              className="group bg-white/10 backdrop-blur-lg rounded-2xl p-8 hover:bg-white/20 transition border border-gray-700"
             >
-              {loading ? (
-                <Loader2 className="animate-spin h-5 w-5" />
-              ) : (
-                <>
-                  Sign In
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </>
-              )}
-            </button>
-          </form>
+              <div className="bg-blue-600 w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <Building2 className="w-8 h-8 text-white" />
+              </div>
+              <h2 className="text-2xl font-bold text-white mb-2">Admin Portal</h2>
+              <p className="text-gray-300 mb-4">
+                Manage vendors, purchase orders, and procurement
+              </p>
+              <span className="text-blue-400 group-hover:text-blue-300 flex items-center justify-center">
+                Go to Admin Login <ArrowRight className="w-4 h-4 ml-1" />
+              </span>
+            </Link>
 
-          <div className="mt-6 text-center">
-            <p className="text-sm text-gray-500">
-              Demo: superadmin@vendorflow.com / Admin@123
-            </p>
+            {/* Vendor Portal Card */}
+            <Link
+              href="/vendor-login"
+              className="group bg-white/10 backdrop-blur-lg rounded-2xl p-8 hover:bg-white/20 transition border border-gray-700"
+            >
+              <div className="bg-green-600 w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <Users className="w-8 h-8 text-white" />
+              </div>
+              <h2 className="text-2xl font-bold text-white mb-2">Vendor Portal</h2>
+              <p className="text-gray-300 mb-4">
+                Submit invoices, track orders, and manage profile
+              </p>
+              <span className="text-green-400 group-hover:text-green-300 flex items-center justify-center">
+                Go to Vendor Login <ArrowRight className="w-4 h-4 ml-1" />
+              </span>
+            </Link>
           </div>
         </div>
       </div>
