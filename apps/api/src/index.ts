@@ -149,7 +149,7 @@ import vendorMasterUploadRoutes from './routes/vendor/master-upload.routes'
 
 // Vendor Auth Routes (for vendor portal)
 import vendorAuthRoutes from './routes/vendor/auth.routes'
-
+import poUploadRoutes from './routes/po-upload.routes'
 // Middleware
 import { errorHandler } from './middleware/error.middleware'
 import { authMiddleware } from './middleware/auth.middleware'
@@ -225,6 +225,8 @@ app.use('/api/bids', bidRoutes)
 app.use('/api/vendors/upload/po', vendorUploadRoutes)        // For PO uploads
 app.use('/api/vendors/upload/master', vendorMasterUploadRoutes) // For master data uploads
 app.use('/api/vendor-management', vendorManagementRoutes)
+app.use('/api/po-upload', poUploadRoutes)
+
 // Protected vendor routes (require auth)
 app.use('/api/vendor', vendorAuthRoutes)
 
@@ -232,7 +234,6 @@ app.use('/api/vendor', vendorAuthRoutes)
 app.use('*', (req, res) => {
   res.status(404).json({ error: 'Endpoint not found' })
 })
-
 app.use(errorHandler)
 
 app.listen(PORT, () => {

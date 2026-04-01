@@ -197,8 +197,10 @@ model purchase_orders {
   
   // PO Basic Info
   poNumber        String    @unique
-  poType          String?   // Standard, Contract, etc.
-  plantCode       String?   // Plant location
+  poType          String?
+  plantCode       String?
+  subDivisionCode String?   // New: Sub-division code
+  plantName       String?   // New: Plant name
   vendorId        String
   vendor          vendors   @relation(fields: [vendorId], references: [id], onDelete: Restrict)
   
@@ -209,7 +211,7 @@ model purchase_orders {
   deliveredDate   DateTime?
   
   // Status
-  status          String    @default("draft") // draft, pending, approved, completed, cancelled
+  status          String    @default("draft")
   
   // Financial
   subtotal        Decimal?  @db.Decimal(19,4)
@@ -249,35 +251,41 @@ model po_line_items {
   lineNumber      Int       @default(1)
   materialCode    String?
   materialDesc    String?
-  uom             String?   // Unit of Measure (EA, KG, etc.)
+  uom             String?
   
   // Quantities
-  quantity        Decimal?  @db.Decimal(19,4)
+  quantity        Decimal?  @db.Decimal(19,4)   // Order Qty
   receivedQty     Decimal?  @db.Decimal(19,4) @default(0)
   pendingQty      Decimal?  @db.Decimal(19,4) @default(0)
+  invoiceQuantity Decimal?  @db.Decimal(19,4)   // Invoice Quantity
   
   // Pricing
-  unitPrice       Decimal?  @db.Decimal(19,4)
+  unitPrice       Decimal?  @db.Decimal(19,4)   // Rate
+  totalPrice      Decimal?  @db.Decimal(19,4)   // Total Price
   discountPercent Decimal?  @db.Decimal(5,2) @default(0)
   discountAmount  Decimal?  @db.Decimal(19,4) @default(0)
   taxableValue    Decimal?  @db.Decimal(19,4)
   
   // Tax Details
-  gstPercent      Decimal?  @db.Decimal(5,2)  // Total GST percentage
-  sgstPercent     Decimal?  @db.Decimal(5,2)  // State GST
-  cgstPercent     Decimal?  @db.Decimal(5,2)  // Central GST
-  igstPercent     Decimal?  @db.Decimal(5,2)  // Integrated GST
+  taxCode         String?   // Tax Code (e.g., G3, I1, etc.)
+  gstPercent      Decimal?  @db.Decimal(5,2)   // Total GST percentage
+  sgstPercent     Decimal?  @db.Decimal(5,2)   // State GST
+  cgstPercent     Decimal?  @db.Decimal(5,2)   // Central GST
+  igstPercent     Decimal?  @db.Decimal(5,2)   // Integrated GST
+  sgstAmount      Decimal?  @db.Decimal(19,4)
+  cgstAmount      Decimal?  @db.Decimal(19,4)
+  igstAmount      Decimal?  @db.Decimal(19,4)
   gstAmount       Decimal?  @db.Decimal(19,4)
   
   // Total
-  totalAmount     Decimal?  @db.Decimal(19,4) // (taxableValue + gstAmount) or (quantity * unitPrice)
+  totalAmount     Decimal?  @db.Decimal(19,4)
   
   // Delivery
   expectedDate    DateTime?
   deliveredDate   DateTime?
   
   // Status
-  status          String    @default("pending") // pending, partial, completed
+  status          String    @default("pending")
   
   // Tracking
   createdAt       DateTime  @default(now())
@@ -406,4 +414,28 @@ model portal_settings {
   updatedBy           String?
 
   @@map("portal_settings")
+}
+// Tax Code model
+model tax_codes {
+  id            Int       @id @default(autoincrement())
+  tax_code      String    @unique @map("tax_code")
+  sgst_percent  Decimal?  @db.Decimal(5,2)
+  cgst_percent  Decimal?  @db.Decimal(5,2)
+  igst_percent  Decimal?  @db.Decimal(5,2)
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+
+  @@map("tax_codes")
+}
+
+// Sub Division Code model
+model sub_division_codes {
+  id                Int       @id @default(autoincrement())
+  sub_division_code String    @unique @map("sub_division_code")
+  plant_name        String    @map("plant_name")
+  company_id        String?
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
+
+  @@map("sub_division_codes")
 }

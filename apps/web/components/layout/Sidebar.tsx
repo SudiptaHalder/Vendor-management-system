@@ -443,16 +443,22 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsO
               <HelpCircle size={20} className="flex-shrink-0" />
               {isOpen && <span className="truncate">Help & Support</span>}
             </Link>
-            <button 
-              onClick={() => {
-                localStorage.clear()
-                window.location.href = '/'
-              }}
-              className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-red-600 rounded-lg hover:bg-red-50"
-            >
-              <LogOut size={20} className="flex-shrink-0" />
-              {isOpen && <span className="truncate">Logout</span>}
-            </button>
+           <button 
+  onClick={() => {
+    // Only clear admin-related items, not everything
+    localStorage.removeItem('token')
+    localStorage.removeItem('user')
+    localStorage.removeItem('expandedMenus')
+    // Also clear cookie for middleware
+    document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+    
+    window.location.href = '/admin-login'
+  }}
+  className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-red-600 rounded-lg hover:bg-red-50"
+>
+  <LogOut size={20} className="flex-shrink-0" />
+  {isOpen && <span className="truncate">Logout</span>}
+</button>
           </div>
         </div>
       </aside>
