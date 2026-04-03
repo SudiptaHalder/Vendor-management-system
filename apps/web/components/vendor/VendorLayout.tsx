@@ -68,14 +68,14 @@ export default function VendorLayout({ children }: VendorLayoutProps) {
       icon: LayoutDashboard
     },
     {
-  name: 'Purchase Orders',
-  icon: ShoppingCart,
-  submenu: [
-    { name: 'All Orders', href: '/vendor/purchase-orders', icon: Package },
-    { name: 'Pending', href: '/vendor/purchase-orders?status=pending', icon: Clock },
-    { name: 'Completed', href: '/vendor/purchase-orders?status=completed', icon: CheckCircle }
-  ]
-},
+      name: 'Purchase Orders',
+      icon: ShoppingCart,
+      submenu: [
+        { name: 'All Orders', href: '/vendor/purchase-orders', icon: Package },
+        { name: 'Pending', href: '/vendor/purchase-orders?status=pending', icon: Clock },
+        { name: 'Completed', href: '/vendor/purchase-orders?status=completed', icon: CheckCircle }
+      ]
+    },
     {
       name: 'Quotes & Bids',
       icon: FileSignature,
@@ -273,9 +273,14 @@ export default function VendorLayout({ children }: VendorLayoutProps) {
                   <p className="text-sm font-medium text-gray-900">{vendor?.name}</p>
                   <p className="text-xs text-gray-500">Vendor</p>
                 </div>
-                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                {/* ✅ MAKE PROFILE ICON CLICKABLE */}
+                <button
+                  onClick={() => router.push('/vendor/profile')}
+                  className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center hover:bg-green-200 transition cursor-pointer"
+                  title="View Profile"
+                >
                   {renderIcon(User, 20)}
-                </div>
+                </button>
               </div>
             </div>
           </div>

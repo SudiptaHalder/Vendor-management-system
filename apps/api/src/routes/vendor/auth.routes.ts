@@ -296,18 +296,64 @@ router.get('/purchase-orders', vendorMiddleware, async (req, res) => {
 })
 
 // Get vendor profile
-router.get('/me', vendorMiddleware, async (req, res) => {
+router.get('/profile', vendorMiddleware, async (req, res) => {
   try {
-    const vendor = (req as any).vendor
+    const vendorId = (req as any).user?.vendorId
+    
+    if (!vendorId) {
+      return res.status(401).json({ 
+        success: false, 
+        error: 'Not authenticated' 
+      })
+    }
+
+    // Get vendor basic info
+    const vendor = await prisma.vendors.findUnique({
+      where: { id: vendorId }
+    })
+
+    if (!vendor) {
+      return res.status(404).json({ 
+        success: false, 
+        error: 'Vendor not found' 
+      })
+    }
+
+    // Get detailed info from vendorMaster
+    const masterData = await prisma.vendorMaster.findUnique({
+      where: { supplierCode: vendor.supplierCode }
+    })
+
+    // Combine data
+    const profile = {
+      id: vendor.id,
+      supplierCode: vendor.supplierCode,
+      supplierName: vendor.supplierName,
+      email: vendor.email,
+      phone: masterData?.telephone1 || null,
+      address: masterData?.address || null,
+      city: masterData?.city || null,
+      state: masterData?.region || null,
+      country: masterData?.countryName || null,
+      postalCode: masterData?.postalCode || null,
+      bankName: masterData?.bankName || null,
+      bankAccount: masterData?.bankAccount || null,
+      bankCode: masterData?.bankKey || null,
+      taxNumber: masterData?.taxNumber || null,
+      gstNumber: masterData?.taxNumber1 || null,
+      panNumber: masterData?.taxNumber2 || null,
+      contactPerson: masterData?.accountHolder || null,
+      contactPhone: masterData?.telephone1 || null,
+      website: masterData?.internetAdd || null,
+      createdAt: vendor.createdAt,
+      updatedAt: vendor.updatedAt
+    }
+
     res.json({
       success: true,
-      data: {
-        id: vendor.id,
-        name: vendor.supplierName,
-        code: vendor.supplierCode,
-        email: vendor.email
-      }
+      data: profile
     })
+
   } catch (error) {
     console.error('Error fetching vendor profile:', error)
     res.status(500).json({ 
@@ -316,5 +362,6 @@ router.get('/me', vendorMiddleware, async (req, res) => {
     })
   }
 })
+
 
 export default router

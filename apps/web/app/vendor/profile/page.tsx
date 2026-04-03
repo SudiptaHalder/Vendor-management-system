@@ -1,237 +1,220 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import VendorLayout from '@/components/vendor/VendorLayout'
-import { User, Building2, Mail, Phone, MapPin, Save } from 'lucide-react'
+import {
+  Building2,
+  AlertCircle
+} from 'lucide-react'
+
+interface VendorProfile {
+  id: string
+  supplierCode: string
+  supplierName: string
+  email: string | null
+  phone: string | null
+  address: string | null
+  city: string | null
+  state: string | null
+  country: string | null
+  postalCode: string | null
+  bankName: string | null
+  bankAccount: string | null
+  gstNumber: string | null
+  panNumber: string | null
+  contactPerson: string | null
+  contactPhone: string | null
+  website: string | null
+  createdAt: string
+}
 
 export default function VendorProfilePage() {
-  const [loading, setLoading] = useState(false)
-  const [saved, setSaved] = useState(false)
-  const [profile, setProfile] = useState({
-    companyName: 'METALMAN AUTO LTD',
-    supplierCode: '100089',
-    email: 'Sudiptah2090@gmail.com',
-    phone: '+91 98765 43210',
-    address: '123 Industrial Area',
-    city: 'Mumbai',
-    state: 'Maharashtra',
-    country: 'India',
-    pincode: '400001',
-    gst: '27ABCDE1234F1Z5',
-    pan: 'ABCDE1234F',
-    contactPerson: 'John Doe',
-    contactPhone: '+91 98765 43210',
-    bankName: 'State Bank of India',
-    accountNumber: '12345678901',
-    ifscCode: 'SBIN0001234'
-  })
+  const router = useRouter()
+  const [profile, setProfile] = useState<VendorProfile | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
 
-  const handleSave = () => {
+  useEffect(() => {
+    fetchVendorProfile()
+  }, [])
+
+  const fetchVendorProfile = async () => {
     setLoading(true)
-    // Mock API call
-    setTimeout(() => {
+    setError('')
+    try {
+      const token = localStorage.getItem('vendorToken')
+      if (!token) {
+        router.push('/vendor-login')
+        return
+      }
+
+      const response = await fetch('http://localhost:3001/api/vendor/profile', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      })
+
+      if (response.status === 401) {
+        localStorage.removeItem('vendorToken')
+        localStorage.removeItem('vendor')
+        router.push('/vendor-login')
+        return
+      }
+
+      const data = await response.json()
+      
+      if (data.success) {
+        setProfile(data.data)
+      } else {
+        setError('Failed to load profile')
+      }
+    } catch (err) {
+      console.error('Error fetching profile:', err)
+      setError('Error connecting to server')
+    } finally {
       setLoading(false)
-      setSaved(true)
-      setTimeout(() => setSaved(false), 3000)
-    }, 1000)
+    }
+  }
+
+  if (loading) {
+    return (
+      <VendorLayout>
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+        </div>
+      </VendorLayout>
+    )
   }
 
   return (
     <VendorLayout>
       <div className="max-w-4xl mx-auto">
+        {/* Header */}
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900">Company Profile</h1>
-          <p className="text-gray-600 mt-1">Manage your company information</p>
+          <p className="text-gray-600 mt-1">View your company information</p>
         </div>
 
+        {/* Error Message */}
+        {error && (
+          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center space-x-2">
+            <AlertCircle size={18} className="text-red-600" />
+            <span className="text-red-700">{error}</span>
+          </div>
+        )}
+
+        {/* Profile Content */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-          {/* Header */}
-          <div className="px-6 py-4 bg-gradient-to-r from-green-600 to-green-700 text-white">
-            <div className="flex items-center space-x-3">
-              <div className="p-2 bg-white/20 rounded-lg">
-                <Building2 size={24} />
+          {/* Company Header */}
+          <div className="px-6 py-6 bg-gradient-to-r from-green-600 to-green-700 text-white">
+            <div className="flex items-center space-x-4">
+              <div className="p-3 bg-white/20 rounded-xl">
+                <Building2 size={32} />
               </div>
               <div>
-                <h2 className="text-lg font-semibold">{profile.companyName}</h2>
-                <p className="text-sm text-green-100">Supplier Code: {profile.supplierCode}</p>
+                <h2 className="text-2xl font-bold">{profile?.supplierName}</h2>
+                <p className="text-green-100">Supplier Code: {profile?.supplierCode}</p>
               </div>
             </div>
           </div>
 
-          {/* Form */}
+          {/* Profile Information */}
           <div className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Basic Information */}
               <div className="md:col-span-2">
-                <h3 className="text-md font-semibold text-gray-900 mb-4 pb-2 border-b">Basic Information</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">Basic Information</h3>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Company Name</label>
-                <input
-                  type="text"
-                  value={profile.companyName}
-                  onChange={(e) => setProfile({...profile, companyName: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
-                />
+                <label className="block text-sm font-medium text-gray-700 mb-1">Supplier Name</label>
+                <p className="text-gray-900">{profile?.supplierName || '-'}</p>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
-                  <input
-                    type="email"
-                    value={profile.email}
-                    onChange={(e) => setProfile({...profile, email: e.target.value})}
-                    className="pl-9 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
-                  />
-                </div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Supplier Code</label>
+                <p className="text-gray-900">{profile?.supplierCode || '-'}</p>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-                <div className="relative">
-                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
-                  <input
-                    type="tel"
-                    value={profile.phone}
-                    onChange={(e) => setProfile({...profile, phone: e.target.value})}
-                    className="pl-9 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
-                  />
-                </div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <p className="text-gray-900">{profile?.email || '-'}</p>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">GST Number</label>
-                <input
-                  type="text"
-                  value={profile.gst}
-                  onChange={(e) => setProfile({...profile, gst: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
-                />
+                <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                <p className="text-gray-900">{profile?.phone || '-'}</p>
               </div>
 
               {/* Address */}
               <div className="md:col-span-2 mt-4">
-                <h3 className="text-md font-semibold text-gray-900 mb-4 pb-2 border-b">Address</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">Address</h3>
               </div>
 
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Street Address</label>
-                <div className="relative">
-                  <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
-                  <input
-                    type="text"
-                    value={profile.address}
-                    onChange={(e) => setProfile({...profile, address: e.target.value})}
-                    className="pl-9 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
-                  />
-                </div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                <p className="text-gray-900">{profile?.address || '-'}</p>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">City</label>
-                <input
-                  type="text"
-                  value={profile.city}
-                  onChange={(e) => setProfile({...profile, city: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                />
+                <p className="text-gray-900">{profile?.city || '-'}</p>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">State</label>
-                <input
-                  type="text"
-                  value={profile.state}
-                  onChange={(e) => setProfile({...profile, state: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                />
+                <p className="text-gray-900">{profile?.state || '-'}</p>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Country</label>
-                <input
-                  type="text"
-                  value={profile.country}
-                  onChange={(e) => setProfile({...profile, country: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                />
+                <p className="text-gray-900">{profile?.country || '-'}</p>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Pincode</label>
-                <input
-                  type="text"
-                  value={profile.pincode}
-                  onChange={(e) => setProfile({...profile, pincode: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                />
+                <label className="block text-sm font-medium text-gray-700 mb-1">Postal Code</label>
+                <p className="text-gray-900">{profile?.postalCode || '-'}</p>
               </div>
 
-              {/* Bank Details */}
+              {/* Additional Info */}
               <div className="md:col-span-2 mt-4">
-                <h3 className="text-md font-semibold text-gray-900 mb-4 pb-2 border-b">Bank Details</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">Additional Information</h3>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">GST Number</label>
+                <p className="text-gray-900">{profile?.gstNumber || '-'}</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">PAN Number</label>
+                <p className="text-gray-900">{profile?.panNumber || '-'}</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Contact Person</label>
+                <p className="text-gray-900">{profile?.contactPerson || '-'}</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Contact Phone</label>
+                <p className="text-gray-900">{profile?.contactPhone || '-'}</p>
               </div>
 
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Bank Name</label>
-                <input
-                  type="text"
-                  value={profile.bankName}
-                  onChange={(e) => setProfile({...profile, bankName: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                />
+                <label className="block text-sm font-medium text-gray-700 mb-1">Website</label>
+                <p className="text-gray-900">{profile?.website || '-'}</p>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Account Number</label>
-                <input
-                  type="text"
-                  value={profile.accountNumber}
-                  onChange={(e) => setProfile({...profile, accountNumber: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">IFSC Code</label>
-                <input
-                  type="text"
-                  value={profile.ifscCode}
-                  onChange={(e) => setProfile({...profile, ifscCode: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                />
+                <label className="block text-sm font-medium text-gray-700 mb-1">Member Since</label>
+                <p className="text-gray-900">
+                  {profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString() : '-'}
+                </p>
               </div>
             </div>
-
-            {/* Save Button */}
-            <div className="mt-8 flex justify-end">
-              <button
-                onClick={handleSave}
-                disabled={loading}
-                className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 flex items-center space-x-2"
-              >
-                {loading ? (
-                  <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                    <span>Saving...</span>
-                  </>
-                ) : (
-                  <>
-                    <Save size={16} />
-                    <span>Save Changes</span>
-                  </>
-                )}
-              </button>
-            </div>
-
-            {saved && (
-              <div className="mt-4 p-3 bg-green-50 text-green-700 rounded-lg text-sm">
-                Profile updated successfully!
-              </div>
-            )}
           </div>
         </div>
       </div>
