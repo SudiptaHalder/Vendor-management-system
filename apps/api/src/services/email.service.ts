@@ -31,8 +31,7 @@ class EmailService {
 
   async sendVendorInvitation(data: SendInvitationData) {
     try {
-      const invitationUrl = `${process.env.FRONTEND_URL}/vendor/setup-password?token=${data.invitationToken}`
-
+const invitationUrl = `${process.env.FRONTEND_URL}/vendor-login?token=${data.invitationToken}`
       const html = `
         <h2>Welcome to VendorFlow</h2>
         <p>Hello ${data.supplierName},</p>
