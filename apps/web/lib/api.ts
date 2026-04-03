@@ -75,12 +75,13 @@ export const api = {
   },
 
   // ============ VENDORS ============
-  async getVendors() {
-    const response = await fetch(`${API_URL}/vendors`, {
-      headers: getHeaders()
-    })
-    return handleResponse(response)
-  },
+async getVendors() {
+  const url = `${API_CONFIG.baseURL}${API_CONFIG.endpoints.vendors.list}`;
+  const response = await fetch(url, {
+    headers: getHeaders()
+  })
+  return handleResponse(response)
+},
 
   async createVendor(data: any) {
     const response = await fetch(`${API_URL}/vendors`, {

@@ -118,12 +118,14 @@
 //   console.log(`🔨 Bids: http://localhost:${PORT}/api/bids`)
 //   console.log(`📤 Upload: http://localhost:${PORT}/api/vendors/upload`)
 // })
+import dotenv from 'dotenv'
+dotenv.config()
 import express from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
 import compression from 'compression'
 import rateLimit from 'express-rate-limit'
-import dotenv from 'dotenv'
+
 import path from 'path'
 
 import { prisma } from '@vendor-management/database'
@@ -150,6 +152,9 @@ import vendorMasterUploadRoutes from './routes/vendor/master-upload.routes'
 // Vendor Auth Routes (for vendor portal)
 import vendorAuthRoutes from './routes/vendor/auth.routes'
 import poUploadRoutes from './routes/po-upload.routes'
+
+
+import vendorMasterUploadRoutes from './routes/vendor/master-upload.routes'
 // Middleware
 import { errorHandler } from './middleware/error.middleware'
 import { authMiddleware } from './middleware/auth.middleware'
@@ -223,7 +228,7 @@ app.use('/api/bids', bidRoutes)
 
 // Vendor Upload Routes - Organized by type
 app.use('/api/vendors/upload/po', vendorUploadRoutes)        // For PO uploads
-app.use('/api/vendors/upload/master', vendorMasterUploadRoutes) // For master data uploads
+app.use('/api/vendors/upload/master', vendorMasterUploadRoutes)
 app.use('/api/vendor-management', vendorManagementRoutes)
 app.use('/api/po-upload', poUploadRoutes)
 
