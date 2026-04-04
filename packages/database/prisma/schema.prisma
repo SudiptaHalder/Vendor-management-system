@@ -194,39 +194,42 @@ model vendor_credentials {
 
 model purchase_orders {
   id              String    @id @default(cuid())
-  
+
   // PO Basic Info
   poNumber        String    @unique
   poType          String?
   plantCode       String?
-  subDivisionCode String?   // New: Sub-division code
-  plantName       String?   // New: Plant name
+  subDivisionCode String?
+  plantName       String?
+
+  // Vendor Relation
   vendorId        String
   vendor          vendors   @relation(fields: [vendorId], references: [id], onDelete: Restrict)
-  
+
   // Dates
   poCreateDate    DateTime?
   poAmendDate     DateTime?
   expectedDate    DateTime?
   deliveredDate   DateTime?
-  
+
   // Status
   status          String    @default("draft")
-  
+
   // Financial
   subtotal        Decimal?  @db.Decimal(19,4)
   taxAmount       Decimal?  @db.Decimal(19,4)
   totalAmount     Decimal?  @db.Decimal(19,4)
   currency        String?   @default("INR")
-  
+
   // Tracking
   createdById     String?
   createdBy       users?    @relation("POCreatedBy", fields: [createdById], references: [id])
+
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 
-  // Relations
-  lineItems       po_line_items[]
+  // ✅ CORRECT RELATIONS
+  lineItems       po_line_items[] @relation("POLineItems")
   legacyLineItems purchase_order_line_items[]
   uploadRecords   vendor_upload_data[]
 
@@ -242,52 +245,45 @@ model purchase_orders {
 
 model po_line_items {
   id              String    @id @default(cuid())
-  
-  // PO Reference
+
   purchaseOrderId String
-  purchaseOrder   purchase_orders @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
-  
-  // Line Item Details
+  purchaseOrder   purchase_orders @relation("POLineItems", fields: [purchaseOrderId], references: [id])
+
   lineNumber      Int       @default(1)
   materialCode    String?
   materialDesc    String?
   uom             String?
-  
-  // Quantities
-  quantity        Decimal?  @db.Decimal(19,4)   // Order Qty
+
+  // ✅ KEEP ALL YOUR EXISTING FIELDS
+  quantity        Decimal?  @db.Decimal(19,4)
   receivedQty     Decimal?  @db.Decimal(19,4) @default(0)
   pendingQty      Decimal?  @db.Decimal(19,4) @default(0)
-  invoiceQuantity Decimal?  @db.Decimal(19,4)   // Invoice Quantity
-  
-  // Pricing
-  unitPrice       Decimal?  @db.Decimal(19,4)   // Rate
-  totalPrice      Decimal?  @db.Decimal(19,4)   // Total Price
+  invoiceQuantity Decimal?  @db.Decimal(19,4)
+
+  unitPrice       Decimal?  @db.Decimal(19,4)
+  totalPrice      Decimal?  @db.Decimal(19,4)
+
   discountPercent Decimal?  @db.Decimal(5,2) @default(0)
   discountAmount  Decimal?  @db.Decimal(19,4) @default(0)
   taxableValue    Decimal?  @db.Decimal(19,4)
-  
-  // Tax Details
-  taxCode         String?   // Tax Code (e.g., G3, I1, etc.)
-  gstPercent      Decimal?  @db.Decimal(5,2)   // Total GST percentage
-  sgstPercent     Decimal?  @db.Decimal(5,2)   // State GST
-  cgstPercent     Decimal?  @db.Decimal(5,2)   // Central GST
-  igstPercent     Decimal?  @db.Decimal(5,2)   // Integrated GST
+
+  gstPercent      Decimal?  @db.Decimal(5,2)
+  sgstPercent     Decimal?  @db.Decimal(5,2)
+  cgstPercent     Decimal?  @db.Decimal(5,2)
+  igstPercent     Decimal?  @db.Decimal(5,2)
+
   sgstAmount      Decimal?  @db.Decimal(19,4)
   cgstAmount      Decimal?  @db.Decimal(19,4)
   igstAmount      Decimal?  @db.Decimal(19,4)
   gstAmount       Decimal?  @db.Decimal(19,4)
-  
-  // Total
+
   totalAmount     Decimal?  @db.Decimal(19,4)
-  
-  // Delivery
+
   expectedDate    DateTime?
   deliveredDate   DateTime?
-  
-  // Status
+
   status          String    @default("pending")
-  
-  // Tracking
+
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 

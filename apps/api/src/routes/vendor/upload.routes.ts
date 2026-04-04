@@ -6,8 +6,200 @@ import crypto from 'crypto'
 import path from 'path'
 import fs from 'fs'
 import XLSX from 'xlsx'
+import { authMiddleware } from '../../middleware/auth.middleware'
 
 const router = Router()
+
+// ============================================
+// GET PURCHASE ORDERS FOR VENDOR (FIXED)
+// ============================================
+router.get('/', authMiddleware, async (req, res) => {
+  try {
+    const vendorId = (req as any).user?.vendorId
+    
+    console.log('📦 Fetching POs for vendorId:', vendorId)
+    
+    if (!vendorId) {
+      return res.status(401).json({ error: 'Vendor not authenticated' })
+    }
+    
+    // Get all POs for this vendor
+    const purchaseOrders = await prisma.purchase_orders.findMany({
+      where: { vendorId: vendorId },
+      orderBy: { poCreateDate: 'desc' }
+    })
+    
+    console.log(`Found ${purchaseOrders.length} POs`)
+    
+    // For each PO, get line items
+    const ordersWithLineItems = []
+    
+    for (const po of purchaseOrders) {
+      const lineItems = await prisma.po_line_items.findMany({
+        where: { purchaseOrderId: po.id },
+        orderBy: { lineNumber: 'asc' }
+      })
+      
+      console.log(`PO ${po.poNumber}: ${lineItems.length} line items found`)
+      
+      // Format line items
+      const formattedLineItems = lineItems.map(item => ({
+        id: item.id,
+        lineNumber: item.lineNumber,
+        materialCode: item.materialCode,
+        materialDesc: item.materialDesc,
+        uom: item.uom,
+        quantity: item.quantity ? Number(item.quantity) : null,
+        receivedQty: item.receivedQty ? Number(item.receivedQty) : null,
+        pendingQty: item.pendingQty ? Number(item.pendingQty) : null,
+        unitPrice: item.unitPrice ? Number(item.unitPrice) : null,
+        discountPercent: item.discountPercent ? Number(item.discountPercent) : null,
+        discountAmount: item.discountAmount ? Number(item.discountAmount) : null,
+        taxableValue: item.taxableValue ? Number(item.taxableValue) : null,
+        gstPercent: item.gstPercent ? Number(item.gstPercent) : null,
+        sgstPercent: item.sgstPercent ? Number(item.sgstPercent) : null,
+        cgstPercent: item.cgstPercent ? Number(item.cgstPercent) : null,
+        igstPercent: item.igstPercent ? Number(item.igstPercent) : null,
+        gstAmount: item.gstAmount ? Number(item.gstAmount) : null,
+        totalAmount: item.totalAmount ? Number(item.totalAmount) : null,
+        status: item.status
+      }))
+      
+      ordersWithLineItems.push({
+        id: po.id,
+        poNumber: po.poNumber,
+        poType: po.poType,
+        plantCode: po.plantCode,
+        subDivisionCode: po.subDivisionCode,
+        plantName: po.plantName,
+        poCreateDate: po.poCreateDate,
+        poAmendDate: po.poAmendDate,
+        expectedDate: po.expectedDate,
+        deliveredDate: po.deliveredDate,
+        status: po.status,
+        subtotal: po.subtotal ? Number(po.subtotal) : null,
+        taxAmount: po.taxAmount ? Number(po.taxAmount) : null,
+        totalAmount: po.totalAmount ? Number(po.totalAmount) : null,
+        currency: po.currency,
+        lineItems: formattedLineItems
+      })
+    }
+    
+    console.log(`✅ Returning ${ordersWithLineItems.length} POs with line items`)
+    
+    res.json({
+      success: true,
+      data: ordersWithLineItems
+    })
+  } catch (error) {
+    console.error('Error fetching purchase orders:', error)
+    res.status(500).json({ error: 'Failed to fetch purchase orders' })
+  }
+})
+
+// ============================================
+// DEBUG ENDPOINT - Test direct line item fetch
+// ============================================
+router.get('/debug-direct', authMiddleware, async (req, res) => {
+  try {
+    const vendorId = (req as any).user?.vendorId
+    
+    console.log('🔍 Debug - vendorId:', vendorId)
+    
+    // Get first PO
+    const po = await prisma.purchase_orders.findFirst({
+      where: { vendorId: vendorId }
+    })
+    
+    if (!po) {
+      return res.json({ 
+        error: 'No PO found for this vendor',
+        vendorId: vendorId
+      })
+    }
+    
+    console.log('Found PO:', po.poNumber, 'ID:', po.id)
+    
+    // Get line items
+    const lineItems = await prisma.po_line_items.findMany({
+      where: { purchaseOrderId: po.id }
+    })
+    
+    console.log(`Found ${lineItems.length} line items for PO ${po.poNumber}`)
+    
+    res.json({
+      success: true,
+      poId: po.id,
+      poNumber: po.poNumber,
+      lineItemsCount: lineItems.length,
+      lineItems: lineItems.map(item => ({
+        id: item.id,
+        materialCode: item.materialCode,
+        uom: item.uom,
+        quantity: item.quantity ? Number(item.quantity) : null,
+        unitPrice: item.unitPrice ? Number(item.unitPrice) : null,
+        totalAmount: item.totalAmount ? Number(item.totalAmount) : null
+      }))
+    })
+  } catch (error) {
+    console.error('Debug error:', error)
+    res.status(500).json({ error: String(error) })
+  }
+})
+
+// ============================================
+// GET SINGLE PO BY NUMBER
+// ============================================
+router.get('/po/:poNumber', authMiddleware, async (req, res) => {
+  try {
+    const { poNumber } = req.params
+    const vendorId = (req as any).user?.vendorId
+    
+    const po = await prisma.purchase_orders.findFirst({
+      where: { 
+        poNumber: poNumber,
+        vendorId: vendorId
+      }
+    })
+    
+    if (!po) {
+      return res.status(404).json({ error: 'Purchase order not found' })
+    }
+    
+    const lineItems = await prisma.po_line_items.findMany({
+      where: { purchaseOrderId: po.id },
+      orderBy: { lineNumber: 'asc' }
+    })
+    
+    const formattedLineItems = lineItems.map(item => ({
+      id: item.id,
+      lineNumber: item.lineNumber,
+      materialCode: item.materialCode,
+      materialDesc: item.materialDesc,
+      uom: item.uom,
+      quantity: item.quantity ? Number(item.quantity) : null,
+      unitPrice: item.unitPrice ? Number(item.unitPrice) : null,
+      totalAmount: item.totalAmount ? Number(item.totalAmount) : null,
+      gstPercent: item.gstPercent ? Number(item.gstPercent) : null,
+      sgstPercent: item.sgstPercent ? Number(item.sgstPercent) : null,
+      cgstPercent: item.cgstPercent ? Number(item.cgstPercent) : null,
+      igstPercent: item.igstPercent ? Number(item.igstPercent) : null
+    }))
+    
+    res.json({
+      success: true,
+      data: {
+        ...po,
+        subtotal: po.subtotal ? Number(po.subtotal) : null,
+        totalAmount: po.totalAmount ? Number(po.totalAmount) : null,
+        lineItems: formattedLineItems
+      }
+    })
+  } catch (error) {
+    console.error('Error fetching PO:', error)
+    res.status(500).json({ error: 'Failed to fetch purchase order' })
+  }
+})
 
 // Ensure upload directory exists
 const uploadDir = path.join(__dirname, '../../uploads')
@@ -31,12 +223,12 @@ const storage = multer.diskStorage({
 
 const upload = multer({ 
   storage: storage,
-  limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
+  limits: { fileSize: 10 * 1024 * 1024 }
 })
 
 // Generate temporary password
 const generateTempPassword = () => {
-  return crypto.randomBytes(4).toString('hex') // 8 character password
+  return crypto.randomBytes(4).toString('hex')
 }
 
 // Excel date parser
@@ -48,7 +240,6 @@ const parseExcelDate = (dateValue: any): Date | null => {
       const excelEpoch = new Date(1899, 11, 31);
       const days = dateValue - 1;
       const date = new Date(excelEpoch.getTime() + days * 24 * 60 * 60 * 1000);
-      
       const year = date.getFullYear();
       if (year >= 2000 && year <= 2100) {
         return date;
@@ -62,9 +253,7 @@ const parseExcelDate = (dateValue: any): Date | null => {
         const month = parseInt(parts[0]);
         const day = parseInt(parts[1]);
         let year = parseInt(parts[2]);
-        
         if (year < 100) year = 2000 + year;
-        
         if (month >= 1 && month <= 12 && day >= 1 && day <= 31 && year >= 2000 && year <= 2100) {
           return new Date(year, month - 1, day);
         }
@@ -74,6 +263,18 @@ const parseExcelDate = (dateValue: any): Date | null => {
   } catch (e) {
     return null;
   }
+}
+
+// Helper to parse number with commas
+const parseNumber = (value: any): number | null => {
+  if (!value && value !== 0) return null;
+  if (typeof value === 'number') return value;
+  if (typeof value === 'string') {
+    const cleaned = value.replace(/,/g, '').replace(/%/g, '');
+    const num = parseFloat(cleaned);
+    return isNaN(num) ? null : num;
+  }
+  return null;
 }
 
 // Parse Excel file
@@ -132,7 +333,7 @@ const parseExcel = (filePath: string) => {
 }
 
 // Upload file endpoint
-router.post('/', upload.single('file'), async (req, res) => {
+router.post('/', authMiddleware, upload.single('file'), async (req, res) => {
   try {
     console.log('📤 Upload request received')
     
@@ -157,7 +358,7 @@ router.post('/', upload.single('file'), async (req, res) => {
 })
 
 // Process uploaded data
-router.post('/process/:fileId', async (req, res) => {
+router.post('/process/:fileId', authMiddleware, async (req, res) => {
   const { fileId } = req.params
   const { fileName } = req.body
   const filePath = path.join(__dirname, '../../uploads', fileId)
@@ -191,52 +392,56 @@ router.post('/process/:fileId', async (req, res) => {
 
     for (const [index, record] of records.entries()) {
       try {
-        // Extract data
         const email = record['Email']?.trim()
         const supplierCode = record['Supplier Code']?.toString().trim()
         const supplierName = record['Supplier Name']?.trim()
-        const plantCode = record['Plant code']?.toString().trim()
+        const subDivisionCode = record['Sub- Division Code']?.toString().trim()
+        const plantName = record['Plant Name']?.trim()
         const poNumber = record['PO No.']?.toString().trim()
         
-        const poCreateDate = parseExcelDate(record['PO Creat. Date'])
-        const poAmendDate = parseExcelDate(record['PO Amendt. Date'])
-        
+        const poCreateDate = parseExcelDate(record['PO Creat. Date']) || parseExcelDate(record['PO Create Date'])        
         const materialCode = record['Material Code']?.toString().trim()
-        const materialDesc = record['Material Description']?.trim()
+        const materialDesc = record['Material Description']?.toString().trim()
         const lineItem = record['Line Item'] ? parseInt(record['Line Item']) : null
         const orderUnit = record['Order Unit']?.trim()
+        const orderQty = parseNumber(record['Order Qty'])
+        const invoiceQuantity = parseNumber(record['Invoice Quantity'])
         
-        const rateStr = record['Rate']?.toString().replace(/,/g, '') || '0'
-        const rate = parseFloat(rateStr) || 0
+        const rate = parseNumber(record['Rate'])
+        const totalPrice = parseNumber(record['Total Price'])
         
-        const quantityStr = record['Invoice Quantity']?.toString().replace(/,/g, '') || '0'
-        const quantity = parseFloat(quantityStr) || 0
+        const sgstPercent = parseNumber(record['SGST %'])
+        const cgstPercent = parseNumber(record['CGST %'])
+        const igstPercent = parseNumber(record['IGST %'])
+        const sgstAmount = parseNumber(record['SGST Amt'])
+        const cgstAmount = parseNumber(record['CGST Amt'])
+        const igstAmount = parseNumber(record['IGST Amt'])
+        
+        const finalTotalPrice = totalPrice || (rate && orderQty ? rate * orderQty : null)
+        const totalGstPercent = (sgstPercent || 0) + (cgstPercent || 0) + (igstPercent || 0)
+        const totalAmount = finalTotalPrice ? finalTotalPrice * (1 + totalGstPercent / 100) : null
         
         if (!supplierCode || !supplierName) {
           summary.errors.push(`Row ${index + 2}: Missing supplier code or name`)
           continue
         }
 
-        // ========== VENDOR: CREATE OR UPDATE (WITH EMAIL UPDATE) ==========
         let vendor = await prisma.vendors.findUnique({
           where: { supplierCode }
         })
 
         if (!vendor) {
-          // Create new vendor
           vendor = await prisma.vendors.create({
             data: {
               supplierCode,
               supplierName,
               email: email || `${supplierCode.toLowerCase()}@vendorflow.com`,
-              plantCode,
               status: 'active'
             }
           })
           summary.vendorsCreated++
-          console.log(`✅ New vendor created: ${supplierName} (${supplierCode}) with email: ${vendor.email}`)
+          console.log(`✅ New vendor created: ${supplierName} (${supplierCode})`)
 
-          // Generate temp password and invitation for new vendor
           const tempPassword = generateTempPassword()
           const hashedPassword = await bcrypt.hash(tempPassword, 10)
           const invitationToken = crypto.randomBytes(32).toString('hex')
@@ -252,104 +457,88 @@ router.post('/process/:fileId', async (req, res) => {
             }
           })
           summary.invitationsSent++
-        } else {
-          // Check if email needs to be updated
-          const updates: any = {}
-          
-          if (vendor.email !== email) {
-            updates.email = email
-            console.log(`📧 Email change detected for ${supplierCode}: "${vendor.email}" -> "${email}"`)
-          }
-          
-          // Also check if other fields need updating
-          if (vendor.supplierName !== supplierName) {
-            updates.supplierName = supplierName
-            console.log(`📝 Name change detected for ${supplierCode}: "${vendor.supplierName}" -> "${supplierName}"`)
-          }
-          
-          if (vendor.plantCode !== plantCode) {
-            updates.plantCode = plantCode
-            console.log(`🏭 Plant code change detected for ${supplierCode}: "${vendor.plantCode}" -> "${plantCode}"`)
-          }
-          
-          // Apply updates if any
-          if (Object.keys(updates).length > 0) {
-            await prisma.vendors.update({
-              where: { id: vendor.id },
-              data: updates
-            })
-            summary.vendorsUpdated++
-            console.log(`🔄 Updated vendor ${supplierCode} with ${Object.keys(updates).length} change(s)`)
-          } else {
-            console.log(`⏭️ Vendor ${supplierCode} unchanged`)
-          }
         }
 
-        // ========== PURCHASE ORDER: Create if doesn't exist ==========
+        let purchaseOrder = null
         if (poNumber) {
-          let purchaseOrder = await prisma.purchase_orders.findUnique({
+          purchaseOrder = await prisma.purchase_orders.findUnique({
             where: { poNumber }
           })
-
+          
           if (!purchaseOrder) {
             purchaseOrder = await prisma.purchase_orders.create({
               data: {
                 poNumber,
                 vendorId: vendor.id,
+                subDivisionCode: subDivisionCode,
+                plantName: plantName,
+                plantCode: subDivisionCode,
+                poType: 'Standard',
                 poCreateDate: poCreateDate,
-                poAmendDate: poAmendDate,
-                status: 'draft'
+                status: 'pending',
+                createdById: userId,
+                subtotal: finalTotalPrice,
+                totalAmount: totalAmount,
+                currency: 'INR'
               }
             })
             summary.purchaseOrders++
             console.log(`✅ New PO created: ${poNumber}`)
           }
+        }
 
-          // ========== LINE ITEM: Create if doesn't exist ==========
-          if (materialCode) {
-            const existingItem = await prisma.purchase_order_line_items.findFirst({
-              where: {
+        if (purchaseOrder && materialCode) {
+          const existingItem = await prisma.po_line_items.findFirst({
+            where: {
+              purchaseOrderId: purchaseOrder.id,
+              materialCode: materialCode
+            }
+          })
+
+          if (!existingItem) {
+            await prisma.po_line_items.create({
+              data: {
                 purchaseOrderId: purchaseOrder.id,
+                lineNumber: lineItem || 1,
                 materialCode: materialCode,
-                lineNumber: lineItem || 1
+                materialDesc: materialDesc,
+                uom: orderUnit,
+                quantity: orderQty,
+                invoiceQuantity: invoiceQuantity || orderQty,
+                unitPrice: rate,
+                totalPrice: finalTotalPrice,
+                gstPercent: totalGstPercent,
+                sgstPercent: sgstPercent,
+                cgstPercent: cgstPercent,
+                igstPercent: igstPercent,
+                sgstAmount: sgstAmount,
+                cgstAmount: cgstAmount,
+                igstAmount: igstAmount,
+                totalAmount: totalAmount,
+                status: 'pending'
               }
             })
-
-            if (!existingItem) {
-              await prisma.purchase_order_line_items.create({
-                data: {
-                  purchaseOrderId: purchaseOrder.id,
-                  lineNumber: lineItem || 1,
-                  materialDesc: materialDesc || '',
-                  materialCode: materialCode,
-                  orderUnit: orderUnit || 'EA',
-                  rate: rate,
-                  invoiceQuantity: quantity
-                }
-              })
-              summary.lineItems++
-              console.log(`✅ New line item: ${materialCode} for PO ${poNumber}`)
-            }
+            summary.lineItems++
+            console.log(`✅ New line item: ${materialCode} for PO ${poNumber}`)
           }
         }
 
-        // ========== RAW DATA: Store for audit ==========
         await prisma.vendor_upload_data.create({
           data: {
             email,
             supplierCode,
             supplierName,
-            plantCode,
+            plantCode: subDivisionCode,
             poNumber,
             poCreateDate,
-            poAmendDate,
             materialCode,
             materialDesc,
             lineItem,
             orderUnit,
             rate,
-            invoiceQuantity: quantity,
+            invoiceQuantity: invoiceQuantity || orderQty,
             vendorId: vendor.id,
+            poId: purchaseOrder?.id,
             uploadedById: userId,
             fileName: fileName,
             rowNumber: index + 2,
@@ -367,7 +556,6 @@ router.post('/process/:fileId', async (req, res) => {
       }
     }
 
-    // Clean up uploaded file
     try {
       fs.unlinkSync(filePath)
       console.log('✅ Cleaned up file:', filePath)
@@ -395,7 +583,10 @@ router.post('/process/:fileId', async (req, res) => {
     res.status(500).json({ error: 'Processing failed: ' + (error as Error).message })
   }
 })
-
+// TEST ENDPOINT - Put this at the very top
+router.get('/test', (req, res) => {
+  res.json({ message: 'Route is working!' })
+})
 // Get vendor data by supplier code
 router.get('/vendor/:supplierCode', async (req, res) => {
   try {
@@ -423,29 +614,6 @@ router.get('/vendor/:supplierCode', async (req, res) => {
   } catch (error) {
     console.error('Error fetching vendor data:', error)
     res.status(500).json({ error: 'Failed to fetch vendor data' })
-  }
-})
-
-// Get purchase order details by PO number
-router.get('/po/:poNumber', async (req, res) => {
-  try {
-    const { poNumber } = req.params
-    
-    const poData = await prisma.purchase_orders.findUnique({
-      where: { poNumber },
-      include: {
-        vendor: true,
-        lineItems: true
-      }
-    })
-
-    res.json({
-      success: true,
-      data: poData
-    })
-  } catch (error) {
-    console.error('Error fetching PO data:', error)
-    res.status(500).json({ error: 'Failed to fetch PO data' })
   }
 })
 

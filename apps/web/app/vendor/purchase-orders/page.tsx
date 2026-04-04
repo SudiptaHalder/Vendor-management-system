@@ -774,10 +774,15 @@ export default function VendorPurchaseOrdersPage() {
       
       if (data.success) {
         // Add mock categories for demo (replace with actual data from backend)
-        const ordersWithCategories = data.data.map((po: PurchaseOrder, index: number) => ({
-          ...po,
-          category: index % 2 === 0 ? 'close_quantity' : 'schedule'
-        }))
+       const ordersWithCategories = data.data.map((po: any, index: number) => ({
+  ...po,
+
+  // 🔥 FORCE lineItems ALWAYS PRESENT
+  lineItems: Array.isArray(po.lineItems) ? po.lineItems : [],
+
+  // keep your existing UI logic
+  category: index % 2 === 0 ? 'close_quantity' : 'schedule'
+}))
         setPurchaseOrders(ordersWithCategories)
       } else {
         setError('Failed to fetch purchase orders')

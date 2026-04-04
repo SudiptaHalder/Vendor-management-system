@@ -247,6 +247,8 @@ router.get('/purchase-orders', vendorMiddleware, async (req, res) => {
   try {
     const vendorId = (req as any).user?.vendorId
     
+    console.log('📦 Fetching POs for vendorId:', vendorId)
+    
     if (!vendorId) {
       return res.status(401).json({ 
         success: false, 
@@ -262,25 +264,47 @@ router.get('/purchase-orders', vendorMiddleware, async (req, res) => {
       }
     })
 
-    // For each PO, get the legacy line items
+    console.log(`Found ${pos.length} POs`)
+
+    // For each PO, get line items from the CORRECT table (po_line_items)
     const posWithItems = await Promise.all(pos.map(async (po) => {
-      const lineItems = await prisma.purchase_order_line_items.findMany({
-        where: { purchaseOrderId: po.id }
+      const lineItems = await prisma.po_line_items.findMany({
+        where: { purchaseOrderId: po.id },
+        orderBy: { lineNumber: 'asc' }
       })
+      
+      console.log(`PO ${po.poNumber}: ${lineItems.length} line items found`)
       
       return {
         ...po,
+        subtotal: po.subtotal ? Number(po.subtotal) : null,
+        taxAmount: po.taxAmount ? Number(po.taxAmount) : null,
+        totalAmount: po.totalAmount ? Number(po.totalAmount) : null,
         lineItems: lineItems.map(item => ({
           id: item.id,
-          lineNumber: item.lineNumber || 1,
+          lineNumber: item.lineNumber,
           materialCode: item.materialCode,
           materialDesc: item.materialDesc,
-          orderUnit: item.orderUnit,
-          rate: item.rate,
-          invoiceQuantity: item.invoiceQuantity
+          uom: item.uom,
+          quantity: item.quantity ? Number(item.quantity) : null,
+          receivedQty: item.receivedQty ? Number(item.receivedQty) : null,
+          pendingQty: item.pendingQty ? Number(item.pendingQty) : null,
+          unitPrice: item.unitPrice ? Number(item.unitPrice) : null,
+          discountPercent: item.discountPercent ? Number(item.discountPercent) : null,
+          discountAmount: item.discountAmount ? Number(item.discountAmount) : null,
+          taxableValue: item.taxableValue ? Number(item.taxableValue) : null,
+          gstPercent: item.gstPercent ? Number(item.gstPercent) : null,
+          sgstPercent: item.sgstPercent ? Number(item.sgstPercent) : null,
+          cgstPercent: item.cgstPercent ? Number(item.cgstPercent) : null,
+          igstPercent: item.igstPercent ? Number(item.igstPercent) : null,
+          gstAmount: item.gstAmount ? Number(item.gstAmount) : null,
+          totalAmount: item.totalAmount ? Number(item.totalAmount) : null,
+          status: item.status
         }))
       }
     }))
+
+    console.log(`✅ Returning ${posWithItems.length} POs with line items`)
 
     res.json({
       success: true,
