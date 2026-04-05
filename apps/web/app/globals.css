@@ -1,30 +1,4 @@
-/* @tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
-
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-} */
+/* 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -85,6 +59,108 @@ body {
   }
 }
 
+input, select, textarea {
+  color: #1f2937 !important;
+  background-color: #ffffff !important;
+}
+
+input::placeholder, textarea::placeholder {
+  color: #9ca3af !important;
+}
+
+table td, table th {
+  color: #1f2937 !important;
+}
+
+.bg-white, .bg-gray-50, .bg-gray-100 {
+  color: #1f2937 !important;
+}
+
+input[type="text"], 
+input[type="number"], 
+input[type="date"],
+select,
+textarea {
+  color: #111827 !important;
+  background-color: #ffffff !important;
+  border-color: #d1d5db !important;
+}
+
+input:disabled, textarea:disabled, select:disabled {
+  background-color: #f3f4f6 !important;
+  color: #6b7280 !important;
+}
+
+label {
+  color: #374151 !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #111827 !important;
+}
+
+p, span, div {
+  color: #374151 !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  input, select, textarea {
+    color: #1f2937 !important;
+    background-color: #ffffff !important;
+  }
+  
+  body {
+    background-color: #f3f4f6 !important;
+    color: #111827 !important;
+  }
+}  */
+  @tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Hide scrollbar for sidebar */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 /* Override for input fields to ensure text is visible */
 input, select, textarea {
   color: #1f2937 !important;
@@ -131,20 +207,44 @@ h1, h2, h3, h4, h5, h6 {
   color: #111827 !important;
 }
 
-/* Paragraph text */
+/* Paragraph text - EXCLUDE sidebar */
 p, span, div {
   color: #374151 !important;
 }
 
-/* Override for dark mode - keep inputs readable */
-@media (prefers-color-scheme: dark) {
-  input, select, textarea {
-    color: #1f2937 !important;
-    background-color: #ffffff !important;
-  }
-  
-  body {
-    background-color: #f3f4f6 !important;
-    color: #111827 !important;
-  }
+/* Sidebar specific - Force white text */
+aside, aside * {
+  color: #ffffff !important;
+}
+
+/* Override for sidebar links and buttons */
+aside a, aside button, aside span, aside p, aside div {
+  color: #ffffff !important;
+}
+
+/* Sidebar hover states */
+aside a:hover, aside button:hover {
+  color: #ffffff !important;
+}
+
+/* Sidebar active state */
+aside a.active, aside .active {
+  color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Keep sidebar icons white */
+aside svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+/* Keep green-200 text for specific elements */
+aside .text-green-200 {
+  color: #bbf7d0 !important;
+}
+
+/* Keep red-300 for logout */
+aside .text-red-300 {
+  color: #fca5a5 !important;
 }

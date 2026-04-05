@@ -1,3 +1,4 @@
+
 // 'use client'
 
 // import { useState, useEffect } from 'react'
@@ -24,7 +25,10 @@
 //   Download,
 //   Eye,
 //   Truck,
-//   ClipboardList
+//   ClipboardList,
+//   Database,
+//   Zap,
+//   HardDrive
 // } from 'lucide-react'
 
 // interface VendorLayoutProps {
@@ -74,6 +78,14 @@
 //         { name: 'All Orders', href: '/vendor/purchase-orders', icon: Package },
 //         { name: 'Pending', href: '/vendor/purchase-orders?status=pending', icon: Clock },
 //         { name: 'Completed', href: '/vendor/purchase-orders?status=completed', icon: CheckCircle }
+//       ]
+//     },
+//     {
+//       name: 'EDI',
+//       icon: Database,
+//       submenu: [
+//         { name: 'Manual', href: '/vendor/edi/manual', icon: HardDrive },
+//         { name: 'Automatic', href: '/vendor/edi/automatic', icon: Zap }
 //       ]
 //     },
 //     {
@@ -273,7 +285,6 @@
 //                   <p className="text-sm font-medium text-gray-900">{vendor?.name}</p>
 //                   <p className="text-xs text-gray-500">Vendor</p>
 //                 </div>
-//                 {/* ✅ MAKE PROFILE ICON CLICKABLE */}
 //                 <button
 //                   onClick={() => router.push('/vendor/profile')}
 //                   className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center hover:bg-green-200 transition cursor-pointer"
@@ -433,7 +444,7 @@ export default function VendorLayout({ children }: VendorLayoutProps) {
     return pathname === href || pathname?.startsWith(href + '/')
   }
 
-  const renderIcon = (icon: any, size: number = 20) => {
+  const renderIcon = (icon: any, size: number = 18) => {
     const IconComponent = icon
     return <IconComponent size={size} />
   }
@@ -448,71 +459,71 @@ export default function VendorLayout({ children }: VendorLayoutProps) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Sidebar */}
+      {/* Sidebar - Reduced width */}
       <aside
         className={`fixed top-0 left-0 z-40 h-screen transition-all duration-300 ${
-          isSidebarOpen ? 'w-64' : 'w-20'
+          isSidebarOpen ? 'w-52' : 'w-16'
         }`}
       >
-        <div className="h-full bg-gradient-to-b from-green-600 to-green-700 text-white flex flex-col">
+        <div className="h-full bg-gradient-to-b from-green-600 to-green-700 text-white flex flex-col overflow-y-auto scrollbar-hide">
           {/* Logo */}
-          <div className="flex items-center justify-between h-16 px-4 border-b border-green-500">
+          <div className="flex items-center justify-between h-14 px-3 border-b border-green-500">
             <div className="flex items-center space-x-2 overflow-hidden">
-              <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center flex-shrink-0">
-                <span className="text-green-600 font-bold text-xl">VF</span>
+              <div className="w-7 h-7 bg-white rounded-lg flex items-center justify-center flex-shrink-0">
+                <span className="text-green-600 font-bold text-lg">VF</span>
               </div>
               {isSidebarOpen && (
-                <span className="text-xl font-bold truncate">
+                <span className="text-lg font-bold text-white truncate">
                   Vendor<span className="text-green-200">Portal</span>
                 </span>
               )}
             </div>
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="p-1.5 rounded-lg hover:bg-green-500 lg:block hidden"
+              className="p-1 rounded-lg hover:bg-green-500 lg:block hidden text-white"
             >
-              <Menu size={18} />
+              <Menu size={16} />
             </button>
           </div>
 
           {/* Vendor Info */}
           {isSidebarOpen && vendor && (
-            <div className="px-4 py-3 bg-green-600">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
-                  {renderIcon(User, 20)}
+            <div className="px-3 py-2 bg-green-600">
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
+                  {renderIcon(User, 16)}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">{vendor.name}</p>
-                  <p className="text-xs text-green-200 truncate">ID: {vendor.code}</p>
+                  <p className="text-xs font-medium text-white truncate">{vendor.name}</p>
+                  <p className="text-[10px] text-green-200 truncate">ID: {vendor.code}</p>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Navigation */}
-          <nav className="flex-1 overflow-y-auto px-3 py-4">
+          {/* Navigation - No scrollbar */}
+          <nav className="flex-1 px-2 py-3 space-y-0.5 overflow-y-auto scrollbar-hide">
             {menuItems.map((item) => (
-              <div key={item.name} className="mb-1">
+              <div key={item.name}>
                 {item.submenu ? (
-                  <div className="mb-2">
-                    <div className="px-3 py-2 text-xs font-semibold text-green-200 uppercase tracking-wider">
-                      {isSidebarOpen ? item.name : renderIcon(item.icon, 20)}
+                  <div>
+                    <div className="px-2 py-1.5 text-[10px] font-semibold text-green-200 uppercase tracking-wider">
+                      {isSidebarOpen ? item.name : renderIcon(item.icon, 16)}
                     </div>
                     {isSidebarOpen && (
-                      <div className="ml-2 space-y-1">
+                      <div className="space-y-0.5">
                         {item.submenu.map((subItem) => (
                           <Link
                             key={subItem.href}
                             href={subItem.href}
-                            className={`flex items-center space-x-3 px-3 py-2 text-sm rounded-lg transition-colors ${
+                            className={`flex items-center space-x-2 px-2 py-1.5 text-xs rounded-md transition-colors ${
                               isActive(subItem.href)
                                 ? 'bg-green-500 text-white'
-                                : 'text-green-100 hover:bg-green-500'
+                                : 'text-white hover:bg-green-500'
                             }`}
                           >
-                            {renderIcon(subItem.icon, 16)}
-                            <span>{subItem.name}</span>
+                            {renderIcon(subItem.icon, 12)}
+                            <span className="text-white">{subItem.name}</span>
                           </Link>
                         ))}
                       </div>
@@ -521,14 +532,14 @@ export default function VendorLayout({ children }: VendorLayoutProps) {
                 ) : (
                   <Link
                     href={item.href}
-                    className={`flex items-center space-x-3 px-3 py-2 text-sm rounded-lg transition-colors ${
+                    className={`flex items-center space-x-2 px-2 py-1.5 text-xs rounded-md transition-colors ${
                       isActive(item.href)
                         ? 'bg-green-500 text-white'
-                        : 'text-green-100 hover:bg-green-500'
+                        : 'text-white hover:bg-green-500'
                     }`}
                   >
-                    {renderIcon(item.icon, 20)}
-                    {isSidebarOpen && <span>{item.name}</span>}
+                    {renderIcon(item.icon, 16)}
+                    {isSidebarOpen && <span className="text-white">{item.name}</span>}
                   </Link>
                 )}
               </div>
@@ -536,26 +547,26 @@ export default function VendorLayout({ children }: VendorLayoutProps) {
           </nav>
 
           {/* Bottom Section */}
-          <div className="border-t border-green-500 p-3">
+          <div className="border-t border-green-500 p-2 space-y-0.5">
             <button
               onClick={() => router.push('/vendor/notifications')}
-              className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-green-100 rounded-lg hover:bg-green-500 mb-1"
+              className="w-full flex items-center space-x-2 px-2 py-1.5 text-xs text-white rounded-md hover:bg-green-500"
             >
-              {renderIcon(Bell, 20)}
+              {renderIcon(Bell, 14)}
               {isSidebarOpen && <span>Notifications</span>}
             </button>
             <button
               onClick={() => router.push('/vendor/support')}
-              className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-green-100 rounded-lg hover:bg-green-500 mb-1"
+              className="w-full flex items-center space-x-2 px-2 py-1.5 text-xs text-white rounded-md hover:bg-green-500"
             >
-              {renderIcon(HelpCircle, 20)}
+              {renderIcon(HelpCircle, 14)}
               {isSidebarOpen && <span>Help & Support</span>}
             </button>
             <button
               onClick={handleLogout}
-              className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-red-300 rounded-lg hover:bg-green-500"
+              className="w-full flex items-center space-x-2 px-2 py-1.5 text-xs text-red-300 rounded-md hover:bg-green-500"
             >
-              {renderIcon(LogOut, 20)}
+              {renderIcon(LogOut, 14)}
               {isSidebarOpen && <span>Logout</span>}
             </button>
           </div>
@@ -563,29 +574,29 @@ export default function VendorLayout({ children }: VendorLayoutProps) {
       </aside>
 
       {/* Main Content */}
-      <div className={`transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-20'}`}>
+      <div className={`transition-all duration-300 ${isSidebarOpen ? 'ml-52' : 'ml-16'}`}>
         {/* Top Header */}
         <header className="bg-white shadow-sm sticky top-0 z-30">
-          <div className="flex items-center justify-between px-6 py-3">
+          <div className="flex items-center justify-between px-4 py-2">
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="p-2 rounded-lg hover:bg-gray-100 lg:hidden"
+              className="p-1.5 rounded-lg hover:bg-gray-100 lg:hidden"
             >
-              <Menu size={20} />
+              <Menu size={18} />
             </button>
             <div className="flex-1" />
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-2">
                 <div className="text-right">
                   <p className="text-sm font-medium text-gray-900">{vendor?.name}</p>
                   <p className="text-xs text-gray-500">Vendor</p>
                 </div>
                 <button
                   onClick={() => router.push('/vendor/profile')}
-                  className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center hover:bg-green-200 transition cursor-pointer"
+                  className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center hover:bg-green-200 transition cursor-pointer"
                   title="View Profile"
                 >
-                  {renderIcon(User, 20)}
+                  {renderIcon(User, 16)}
                 </button>
               </div>
             </div>
@@ -593,7 +604,7 @@ export default function VendorLayout({ children }: VendorLayoutProps) {
         </header>
 
         {/* Page Content */}
-        <main className="p-6">
+        <main className="p-4">
           {children}
         </main>
       </div>
