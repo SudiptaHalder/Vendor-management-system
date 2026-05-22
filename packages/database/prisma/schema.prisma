@@ -1,7 +1,3 @@
-// ========================================
-// VENDORFLOW - COMPLETE SCHEMA
-// ========================================
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,55 +7,44 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// ========================================
-// ADMIN USERS (for uploading)
-// ========================================
-
 model users {
-  id           String    @id @default(cuid())
-  email        String    @unique
-  password     String?
-  name         String?
-  role         String    @default("admin")
-  isActive     Boolean   @default(true)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-
-  // Relations
-  uploadedFiles           vendor_upload_data[]
-  createdPurchaseOrders   purchase_orders[] @relation("POCreatedBy")
+  id                    String               @id @default(cuid())
+  email                 String               @unique
+  password              String?
+  name                  String?
+  role                  String               @default("admin")
+  isActive              Boolean              @default(true)
+  createdAt             DateTime             @default(now())
+  updatedAt             DateTime             @updatedAt
+  createdPurchaseOrders purchase_orders[]    @relation("POCreatedBy")
+  uploadedFiles         vendor_upload_data[]
 
   @@index([email])
   @@map("users")
 }
 
-// ========================================
-// VENDORS (created from uploads)
-// ========================================
-
 model vendors {
-  id              String    @id @default(cuid())
-  supplierCode    String    @unique
-  supplierName    String
-  email           String?
-  plantCode       String?
-  status          String    @default("active")
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  
-  // Relations
-  credentials     vendor_credentials?
-  uploadRecords   vendor_upload_data[]
-  purchaseOrders  purchase_orders[]
-  invitations     vendor_invitations[]
-  masterData      VendorMaster?
+  id             String               @id @default(cuid())
+  supplierCode   String               @unique
+  supplierName   String
+  email          String?
+  plantCode      String?
+  status         String               @default("active")
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+  sapCode        String?
+  sapSyncStatus  String?              @default("pending")
+  sapLastSyncAt  DateTime?            @db.Timestamp(6)
+  sapPayload     String?
+  sapError       String?
+  purchaseOrders purchase_orders[]
+  credentials    vendor_credentials?
+  invitations    vendor_invitations[]
+  masterData     VendorMaster?
+  uploadRecords  vendor_upload_data[]
 
   @@map("vendors")
 }
-
-// ========================================
-// VENDOR MASTER DATA (detailed vendor info)
-// ========================================
 
 model VendorMaster {
   id                    String    @id @default(cuid())
@@ -72,10 +57,10 @@ model VendorMaster {
   bankName              String?
   bankAccount           String?
   taxNumber             String?
-  postingBlock          Boolean?   @default(false)
-  purchasingBlock       Boolean?   @default(false)
+  postingBlock          Boolean?  @default(false)
+  purchasingBlock       Boolean?  @default(false)
   paymentMethods        String?
-  deletionFlag          Boolean?   @default(false)
+  deletionFlag          Boolean?  @default(false)
   createdBy             String?
   accountHolder         String?
   accountingClerk       String?
@@ -84,7 +69,7 @@ model VendorMaster {
   alternativePayee      String?
   alternativePayeeCC    String?
   authorization         String?
-  automaticPO           Boolean?   @default(false)
+  automaticPO           Boolean?  @default(false)
   bankControlKey        String?
   bankCountry           String?
   bankKey               String?
@@ -94,24 +79,24 @@ model VendorMaster {
   branchCode            String?
   branchDescription     String?
   businessPartner       String?
-  checkDoubleInvoice    Boolean?   @default(false)
+  checkDoubleInvoice    Boolean?  @default(false)
   clerkFaxNo            String?
   countryKey            String?
   createdOn             DateTime?
   defaultBranch         String?
   email                 String?
   faxNumber             String?
-  grBasedInvVerif       Boolean?   @default(false)
+  grBasedInvVerif       Boolean?  @default(false)
   iban                  String?
   incoterms             String?
   incotermsPart2        String?
   internetAdd           String?
-  itemPaymentBlock      Boolean?   @default(false)
-  liableForVAT          Boolean?   @default(true)
+  itemPaymentBlock      Boolean?  @default(false)
+  liableForVAT          Boolean?  @default(true)
   minorityIndicator     String?
-  naturalPerson         Boolean?   @default(false)
+  naturalPerson         Boolean?  @default(false)
   orderCurrency         String?
-  paymentBlock          Boolean?   @default(false)
+  paymentBlock          Boolean?  @default(false)
   planningGroup         String?
   postalCode            String?
   previousAccountNo     String?
@@ -147,90 +132,66 @@ model VendorMaster {
   termsOfPaytsKeyPO     String?
   tradingPartnerNo      String?
   wTaxCRKey             String?
-  
-  // Relations
-  vendor                vendors   @relation(fields: [supplierCode], references: [supplierCode])
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
+  vendor                vendors   @relation(fields: [supplierCode], references: [supplierCode])
 
   @@map("vendor_master")
 }
 
-// ========================================
-// VENDOR CREDENTIALS (for login)
-// ========================================
-
 model vendor_credentials {
-  id              String    @id @default(cuid())
-  vendorId        String    @unique
-  vendor          vendors   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
-  
-  // Login credentials
-  username        String    @unique
-  password        String
-  tempPassword    String?
-  
-  // Status
-  isActive        Boolean   @default(true)
-  isTempPassword  Boolean   @default(true)
-  lastLoginAt     DateTime?
+  id                String    @id @default(cuid())
+  vendorId          String    @unique
+  username          String    @unique
+  password          String
+  tempPassword      String?
+  isActive          Boolean   @default(true)
+  isTempPassword    Boolean   @default(true)
+  lastLoginAt       DateTime?
   passwordChangedAt DateTime?
-  
-  // Invitation
-  invitationSent  Boolean   @default(false)
-  invitationToken String?   @unique
-  
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  invitationSent    Boolean   @default(false)
+  invitationToken   String?   @unique
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  vendor            vendors   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
 
   @@index([username])
   @@index([vendorId])
   @@map("vendor_credentials")
 }
 
-// ========================================
-// PURCHASE ORDERS (enhanced)
-// ========================================
-
 model purchase_orders {
-  id              String    @id @default(cuid())
-
-  // PO Basic Info
-  poNumber        String    @unique
-  poType          String?
-  plantCode       String?
-  subDivisionCode String?
-  plantName       String?
-
-  // Vendor Relation
+  id              String                      @id @default(cuid())
+  poNumber        String                      @unique
   vendorId        String
-  vendor          vendors   @relation(fields: [vendorId], references: [id], onDelete: Restrict)
-
-  // Dates
   poCreateDate    DateTime?
   poAmendDate     DateTime?
-  expectedDate    DateTime?
-  deliveredDate   DateTime?
-
-  // Status
-  status          String    @default("draft")
-
-  // Financial
-  subtotal        Decimal?  @db.Decimal(19,4)
-  taxAmount       Decimal?  @db.Decimal(19,4)
-  totalAmount     Decimal?  @db.Decimal(19,4)
-  currency        String?   @default("INR")
-
-  // Tracking
+  status          String                      @default("draft")
+  createdAt       DateTime                    @default(now())
+  updatedAt       DateTime                    @updatedAt
   createdById     String?
-  createdBy       users?    @relation("POCreatedBy", fields: [createdById], references: [id])
-
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-
-  // ✅ CORRECT RELATIONS
-  lineItems       po_line_items[] @relation("POLineItems")
+  currency        String?                     @default("INR")
+  deliveredDate   DateTime?
+  expectedDate    DateTime?
+  plantCode       String?
+  poType          String?
+  subtotal        Decimal?                    @db.Decimal(19, 4)
+  taxAmount       Decimal?                    @db.Decimal(19, 4)
+  totalAmount     Decimal?                    @db.Decimal(19, 4)
+  plantName       String?
+  subDivisionCode String?
+  sapId           String?
+  sapSyncStatus   String?                     @default("pending")
+  sapLastSyncAt   DateTime?                   @db.Timestamp(6)
+  sapPayload      String?
+  sapError        String?
+  sapRetryCount   Int?                        @default(0)
+  sapExternalId   String?
+  lineItems       po_line_items[]             @relation("POLineItems")
   legacyLineItems purchase_order_line_items[]
+  createdBy       users?                      @relation("POCreatedBy", fields: [createdById], references: [id])
+  vendor          vendors                     @relation(fields: [vendorId], references: [id])
+  sapMaterialDocs sap_material_documents[]
   uploadRecords   vendor_upload_data[]
 
   @@index([poNumber])
@@ -239,109 +200,68 @@ model purchase_orders {
   @@map("purchase_orders")
 }
 
-// ========================================
-// PURCHASE ORDER LINE ITEMS (enhanced)
-// ========================================
-
 model po_line_items {
-  id              String    @id @default(cuid())
-
+  id              String          @id @default(cuid())
   purchaseOrderId String
-  purchaseOrder   purchase_orders @relation("POLineItems", fields: [purchaseOrderId], references: [id])
-
-  lineNumber      Int       @default(1)
+  lineNumber      Int             @default(1)
   materialCode    String?
   materialDesc    String?
   uom             String?
-
-  // ✅ KEEP ALL YOUR EXISTING FIELDS
-  quantity        Decimal?  @db.Decimal(19,4)
-  receivedQty     Decimal?  @db.Decimal(19,4) @default(0)
-  pendingQty      Decimal?  @db.Decimal(19,4) @default(0)
-  invoiceQuantity Decimal?  @db.Decimal(19,4)
-
-  unitPrice       Decimal?  @db.Decimal(19,4)
-  totalPrice      Decimal?  @db.Decimal(19,4)
-
-  discountPercent Decimal?  @db.Decimal(5,2) @default(0)
-  discountAmount  Decimal?  @db.Decimal(19,4) @default(0)
-  taxableValue    Decimal?  @db.Decimal(19,4)
-
-  gstPercent      Decimal?  @db.Decimal(5,2)
-  sgstPercent     Decimal?  @db.Decimal(5,2)
-  cgstPercent     Decimal?  @db.Decimal(5,2)
-  igstPercent     Decimal?  @db.Decimal(5,2)
-
-  sgstAmount      Decimal?  @db.Decimal(19,4)
-  cgstAmount      Decimal?  @db.Decimal(19,4)
-  igstAmount      Decimal?  @db.Decimal(19,4)
-  gstAmount       Decimal?  @db.Decimal(19,4)
-
-  totalAmount     Decimal?  @db.Decimal(19,4)
-
+  quantity        Decimal?        @db.Decimal(19, 4)
+  receivedQty     Decimal?        @default(0) @db.Decimal(19, 4)
+  pendingQty      Decimal?        @default(0) @db.Decimal(19, 4)
+  unitPrice       Decimal?        @db.Decimal(19, 4)
+  discountPercent Decimal?        @default(0) @db.Decimal(5, 2)
+  discountAmount  Decimal?        @default(0) @db.Decimal(19, 4)
+  taxableValue    Decimal?        @db.Decimal(19, 4)
+  gstPercent      Decimal?        @db.Decimal(5, 2)
+  sgstPercent     Decimal?        @db.Decimal(5, 2)
+  cgstPercent     Decimal?        @db.Decimal(5, 2)
+  igstPercent     Decimal?        @db.Decimal(5, 2)
+  gstAmount       Decimal?        @db.Decimal(19, 4)
+  totalAmount     Decimal?        @db.Decimal(19, 4)
   expectedDate    DateTime?
   deliveredDate   DateTime?
-
-  status          String    @default("pending")
-
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  status          String          @default("pending")
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  cgstAmount      Decimal?        @db.Decimal(19, 4)
+  igstAmount      Decimal?        @db.Decimal(19, 4)
+  invoiceQuantity Decimal?        @db.Decimal(19, 4)
+  sgstAmount      Decimal?        @db.Decimal(19, 4)
+  totalPrice      Decimal?        @db.Decimal(19, 4)
+  purchaseOrder   purchase_orders @relation("POLineItems", fields: [purchaseOrderId], references: [id])
 
   @@index([purchaseOrderId])
   @@map("po_line_items")
 }
 
-// ========================================
-// LEGACY PURCHASE ORDER LINE ITEMS (for backward compatibility)
-// ========================================
-
 model purchase_order_line_items {
-  id              String    @id @default(cuid())
-  
-  // PO Reference
+  id              String               @id @default(cuid())
   purchaseOrderId String
-  purchaseOrder   purchase_orders @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
-  
-  // Item Details
   lineNumber      Int?
   materialCode    String?
   materialDesc    String?
   orderUnit       String?
-  rate            Decimal?  @db.Decimal(19,4)
-  invoiceQuantity Decimal?  @db.Decimal(19,4)
-  
-  // Tracking
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  
-  // Relations
+  rate            Decimal?             @db.Decimal(19, 4)
+  invoiceQuantity Decimal?             @db.Decimal(19, 4)
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+  purchaseOrder   purchase_orders      @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
   uploadRecords   vendor_upload_data[]
 
   @@index([purchaseOrderId])
   @@map("purchase_order_line_items")
 }
 
-// ========================================
-// RAW UPLOAD DATA (audit trail)
-// ========================================
-
 model vendor_upload_data {
-  id              String    @id @default(cuid())
-  
-  // Who uploaded
+  id              String                     @id @default(cuid())
   uploadedById    String
-  uploadedBy      users     @relation(fields: [uploadedById], references: [id])
-  
-  // File info
   fileName        String
   rowNumber       Int
-  uploadedAt      DateTime  @default(now())
-  
-  // Status
-  status          String    @default("processed")
+  uploadedAt      DateTime                   @default(now())
+  status          String                     @default("processed")
   errorMessage    String?
-  
-  // Raw Excel data
   email           String?
   supplierCode    String
   supplierName    String
@@ -353,16 +273,15 @@ model vendor_upload_data {
   materialDesc    String?
   lineItem        Int?
   orderUnit       String?
-  rate            Decimal?  @db.Decimal(19,4)
-  invoiceQuantity Decimal?  @db.Decimal(19,4)
-  
-  // Relations to created records
+  rate            Decimal?                   @db.Decimal(19, 4)
+  invoiceQuantity Decimal?                   @db.Decimal(19, 4)
   vendorId        String?
-  vendor          vendors?         @relation(fields: [vendorId], references: [id])
   poId            String?
-  purchaseOrder   purchase_orders? @relation(fields: [poId], references: [id])
   lineItemId      String?
   poLineItem      purchase_order_line_items? @relation(fields: [lineItemId], references: [id])
+  purchaseOrder   purchase_orders?           @relation(fields: [poId], references: [id])
+  uploadedBy      users                      @relation(fields: [uploadedById], references: [id])
+  vendor          vendors?                   @relation(fields: [vendorId], references: [id])
 
   @@index([supplierCode])
   @@index([poNumber])
@@ -371,67 +290,160 @@ model vendor_upload_data {
   @@map("vendor_upload_data")
 }
 
-// ========================================
-// VENDOR INVITATIONS (email tracking)
-// ========================================
-
 model vendor_invitations {
   id              String    @id @default(cuid())
   vendorId        String
-  vendor          vendors   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
-  
   email           String
   username        String
   tempPassword    String
   invitationToken String    @unique
-  
   status          String    @default("pending")
   sentAt          DateTime?
   acceptedAt      DateTime?
   expiresAt       DateTime
-  
   createdAt       DateTime  @default(now())
+  vendor          vendors   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
 
   @@index([vendorId])
   @@index([invitationToken])
   @@index([status])
   @@map("vendor_invitations")
 }
+
 model portal_settings {
-  id                  String    @id @default(cuid())
-  companyId           String?   // If you have multi-tenant
-  portalEnabled       Boolean   @default(true)
-  selfRegistration    Boolean   @default(true)
-  invoiceSubmission   Boolean   @default(true)
-  paymentTracking     Boolean   @default(true)
-  documentUpload      Boolean   @default(true)
-  messaging           Boolean   @default(false)
-  updatedAt           DateTime  @updatedAt
-  updatedBy           String?
+  id                String   @id @default(cuid())
+  companyId         String?
+  portalEnabled     Boolean  @default(true)
+  selfRegistration  Boolean  @default(true)
+  invoiceSubmission Boolean  @default(true)
+  paymentTracking   Boolean  @default(true)
+  documentUpload    Boolean  @default(true)
+  messaging         Boolean  @default(false)
+  updatedAt         DateTime @updatedAt
+  updatedBy         String?
 
   @@map("portal_settings")
 }
-// Tax Code model
+
 model tax_codes {
-  id            Int       @id @default(autoincrement())
-  tax_code      String    @unique @map("tax_code")
-  sgst_percent  Decimal?  @db.Decimal(5,2)
-  cgst_percent  Decimal?  @db.Decimal(5,2)
-  igst_percent  Decimal?  @db.Decimal(5,2)
-  created_at    DateTime  @default(now())
-  updated_at    DateTime  @updatedAt
+  id           Int      @id @default(autoincrement())
+  tax_code     String   @unique @map("tax_code")
+  sgst_percent Decimal? @db.Decimal(5, 2)
+  cgst_percent Decimal? @db.Decimal(5, 2)
+  igst_percent Decimal? @db.Decimal(5, 2)
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
 
   @@map("tax_codes")
 }
 
-// Sub Division Code model
 model sub_division_codes {
-  id                Int       @id @default(autoincrement())
-  sub_division_code String    @unique @map("sub_division_code")
-  plant_name        String    @map("plant_name")
+  id                Int      @id @default(autoincrement())
+  sub_division_code String   @unique @map("sub_division_code")
+  plant_name        String   @map("plant_name")
   company_id        String?
-  created_at        DateTime  @default(now())
-  updated_at        DateTime  @updatedAt
+  created_at        DateTime @default(now())
+  updated_at        DateTime @updatedAt
 
   @@map("sub_division_codes")
 }
+
+model sap_material_documents {
+  id                  String           @id @default(dbgenerated("(gen_random_uuid())::text"))
+  sapId               String           @unique
+  documentNumber      String
+  documentDate        DateTime         @db.Timestamp(6)
+  postingDate         DateTime         @db.Timestamp(6)
+  companyCode         String
+  plant               String
+  materialCode        String
+  materialName        String?
+  quantity            Decimal          @db.Decimal(19, 4)
+  unit                String
+  vendorCode          String
+  vendorName          String?
+  purchaseOrderId     String?
+  purchaseOrderNumber String?
+  amount              Decimal          @db.Decimal(19, 4)
+  currency            String
+  isSynced            Boolean?         @default(true)
+  syncedAt            DateTime?        @default(now()) @db.Timestamp(6)
+  sapPayload          String?
+  createdAt           DateTime?        @default(now()) @db.Timestamp(6)
+  updatedAt           DateTime?        @default(now()) @updatedAt @db.Timestamp(6)
+  purchaseOrder       purchase_orders? @relation(fields: [purchaseOrderId], references: [id], onUpdate: NoAction, map: "fk_sap_material_documents_purchase_order")
+
+  @@index([documentDate], map: "idx_sap_material_documents_documentdate")
+  @@index([purchaseOrderId], map: "idx_sap_material_documents_purchaseorderid")
+  @@index([sapId], map: "idx_sap_material_documents_sapid")
+  @@index([vendorCode], map: "idx_sap_material_documents_vendorcode")
+  @@map("sap_material_documents")
+}
+
+model sap_sync_logs {
+  id               String    @id @default(dbgenerated("(gen_random_uuid())::text"))
+  syncType         String
+  direction        String
+  status           String
+  recordsProcessed Int?      @default(0)
+  recordsFailed    Int?      @default(0)
+  errorDetails     String?
+  syncData         Json?
+  startedAt        DateTime? @default(now()) @db.Timestamp(6)
+  completedAt      DateTime? @db.Timestamp(6)
+  triggeredBy      String?
+
+  @@index([direction], map: "idx_sap_sync_logs_direction")
+  @@index([startedAt], map: "idx_sap_sync_logs_startedat")
+  @@index([status], map: "idx_sap_sync_logs_status")
+  @@index([syncType], map: "idx_sap_sync_logs_synctype")
+  @@map("sap_sync_logs")
+}
+
+model sap_failed_syncs {
+  id           String    @id @default(dbgenerated("(gen_random_uuid())::text"))
+  recordType   String
+  recordId     String
+  sapId        String?
+  action       String
+  payload      Json
+  errorMessage String
+  retryCount   Int?      @default(0)
+  maxRetries   Int?      @default(3)
+  nextRetryAt  DateTime  @db.Timestamp(6)
+  status       String?   @default("pending")
+  createdAt    DateTime? @default(now()) @db.Timestamp(6)
+  resolvedAt   DateTime? @db.Timestamp(6)
+  resolvedBy   String?
+  processedAt  DateTime? @db.Timestamp(6)
+
+  @@index([createdAt], map: "idx_sap_failed_syncs_createdat")
+  @@index([recordType, recordId], map: "idx_sap_failed_syncs_record_type_id")
+  @@index([status, nextRetryAt], map: "idx_sap_failed_syncs_status_nextretry")
+  @@map("sap_failed_syncs")
+}
+
+model sap_configuration {
+  id          String    @id @default(dbgenerated("(gen_random_uuid())::text"))
+  configKey   String    @unique
+  configValue String
+  description String?
+  isEncrypted Boolean?  @default(false)
+  updatedAt   DateTime? @default(now()) @updatedAt @db.Timestamp(6)
+  updatedBy   String?
+
+  @@map("sap_configuration")
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

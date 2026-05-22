@@ -1,14 +1,87 @@
+// // import { NextResponse } from 'next/server'
+// // import type { NextRequest } from 'next/server'
+
+// // export function middleware(request: NextRequest) {
+// //   const { pathname } = request.nextUrl
+  
+// //   // Check for tokens in cookies
+// //   const adminToken = request.cookies.get('token')?.value
+// //   const vendorToken = request.cookies.get('vendorToken')?.value
+
+// //   // Public routes that don't need authentication
+// //   const publicRoutes = [
+// //     '/',
+// //     '/pricing',
+// //     '/features',
+// //     '/demo',
+// //     '/about',
+// //     '/blog',
+// //     '/contact',
+// //     '/admin-login',     // Changed from '/login'
+// //     '/vendor-login',    // Vendor login
+// //     '/signup',
+// //     '/forgot-password'
+// //   ]
+
+// //   // Allow public routes
+// //   if (publicRoutes.includes(pathname)) {
+// //     return NextResponse.next()
+// //   }
+
+// //   // Handle vendor routes
+// //   if (pathname.startsWith('/vendor')) {
+// //     if (!vendorToken) {
+// //       const loginUrl = new URL('/vendor-login', request.url)
+// //       return NextResponse.redirect(loginUrl)
+// //     }
+// //     return NextResponse.next()
+// //   }
+
+// //   // Handle admin routes
+// //   const isAdminRoute = pathname.startsWith('/dashboard') ||
+// //                       pathname.startsWith('/vendors') ||
+// //                       pathname.startsWith('/procurement') ||
+// //                       pathname.startsWith('/projects') ||
+// //                       pathname.startsWith('/work-orders') ||
+// //                       pathname.startsWith('/schedules') ||
+// //                       pathname.startsWith('/resources') ||
+// //                       pathname.startsWith('/invoices') ||
+// //                       pathname.startsWith('/payments') ||
+// //                       pathname.startsWith('/expenses') ||
+// //                       pathname.startsWith('/budget') ||
+// //                       pathname.startsWith('/documents') ||
+// //                       pathname.startsWith('/reports') ||
+// //                       pathname.startsWith('/settings') ||
+// //                       pathname.startsWith('/profile') ||
+// //                       pathname.startsWith('/calendar') ||
+// //                       pathname.startsWith('/bids') ||
+// //                       pathname.startsWith('/contracts') ||
+// //                       pathname.startsWith('/quotes') ||
+// //                       pathname.startsWith('/rfqs')
+
+// //   if (!adminToken && isAdminRoute) {
+// //     const loginUrl = new URL('/admin-login', request.url)  // Changed from '/login'
+// //     return NextResponse.redirect(loginUrl)
+// //   }
+
+// //   return NextResponse.next()
+// // }
+
+// // export const config = {
+// //   matcher: [
+// //     '/((?!_next/static|_next/image|favicon.ico).*)',
+// //   ],
+// // }
 // import { NextResponse } from 'next/server'
 // import type { NextRequest } from 'next/server'
 
 // export function middleware(request: NextRequest) {
 //   const { pathname } = request.nextUrl
   
-//   // Check for tokens in cookies
 //   const adminToken = request.cookies.get('token')?.value
 //   const vendorToken = request.cookies.get('vendorToken')?.value
 
-//   // Public routes that don't need authentication
+//   // Public routes (no auth needed)
 //   const publicRoutes = [
 //     '/',
 //     '/pricing',
@@ -17,8 +90,8 @@
 //     '/about',
 //     '/blog',
 //     '/contact',
-//     '/admin-login',     // Changed from '/login'
-//     '/vendor-login',    // Vendor login
+//     '/admin-login',
+//     '/vendor-login',
 //     '/signup',
 //     '/forgot-password'
 //   ]
@@ -31,8 +104,7 @@
 //   // Handle vendor routes
 //   if (pathname.startsWith('/vendor')) {
 //     if (!vendorToken) {
-//       const loginUrl = new URL('/vendor-login', request.url)
-//       return NextResponse.redirect(loginUrl)
+//       return NextResponse.redirect(new URL('/vendor-login', request.url))
 //     }
 //     return NextResponse.next()
 //   }
@@ -60,18 +132,16 @@
 //                       pathname.startsWith('/rfqs')
 
 //   if (!adminToken && isAdminRoute) {
-//     const loginUrl = new URL('/admin-login', request.url)  // Changed from '/login'
-//     return NextResponse.redirect(loginUrl)
+//     return NextResponse.redirect(new URL('/admin-login', request.url))
 //   }
 
 //   return NextResponse.next()
 // }
 
 // export const config = {
-//   matcher: [
-//     '/((?!_next/static|_next/image|favicon.ico).*)',
-//   ],
+//   matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
 // }
+// apps/web/middleware.ts
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
@@ -80,6 +150,11 @@ export function middleware(request: NextRequest) {
   
   const adminToken = request.cookies.get('token')?.value
   const vendorToken = request.cookies.get('vendorToken')?.value
+
+  console.log('='.repeat(50))
+  console.log(`🌐 Middleware - Path: ${pathname}`)
+  console.log(`   Admin token: ${adminToken ? '✅ Present' : '❌ Missing'}`)
+  console.log(`   Vendor token: ${vendorToken ? '✅ Present' : '❌ Missing'}`)
 
   // Public routes (no auth needed)
   const publicRoutes = [
@@ -98,14 +173,18 @@ export function middleware(request: NextRequest) {
 
   // Allow public routes
   if (publicRoutes.includes(pathname)) {
+    console.log(`   ✅ Public route, allowing`)
     return NextResponse.next()
   }
 
   // Handle vendor routes
   if (pathname.startsWith('/vendor')) {
+    console.log(`   🔒 Vendor route detected`)
     if (!vendorToken) {
+      console.log(`   ❌ No vendor token, redirecting to /vendor-login`)
       return NextResponse.redirect(new URL('/vendor-login', request.url))
     }
+    console.log(`   ✅ Vendor token found, allowing vendor route`)
     return NextResponse.next()
   }
 
@@ -131,10 +210,17 @@ export function middleware(request: NextRequest) {
                       pathname.startsWith('/quotes') ||
                       pathname.startsWith('/rfqs')
 
-  if (!adminToken && isAdminRoute) {
-    return NextResponse.redirect(new URL('/admin-login', request.url))
+  if (isAdminRoute) {
+    console.log(`   🔒 Admin route detected`)
+    if (!adminToken) {
+      console.log(`   ❌ No admin token, redirecting to /admin-login`)
+      return NextResponse.redirect(new URL('/admin-login', request.url))
+    }
+    console.log(`   ✅ Admin token found, allowing admin route`)
+    return NextResponse.next()
   }
 
+  console.log(`   ✅ Allowing (default)`)
   return NextResponse.next()
 }
 
