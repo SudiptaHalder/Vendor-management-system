@@ -39,7 +39,8 @@ import {
   ChevronLeft,
   ChevronRight as ChevronRightIcon,
   Upload,
-  Lock // Added Lock icon for disabled items
+  Lock,
+  TrendingUp // Added for SAP Data Explorer
 } from 'lucide-react'
 
 interface SubMenuItem {
@@ -47,7 +48,7 @@ interface SubMenuItem {
   href: string
   icon?: any
   badge?: number
-  disabled?: boolean // Added disabled property
+  disabled?: boolean
 }
 
 interface MenuItem {
@@ -56,7 +57,7 @@ interface MenuItem {
   href?: string
   submenu?: SubMenuItem[]
   badge?: number
-  disabled?: boolean // Added disabled property
+  disabled?: boolean
 }
 
 export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (open: boolean) => void }) {
@@ -68,21 +69,16 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsO
   const [pendingPaymentsCount, setPendingPaymentsCount] = useState(0)
   const [mounted, setMounted] = useState(false)
   
-  // Safely use notifications
   let unreadCount = 0
   try {
     const notifications = useNotifications()
     unreadCount = notifications?.unreadCount || 0
-  } catch (e) {
-    // Context not available yet
-  }
+  } catch (e) {}
 
-  // Set mounted state
   useEffect(() => {
     setMounted(true)
   }, [])
 
-  // Load expanded menus from localStorage on mount
   useEffect(() => {
     const saved = localStorage.getItem('expandedMenus')
     if (saved) {
@@ -98,14 +94,12 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsO
     }
   }, [])
 
-  // Save expanded menus to localStorage
   useEffect(() => {
     if (mounted) {
       localStorage.setItem('expandedMenus', JSON.stringify(expandedMenus))
     }
   }, [expandedMenus, mounted])
 
-  // Auto-expand current section
   useEffect(() => {
     const currentSection = getCurrentSectionFromPath(pathname)
     if (currentSection && !expandedMenus.includes(currentSection)) {
@@ -113,38 +107,10 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsO
     }
   }, [pathname])
 
-  // Fetch real data - with error handling
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const approvalsResponse = await api.getApprovals()
-  //       if (approvalsResponse?.success) {
-  //         setPendingApprovals(approvalsResponse.data?.length || 0)
-  //       }
-
-  //       // Try to fetch payments, but don't error if it fails
-  //       try {
-  //         const paymentsResponse = await api.getPayments({ status: 'pending' })
-  //         if (paymentsResponse?.success) {
-  //           setPendingPaymentsCount(paymentsResponse.data?.length || 0)
-  //         }
-  //       } catch (paymentErr) {
-  //         console.log('Payments endpoint not available yet')
-  //         setPendingPaymentsCount(0)
-  //       }
-  //     } catch (err) {
-  //       console.error('Error fetching sidebar data:', err)
-  //     }
-  //   }
-    
-  //   fetchData()
-  //   const interval = setInterval(fetchData, 30000)
-  //   return () => clearInterval(interval)
-  // }, [])
-
   const getCurrentSectionFromPath = (path: string): string | null => {
     if (path.startsWith('/vendors')) return 'Vendors'
     if (path.startsWith('/procurement')) return 'Procurement'
+    if (path.startsWith('/sap')) return 'SAP Integration'
     if (path.startsWith('/projects') || path.startsWith('/work-orders') || path.startsWith('/schedules') || path.startsWith('/resources')) return 'Projects'
     if (path.startsWith('/invoices') || path.startsWith('/payments') || path.startsWith('/expenses') || path.startsWith('/budget')) return 'Finance'
     if (path.startsWith('/documents')) return 'Documents'
@@ -180,26 +146,32 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsO
         { name: 'Vendor Portal', href: '/vendors/portal', icon: Shield},
         { name: 'Categories', href: '/vendors/categories', icon: Layers, disabled: true },
         { name: 'Approvals', href: '/vendors/approvals', icon: CheckCircle, badge: pendingApprovals, disabled: true },
-        
+      ]
+    },
+    {
+      name: 'SAP Integration',
+      icon: Database,
+      submenu: [
+        { name: 'SAP Data Explorer', href: '/sap-data-explorer', icon: TrendingUp },
+        { name: 'SAP Live Dashboard', href: '/sap-live-dashboard', icon: BarChart3 },
+        { name: 'Enterprise Dashboard', href: '/enterprise-dashboard', icon: Building2 },
+        { name: 'Sync Status', href: '/sap-sync-status', icon: CheckCircle, disabled: true },
       ]
     },
     {
       name: 'Procurement',
       icon: Package,
-     
       submenu: [
-        { name: 'Purchase Orders', href: '/procurement/purchase-orders', icon: FileText, disabled: true },
+        { name: 'Purchase Orders', href: '/procurement/purchase-orders', icon: FileText },
         { name: 'RFQs', href: '/procurement/rfqs', icon: MessageSquare, disabled: true },
         { name: 'Quotes', href: '/procurement/quotes', icon: FileSignature, disabled: true },
         { name: 'Contracts', href: '/procurement/contracts', icon: FileCheck, disabled: true },
         { name: 'Bids', href: '/procurement/bids', icon: ClipboardList, disabled: true }
       ]
     },
-
     {
       name: 'Projects',
       icon: Building2,
-     
       submenu: [
         { name: 'Active Projects', href: '/projects/active', icon: ClipboardList, badge: activeProjectsCount, disabled: true },
         { name: 'All Projects', href: '/projects', icon: Building2, disabled: true },
@@ -208,17 +180,14 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsO
         { name: 'Resources', href: '/resources', icon: Database, disabled: true }
       ]
     },
-    
     {
       name: 'Documents',
       icon: FolderOpen,
       href: '/documents',
-      
     },
     {
       name: 'Reports',
       icon: BarChart3,
-      
       submenu: [
         { name: 'Vendor Reports', href: '/reports/vendors', icon: FileText },
         { name: 'Financial Reports', href: '/reports/financial', icon: FileText },
@@ -229,7 +198,6 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsO
     {
       name: 'Settings',
       icon: Settings,
-      
       submenu: [
         { name: 'Company Profile', href: '/settings/company', icon: Building2, disabled: true },
         { name: 'Team Members', href: '/settings/team', icon: Users, disabled: true },
@@ -240,7 +208,6 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsO
     }
   ]
 
-  // Don't render until mounted
   if (!mounted) {
     return (
       <aside className={`fixed top-0 left-0 z-30 h-screen bg-white border-r border-gray-200 transition-all duration-300 ${
@@ -251,7 +218,6 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsO
 
   return (
     <>
-      {/* Mobile overlay */}
       {isOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden"
@@ -259,13 +225,11 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsO
         />
       )}
 
-      {/* Sidebar */}
       <aside
         className={`fixed top-0 left-0 z-30 h-screen bg-white border-r border-gray-200 transition-all duration-300 flex flex-col ${
           isOpen ? 'w-64' : 'w-20'
         }`}
       >
-        {/* Logo and Minimize Button - Fixed at top */}
         <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200 flex-shrink-0">
           <div className="flex items-center space-x-2 overflow-hidden">
             <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -278,7 +242,6 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsO
             )}
           </div>
           
-          {/* Minimize/Maximize Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="p-1.5 rounded-lg hover:bg-gray-100 lg:block hidden flex-shrink-0 text-gray-700 hover:text-gray-900"
@@ -288,7 +251,6 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsO
           </button>
         </div>
 
-        {/* Company Info - Fixed below logo */}
         {isOpen && (
           <div className="px-4 py-3 border-b border-gray-200 bg-gray-50 flex-shrink-0">
             <div className="flex items-center space-x-3">
@@ -303,7 +265,6 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsO
           </div>
         )}
 
-        {/* Navigation - Scrollable area */}
         <nav className="flex-1 overflow-y-auto px-3 py-4">
           <div className="space-y-1">
             {menuItems.map((item) => (
@@ -344,7 +305,6 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsO
                       )}
                     </button>
                     
-                    {/* Submenu */}
                     {isOpen && !item.disabled && expandedMenus.includes(item.name) && (
                       <div className="ml-8 mt-1 space-y-1">
                         {item.submenu.map((subItem) => (
@@ -421,7 +381,6 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsO
           </div>
         </nav>
 
-        {/* Bottom section - Fixed at bottom */}
         <div className="border-t border-gray-200 bg-white p-3 flex-shrink-0">
           <div className="space-y-1">
             <Link
@@ -443,22 +402,19 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsO
               <HelpCircle size={20} className="flex-shrink-0" />
               {isOpen && <span className="truncate">Help & Support</span>}
             </Link>
-           <button 
-  onClick={() => {
-    // Only clear admin-related items, not everything
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
-    localStorage.removeItem('expandedMenus')
-    // Also clear cookie for middleware
-    document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
-    
-    window.location.href = '/admin-login'
-  }}
-  className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-red-600 rounded-lg hover:bg-red-50"
->
-  <LogOut size={20} className="flex-shrink-0" />
-  {isOpen && <span className="truncate">Logout</span>}
-</button>
+            <button 
+              onClick={() => {
+                localStorage.removeItem('token')
+                localStorage.removeItem('user')
+                localStorage.removeItem('expandedMenus')
+                document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+                window.location.href = '/admin-login'
+              }}
+              className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-red-600 rounded-lg hover:bg-red-50"
+            >
+              <LogOut size={20} className="flex-shrink-0" />
+              {isOpen && <span className="truncate">Logout</span>}
+            </button>
           </div>
         </div>
       </aside>

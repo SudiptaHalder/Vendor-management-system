@@ -145,3 +145,45 @@ router.get('/material-documents', authMiddleware, async (req, res) => {
 });
 
 export default router;
+
+// ============= LIVE SAP DATA ENDPOINTS (Direct from SAP) =============
+
+// Get live dashboard data directly from SAP
+router.get('/live/dashboard', authMiddleware, async (req, res) => {
+  try {
+    const { SAPLiveDataService } = require('../services/sap/sapLiveDataService');
+    const liveDataService = new SAPLiveDataService();
+    const data = await liveDataService.getLiveDashboardData();
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ 
+      success: false, 
+      error: error.message,
+      message: 'Failed to fetch live data from SAP'
+    });
+  }
+});
+
+// Get live material documents count
+router.get('/live/material-documents/count', authMiddleware, async (req, res) => {
+  try {
+    const { SAPLiveDataService } = require('../services/sap/sapLiveDataService');
+    const liveDataService = new SAPLiveDataService();
+    const count = await liveDataService.getLiveMaterialDocumentsCount();
+    res.json({ success: true, data: { count, source: 'SAP Live' } });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// Get live vendors count from SAP
+router.get('/live/vendors/count', authMiddleware, async (req, res) => {
+  try {
+    const { SAPLiveDataService } = require('../services/sap/sapLiveDataService');
+    const liveDataService = new SAPLiveDataService();
+    const count = await liveDataService.getLiveVendorsCount();
+    res.json({ success: true, data: { count, source: 'SAP Live' } });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});

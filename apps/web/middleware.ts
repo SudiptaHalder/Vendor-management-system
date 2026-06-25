@@ -29,7 +29,7 @@
 // //   }
 
 // //   // Handle vendor routes
-// //   if (pathname.startsWith('/vendor')) {
+// //   if (pathname.startsWith('/vendor/') || pathname === '/vendor') {
 // //     if (!vendorToken) {
 // //       const loginUrl = new URL('/vendor-login', request.url)
 // //       return NextResponse.redirect(loginUrl)
@@ -102,7 +102,7 @@
 //   }
 
 //   // Handle vendor routes
-//   if (pathname.startsWith('/vendor')) {
+//   if (pathname.startsWith('/vendor/') || pathname === '/vendor') {
 //     if (!vendorToken) {
 //       return NextResponse.redirect(new URL('/vendor-login', request.url))
 //     }
@@ -178,7 +178,10 @@ export function middleware(request: NextRequest) {
   }
 
   // Handle vendor routes
-  if (pathname.startsWith('/vendor')) {
+  if (
+  pathname.startsWith('/vendor/') ||
+  pathname === '/vendor'
+) {
     console.log(`   🔒 Vendor route detected`)
     if (!vendorToken) {
       console.log(`   ❌ No vendor token, redirecting to /vendor-login`)

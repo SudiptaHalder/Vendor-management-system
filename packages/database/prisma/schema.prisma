@@ -42,7 +42,18 @@ model vendors {
   invitations    vendor_invitations[]
   masterData     VendorMaster?
   uploadRecords  vendor_upload_data[]
-
+  gstn                 String?
+  contactName          String?
+  addressLine1         String?
+  addressLine2         String?
+  city                 String?
+  state                String?
+  country              String?
+  postalCode           String?
+  taxNumber            String?
+  businessPartnerType  String?
+  sapBusinessPartnerId String?
+  lastSyncAt           DateTime?
   @@map("vendors")
 }
 
