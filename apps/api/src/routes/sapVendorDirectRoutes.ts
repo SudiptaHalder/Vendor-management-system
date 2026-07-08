@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { authMiddleware } from '../middleware/auth.middleware';
 import { VendorDetailService } from '../services/sap/vendorDetailService';
-
+import { SAPAuth } from '../services/sap/shared/sapAuth';
 const router = Router();
 
 // Get complete vendor details
