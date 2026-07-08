@@ -223,6 +223,8 @@ import sapRoutes from './routes/sap.routes'
 import { SAPSyncService } from './services/sap/sapSyncService'
 import erpRoutes from './routes/erp.routes'
 
+import sapVendorDirectRoutes from './routes/sapVendorDirectRoutes';
+
 // Admin Sync Routes
 import adminSyncRoutes from './routes/adminSyncRoutes'
 
@@ -267,7 +269,7 @@ const limiter = rateLimit({
 })
 
 app.use('/api/', limiter)
-
+app.use('/api/sap', sapVendorDirectRoutes);
 // ============= PUBLIC ROUTES (NO AUTH REQUIRED) =============
 app.use('/api/auth', authRoutes)
 app.get('/api/health', (req, res) => {
@@ -304,7 +306,7 @@ app.use('/api/vendor-management', vendorManagementRoutes)
 app.use('/api/po-upload', poUploadRoutes)
 app.use('/api/vendor', vendorAuthRoutes)
 app.use('/api/erp', erpRoutes)
-
+app.use('/api/sap', sapVendorDirectRoutes);
 // Admin Sync Routes (Protected)
 app.use('/api/admin/sync', adminSyncRoutes)
 
