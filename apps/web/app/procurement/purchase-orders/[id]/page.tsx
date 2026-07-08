@@ -1,634 +1,91 @@
-// 'use client'
-
-// import { useState, useEffect } from 'react'
-// import { useParams, useRouter } from 'next/navigation'
-// import MainLayout from '@/components/layout/MainLayout'
-// import { api } from '@/lib/api'
-// import {
-//   ArrowLeft,
-//   ShoppingCart,
-//   Building2,
-//   Calendar,
-//   DollarSign,
-//   Clock,
-//   Truck,
-//   CheckCircle,
-//   XCircle,
-//   FileText,
-//   Download,
-//   Send,
-//   Edit2,
-//   Trash2,
-//   Printer,
-//   Mail,
-//   AlertCircle,
-//   Package
-// } from 'lucide-react'
-// import Link from 'next/link'
-
-// interface PurchaseOrder {
-//   id: string
-//   poNumber: string
-//   title: string
-//   description?: string
-//   status: string
-//   priority: string
-//   orderDate: string
-//   expectedDate?: string
-//   deliveredDate?: string
-//   subtotal: number
-//   taxAmount: number
-//   discount: number
-//   total: number
-//   currency: string
-//   notes?: string
-//   terms?: string
-//   vendor: {
-//     id: string
-//     name: string
-//     email: string
-//     phone?: string
-//     contactPerson?: string
-//   }
-//   lineItems: Array<{
-//     id: string
-//     lineNumber: number
-//     description: string
-//     quantity: number
-//     unitPrice: number
-//     total: number
-//     notes?: string
-//     receivedQuantity?: number
-//   }>
-//   createdBy: {
-//     name: string
-//     email: string
-//   }
-//   createdAt: string
-// }
-
-// // Helper function to safely format currency
-// const formatCurrency = (amount: any, currency: string = 'USD'): string => {
-//   // Handle undefined, null, or non-numeric values
-//   if (amount === undefined || amount === null || isNaN(Number(amount))) {
-//     return `${currency} 0.00`
-//   }
-//   const numAmount = Number(amount)
-//   return `${currency} ${numAmount.toFixed(2)}`
-// }
-
-// // Helper function to safely format numbers
-// const formatNumber = (value: any): string => {
-//   // Handle undefined, null, or non-numeric values
-//   if (value === undefined || value === null || isNaN(Number(value))) {
-//     return '0'
-//   }
-//   const numValue = Number(value)
-//   return numValue.toFixed(2)
-// }
-
-// export default function PurchaseOrderDetailPage() {
-//   const params = useParams()
-//   const router = useRouter()
-//   const [order, setOrder] = useState<PurchaseOrder | null>(null)
-//   const [loading, setLoading] = useState(true)
-//   const [error, setError] = useState('')
-//   const [showDeleteModal, setShowDeleteModal] = useState(false)
-//   const [showStatusModal, setShowStatusModal] = useState(false)
-//   const [selectedStatus, setSelectedStatus] = useState('')
-
-//   const id = params.id as string
-
-//   useEffect(() => {
-//     fetchPurchaseOrder()
-//   }, [id])
-
-//   const fetchPurchaseOrder = async () => {
-//     setLoading(true)
-//     try {
-//       const response = await api.getPurchaseOrder(id)
-//       if (response.success) {
-//         setOrder(response.data)
-//       } else {
-//         setError('Failed to load purchase order')
-//       }
-//     } catch (err) {
-//       setError('Failed to load purchase order')
-//     } finally {
-//       setLoading(false)
-//     }
-//   }
-
-//   const handleStatusUpdate = async () => {
-//     if (!selectedStatus) return
-//     try {
-//       const response = await api.updatePurchaseOrderStatus(id, selectedStatus)
-//       if (response.success) {
-//         setOrder(response.data)
-//         setShowStatusModal(false)
-//       }
-//     } catch (err) {
-//       console.error('Error updating status:', err)
-//     }
-//   }
-
-//   const handleDelete = async () => {
-//     try {
-//       const response = await api.deletePurchaseOrder(id)
-//       if (response.success) {
-//         router.push('/procurement/purchase-orders')
-//       }
-//     } catch (err) {
-//       console.error('Error deleting purchase order:', err)
-//     }
-//   }
-
-//   const getStatusBadge = (status: string) => {
-//     const statusConfig: Record<string, { color: string, icon: any, label: string }> = {
-//       draft: { color: 'bg-gray-100 text-gray-800', icon: FileText, label: 'Draft' },
-//       sent: { color: 'bg-blue-100 text-blue-800', icon: Send, label: 'Sent' },
-//       acknowledged: { color: 'bg-purple-100 text-purple-800', icon: CheckCircle, label: 'Acknowledged' },
-//       confirmed: { color: 'bg-indigo-100 text-indigo-800', icon: CheckCircle, label: 'Confirmed' },
-//       shipped: { color: 'bg-yellow-100 text-yellow-800', icon: Truck, label: 'Shipped' },
-//       delivered: { color: 'bg-green-100 text-green-800', icon: CheckCircle, label: 'Delivered' },
-//       cancelled: { color: 'bg-red-100 text-red-800', icon: XCircle, label: 'Cancelled' }
-//     }
-//     const config = statusConfig[status] || statusConfig.draft
-//     const Icon = config.icon
-//     return (
-//       <span className={`px-3 py-1 text-sm font-medium rounded-full flex items-center space-x-1 w-fit ${config.color}`}>
-//         <Icon size={14} />
-//         <span>{config.label}</span>
-//       </span>
-//     )
-//   }
-
-//   const getPriorityBadge = (priority: string) => {
-//     const priorityConfig: Record<string, { color: string, label: string }> = {
-//       low: { color: 'bg-gray-100 text-gray-800', label: 'Low' },
-//       medium: { color: 'bg-blue-100 text-blue-800', label: 'Medium' },
-//       high: { color: 'bg-orange-100 text-orange-800', label: 'High' },
-//       urgent: { color: 'bg-red-100 text-red-800', label: 'Urgent' }
-//     }
-//     const config = priorityConfig[priority] || priorityConfig.medium
-//     return (
-//       <span className={`px-3 py-1 text-sm font-medium rounded-full ${config.color}`}>
-//         {config.label}
-//       </span>
-//     )
-//   }
-
-//   if (loading) {
-//     return (
-//       <MainLayout>
-//         <div className="flex items-center justify-center h-64">
-//           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-//         </div>
-//       </MainLayout>
-//     )
-//   }
-
-//   if (error || !order) {
-//     return (
-//       <MainLayout>
-//         <div className="text-center py-12">
-//           <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-//           <h2 className="text-2xl font-bold text-gray-900 mb-2">Purchase Order Not Found</h2>
-//           <p className="text-gray-600 mb-6">{error || 'The purchase order you are looking for does not exist.'}</p>
-//           <Link
-//             href="/procurement/purchase-orders"
-//             className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-//           >
-//             <ArrowLeft size={16} className="mr-2" />
-//             Back to Purchase Orders
-//           </Link>
-//         </div>
-//       </MainLayout>
-//     )
-//   }
-
-//   return (
-//     <MainLayout>
-//       {/* Header */}
-//       <div className="mb-6">
-//         <div className="flex items-center justify-between">
-//           <div className="flex items-center space-x-4">
-//             <Link
-//               href="/procurement/purchase-orders"
-//               className="p-2 hover:bg-gray-100 rounded-lg transition"
-//             >
-//               <ArrowLeft size={20} className="text-gray-600" />
-//             </Link>
-//             <div>
-//               <div className="flex items-center space-x-3 mb-1">
-//                 <h1 className="text-2xl font-bold text-gray-900">{order.poNumber}</h1>
-//                 {getStatusBadge(order.status)}
-//                 {getPriorityBadge(order.priority)}
-//               </div>
-//               <p className="text-gray-600">{order.title}</p>
-//             </div>
-//           </div>
-//           <div className="flex items-center space-x-3">
-//             <button className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center space-x-2">
-//               <Printer size={16} />
-//               <span>Print</span>
-//             </button>
-//             <button className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center space-x-2">
-//               <Download size={16} />
-//               <span>Export</span>
-//             </button>
-//             <button className="px-4 py-2 text-blue-600 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 flex items-center space-x-2">
-//               <Edit2 size={16} />
-//               <span>Edit</span>
-//             </button>
-//             <button
-//               onClick={() => setShowDeleteModal(true)}
-//               className="px-4 py-2 text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 flex items-center space-x-2"
-//             >
-//               <Trash2 size={16} />
-//               <span>Delete</span>
-//             </button>
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* Main Content */}
-//       <div className="grid grid-cols-3 gap-6">
-//         {/* Left Column - 2/3 width */}
-//         <div className="col-span-2 space-y-6">
-//           {/* Vendor Information */}
-//           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-//             <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-//               <Building2 size={18} className="mr-2 text-gray-500" />
-//               Vendor Information
-//             </h2>
-//             <div className="flex items-start space-x-4">
-//               <div className="p-3 bg-blue-100 rounded-lg">
-//                 <Building2 className="w-6 h-6 text-blue-600" />
-//               </div>
-//               <div className="flex-1">
-//                 <h3 className="text-lg font-medium text-gray-900">{order.vendor.name}</h3>
-//                 <div className="mt-2 grid grid-cols-2 gap-4">
-//                   <div>
-//                     <p className="text-xs text-gray-500">Email</p>
-//                     <p className="text-sm text-gray-900">{order.vendor.email || '—'}</p>
-//                   </div>
-//                   <div>
-//                     <p className="text-xs text-gray-500">Phone</p>
-//                     <p className="text-sm text-gray-900">{order.vendor.phone || '—'}</p>
-//                   </div>
-//                   <div>
-//                     <p className="text-xs text-gray-500">Contact Person</p>
-//                     <p className="text-sm text-gray-900">{order.vendor.contactPerson || '—'}</p>
-//                   </div>
-//                 </div>
-//               </div>
-//             </div>
-//           </div>
-
-//           {/* Line Items */}
-//           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-//             <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-//               <Package size={18} className="mr-2 text-gray-500" />
-//               Line Items
-//             </h2>
-//             <div className="overflow-x-auto">
-//               <table className="w-full">
-//                 <thead className="bg-gray-50">
-//                   <tr>
-//                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">#</th>
-//                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
-//                     <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Quantity</th>
-//                     <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Unit Price</th>
-//                     <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Total</th>
-//                     <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Received</th>
-//                   </tr>
-//                 </thead>
-//                 <tbody className="divide-y divide-gray-200">
-//                   {order.lineItems?.map((item) => (
-//                     <tr key={item.id}>
-//                       <td className="px-4 py-3 text-sm text-gray-500">{item.lineNumber}</td>
-//                       <td className="px-4 py-3">
-//                         <div className="text-sm font-medium text-gray-900">{item.description}</div>
-//                         {item.notes && (
-//                           <div className="text-xs text-gray-500">{item.notes}</div>
-//                         )}
-//                       </td>
-//                       <td className="px-4 py-3 text-sm text-gray-900 text-right">{formatNumber(item.quantity)}</td>
-//                       <td className="px-4 py-3 text-sm text-gray-900 text-right">
-//                         {formatCurrency(item.unitPrice, order.currency)}
-//                       </td>
-//                       <td className="px-4 py-3 text-sm font-medium text-gray-900 text-right">
-//                         {formatCurrency(item.total, order.currency)}
-//                       </td>
-//                       <td className="px-4 py-3 text-sm text-gray-900 text-right">
-//                         {formatNumber(item.receivedQuantity)}
-//                       </td>
-//                     </tr>
-//                   ))}
-//                 </tbody>
-//                 <tfoot className="bg-gray-50">
-//                   <tr>
-//                     <td colSpan={4} className="px-4 py-3 text-sm font-medium text-gray-900 text-right">Subtotal:</td>
-//                     <td className="px-4 py-3 text-sm font-medium text-gray-900 text-right">
-//                       {formatCurrency(order.subtotal, order.currency)}
-//                     </td>
-//                     <td></td>
-//                   </tr>
-//                   <tr>
-//                     <td colSpan={4} className="px-4 py-3 text-sm text-gray-700 text-right">Tax:</td>
-//                     <td className="px-4 py-3 text-sm text-gray-700 text-right">
-//                       {formatCurrency(order.taxAmount, order.currency)}
-//                     </td>
-//                     <td></td>
-//                   </tr>
-//                   <tr>
-//                     <td colSpan={4} className="px-4 py-3 text-sm text-gray-700 text-right">Discount:</td>
-//                     <td className="px-4 py-3 text-sm text-gray-700 text-right">
-//                       -{formatCurrency(order.discount, order.currency)}
-//                     </td>
-//                     <td></td>
-//                   </tr>
-//                   <tr>
-//                     <td colSpan={4} className="px-4 py-3 text-sm font-bold text-gray-900 text-right">Total:</td>
-//                     <td className="px-4 py-3 text-sm font-bold text-gray-900 text-right">
-//                       {formatCurrency(order.total, order.currency)}
-//                     </td>
-//                     <td></td>
-//                   </tr>
-//                 </tfoot>
-//               </table>
-//             </div>
-//           </div>
-
-//           {/* Notes & Terms */}
-//           {(order.notes || order.terms) && (
-//             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-//               <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-//                 <FileText size={18} className="mr-2 text-gray-500" />
-//                 Notes & Terms
-//               </h2>
-//               {order.notes && (
-//                 <div className="mb-4">
-//                   <h3 className="text-sm font-medium text-gray-700 mb-2">Notes</h3>
-//                   <p className="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">{order.notes}</p>
-//                 </div>
-//               )}
-//               {order.terms && (
-//                 <div>
-//                   <h3 className="text-sm font-medium text-gray-700 mb-2">Terms & Conditions</h3>
-//                   <p className="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">{order.terms}</p>
-//                 </div>
-//               )}
-//             </div>
-//           )}
-//         </div>
-
-//         {/* Right Column - 1/3 width */}
-//         <div className="space-y-6">
-//           {/* Summary Card */}
-//           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-//             <h2 className="text-lg font-semibold text-gray-900 mb-4">Order Summary</h2>
-//             <div className="space-y-3">
-//               <div className="flex justify-between">
-//                 <span className="text-sm text-gray-600">Order Date</span>
-//                 <span className="text-sm font-medium text-gray-900">
-//                   {new Date(order.orderDate).toLocaleDateString()}
-//                 </span>
-//               </div>
-//               {order.expectedDate && (
-//                 <div className="flex justify-between">
-//                   <span className="text-sm text-gray-600">Expected Delivery</span>
-//                   <span className="text-sm font-medium text-gray-900">
-//                     {new Date(order.expectedDate).toLocaleDateString()}
-//                   </span>
-//                 </div>
-//               )}
-//               {order.deliveredDate && (
-//                 <div className="flex justify-between">
-//                   <span className="text-sm text-gray-600">Delivered Date</span>
-//                   <span className="text-sm font-medium text-gray-900">
-//                     {new Date(order.deliveredDate).toLocaleDateString()}
-//                   </span>
-//                 </div>
-//               )}
-//               <div className="flex justify-between pt-3 border-t">
-//                 <span className="text-sm text-gray-600">Created By</span>
-//                 <span className="text-sm font-medium text-gray-900">{order.createdBy.name}</span>
-//               </div>
-//               <div className="flex justify-between">
-//                 <span className="text-sm text-gray-600">Created At</span>
-//                 <span className="text-sm font-medium text-gray-900">
-//                   {new Date(order.createdAt).toLocaleDateString()}
-//                 </span>
-//               </div>
-//             </div>
-//           </div>
-
-//           {/* Status Actions */}
-//           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-//             <h2 className="text-lg font-semibold text-gray-900 mb-4">Update Status</h2>
-//             <div className="space-y-2">
-//               {['draft', 'sent', 'acknowledged', 'confirmed', 'shipped', 'delivered'].map((status) => (
-//                 <button
-//                   key={status}
-//                   onClick={() => {
-//                     setSelectedStatus(status)
-//                     setShowStatusModal(true)
-//                   }}
-//                   disabled={order.status === status}
-//                   className={`w-full px-4 py-2 text-sm font-medium rounded-lg flex items-center justify-between ${
-//                     order.status === status
-//                       ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
-//                       : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
-//                   }`}
-//                 >
-//                   <span>Mark as {status.charAt(0).toUpperCase() + status.slice(1)}</span>
-//                   {order.status === status && <CheckCircle size={16} className="text-green-600" />}
-//                 </button>
-//               ))}
-//             </div>
-//           </div>
-
-//           {/* Actions */}
-//           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-//             <h2 className="text-lg font-semibold text-gray-900 mb-4">Actions</h2>
-//             <div className="space-y-2">
-//               <button className="w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center justify-between">
-//                 <span>Send to Vendor</span>
-//                 <Mail size={16} />
-//               </button>
-//               <button className="w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center justify-between">
-//                 <span>Create RFQ</span>
-//                 <FileText size={16} />
-//               </button>
-//               <button className="w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center justify-between">
-//                 <span>Receive Goods</span>
-//                 <Truck size={16} />
-//               </button>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* Delete Confirmation Modal */}
-//       {showDeleteModal && (
-//         <div className="fixed inset-0 z-50 overflow-y-auto">
-//           <div className="fixed inset-0 bg-black bg-opacity-50" onClick={() => setShowDeleteModal(false)} />
-//           <div className="flex min-h-full items-center justify-center p-4">
-//             <div className="relative w-full max-w-md bg-white rounded-xl shadow-2xl p-6">
-//               <div className="text-center">
-//                 <div className="mx-auto w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mb-4">
-//                   <Trash2 className="w-6 h-6 text-red-600" />
-//                 </div>
-//                 <h3 className="text-lg font-semibold text-gray-900 mb-2">Delete Purchase Order</h3>
-//                 <p className="text-sm text-gray-600 mb-6">
-//                   Are you sure you want to delete <span className="font-semibold">{order.poNumber}</span>? 
-//                   This action cannot be undone.
-//                 </p>
-//                 <div className="flex justify-center space-x-3">
-//                   <button
-//                     onClick={() => setShowDeleteModal(false)}
-//                     className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
-//                   >
-//                     Cancel
-//                   </button>
-//                   <button
-//                     onClick={handleDelete}
-//                     className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 flex items-center space-x-2"
-//                   >
-//                     <Trash2 size={16} />
-//                     <span>Delete</span>
-//                   </button>
-//                 </div>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       )}
-
-//       {/* Status Update Modal */}
-//       {showStatusModal && (
-//         <div className="fixed inset-0 z-50 overflow-y-auto">
-//           <div className="fixed inset-0 bg-black bg-opacity-50" onClick={() => setShowStatusModal(false)} />
-//           <div className="flex min-h-full items-center justify-center p-4">
-//             <div className="relative w-full max-w-md bg-white rounded-xl shadow-2xl p-6">
-//               <div className="text-center">
-//                 <div className="mx-auto w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-4">
-//                   <Clock className="w-6 h-6 text-blue-600" />
-//                 </div>
-//                 <h3 className="text-lg font-semibold text-gray-900 mb-2">Update Status</h3>
-//                 <p className="text-sm text-gray-600 mb-6">
-//                   Are you sure you want to change the status to{' '}
-//                   <span className="font-semibold capitalize">{selectedStatus}</span>?
-//                 </p>
-//                 <div className="flex justify-center space-x-3">
-//                   <button
-//                     onClick={() => setShowStatusModal(false)}
-//                     className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
-//                   >
-//                     Cancel
-//                   </button>
-//                   <button
-//                     onClick={handleStatusUpdate}
-//                     className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
-//                   >
-//                     Update Status
-//                   </button>
-//                 </div>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       )}
-//     </MainLayout>
-//   )
-// }
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import MainLayout from '@/components/layout/MainLayout'
-import { api } from '@/lib/api'
 import {
   ArrowLeft,
-  ShoppingCart,
   Building2,
   Calendar,
-  DollarSign,
-  Clock,
-  Truck,
   CheckCircle,
   XCircle,
   FileText,
-  Download,
-  Send,
-  Edit2,
-  Trash2,
-  Printer,
-  Mail,
   AlertCircle,
-  Package
+  Package,
+  Zap,
+  RefreshCw,
+  List,
+  Receipt,
+  Clock,
+  Truck,
+  DollarSign,
+  MapPin,
+  Tag,
+  Layers,
+  Printer,
+  Download,
+  ChevronDown,
+  ChevronUp,
+  Maximize2,
+  Minimize2
 } from 'lucide-react'
 import Link from 'next/link'
 
+interface LineItem {
+  PurchaseOrderItem: string;
+  PurchaseOrderItemCategory: string;
+  Material: string;
+  MaterialGroup: string;
+  Plant: string;
+  StorageLocation: string;
+  OrderQuantity: number;
+  PurchaseOrderQuantityUnit: string;
+  NetPriceAmount: number;
+  DocumentCurrency: string;
+  PurchaseOrderItemText: string;
+  SupplierMaterialNumber: string;
+  TaxCode: string;
+  GoodsReceiptIsExpected: boolean;
+  InvoiceIsExpected: boolean;
+  IsCompletelyDelivered: boolean;
+  IsFinallyInvoiced: boolean;
+  DeliveryAddressCityName: string;
+  DeliveryAddressCountry: string;
+  DeliveryAddressName: string;
+  PlantName?: string;
+  MaterialName?: string;
+  MaterialGroupName?: string;
+  Status?: string;
+  RevisionLevel?: string;
+  PriceUnit?: number;
+  NetOrderValue?: number;
+  MaterialDescription?: string;
+}
+
 interface PurchaseOrder {
-  id: string
-  poNumber: string
-  title: string
-  description?: string
-  status: string
-  priority: string
-  orderDate: string
-  expectedDate?: string
-  deliveredDate?: string
-  subtotal: number
-  taxAmount: number
-  discount: number
-  total: number
-  currency: string
-  notes?: string
-  terms?: string
-  vendor: {
-    id: string
-    name: string
-    email: string
-    phone?: string
-    contactPerson?: string
-  }
-  lineItems: Array<{
-    id: string
-    lineNumber: number
-    description: string
-    quantity: number
-    unitPrice: number
-    total: number
-    notes?: string
-    receivedQuantity?: number
-  }>
-  createdBy: {
-    name: string
-    email: string
-  }
-  createdAt: string
-}
-
-// Helper function to safely format currency
-const formatCurrency = (amount: any, currency: string = 'USD'): string => {
-  if (amount === undefined || amount === null || isNaN(Number(amount))) {
-    return `${currency} 0.00`
-  }
-  const numAmount = Number(amount)
-  return `${currency} ${numAmount.toFixed(2)}`
-}
-
-// Helper function to safely format numbers
-const formatNumber = (value: any): string => {
-  if (value === undefined || value === null || isNaN(Number(value))) {
-    return '0'
-  }
-  const numValue = Number(value)
-  return numValue.toFixed(2)
+  PurchaseOrder: string;
+  Supplier: string;
+  SupplierName?: string;
+  PurchaseOrderDate: string;
+  TotalAmount: number;
+  DocumentCurrency: string;
+  PurchaseOrderStatus: string;
+  CreatedByUser: string;
+  CreationDate: string;
+  CompanyCode?: string;
+  PurchasingOrganization?: string;
+  PurchasingGroup?: string;
+  PaymentTerms?: string;
+  PurchaseOrderType?: string;
+  SupplierAddress?: string;
+  SupplierCity?: string;
+  SupplierCountry?: string;
+  DeliveryAddress?: string;
+  DeliveryCity?: string;
+  DeliveryCountry?: string;
+  to_PurchaseOrderItem?: {
+    results: LineItem[];
+  };
 }
 
 export default function PurchaseOrderDetailPage() {
@@ -637,10 +94,9 @@ export default function PurchaseOrderDetailPage() {
   const [order, setOrder] = useState<PurchaseOrder | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [showDeleteModal, setShowDeleteModal] = useState(false)
-  const [showStatusModal, setShowStatusModal] = useState(false)
-  const [selectedStatus, setSelectedStatus] = useState('')
-  const printRef = useRef<HTMLDivElement>(null)
+  const [refreshing, setRefreshing] = useState(false)
+  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set())
+  const [expandedColumns, setExpandedColumns] = useState<Set<string>>(new Set())
 
   const id = params.id as string
 
@@ -649,272 +105,147 @@ export default function PurchaseOrderDetailPage() {
   }, [id])
 
   const fetchPurchaseOrder = async () => {
-    setLoading(true)
     try {
-      const response = await api.getPurchaseOrder(id)
-      if (response.success) {
-        setOrder(response.data)
-      } else {
-        setError('Failed to load purchase order')
+      const token = localStorage.getItem('token')
+      if (!token) {
+        window.location.href = '/admin-login'
+        return
       }
-    } catch (err) {
-      setError('Failed to load purchase order')
+
+      setRefreshing(true)
+      setError('')
+
+      const response = await fetch(`http://localhost:3001/api/sap/purchase-orders/${id}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+      
+      const data = await response.json()
+      
+      if (data.success && data.data) {
+        const processedOrder = {
+          ...data.data,
+          to_PurchaseOrderItem: {
+            results: data.data.to_PurchaseOrderItem?.results?.map((item: any) => ({
+              ...item,
+              NetOrderValue: (item.OrderQuantity || 0) * (item.NetPriceAmount || 0),
+              PriceUnit: item.PriceUnit || 1,
+              RevisionLevel: item.RevisionLevel || '',
+              Status: item.Status || determineItemStatus(item),
+              MaterialDescription: item.PurchaseOrderItemText || item.MaterialName || item.Material || ''
+            })) || []
+          }
+        }
+        setOrder(processedOrder)
+      } else {
+        setError(data.error || 'Purchase order not found')
+      }
+    } catch (err: any) {
+      console.error('Error fetching purchase order:', err)
+      setError(err.message || 'Failed to fetch purchase order')
     } finally {
       setLoading(false)
+      setRefreshing(false)
     }
   }
 
-  const handleStatusUpdate = async () => {
-    if (!selectedStatus) return
-    try {
-      const response = await api.updatePurchaseOrderStatus(id, selectedStatus)
-      if (response.success) {
-        setOrder(response.data)
-        setShowStatusModal(false)
+  const toggleRowExpansion = (rowId: string) => {
+    setExpandedRows(prev => {
+      const newSet = new Set(prev)
+      if (newSet.has(rowId)) {
+        newSet.delete(rowId)
+      } else {
+        newSet.add(rowId)
       }
-    } catch (err) {
-      console.error('Error updating status:', err)
-    }
-  }
-
-  const handleDelete = async () => {
-    try {
-      const response = await api.deletePurchaseOrder(id)
-      if (response.success) {
-        router.push('/procurement/purchase-orders')
-      }
-    } catch (err) {
-      console.error('Error deleting purchase order:', err)
-    }
-  }
-
-  const handlePrint = () => {
-    const printWindow = window.open('', '_blank')
-    if (!printWindow || !order) return
-
-    const printContent = `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title>${order.poNumber} - Purchase Order</title>
-          <style>
-            body { font-family: Arial, sans-serif; margin: 40px; }
-            .header { display: flex; justify-content: space-between; margin-bottom: 30px; }
-            .title { font-size: 24px; font-weight: bold; color: #2563eb; }
-            .po-number { font-size: 18px; color: #374151; margin-top: 5px; }
-            .section { margin-bottom: 30px; }
-            .section-title { font-size: 16px; font-weight: bold; margin-bottom: 10px; color: #111827; }
-            table { width: 100%; border-collapse: collapse; }
-            th { background: #f3f4f6; padding: 10px; text-align: left; font-size: 12px; }
-            td { padding: 10px; border-bottom: 1px solid #e5e7eb; }
-            .total { text-align: right; font-weight: bold; }
-            .footer { margin-top: 50px; font-size: 12px; color: #6b7280; }
-          </style>
-        </head>
-        <body>
-          <div class="header">
-            <div>
-              <div class="title">VendorFlow</div>
-              <div class="po-number">Purchase Order: ${order.poNumber}</div>
-            </div>
-            <div>
-              <div>Date: ${new Date(order.orderDate).toLocaleDateString()}</div>
-              <div>Status: ${order.status.toUpperCase()}</div>
-            </div>
-          </div>
-          
-          <div class="section">
-            <div class="section-title">Vendor Information</div>
-            <div><strong>${order.vendor.name}</strong></div>
-            <div>${order.vendor.email || ''}</div>
-            <div>${order.vendor.phone || ''}</div>
-            <div>Contact: ${order.vendor.contactPerson || ''}</div>
-          </div>
-          
-          <div class="section">
-            <div class="section-title">Order Details</div>
-            <div><strong>${order.title}</strong></div>
-            <div>${order.description || ''}</div>
-            <div style="margin-top: 10px;">
-              <strong>Expected Delivery:</strong> ${order.expectedDate ? new Date(order.expectedDate).toLocaleDateString() : 'Not specified'}
-            </div>
-          </div>
-          
-          <div class="section">
-            <div class="section-title">Line Items</div>
-            <table>
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Description</th>
-                  <th>Quantity</th>
-                  <th>Unit Price</th>
-                  <th>Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${order.lineItems.map(item => `
-                  <tr>
-                    <td>${item.lineNumber}</td>
-                    <td>${item.description}</td>
-                    <td>${formatNumber(item.quantity)}</td>
-                    <td>${formatCurrency(item.unitPrice, order.currency)}</td>
-                    <td>${formatCurrency(item.total, order.currency)}</td>
-                  </tr>
-                `).join('')}
-              </tbody>
-              <tfoot>
-                <tr>
-                  <td colspan="4" class="total">Subtotal:</td>
-                  <td>${formatCurrency(order.subtotal, order.currency)}</td>
-                </tr>
-                <tr>
-                  <td colspan="4" class="total">Tax:</td>
-                  <td>${formatCurrency(order.taxAmount, order.currency)}</td>
-                </tr>
-                <tr>
-                  <td colspan="4" class="total">Discount:</td>
-                  <td>-${formatCurrency(order.discount, order.currency)}</td>
-                </tr>
-                <tr>
-                  <td colspan="4" class="total">Total:</td>
-                  <td><strong>${formatCurrency(order.total, order.currency)}</strong></td>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-          
-          ${order.notes ? `
-            <div class="section">
-              <div class="section-title">Notes</div>
-              <p>${order.notes}</p>
-            </div>
-          ` : ''}
-          
-          ${order.terms ? `
-            <div class="section">
-              <div class="section-title">Terms & Conditions</div>
-              <p>${order.terms}</p>
-            </div>
-          ` : ''}
-          
-          <div class="footer">
-            <p>Created by: ${order.createdBy.name} on ${new Date(order.createdAt).toLocaleDateString()}</p>
-            <p>This is a computer generated document. No signature is required.</p>
-          </div>
-          
-          <script>
-            window.onload = function() { window.print(); }
-          </script>
-        </body>
-      </html>
-    `
-
-    printWindow.document.write(printContent)
-    printWindow.document.close()
-  }
-
-  const handleExport = () => {
-    if (!order) return
-
-    // Create CSV content
-    const headers = ['PO Number', 'Title', 'Vendor', 'Status', 'Order Date', 'Total', 'Currency']
-    const data = [
-      order.poNumber,
-      order.title,
-      order.vendor.name,
-      order.status,
-      new Date(order.orderDate).toLocaleDateString(),
-      order.total,
-      order.currency
-    ]
-
-    const lineItemsHeaders = ['Line #', 'Description', 'Quantity', 'Unit Price', 'Total']
-    const lineItemsData = order.lineItems.map(item => [
-      item.lineNumber,
-      item.description,
-      item.quantity,
-      item.unitPrice,
-      item.total
-    ])
-
-    // Create CSV string
-    let csv = headers.join(',') + '\n'
-    csv += data.map(cell => `"${cell}"`).join(',') + '\n\n'
-    csv += lineItemsHeaders.join(',') + '\n'
-    lineItemsData.forEach(row => {
-      csv += row.map(cell => `"${cell}"`).join(',') + '\n'
+      return newSet
     })
-
-    // Download CSV
-    const blob = new Blob([csv], { type: 'text/csv' })
-    const url = window.URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `${order.poNumber}_export.csv`
-    a.click()
-    window.URL.revokeObjectURL(url)
   }
 
-  const handleEdit = () => {
-    router.push(`/procurement/purchase-orders/${id}/edit`)
-  }
-
-  const handleSendToVendor = async () => {
-    try {
-      const response = await api.updatePurchaseOrderStatus(id, 'sent')
-      if (response.success) {
-        setOrder(response.data)
-        // Here you would also trigger an email to the vendor
-        alert('Purchase order sent to vendor successfully!')
+  const toggleColumnExpansion = (colId: string) => {
+    setExpandedColumns(prev => {
+      const newSet = new Set(prev)
+      if (newSet.has(colId)) {
+        newSet.delete(colId)
+      } else {
+        newSet.add(colId)
       }
-    } catch (err) {
-      console.error('Error sending purchase order:', err)
-      alert('Failed to send purchase order to vendor')
-    }
+      return newSet
+    })
   }
 
-  const handleCreateRFQ = () => {
-    router.push(`/procurement/rfqs/new?poId=${id}&vendorId=${order?.vendor.id}`)
-  }
-
-  const handleReceiveGoods = () => {
-    router.push(`/procurement/goods-receipts/new?poId=${id}`)
+  const determineItemStatus = (item: any): string => {
+    if (item.IsCompletelyDelivered) return 'Delivered'
+    if (item.IsFinallyInvoiced) return 'Invoiced'
+    if (item.GoodsReceiptIsExpected) return 'In Progress'
+    return 'Open'
   }
 
   const getStatusBadge = (status: string) => {
-    const statusConfig: Record<string, { color: string, icon: any, label: string }> = {
-      draft: { color: 'bg-gray-100 text-gray-800', icon: FileText, label: 'Draft' },
-      sent: { color: 'bg-blue-100 text-blue-800', icon: Send, label: 'Sent' },
-      acknowledged: { color: 'bg-purple-100 text-purple-800', icon: CheckCircle, label: 'Acknowledged' },
-      confirmed: { color: 'bg-indigo-100 text-indigo-800', icon: CheckCircle, label: 'Confirmed' },
-      shipped: { color: 'bg-yellow-100 text-yellow-800', icon: Truck, label: 'Shipped' },
-      delivered: { color: 'bg-green-100 text-green-800', icon: CheckCircle, label: 'Delivered' },
-      cancelled: { color: 'bg-red-100 text-red-800', icon: XCircle, label: 'Cancelled' }
+    const statusMap: Record<string, { color: string, label: string }> = {
+      '1': { color: 'bg-green-100 text-green-800', label: 'Open' },
+      '2': { color: 'bg-blue-100 text-blue-800', label: 'In Review' },
+      '3': { color: 'bg-purple-100 text-purple-800', label: 'Approved' },
+      '4': { color: 'bg-gray-100 text-gray-800', label: 'Closed' },
+      '5': { color: 'bg-red-100 text-red-800', label: 'Cancelled' },
+      '6': { color: 'bg-teal-100 text-teal-800', label: 'Completed' },
     }
-    const config = statusConfig[status] || statusConfig.draft
-    const Icon = config.icon
-    return (
-      <span className={`px-3 py-1 text-sm font-medium rounded-full flex items-center space-x-1 w-fit ${config.color}`}>
-        <Icon size={14} />
-        <span>{config.label}</span>
-      </span>
-    )
+    const config = statusMap[status] || { color: 'bg-gray-100 text-gray-800', label: status }
+    return <span className={`px-3 py-1 text-sm font-medium rounded-full ${config.color}`}>{config.label}</span>
   }
 
-  const getPriorityBadge = (priority: string) => {
-    const priorityConfig: Record<string, { color: string, label: string }> = {
-      low: { color: 'bg-gray-100 text-gray-800', label: 'Low' },
-      medium: { color: 'bg-blue-100 text-blue-800', label: 'Medium' },
-      high: { color: 'bg-orange-100 text-orange-800', label: 'High' },
-      urgent: { color: 'bg-red-100 text-red-800', label: 'Urgent' }
+  const getItemCategoryLabel = (category: string) => {
+    const categories: Record<string, string> = {
+      '0': 'Standard',
+      '1': 'Consignment',
+      '2': 'Subcontracting',
+      '3': 'Stock Transfer',
+      '4': 'Service',
+      '5': 'Non-Stock'
     }
-    const config = priorityConfig[priority] || priorityConfig.medium
-    return (
-      <span className={`px-3 py-1 text-sm font-medium rounded-full ${config.color}`}>
-        {config.label}
-      </span>
-    )
+    return categories[category] || category || 'Standard'
+  }
+
+  const getItemStatusBadge = (status: string) => {
+    const statusMap: Record<string, { color: string, label: string }> = {
+      'Open': { color: 'bg-yellow-100 text-yellow-800', label: 'Open' },
+      'In Progress': { color: 'bg-blue-100 text-blue-800', label: 'In Progress' },
+      'Delivered': { color: 'bg-green-100 text-green-800', label: 'Delivered' },
+      'Invoiced': { color: 'bg-purple-100 text-purple-800', label: 'Invoiced' },
+      'Cancelled': { color: 'bg-red-100 text-red-800', label: 'Cancelled' },
+    }
+    const config = statusMap[status] || { color: 'bg-gray-100 text-gray-800', label: status }
+    return <span className={`px-2 py-1 text-xs font-medium rounded-full ${config.color}`}>{config.label}</span>
+  }
+
+  const formatDate = (dateStr: string | null) => {
+    if (!dateStr) return '-'
+    try {
+      const date = new Date(dateStr)
+      return isNaN(date.getTime()) ? '-' : date.toLocaleDateString()
+    } catch {
+      return '-'
+    }
+  }
+
+  const formatCurrency = (amount: number | null, currency: string = 'INR') => {
+    if (amount === null || amount === undefined || isNaN(amount)) return '-'
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: currency,
+      minimumFractionDigits: 2
+    }).format(amount)
+  }
+
+  const formatNumber = (num: number | null | undefined) => {
+    if (num === null || num === undefined || isNaN(num)) return '-'
+    return new Intl.NumberFormat('en-IN').format(num)
+  }
+
+  const handlePrint = () => {
+    window.print()
+  }
+
+  const handleExport = () => {
+    alert('Export functionality coming soon!')
   }
 
   if (loading) {
@@ -946,370 +277,335 @@ export default function PurchaseOrderDetailPage() {
     )
   }
 
+  const lineItems = order.to_PurchaseOrderItem?.results || []
+  const isDescriptionExpanded = expandedColumns.has('description')
+
   return (
     <MainLayout>
-      <div ref={printRef}>
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Link
-                href="/procurement/purchase-orders"
-                className="p-2 hover:bg-gray-100 rounded-lg transition"
-              >
-                <ArrowLeft size={20} className="text-gray-600" />
-              </Link>
-              <div>
-                <div className="flex items-center space-x-3 mb-1">
-                  <h1 className="text-2xl font-bold text-gray-900">{order.poNumber}</h1>
-                  {getStatusBadge(order.status)}
-                  {getPriorityBadge(order.priority)}
-                </div>
-                <p className="text-gray-600">{order.title}</p>
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center space-x-4">
+            <Link
+              href="/procurement/purchase-orders"
+              className="p-2 hover:bg-gray-100 rounded-lg transition"
+            >
+              <ArrowLeft size={20} className="text-gray-600" />
+            </Link>
+            <div>
+              <div className="flex items-center space-x-3">
+                <h1 className="text-2xl font-bold text-gray-900">PO #{order.PurchaseOrder}</h1>
+                {getStatusBadge(order.PurchaseOrderStatus)}
+                <span className="flex items-center text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
+                  <Zap size={12} className="mr-1" />
+                  SAP Live
+                </span>
               </div>
+              <p className="text-gray-600">Vendor: {order.SupplierName || order.Supplier || 'Unknown'}</p>
             </div>
-            <div className="flex items-center space-x-3">
-              <button
-                onClick={handlePrint}
-                className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center space-x-2"
-              >
-                <Printer size={16} />
-                <span>Print</span>
-              </button>
-              <button
-                onClick={handleExport}
-                className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center space-x-2"
-              >
-                <Download size={16} />
-                <span>Export</span>
-              </button>
-              <button
-                onClick={handleEdit}
-                className="px-4 py-2 text-blue-600 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 flex items-center space-x-2"
-              >
-                <Edit2 size={16} />
-                <span>Edit</span>
-              </button>
-              <button
-                onClick={() => setShowDeleteModal(true)}
-                className="px-4 py-2 text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 flex items-center space-x-2"
-              >
-                <Trash2 size={16} />
-                <span>Delete</span>
-              </button>
+          </div>
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={handlePrint}
+              className="px-4 py-2 text-gray-600 bg-gray-100 border border-gray-200 rounded-lg hover:bg-gray-200 flex items-center space-x-2"
+            >
+              <Printer size={16} />
+              <span>Print</span>
+            </button>
+            <button
+              onClick={handleExport}
+              className="px-4 py-2 text-gray-600 bg-gray-100 border border-gray-200 rounded-lg hover:bg-gray-200 flex items-center space-x-2"
+            >
+              <Download size={16} />
+              <span>Export</span>
+            </button>
+            <button
+              onClick={fetchPurchaseOrder}
+              disabled={refreshing}
+              className="px-4 py-2 text-blue-600 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 flex items-center space-x-2 disabled:opacity-50"
+            >
+              <RefreshCw size={16} className={refreshing ? 'animate-spin' : ''} />
+              <span>Refresh</span>
+            </button>
+          </div>
+        </div>
+
+        {/* PO Header Information */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+            <p className="text-xs text-gray-500">PO Number</p>
+            <p className="text-sm font-semibold text-gray-900">{order.PurchaseOrder}</p>
+          </div>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+            <p className="text-xs text-gray-500">PO Type</p>
+            <p className="text-sm text-gray-900">{order.PurchaseOrderType || 'Standard'}</p>
+          </div>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+            <p className="text-xs text-gray-500">Order Date</p>
+            <p className="text-sm text-gray-900">{formatDate(order.PurchaseOrderDate)}</p>
+          </div>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+            <p className="text-xs text-gray-500">Total Amount</p>
+            <p className="text-sm font-bold text-blue-600">{formatCurrency(order.TotalAmount, order.DocumentCurrency)}</p>
+          </div>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+            <p className="text-xs text-gray-500">Company Code</p>
+            <p className="text-sm text-gray-900">{order.CompanyCode || '-'}</p>
+          </div>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+            <p className="text-xs text-gray-500">Purchasing Org</p>
+            <p className="text-sm text-gray-900">{order.PurchasingOrganization || '-'}</p>
+          </div>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+            <p className="text-xs text-gray-500">Purchasing Group</p>
+            <p className="text-sm text-gray-900">{order.PurchasingGroup || '-'}</p>
+          </div>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+            <p className="text-xs text-gray-500">Payment Terms</p>
+            <p className="text-sm text-gray-900">{order.PaymentTerms || '-'}</p>
+          </div>
+        </div>
+
+        {/* Vendor Information */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+            <h2 className="text-sm font-semibold text-gray-700 mb-2 flex items-center">
+              <Building2 size={16} className="mr-2" />
+              Vendor Information
+            </h2>
+            <div>
+              <p className="font-medium text-gray-900">{order.SupplierName || order.Supplier || 'Unknown'}</p>
+              <p className="text-sm text-gray-500">Supplier Code: {order.Supplier || 'N/A'}</p>
+              {order.SupplierAddress && (
+                <p className="text-sm text-gray-500 mt-1">{order.SupplierAddress}</p>
+              )}
+              {(order.SupplierCity || order.SupplierCountry) && (
+                <p className="text-sm text-gray-500">
+                  {[order.SupplierCity, order.SupplierCountry].filter(Boolean).join(', ')}
+                </p>
+              )}
+            </div>
+          </div>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+            <h2 className="text-sm font-semibold text-gray-700 mb-2 flex items-center">
+              <MapPin size={16} className="mr-2" />
+              Delivery Address
+            </h2>
+            <div>
+              {order.DeliveryAddress ? (
+                <>
+                  <p className="text-sm text-gray-900">{order.DeliveryAddress}</p>
+                  {order.DeliveryCity && (
+                    <p className="text-sm text-gray-500">{order.DeliveryCity}</p>
+                  )}
+                  {order.DeliveryCountry && (
+                    <p className="text-sm text-gray-500">{order.DeliveryCountry}</p>
+                  )}
+                </>
+              ) : (
+                <p className="text-sm text-gray-500">No delivery address specified</p>
+              )}
             </div>
           </div>
         </div>
 
-        {/* Main Content */}
-        <div className="grid grid-cols-3 gap-6">
-          {/* Left Column - 2/3 width */}
-          <div className="col-span-2 space-y-6">
-            {/* Vendor Information */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                <Building2 size={18} className="mr-2 text-gray-500" />
-                Vendor Information
-              </h2>
-              <div className="flex items-start space-x-4">
-                <div className="p-3 bg-blue-100 rounded-lg">
-                  <Building2 className="w-6 h-6 text-blue-600" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-lg font-medium text-gray-900">{order.vendor.name}</h3>
-                  <div className="mt-2 grid grid-cols-2 gap-4">
-                    <div>
-                      <p className="text-xs text-gray-500">Email</p>
-                      <p className="text-sm text-gray-900">{order.vendor.email || '—'}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-500">Phone</p>
-                      <p className="text-sm text-gray-900">{order.vendor.phone || '—'}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-500">Contact Person</p>
-                      <p className="text-sm text-gray-900">{order.vendor.contactPerson || '—'}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+        {/* Column Expansion Toggle */}
+        <div className="mb-4 flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => toggleColumnExpansion('description')}
+              className={`px-3 py-1.5 text-sm rounded-lg border flex items-center space-x-1 transition ${
+                isDescriptionExpanded 
+                  ? 'bg-blue-50 text-blue-700 border-blue-300' 
+                  : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100'
+              }`}
+            >
+              {isDescriptionExpanded ? (
+                <>
+                  <Minimize2 size={14} />
+                  <span>Collapse Description</span>
+                </>
+              ) : (
+                <>
+                  <Maximize2 size={14} />
+                  <span>Expand Descriptions</span>
+                </>
+              )}
+            </button>
+            <span className="text-xs text-gray-500">
+              {isDescriptionExpanded ? 'Showing full descriptions' : 'Showing truncated descriptions'}
+            </span>
+          </div>
+          <div className="text-sm text-gray-500">
+            {lineItems.length} items
+          </div>
+        </div>
 
-            {/* Line Items */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                <Package size={18} className="mr-2 text-gray-500" />
-                Line Items
-              </h2>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">#</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
-                      <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Quantity</th>
-                      <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Unit Price</th>
-                      <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Total</th>
-                      <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Received</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200">
-                    {order.lineItems?.map((item) => (
-                      <tr key={item.id}>
-                        <td className="px-4 py-3 text-sm text-gray-500">{item.lineNumber}</td>
-                        <td className="px-4 py-3">
-                          <div className="text-sm font-medium text-gray-900">{item.description}</div>
-                          {item.notes && (
-                            <div className="text-xs text-gray-500">{item.notes}</div>
+        {/* Line Items */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
+            <h2 className="text-sm font-semibold text-gray-700 flex items-center">
+              <List size={16} className="mr-2" />
+              Line Items ({lineItems.length})
+            </h2>
+            <div className="flex items-center space-x-4">
+              <span className="text-sm text-gray-500">
+                Total: {formatCurrency(order.TotalAmount, order.DocumentCurrency)}
+              </span>
+            </div>
+          </div>
+          
+          {lineItems.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Item</th>
+                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Item Category</th>
+                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Material Code</th>
+                    <th className={`px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${
+                      isDescriptionExpanded ? 'min-w-[400px]' : 'min-w-[200px]'
+                    }`}>
+                      <div className="flex items-center justify-between">
+                        <span>Material Description</span>
+                        <button
+                          onClick={() => toggleColumnExpansion('description')}
+                          className="ml-2 p-0.5 hover:bg-gray-200 rounded transition"
+                          title={isDescriptionExpanded ? 'Collapse' : 'Expand'}
+                        >
+                          {isDescriptionExpanded ? (
+                            <Minimize2 size={12} className="text-gray-500" />
+                          ) : (
+                            <Maximize2 size={12} className="text-gray-500" />
                           )}
+                        </button>
+                      </div>
+                    </th>
+                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Material Group</th>
+                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Plant</th>
+                    <th className="px-3 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Order Qty</th>
+                    <th className="px-3 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Net Price</th>
+                    <th className="px-3 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Price Unit</th>
+                    <th className="px-3 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Net Value</th>
+                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Revision</th>
+                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Supplier Material</th>
+                    <th className="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {lineItems.map((item, idx) => {
+                    const rowId = item.PurchaseOrderItem || `row-${idx}`
+                    const isExpanded = expandedRows.has(rowId)
+                    const description = item.MaterialDescription || item.PurchaseOrderItemText || item.MaterialName || '-'
+                    
+                    return (
+                      <tr key={rowId} className={`hover:bg-gray-50 ${isExpanded ? 'bg-blue-50' : ''}`}>
+                        <td className="px-3 py-3 text-gray-600 font-medium text-center whitespace-nowrap">
+                          {item.PurchaseOrderItem || idx + 1}
                         </td>
-                        <td className="px-4 py-3 text-sm text-gray-900 text-right">{formatNumber(item.quantity)}</td>
-                        <td className="px-4 py-3 text-sm text-gray-900 text-right">
-                          {formatCurrency(item.unitPrice, order.currency)}
+                        <td className="px-3 py-3 whitespace-nowrap">
+                          <span className="text-xs px-2 py-1 bg-gray-100 rounded-full text-gray-700 whitespace-nowrap">
+                            {getItemCategoryLabel(item.PurchaseOrderItemCategory)}
+                          </span>
                         </td>
-                        <td className="px-4 py-3 text-sm font-medium text-gray-900 text-right">
-                          {formatCurrency(item.total, order.currency)}
+                        <td className="px-3 py-3 font-mono text-xs text-gray-900 whitespace-nowrap" title={item.Material}>
+                          {item.Material || '-'}
                         </td>
-                        <td className="px-4 py-3 text-sm text-gray-900 text-right">
-                          {formatNumber(item.receivedQuantity)}
+                        <td className={`px-3 py-3 ${
+                          isDescriptionExpanded ? 'min-w-[400px]' : 'max-w-[250px]'
+                        }`}>
+                          <div className="flex items-start space-x-2">
+                            <div className="flex-1">
+                              {isDescriptionExpanded ? (
+                                <div className="text-gray-900 whitespace-pre-wrap break-words leading-relaxed">
+                                  {description}
+                                </div>
+                              ) : (
+                                <div className="relative">
+                                  <div className="text-gray-900 truncate" title={description}>
+                                    {description}
+                                  </div>
+                                  {description.length > 40 && (
+                                    <button
+                                      onClick={() => toggleRowExpansion(rowId)}
+                                      className="text-xs text-blue-600 hover:text-blue-800 font-medium mt-0.5 focus:outline-none"
+                                    >
+                                      {isExpanded ? 'Show less' : 'Show more...'}
+                                    </button>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                            {isDescriptionExpanded && description.length > 60 && (
+                              <button
+                                onClick={() => toggleRowExpansion(rowId)}
+                                className="flex-shrink-0 text-blue-600 hover:text-blue-800 focus:outline-none mt-1"
+                              >
+                                {isExpanded ? (
+                                  <ChevronUp size={16} />
+                                ) : (
+                                  <ChevronDown size={16} />
+                                )}
+                              </button>
+                            )}
+                          </div>
+                        </td>
+                        <td className="px-3 py-3 text-gray-600 max-w-[150px] truncate" title={item.MaterialGroup || item.MaterialGroupName}>
+                          {item.MaterialGroupName || item.MaterialGroup || '-'}
+                        </td>
+                        <td className="px-3 py-3 text-gray-600 max-w-[120px] truncate" title={item.PlantName || item.Plant}>
+                          {item.PlantName || item.Plant || '-'}
+                        </td>
+                        <td className="px-3 py-3 text-right text-gray-900 whitespace-nowrap">
+                          {formatNumber(item.OrderQuantity)} {item.PurchaseOrderQuantityUnit || 'EA'}
+                        </td>
+                        <td className="px-3 py-3 text-right font-medium text-gray-900 whitespace-nowrap">
+                          {formatCurrency(item.NetPriceAmount, order.DocumentCurrency)}
+                        </td>
+                        <td className="px-3 py-3 text-right text-gray-600 whitespace-nowrap">
+                          {item.PriceUnit || 1} {item.PurchaseOrderQuantityUnit || 'EA'}
+                        </td>
+                        <td className="px-3 py-3 text-right font-medium text-gray-900 whitespace-nowrap">
+                          {formatCurrency(item.NetOrderValue || (item.OrderQuantity * item.NetPriceAmount), order.DocumentCurrency)}
+                        </td>
+                        <td className="px-3 py-3 text-gray-600 whitespace-nowrap">
+                          {item.RevisionLevel || '-'}
+                        </td>
+                        <td className="px-3 py-3 font-mono text-xs text-gray-600 max-w-[120px] truncate" title={item.SupplierMaterialNumber}>
+                          {item.SupplierMaterialNumber || '-'}
+                        </td>
+                        <td className="px-3 py-3 text-center whitespace-nowrap">
+                          {getItemStatusBadge(item.Status || determineItemStatus(item))}
                         </td>
                       </tr>
-                    ))}
-                  </tbody>
-                  <tfoot className="bg-gray-50">
-                    <tr>
-                      <td colSpan={4} className="px-4 py-3 text-sm font-medium text-gray-900 text-right">Subtotal:</td>
-                      <td className="px-4 py-3 text-sm font-medium text-gray-900 text-right">
-                        {formatCurrency(order.subtotal, order.currency)}
-                      </td>
-                      <td></td>
-                    </tr>
-                    <tr>
-                      <td colSpan={4} className="px-4 py-3 text-sm text-gray-700 text-right">Tax:</td>
-                      <td className="px-4 py-3 text-sm text-gray-700 text-right">
-                        {formatCurrency(order.taxAmount, order.currency)}
-                      </td>
-                      <td></td>
-                    </tr>
-                    <tr>
-                      <td colSpan={4} className="px-4 py-3 text-sm text-gray-700 text-right">Discount:</td>
-                      <td className="px-4 py-3 text-sm text-gray-700 text-right">
-                        -{formatCurrency(order.discount, order.currency)}
-                      </td>
-                      <td></td>
-                    </tr>
-                    <tr>
-                      <td colSpan={4} className="px-4 py-3 text-sm font-bold text-gray-900 text-right">Total:</td>
-                      <td className="px-4 py-3 text-sm font-bold text-gray-900 text-right">
-                        {formatCurrency(order.total, order.currency)}
-                      </td>
-                      <td></td>
-                    </tr>
-                  </tfoot>
-                </table>
-              </div>
+                    )
+                  })}
+                </tbody>
+              </table>
             </div>
+          ) : (
+            <div className="px-6 py-12 text-center text-gray-500">
+              <Package size={48} className="mx-auto mb-3 text-gray-300" />
+              <p>No line items found for this purchase order</p>
+            </div>
+          )}
+        </div>
 
-            {/* Notes & Terms */}
-            {(order.notes || order.terms) && (
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                  <FileText size={18} className="mr-2 text-gray-500" />
-                  Notes & Terms
-                </h2>
-                {order.notes && (
-                  <div className="mb-4">
-                    <h3 className="text-sm font-medium text-gray-700 mb-2">Notes</h3>
-                    <p className="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">{order.notes}</p>
-                  </div>
-                )}
-                {order.terms && (
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-700 mb-2">Terms & Conditions</h3>
-                    <p className="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">{order.terms}</p>
-                  </div>
-                )}
-              </div>
-            )}
+        {/* Footer */}
+        <div className="mt-6 flex justify-between items-center text-xs text-gray-500 border-t border-gray-200 pt-4">
+          <div>
+            <span>Created by: {order.CreatedByUser || 'N/A'}</span>
+            <span className="mx-2">|</span>
+            <span>Created on: {formatDate(order.CreationDate)}</span>
           </div>
-
-          {/* Right Column - 1/3 width */}
-          <div className="space-y-6">
-            {/* Summary Card */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Order Summary</h2>
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">Order Date</span>
-                  <span className="text-sm font-medium text-gray-900">
-                    {new Date(order.orderDate).toLocaleDateString()}
-                  </span>
-                </div>
-                {order.expectedDate && (
-                  <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">Expected Delivery</span>
-                    <span className="text-sm font-medium text-gray-900">
-                      {new Date(order.expectedDate).toLocaleDateString()}
-                    </span>
-                  </div>
-                )}
-                {order.deliveredDate && (
-                  <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">Delivered Date</span>
-                    <span className="text-sm font-medium text-gray-900">
-                      {new Date(order.deliveredDate).toLocaleDateString()}
-                    </span>
-                  </div>
-                )}
-                <div className="flex justify-between pt-3 border-t">
-                  <span className="text-sm text-gray-600">Created By</span>
-                  <span className="text-sm font-medium text-gray-900">{order.createdBy.name}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">Created At</span>
-                  <span className="text-sm font-medium text-gray-900">
-                    {new Date(order.createdAt).toLocaleDateString()}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Status Actions */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Update Status</h2>
-              <div className="space-y-2">
-                {['draft', 'sent', 'acknowledged', 'confirmed', 'shipped', 'delivered'].map((status) => (
-                  <button
-                    key={status}
-                    onClick={() => {
-                      setSelectedStatus(status)
-                      setShowStatusModal(true)
-                    }}
-                    disabled={order.status === status}
-                    className={`w-full px-4 py-2 text-sm font-medium rounded-lg flex items-center justify-between ${
-                      order.status === status
-                        ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
-                        : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
-                    }`}
-                  >
-                    <span>Mark as {status.charAt(0).toUpperCase() + status.slice(1)}</span>
-                    {order.status === status && <CheckCircle size={16} className="text-green-600" />}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Actions */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Actions</h2>
-              <div className="space-y-2">
-                <button
-                  onClick={handleSendToVendor}
-                  disabled={order.status !== 'draft'}
-                  className={`w-full px-4 py-2 text-sm font-medium rounded-lg flex items-center justify-between ${
-                    order.status === 'draft'
-                      ? 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
-                      : 'text-gray-400 bg-gray-100 cursor-not-allowed'
-                  }`}
-                >
-                  <span>Send to Vendor</span>
-                  <Mail size={16} />
-                </button>
-                <button
-                  onClick={handleCreateRFQ}
-                  className="w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center justify-between"
-                >
-                  <span>Create RFQ</span>
-                  <FileText size={16} />
-                </button>
-                <button
-                  onClick={handleReceiveGoods}
-                  disabled={order.status !== 'shipped'}
-                  className={`w-full px-4 py-2 text-sm font-medium rounded-lg flex items-center justify-between ${
-                    order.status === 'shipped'
-                      ? 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
-                      : 'text-gray-400 bg-gray-100 cursor-not-allowed'
-                  }`}
-                >
-                  <span>Receive Goods</span>
-                  <Truck size={16} />
-                </button>
-              </div>
-            </div>
+          <div className="flex items-center space-x-2">
+            <span className="flex items-center">
+              <span className="w-2 h-2 rounded-full bg-green-500 mr-1"></span>
+              {order.PurchaseOrderStatus === '1' ? 'Live' : 'Archived'}
+            </span>
           </div>
         </div>
       </div>
-
-      {/* Delete Confirmation Modal */}
-      {showDeleteModal && (
-        <div className="fixed inset-0 z-50 overflow-y-auto">
-          <div className="fixed inset-0 bg-black bg-opacity-50" onClick={() => setShowDeleteModal(false)} />
-          <div className="flex min-h-full items-center justify-center p-4">
-            <div className="relative w-full max-w-md bg-white rounded-xl shadow-2xl p-6">
-              <div className="text-center">
-                <div className="mx-auto w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mb-4">
-                  <Trash2 className="w-6 h-6 text-red-600" />
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Delete Purchase Order</h3>
-                <p className="text-sm text-gray-600 mb-6">
-                  Are you sure you want to delete <span className="font-semibold">{order.poNumber}</span>? 
-                  This action cannot be undone.
-                </p>
-                <div className="flex justify-center space-x-3">
-                  <button
-                    onClick={() => setShowDeleteModal(false)}
-                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={handleDelete}
-                    className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 flex items-center space-x-2"
-                  >
-                    <Trash2 size={16} />
-                    <span>Delete</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Status Update Modal */}
-      {showStatusModal && (
-        <div className="fixed inset-0 z-50 overflow-y-auto">
-          <div className="fixed inset-0 bg-black bg-opacity-50" onClick={() => setShowStatusModal(false)} />
-          <div className="flex min-h-full items-center justify-center p-4">
-            <div className="relative w-full max-w-md bg-white rounded-xl shadow-2xl p-6">
-              <div className="text-center">
-                <div className="mx-auto w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-4">
-                  <Clock className="w-6 h-6 text-blue-600" />
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Update Status</h3>
-                <p className="text-sm text-gray-600 mb-6">
-                  Are you sure you want to change the status to{' '}
-                  <span className="font-semibold capitalize">{selectedStatus}</span>?
-                </p>
-                <div className="flex justify-center space-x-3">
-                  <button
-                    onClick={() => setShowStatusModal(false)}
-                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={handleStatusUpdate}
-                    className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
-                  >
-                    Update Status
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </MainLayout>
   )
 }

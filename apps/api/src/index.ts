@@ -224,7 +224,7 @@ import { SAPSyncService } from './services/sap/sapSyncService'
 import erpRoutes from './routes/erp.routes'
 
 import sapVendorDirectRoutes from './routes/sapVendorDirectRoutes';
-
+import sapPurchaseOrderRoutes from './routes/sapPurchaseOrderRoutes';
 // Admin Sync Routes
 import adminSyncRoutes from './routes/adminSyncRoutes'
 
@@ -309,7 +309,7 @@ app.use('/api/erp', erpRoutes)
 app.use('/api/sap', sapVendorDirectRoutes);
 // Admin Sync Routes (Protected)
 app.use('/api/admin/sync', adminSyncRoutes)
-
+app.use('/api/sap/purchase-orders', sapPurchaseOrderRoutes);
 // SAP Background Sync
 if (process.env.SAP_ENABLED === 'true') {
   try {
