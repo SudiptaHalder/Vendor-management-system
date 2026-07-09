@@ -1,3 +1,4 @@
+
 // import dotenv from 'dotenv'
 // dotenv.config()
 
@@ -29,7 +30,7 @@
 
 // // Vendor Master Upload Routes
 // import vendorMasterUploadRoutes from './routes/vendor/master-upload.routes'
-// import adminSyncRoutes from './routes/adminSyncRoutes';
+
 // // Vendor Auth Routes (for vendor portal)
 // import vendorAuthRoutes from './routes/vendor/auth.routes'
 // import poUploadRoutes from './routes/po-upload.routes'
@@ -38,11 +39,18 @@
 // import { errorHandler } from './middleware/error.middleware'
 // import { authMiddleware } from './middleware/auth.middleware'
 // import vendorManagementRoutes from './routes/vendor/management.routes'
-// import sapSyncRoutes from './routes/sapSyncRoutes';
+
 // // SAP Integration Routes
 // import sapRoutes from './routes/sap.routes'
 // import { SAPSyncService } from './services/sap/sapSyncService'
-// import erpRoutes from './routes/erp.routes';
+// import erpRoutes from './routes/erp.routes'
+
+// import sapVendorDirectRoutes from './routes/sapVendorDirectRoutes';
+// import sapPurchaseOrderRoutes from './routes/sapPurchaseOrderRoutes';
+// // Admin Sync Routes
+// import vendorSAPPurchaseOrdersRoutes from './routes/vendor/sap-purchase-orders.routes';
+// import adminSyncRoutes from './routes/adminSyncRoutes'
+// import sapInvitationRoutes from './routes/sapInvitation.routes';
 // const app = express()
 // const PORT = process.env.PORT || 3001
 
@@ -84,7 +92,7 @@
 // })
 
 // app.use('/api/', limiter)
-
+// app.use('/api/sap', sapVendorDirectRoutes);
 // // ============= PUBLIC ROUTES (NO AUTH REQUIRED) =============
 // app.use('/api/auth', authRoutes)
 // app.get('/api/health', (req, res) => {
@@ -100,18 +108,14 @@
 
 // app.use('/api/vendor/public', vendorAuthRoutes)
 
-// // SAP Public Routes (NO AUTH REQUIRED) - Mount the entire router first, then we'll override protected routes
-// // We'll mount at /api/sap and let the router handle which endpoints are public vs protected
+// // SAP Public Routes (NO AUTH REQUIRED)
 // app.use('/api/sap', sapRoutes)
 
+
+// app.use('/api/sap/invitations', sapInvitationRoutes);
 // // ============= AUTH MIDDLEWARE - APPLIED TO ALL PROTECTED ROUTES =============
-// // Note: This will apply to all routes under /api/* that come after this point
-// // But our SAP routes are already mounted above, so we need to be careful
-// // Actually, let's keep SAP routes after auth for protected endpoints, but we'll have separate public endpoints
-// app.use('/api/admin/sync', adminSyncRoutes);
-// // Better approach: Mount protected routes after auth middleware
 // app.use('/api/*', authMiddleware)
-// app.use('/api/sap-sync', sapSyncRoutes);
+// app.use('/api/vendor/sap-purchase-orders', vendorSAPPurchaseOrdersRoutes);
 // // ============= PROTECTED ROUTES (AUTH REQUIRED) =============
 // app.use('/api/vendors', vendorRoutes)
 // app.use('/api/categories', categoryRoutes)
@@ -126,7 +130,11 @@
 // app.use('/api/vendor-management', vendorManagementRoutes)
 // app.use('/api/po-upload', poUploadRoutes)
 // app.use('/api/vendor', vendorAuthRoutes)
-// app.use('/api/erp', erpRoutes);
+// app.use('/api/erp', erpRoutes)
+// app.use('/api/sap', sapVendorDirectRoutes);
+// // Admin Sync Routes (Protected)
+// app.use('/api/admin/sync', adminSyncRoutes)
+// app.use('/api/sap/purchase-orders', sapPurchaseOrderRoutes);
 // // SAP Background Sync
 // if (process.env.SAP_ENABLED === 'true') {
 //   try {
@@ -177,6 +185,8 @@
 
 // export default app
 
+
+
 import dotenv from 'dotenv'
 dotenv.config()
 
@@ -223,11 +233,13 @@ import sapRoutes from './routes/sap.routes'
 import { SAPSyncService } from './services/sap/sapSyncService'
 import erpRoutes from './routes/erp.routes'
 
-import sapVendorDirectRoutes from './routes/sapVendorDirectRoutes';
-import sapPurchaseOrderRoutes from './routes/sapPurchaseOrderRoutes';
+import sapVendorDirectRoutes from './routes/sapVendorDirectRoutes'
+import sapPurchaseOrderRoutes from './routes/sapPurchaseOrderRoutes'
 // Admin Sync Routes
+import vendorSAPPurchaseOrdersRoutes from './routes/vendor/sap-purchase-orders.routes'
 import adminSyncRoutes from './routes/adminSyncRoutes'
-import sapInvitationRoutes from './routes/sapInvitation.routes';
+import sapInvitationRoutes from './routes/sapInvitation.routes'
+
 const app = express()
 const PORT = process.env.PORT || 3001
 
@@ -269,7 +281,7 @@ const limiter = rateLimit({
 })
 
 app.use('/api/', limiter)
-app.use('/api/sap', sapVendorDirectRoutes);
+
 // ============= PUBLIC ROUTES (NO AUTH REQUIRED) =============
 app.use('/api/auth', authRoutes)
 app.get('/api/health', (req, res) => {
@@ -283,14 +295,18 @@ app.get('/api/health', (req, res) => {
   })
 })
 
+// Vendor Public Routes (NO AUTH)
 app.use('/api/vendor/public', vendorAuthRoutes)
 
-// SAP Public Routes (NO AUTH REQUIRED)
+// SAP Public Routes (NO AUTH)
 app.use('/api/sap', sapRoutes)
+app.use('/api/sap/invitations', sapInvitationRoutes)
 
+// ============= VENDOR ROUTES (Use their own middleware) =============
+app.use('/api/vendor/sap-purchase-orders', vendorSAPPurchaseOrdersRoutes)
 
-app.use('/api/sap/invitations', sapInvitationRoutes);
 // ============= AUTH MIDDLEWARE - APPLIED TO ALL PROTECTED ROUTES =============
+// Note: This applies to all /api/* routes EXCEPT those registered above
 app.use('/api/*', authMiddleware)
 
 // ============= PROTECTED ROUTES (AUTH REQUIRED) =============
@@ -308,10 +324,12 @@ app.use('/api/vendor-management', vendorManagementRoutes)
 app.use('/api/po-upload', poUploadRoutes)
 app.use('/api/vendor', vendorAuthRoutes)
 app.use('/api/erp', erpRoutes)
-app.use('/api/sap', sapVendorDirectRoutes);
+app.use('/api/sap', sapVendorDirectRoutes)
+
 // Admin Sync Routes (Protected)
 app.use('/api/admin/sync', adminSyncRoutes)
-app.use('/api/sap/purchase-orders', sapPurchaseOrderRoutes);
+app.use('/api/sap/purchase-orders', sapPurchaseOrderRoutes)
+
 // SAP Background Sync
 if (process.env.SAP_ENABLED === 'true') {
   try {
