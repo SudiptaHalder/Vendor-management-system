@@ -1,3 +1,395 @@
+// import { Router } from 'express'
+// import { prisma } from '@vendor-management/database'
+// import bcrypt from 'bcrypt'
+// import jwt from 'jsonwebtoken'
+// import { vendorMiddleware } from '../../middleware/vendor.middleware'
+
+// const router = Router()
+
+// // ============= PUBLIC ROUTES (NO AUTH REQUIRED) =============
+
+// // Vendor login
+// router.post('/login', async (req, res) => {
+//   try {
+//     const { username, password } = req.body
+    
+//     console.log('🔐 Vendor login attempt:', username)
+
+//     if (!username || !password) {
+//       return res.status(400).json({ 
+//         success: false, 
+//         error: 'Username and password are required' 
+//       })
+//     }
+
+//     const credentials = await prisma.vendor_credentials.findUnique({
+//       where: { username },
+//       include: { vendor: true }
+//     })
+
+//     if (!credentials) {
+//       return res.status(401).json({ 
+//         success: false, 
+//         error: 'Invalid credentials' 
+//       })
+//     }
+
+//     const isValid = await bcrypt.compare(password, credentials.password)
+//     if (!isValid) {
+//       return res.status(401).json({ 
+//         success: false, 
+//         error: 'Invalid credentials' 
+//       })
+//     }
+
+//     await prisma.vendor_credentials.update({
+//       where: { id: credentials.id },
+//       data: { lastLoginAt: new Date() }
+//     })
+
+//     const token = jwt.sign(
+//       {
+//         vendorId: credentials.vendorId,
+//         username: credentials.username,
+//         type: 'vendor'
+//       },
+//       process.env.JWT_SECRET || 'dev-secret-key',
+//       { expiresIn: '7d' }
+//     )
+
+//     console.log('✅ Vendor login successful:', credentials.vendor.supplierName)
+
+//     res.json({
+//       success: true,
+//       data: {
+//         token,
+//         vendor: {
+//           id: credentials.vendorId,
+//           name: credentials.vendor.supplierName,
+//           code: credentials.vendor.supplierCode,
+//           email: credentials.vendor.email
+//         }
+//       }
+//     })
+
+//   } catch (error) {
+//     console.error('Error logging in:', error)
+//     res.status(500).json({ 
+//       success: false, 
+//       error: 'Login failed' 
+//     })
+//   }
+// })
+
+// // Verify invitation token
+// router.get('/verify-invitation', async (req, res) => {
+//   try {
+//     const { token } = req.query
+    
+//     if (!token) {
+//       return res.status(400).json({ 
+//         success: false, 
+//         error: 'Token is required' 
+//       })
+//     }
+
+//     const invitation = await prisma.vendor_invitations.findUnique({
+//       where: { invitationToken: token as string },
+//       include: { vendor: true }
+//     })
+
+//     if (!invitation) {
+//       return res.status(404).json({ 
+//         success: false, 
+//         error: 'Invalid invitation token' 
+//       })
+//     }
+
+//     if (new Date() > invitation.expiresAt) {
+//       return res.status(400).json({ 
+//         success: false, 
+//         error: 'Invitation has expired' 
+//       })
+//     }
+
+//     if (invitation.status === 'accepted') {
+//       return res.status(400).json({ 
+//         success: false, 
+//         error: 'Invitation already used' 
+//       })
+//     }
+
+//     res.json({
+//       success: true,
+//       data: {
+//         supplierCode: invitation.vendor.supplierCode,
+//         supplierName: invitation.vendor.supplierName,
+//         email: invitation.email
+//       }
+//     })
+
+//   } catch (error) {
+//     console.error('Error verifying invitation:', error)
+//     res.status(500).json({ 
+//       success: false, 
+//       error: 'Failed to verify invitation' 
+//     })
+//   }
+// })
+
+// // Set password (first time login)
+// router.post('/set-password', async (req, res) => {
+//   try {
+//     const { token, password } = req.body
+
+//     if (!token || !password) {
+//       return res.status(400).json({ 
+//         success: false, 
+//         error: 'Token and password are required' 
+//       })
+//     }
+
+//     if (password.length < 8) {
+//       return res.status(400).json({ 
+//         success: false, 
+//         error: 'Password must be at least 8 characters' 
+//       })
+//     }
+
+//     const invitation = await prisma.vendor_invitations.findUnique({
+//       where: { invitationToken: token },
+//       include: { vendor: true }
+//     })
+
+//     if (!invitation) {
+//       return res.status(404).json({ 
+//         success: false, 
+//         error: 'Invalid invitation token' 
+//       })
+//     }
+
+//     if (new Date() > invitation.expiresAt) {
+//       return res.status(400).json({ 
+//         success: false, 
+//         error: 'Invitation has expired' 
+//       })
+//     }
+
+//     if (invitation.status === 'accepted') {
+//       return res.status(400).json({ 
+//         success: false, 
+//         error: 'Invitation already used' 
+//       })
+//     }
+
+//     const hashedPassword = await bcrypt.hash(password, 10)
+
+//     await prisma.vendor_credentials.upsert({
+//       where: { vendorId: invitation.vendorId },
+//       update: {
+//         password: hashedPassword,
+//         isTempPassword: false,
+//         passwordChangedAt: new Date()
+//       },
+//       create: {
+//         vendorId: invitation.vendorId,
+//         username: invitation.vendor.supplierCode,
+//         password: hashedPassword,
+//         isTempPassword: false,
+//         isActive: true
+//       }
+//     })
+
+//     await prisma.vendor_invitations.update({
+//       where: { id: invitation.id },
+//       data: {
+//         status: 'accepted',
+//         acceptedAt: new Date()
+//       }
+//     })
+
+//     const jwtToken = jwt.sign(
+//       {
+//         vendorId: invitation.vendorId,
+//         username: invitation.vendor.supplierCode,
+//         type: 'vendor'
+//       },
+//       process.env.JWT_SECRET || 'dev-secret-key',
+//       { expiresIn: '7d' }
+//     )
+
+//     res.json({
+//       success: true,
+//       data: {
+//         token: jwtToken,
+//         vendor: {
+//           id: invitation.vendorId,
+//           name: invitation.vendor.supplierName,
+//           code: invitation.vendor.supplierCode,
+//           email: invitation.vendor.email
+//         }
+//       }
+//     })
+
+//   } catch (error) {
+//     console.error('Error setting password:', error)
+//     res.status(500).json({ 
+//       success: false, 
+//       error: 'Failed to set password' 
+//     })
+//   }
+// })
+
+// // ============= PROTECTED ROUTES (AUTH REQUIRED) =============
+
+// // Get vendor's purchase orders with legacy line items
+// router.get('/purchase-orders', vendorMiddleware, async (req, res) => {
+//   try {
+//     const vendorId = (req as any).user?.vendorId
+    
+//     console.log('📦 Fetching POs for vendorId:', vendorId)
+    
+//     if (!vendorId) {
+//       return res.status(401).json({ 
+//         success: false, 
+//         error: 'Not authenticated' 
+//       })
+//     }
+
+//     // Get all POs for this vendor
+//     const pos = await prisma.purchase_orders.findMany({
+//       where: { vendorId },
+//       orderBy: {
+//         poCreateDate: 'desc'
+//       }
+//     })
+
+//     console.log(`Found ${pos.length} POs`)
+
+//     // For each PO, get line items from the CORRECT table (po_line_items)
+//     const posWithItems = await Promise.all(pos.map(async (po) => {
+//       const lineItems = await prisma.po_line_items.findMany({
+//         where: { purchaseOrderId: po.id },
+//         orderBy: { lineNumber: 'asc' }
+//       })
+      
+//       console.log(`PO ${po.poNumber}: ${lineItems.length} line items found`)
+      
+//       return {
+//         ...po,
+//         subtotal: po.subtotal ? Number(po.subtotal) : null,
+//         taxAmount: po.taxAmount ? Number(po.taxAmount) : null,
+//         totalAmount: po.totalAmount ? Number(po.totalAmount) : null,
+//         lineItems: lineItems.map(item => ({
+//           id: item.id,
+//           lineNumber: item.lineNumber,
+//           materialCode: item.materialCode,
+//           materialDesc: item.materialDesc,
+//           uom: item.uom,
+//           quantity: item.quantity ? Number(item.quantity) : null,
+//           receivedQty: item.receivedQty ? Number(item.receivedQty) : null,
+//           pendingQty: item.pendingQty ? Number(item.pendingQty) : null,
+//           unitPrice: item.unitPrice ? Number(item.unitPrice) : null,
+//           discountPercent: item.discountPercent ? Number(item.discountPercent) : null,
+//           discountAmount: item.discountAmount ? Number(item.discountAmount) : null,
+//           taxableValue: item.taxableValue ? Number(item.taxableValue) : null,
+//           gstPercent: item.gstPercent ? Number(item.gstPercent) : null,
+//           sgstPercent: item.sgstPercent ? Number(item.sgstPercent) : null,
+//           cgstPercent: item.cgstPercent ? Number(item.cgstPercent) : null,
+//           igstPercent: item.igstPercent ? Number(item.igstPercent) : null,
+//           gstAmount: item.gstAmount ? Number(item.gstAmount) : null,
+//           totalAmount: item.totalAmount ? Number(item.totalAmount) : null,
+//           status: item.status
+//         }))
+//       }
+//     }))
+
+//     console.log(`✅ Returning ${posWithItems.length} POs with line items`)
+
+//     res.json({
+//       success: true,
+//       data: posWithItems
+//     })
+//   } catch (error) {
+//     console.error('Error fetching vendor POs:', error)
+//     res.status(500).json({ 
+//       success: false, 
+//       error: 'Failed to fetch purchase orders' 
+//     })
+//   }
+// })
+
+// // Get vendor profile
+// router.get('/profile', vendorMiddleware, async (req, res) => {
+//   try {
+//     const vendorId = (req as any).user?.vendorId
+    
+//     if (!vendorId) {
+//       return res.status(401).json({ 
+//         success: false, 
+//         error: 'Not authenticated' 
+//       })
+//     }
+
+//     // Get vendor basic info
+//     const vendor = await prisma.vendors.findUnique({
+//       where: { id: vendorId }
+//     })
+
+//     if (!vendor) {
+//       return res.status(404).json({ 
+//         success: false, 
+//         error: 'Vendor not found' 
+//       })
+//     }
+
+//     // Get detailed info from vendorMaster
+//     const masterData = await prisma.vendorMaster.findUnique({
+//       where: { supplierCode: vendor.supplierCode }
+//     })
+
+//     // Combine data
+//     const profile = {
+//       id: vendor.id,
+//       supplierCode: vendor.supplierCode,
+//       supplierName: vendor.supplierName,
+//       email: vendor.email,
+//       phone: masterData?.telephone1 || null,
+//       address: masterData?.address || null,
+//       city: masterData?.city || null,
+//       state: masterData?.region || null,
+//       country: masterData?.countryName || null,
+//       postalCode: masterData?.postalCode || null,
+//       bankName: masterData?.bankName || null,
+//       bankAccount: masterData?.bankAccount || null,
+//       bankCode: masterData?.bankKey || null,
+//       taxNumber: masterData?.taxNumber || null,
+//       gstNumber: masterData?.taxNumber1 || null,
+//       panNumber: masterData?.taxNumber2 || null,
+//       contactPerson: masterData?.accountHolder || null,
+//       contactPhone: masterData?.telephone1 || null,
+//       website: masterData?.internetAdd || null,
+//       createdAt: vendor.createdAt,
+//       updatedAt: vendor.updatedAt
+//     }
+
+//     res.json({
+//       success: true,
+//       data: profile
+//     })
+
+//   } catch (error) {
+//     console.error('Error fetching vendor profile:', error)
+//     res.status(500).json({ 
+//       success: false, 
+//       error: 'Failed to fetch profile' 
+//     })
+//   }
+// })
+
+
+// export default router
+
 import { Router } from 'express'
 import { prisma } from '@vendor-management/database'
 import bcrypt from 'bcrypt'
@@ -8,7 +400,7 @@ const router = Router()
 
 // ============= PUBLIC ROUTES (NO AUTH REQUIRED) =============
 
-// Vendor login
+// Vendor login - Supports both regular password and temp password
 router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body
@@ -28,23 +420,46 @@ router.post('/login', async (req, res) => {
     })
 
     if (!credentials) {
+      console.log('❌ No credentials found for username:', username)
       return res.status(401).json({ 
         success: false, 
         error: 'Invalid credentials' 
       })
     }
 
-    const isValid = await bcrypt.compare(password, credentials.password)
+    // Check if password matches regular password
+    let isValid = false
+    let isTempPassword = false
+
+    // Check regular password if it exists
+    if (credentials.password) {
+      isValid = await bcrypt.compare(password, credentials.password)
+    }
+
+    // If regular password doesn't match, check temp password
+    if (!isValid && credentials.tempPassword) {
+      isValid = await bcrypt.compare(password, credentials.tempPassword)
+      if (isValid) {
+        isTempPassword = true
+        console.log('✅ Temp password matched for vendor:', credentials.vendor.supplierName)
+      }
+    }
+
     if (!isValid) {
+      console.log('❌ Invalid password for vendor:', credentials.vendor.supplierName)
       return res.status(401).json({ 
         success: false, 
         error: 'Invalid credentials' 
       })
     }
 
+    // Update last login and temp password flag
     await prisma.vendor_credentials.update({
       where: { id: credentials.id },
-      data: { lastLoginAt: new Date() }
+      data: { 
+        lastLoginAt: new Date(),
+        isTempPassword: isTempPassword
+      }
     })
 
     const token = jwt.sign(
@@ -68,7 +483,8 @@ router.post('/login', async (req, res) => {
           name: credentials.vendor.supplierName,
           code: credentials.vendor.supplierCode,
           email: credentials.vendor.email
-        }
+        },
+        requiresPasswordChange: isTempPassword // Flag to force password change
       }
     })
 
@@ -137,7 +553,7 @@ router.get('/verify-invitation', async (req, res) => {
   }
 })
 
-// Set password (first time login)
+// Set password (first time login - from invitation)
 router.post('/set-password', async (req, res) => {
   try {
     const { token, password } = req.body
@@ -184,12 +600,15 @@ router.post('/set-password', async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10)
 
+    // Update or create credentials with the new password
     await prisma.vendor_credentials.upsert({
       where: { vendorId: invitation.vendorId },
       update: {
         password: hashedPassword,
+        tempPassword: null, // Clear temp password after setting permanent password
         isTempPassword: false,
-        passwordChangedAt: new Date()
+        passwordChangedAt: new Date(),
+        isActive: true
       },
       create: {
         vendorId: invitation.vendorId,
@@ -200,6 +619,7 @@ router.post('/set-password', async (req, res) => {
       }
     })
 
+    // Update invitation status
     await prisma.vendor_invitations.update({
       where: { id: invitation.id },
       data: {
@@ -386,6 +806,5 @@ router.get('/profile', vendorMiddleware, async (req, res) => {
     })
   }
 })
-
 
 export default router

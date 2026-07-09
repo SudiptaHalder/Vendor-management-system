@@ -227,7 +227,7 @@ import sapVendorDirectRoutes from './routes/sapVendorDirectRoutes';
 import sapPurchaseOrderRoutes from './routes/sapPurchaseOrderRoutes';
 // Admin Sync Routes
 import adminSyncRoutes from './routes/adminSyncRoutes'
-
+import sapInvitationRoutes from './routes/sapInvitation.routes';
 const app = express()
 const PORT = process.env.PORT || 3001
 
@@ -288,6 +288,8 @@ app.use('/api/vendor/public', vendorAuthRoutes)
 // SAP Public Routes (NO AUTH REQUIRED)
 app.use('/api/sap', sapRoutes)
 
+
+app.use('/api/sap/invitations', sapInvitationRoutes);
 // ============= AUTH MIDDLEWARE - APPLIED TO ALL PROTECTED ROUTES =============
 app.use('/api/*', authMiddleware)
 
