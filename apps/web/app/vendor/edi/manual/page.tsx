@@ -1,4 +1,6 @@
 
+
+
 // 'use client'
 
 // import { useState, useEffect, useRef } from 'react'
@@ -12,9 +14,10 @@
 //   Package,
 //   CheckCircle,
 //   Printer,
-//   Download,
 //   Zap,
-//   RefreshCw
+//   RefreshCw,
+//   AlertCircle,
+//   XCircle
 // } from 'lucide-react'
 
 // interface LineItem {
@@ -49,24 +52,35 @@
 //     materialDesc: string
 //     uom: string
 //     poQty: number
-//     remainingQty: number
+//     unitPrice: number
+//     sapTotalPrice: number
 //     invoiceQty: number
-//     totalPrice: number
-//     isSelected: boolean
+//     enteredTotalPrice: number
 //     isVerified: boolean
-//     isFirstLine: boolean
+//     isValid: boolean
+//     errorMessage: string
 //   }[]
 //   isSubmitted: boolean
 //   barcode: string
+// }
+
+// const formatCurrency = (value: any): string => {
+//   if (value === null || value === undefined || isNaN(value)) return '0.00'
+//   return Number(value).toFixed(2)
+// }
+
+// const safeNumber = (value: any): number => {
+//   if (value === null || value === undefined || isNaN(value)) return 0
+//   return Number(value)
 // }
 
 // export default function EDIManualPage() {
 //   const [showForm, setShowForm] = useState(false)
 //   const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>([])
 //   const [loading, setLoading] = useState(true)
+//   const [error, setError] = useState('')
 //   const [submitting, setSubmitting] = useState(false)
 
-//   // ✅ FIX: use img ref instead of canvas ref
 //   const barcodeRef = useRef<HTMLImageElement | null>(null)
 //   const printRef = useRef<HTMLDivElement | null>(null)
 
@@ -85,7 +99,6 @@
 //     fetchPurchaseOrders()
 //   }, [])
 
-//   // ✅ FIX: render barcode to offscreen canvas, then set as img src
 //   useEffect(() => {
 //     if (formData.isSubmitted && formData.barcode) {
 //       setTimeout(() => {
@@ -111,17 +124,36 @@
 
 //   const fetchPurchaseOrders = async () => {
 //     setLoading(true)
+//     setError('')
 //     try {
 //       const token = localStorage.getItem('vendorToken')
-//       const response = await fetch('http://localhost:3001/api/vendor/purchase-orders', {
+//       if (!token) {
+//         setError('Not authenticated')
+//         setLoading(false)
+//         return
+//       }
+
+//       const response = await fetch('http://localhost:3001/api/vendor/sap-purchase-orders', {
 //         headers: { 'Authorization': `Bearer ${token}` }
 //       })
+
+//       if (response.status === 401) {
+//         localStorage.removeItem('vendorToken')
+//         localStorage.removeItem('vendor')
+//         window.location.href = '/vendor-login'
+//         return
+//       }
+
 //       const data = await response.json()
+      
 //       if (data.success) {
-//         setPurchaseOrders(data.data)
+//         setPurchaseOrders(data.data || [])
+//       } else {
+//         setError(data.error || 'Failed to fetch purchase orders')
 //       }
 //     } catch (error) {
 //       console.error('Error fetching POs:', error)
+//       setError('Error connecting to server')
 //     } finally {
 //       setLoading(false)
 //     }
@@ -130,20 +162,24 @@
 //   const handlePONumberChange = (poNumber: string) => {
 //     const selectedPO = purchaseOrders.find(po => po.poNumber === poNumber) || null
 
-//     const lineItemsData = selectedPO?.lineItems.map((item, index) => {
-//       const isFirstLine = index === 0
+//     const lineItemsData = selectedPO?.lineItems.map((item) => {
+//       const unitPrice = safeNumber(item.unitPrice)
+//       const quantity = safeNumber(item.quantity)
+//       const sapTotalPrice = unitPrice * quantity
+      
 //       return {
-//         lineItemId: item.id,
-//         materialCode: item.materialCode,
-//         materialDesc: item.materialDesc,
-//         uom: item.uom,
-//         poQty: item.quantity,
-//         remainingQty: isFirstLine ? 0 : item.quantity,
-//         invoiceQty: isFirstLine ? item.quantity : 0,
-//         totalPrice: isFirstLine ? item.totalAmount : 0,
-//         isSelected: isFirstLine,
-//         isVerified: isFirstLine,
-//         isFirstLine: isFirstLine
+//         lineItemId: item.id || '',
+//         materialCode: item.materialCode || '',
+//         materialDesc: item.materialDesc || '',
+//         uom: item.uom || '',
+//         poQty: quantity,
+//         unitPrice: unitPrice,
+//         sapTotalPrice: sapTotalPrice,
+//         invoiceQty: 0,
+//         enteredTotalPrice: 0,
+//         isVerified: false,
+//         isValid: false,
+//         errorMessage: ''
 //       }
 //     }) || []
 
@@ -154,30 +190,12 @@
 //       lineItemsData,
 //       invoiceNo: `INV-${Date.now()}`,
 //       invoiceDate: new Date().toISOString().split('T')[0],
-//       vehicleNo: 'TEST-VH-1234'
+//       vehicleNo: ''
 //     })
-//   }
-
-//   const toggleLineSelection = (index: number) => {
-//     const updatedLineItems = [...formData.lineItemsData]
-//     if (updatedLineItems[index].isFirstLine) return
-
-//     updatedLineItems[index].isSelected = !updatedLineItems[index].isSelected
-
-//     if (!updatedLineItems[index].isSelected) {
-//       updatedLineItems[index].isVerified = false
-//       updatedLineItems[index].invoiceQty = 0
-//       updatedLineItems[index].totalPrice = 0
-//       updatedLineItems[index].remainingQty = updatedLineItems[index].poQty
-//     }
-
-//     setFormData({ ...formData, lineItemsData: updatedLineItems })
 //   }
 
 //   const handleInvoiceQtyChange = (index: number, value: number) => {
 //     const updatedLineItems = [...formData.lineItemsData]
-//     if (updatedLineItems[index].isFirstLine) return
-
 //     const item = updatedLineItems[index]
 //     const maxQty = item.poQty
 
@@ -188,18 +206,19 @@
 //     }
 
 //     item.invoiceQty = invoiceQty
-//     item.remainingQty = item.poQty - invoiceQty
 //     item.isVerified = false
+//     item.isValid = false
+//     item.errorMessage = ''
 
 //     setFormData({ ...formData, lineItemsData: updatedLineItems })
 //   }
 
-//   const handleTotalPriceChange = (index: number, value: number) => {
+//   const handleEnteredTotalPriceChange = (index: number, value: number) => {
 //     const updatedLineItems = [...formData.lineItemsData]
-//     if (updatedLineItems[index].isFirstLine) return
-
-//     updatedLineItems[index].totalPrice = value
+//     updatedLineItems[index].enteredTotalPrice = value
 //     updatedLineItems[index].isVerified = false
+//     updatedLineItems[index].isValid = false
+//     updatedLineItems[index].errorMessage = ''
 //     setFormData({ ...formData, lineItemsData: updatedLineItems })
 //   }
 
@@ -207,20 +226,43 @@
 //     const updatedLineItems = [...formData.lineItemsData]
 //     const item = updatedLineItems[index]
 
-//     if (item.invoiceQty > 0 && item.totalPrice > 0) {
-//       item.isVerified = true
-//     } else {
-//       alert('Please enter both quantity and price before checking')
+//     if (item.invoiceQty <= 0) {
+//       item.errorMessage = 'Invoice quantity must be greater than 0'
+//       item.isValid = false
 //       item.isVerified = false
+//       setFormData({ ...formData, lineItemsData: updatedLineItems })
+//       return
+//     }
+
+//     if (item.enteredTotalPrice <= 0) {
+//       item.errorMessage = 'Total price must be greater than 0'
+//       item.isValid = false
+//       item.isVerified = false
+//       setFormData({ ...formData, lineItemsData: updatedLineItems })
+//       return
+//     }
+
+//     const expectedTotalPrice = item.unitPrice * item.invoiceQty
+//     const tolerance = 0.01
+//     const diff = Math.abs(item.enteredTotalPrice - expectedTotalPrice)
+//     const isPriceValid = diff <= (expectedTotalPrice * tolerance)
+
+//     if (isPriceValid) {
+//       item.isValid = true
+//       item.isVerified = true
+//       item.errorMessage = ''  // Clear error message on success
+//     } else {
+//       item.isValid = false
+//       item.isVerified = false
+//       item.errorMessage = `Expected: ₹${formatCurrency(expectedTotalPrice)}`
 //     }
 
 //     setFormData({ ...formData, lineItemsData: updatedLineItems })
 //   }
 
-//   const allSelectedLinesVerified = () => {
-//     const selectedLines = formData.lineItemsData.filter(item => item.isSelected === true)
-//     if (selectedLines.length === 0) return false
-//     return selectedLines.every(item => item.isVerified === true)
+//   const allLinesVerified = () => {
+//     if (formData.lineItemsData.length === 0) return false
+//     return formData.lineItemsData.every(item => item.isVerified === true && item.isValid === true)
 //   }
 
 //   const generateBarcodeNumber = () => {
@@ -228,8 +270,8 @@
 //   }
 
 //   const handleSubmit = async () => {
-//     if (!allSelectedLinesVerified()) {
-//       alert('Please check all selected line items before submitting')
+//     if (!allLinesVerified()) {
+//       alert('Please verify all line items before submitting')
 //       return
 //     }
 
@@ -250,35 +292,6 @@
 //     })
 
 //     setSubmitting(false)
-//   }
-
-//   const handleDownloadPDF = async () => {
-//     if (!printRef.current) return
-
-//     // ✅ FIX: wait longer to ensure the img src is fully loaded
-//     await new Promise((resolve) => setTimeout(resolve, 800))
-
-//     const canvas = await html2canvas(printRef.current, {
-//       scale: 2,
-//       backgroundColor: '#ffffff',
-//       useCORS: true,
-//       allowTaint: true,
-//       logging: false
-//     })
-
-//     const imgData = canvas.toDataURL('image/png')
-
-//     const pdf = new jsPDF({
-//       orientation: 'portrait',
-//       unit: 'mm',
-//       format: 'a4'
-//     })
-
-//     const imgWidth = 190
-//     const imgHeight = (canvas.height * imgWidth) / canvas.width
-
-//     pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight)
-//     pdf.save(`EDI_Invoice_${formData.invoiceNo}.pdf`)
 //   }
 
 //   const handlePrint = () => {
@@ -311,10 +324,8 @@
 //       formData.invoiceDate &&
 //       formData.vehicleNo &&
 //       formData.poNumber &&
-//       allSelectedLinesVerified()
+//       allLinesVerified()
 //   }
-
-//   const selectedLineItems = formData.lineItemsData.filter(item => item.isSelected)
 
 //   if (loading) {
 //     return (
@@ -345,6 +356,28 @@
 //             </button>
 //           )}
 //         </div>
+
+//         {error && (
+//           <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center text-red-700 text-sm">
+//             <AlertCircle size={16} className="mr-2" />
+//             {error}
+//           </div>
+//         )}
+
+//         {!loading && purchaseOrders.length === 0 && !showForm && !formData.isSubmitted && !error && (
+//           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center">
+//             <Package size={40} className="mx-auto mb-3 text-gray-400" />
+//             <h3 className="text-base font-medium text-gray-900 mb-1">No Purchase Orders Found</h3>
+//             <p className="text-sm text-gray-500">You don't have any purchase orders to create EDI for.</p>
+//             <button
+//               onClick={fetchPurchaseOrders}
+//               className="mt-4 px-4 py-2 text-sm text-green-600 border border-green-200 rounded-lg hover:bg-green-50"
+//             >
+//               <RefreshCw size={14} className="inline mr-1" />
+//               Refresh from SAP
+//             </button>
+//           </div>
+//         )}
 
 //         {/* EDI Form */}
 //         {showForm && (
@@ -428,74 +461,68 @@
 //                   <table className="w-full text-xs border border-gray-200 rounded-lg">
 //                     <thead className="bg-gray-50">
 //                       <tr>
-//                         <th className="px-2 py-1.5 text-left w-8">Sel</th>
 //                         <th className="px-2 py-1.5 text-left">Material</th>
 //                         <th className="px-2 py-1.5 text-left">Description</th>
 //                         <th className="px-2 py-1.5 text-left w-10">UOM</th>
-//                         <th className="px-2 py-1.5 text-right w-14">Rem Qty</th>
+//                         <th className="px-2 py-1.5 text-right w-14">PO Qty</th>
+//                         <th className="px-2 py-1.5 text-right w-16">Unit Price</th>
 //                         <th className="px-2 py-1.5 text-right w-20">Invoice Qty</th>
-//                         <th className="px-2 py-1.5 text-right w-24">Total Price</th>
+//                         <th className="px-2 py-1.5 text-right w-24">Entered Total</th>
 //                         <th className="px-2 py-1.5 text-center w-16">Action</th>
 //                         <th className="px-2 py-1.5 text-center w-12">Status</th>
 //                       </tr>
 //                     </thead>
 //                     <tbody className="divide-y divide-gray-200">
 //                       {formData.lineItemsData.map((item, idx) => {
-//                         const isSelected = item.isSelected
 //                         const isVerified = item.isVerified
-//                         const isFirstLine = item.isFirstLine
-//                         const rowClass = isFirstLine
-//                           ? 'bg-green-50'
-//                           : isSelected && isVerified
-//                           ? 'bg-green-50'
-//                           : isSelected
-//                           ? 'bg-yellow-50'
-//                           : 'bg-gray-50 opacity-60'
+//                         const isValid = item.isValid
+//                         const hasError = !isValid && !isVerified && item.errorMessage
 
 //                         return (
-//                           <tr key={idx} className={rowClass}>
-//                             <td className="px-2 py-1.5 text-center">
-//                               <input
-//                                 type="checkbox"
-//                                 checked={isSelected}
-//                                 onChange={() => toggleLineSelection(idx)}
-//                                 className="w-3.5 h-3.5 text-green-600 rounded"
-//                                 disabled={formData.isSubmitted || isFirstLine}
-//                               />
-//                             </td>
+//                           <tr key={idx} className={isVerified && isValid ? 'bg-green-50' : hasError ? 'bg-red-50' : 'bg-white'}>
 //                             <td className="px-2 py-1.5 font-mono">{item.materialCode}</td>
-//                             <td className="px-2 py-1.5 truncate max-w-[150px]">{item.materialDesc}</td>
+//                             <td className="px-2 py-1.5 truncate max-w-[120px]">{item.materialDesc}</td>
 //                             <td className="px-2 py-1.5">{item.uom}</td>
-//                             <td className="px-2 py-1.5 text-right text-red-600 font-medium">{item.remainingQty}</td>
+//                             <td className="px-2 py-1.5 text-right font-medium">{item.poQty}</td>
+//                             <td className="px-2 py-1.5 text-right">₹{formatCurrency(item.unitPrice)}</td>
 //                             <td className="px-2 py-1.5">
 //                               <input
 //                                 type="number"
 //                                 value={item.invoiceQty || ''}
 //                                 onChange={(e) => handleInvoiceQtyChange(idx, parseFloat(e.target.value) || 0)}
-//                                 className={`w-full px-1 py-0.5 text-right text-xs border rounded ${!isSelected || formData.isSubmitted || isFirstLine ? 'bg-gray-100' : 'bg-white'}`}
-//                                 disabled={!isSelected || formData.isSubmitted || isFirstLine}
+//                                 className={`w-full px-1 py-0.5 text-right text-xs border rounded bg-white focus:ring-1 focus:ring-green-500 ${hasError ? 'border-red-500' : 'border-gray-300'}`}
+//                                 disabled={formData.isSubmitted || isVerified}
 //                                 placeholder="Qty"
 //                                 step="1"
+//                                 min="0"
+//                                 max={item.poQty}
 //                               />
 //                             </td>
 //                             <td className="px-2 py-1.5">
 //                               <input
 //                                 type="number"
-//                                 value={item.totalPrice || ''}
-//                                 onChange={(e) => handleTotalPriceChange(idx, parseFloat(e.target.value) || 0)}
-//                                 className={`w-full px-1 py-0.5 text-right text-xs border rounded ${!isSelected || formData.isSubmitted || isFirstLine ? 'bg-gray-100' : 'bg-white'}`}
-//                                 disabled={!isSelected || formData.isSubmitted || isFirstLine}
-//                                 placeholder="Price"
+//                                 value={item.enteredTotalPrice || ''}
+//                                 onChange={(e) => handleEnteredTotalPriceChange(idx, parseFloat(e.target.value) || 0)}
+//                                 className={`w-full px-1 py-0.5 text-right text-xs border rounded bg-white focus:ring-1 focus:ring-green-500 ${hasError ? 'border-red-500' : 'border-gray-300'}`}
+//                                 disabled={formData.isSubmitted || isVerified}
+//                                 placeholder="Total"
 //                                 step="0.01"
+//                                 min="0"
 //                               />
+//                               {hasError && (
+//                                 <div className="text-red-500 text-[10px] mt-0.5">{item.errorMessage}</div>
+//                               )}
+//                               {isValid && isVerified && (
+//                                 <div className="text-green-600 text-[10px] mt-0.5">✓ Verified (₹{formatCurrency(item.unitPrice * item.invoiceQty)})</div>
+//                               )}
 //                             </td>
 //                             <td className="px-2 py-1.5 text-center">
-//                               {!formData.isSubmitted && isSelected && !isVerified && !isFirstLine && (
+//                               {!formData.isSubmitted && !isVerified && (
 //                                 <button
 //                                   onClick={() => handleCheckLine(idx)}
-//                                   disabled={!item.invoiceQty || !item.totalPrice}
+//                                   disabled={!item.invoiceQty || !item.enteredTotalPrice}
 //                                   className={`px-2 py-0.5 rounded text-xs ${
-//                                     item.invoiceQty && item.totalPrice
+//                                     item.invoiceQty && item.enteredTotalPrice
 //                                       ? 'bg-blue-600 text-white hover:bg-blue-700'
 //                                       : 'bg-gray-300 text-gray-500 cursor-not-allowed'
 //                                   }`}
@@ -503,18 +530,25 @@
 //                                   Check
 //                                 </button>
 //                               )}
-//                               {(isVerified || isFirstLine) && (
+//                               {isVerified && isValid && (
 //                                 <span className="inline-flex items-center px-1.5 py-0.5 text-xs font-medium text-green-800 bg-green-100 rounded-full">
 //                                   <CheckCircle size={10} className="mr-0.5" />
 //                                   OK
 //                                 </span>
 //                               )}
+//                               {isVerified && !isValid && (
+//                                 <span className="inline-flex items-center px-1.5 py-0.5 text-xs font-medium text-red-800 bg-red-100 rounded-full">
+//                                   <XCircle size={10} className="mr-0.5" />
+//                                   Error
+//                                 </span>
+//                               )}
 //                             </td>
 //                             <td className="px-2 py-1.5 text-center">
-//                               {(isVerified || isFirstLine) && (
+//                               {isVerified && isValid ? (
 //                                 <span className="inline-flex items-center px-1.5 py-0.5 text-xs font-medium text-green-800 bg-green-100 rounded-full">✓</span>
-//                               )}
-//                               {isSelected && !isVerified && !formData.isSubmitted && !isFirstLine && (
+//                               ) : isVerified && !isValid ? (
+//                                 <span className="inline-flex items-center px-1.5 py-0.5 text-xs font-medium text-red-800 bg-red-100 rounded-full">✗</span>
+//                               ) : (
 //                                 <span className="inline-flex items-center px-1.5 py-0.5 text-xs font-medium text-yellow-800 bg-yellow-100 rounded-full">Pending</span>
 //                               )}
 //                             </td>
@@ -554,10 +588,10 @@
 //               </div>
 //             )}
 
-//             {/* Print Area - Everything for PDF/Print */}
+//             {/* Print Area */}
 //             <div ref={printRef}>
 //               {/* Submitted Line Items */}
-//               {formData.isSubmitted && selectedLineItems.length > 0 && (
+//               {formData.isSubmitted && formData.lineItemsData.length > 0 && (
 //                 <div className="mt-6 pt-4 border-t border-gray-200">
 //                   <h3 className="text-sm font-semibold text-gray-900 mb-3">Submitted Line Items</h3>
 //                   <div className="overflow-x-auto">
@@ -572,13 +606,13 @@
 //                         </tr>
 //                       </thead>
 //                       <tbody className="divide-y divide-gray-200">
-//                         {selectedLineItems.map((item, idx) => (
+//                         {formData.lineItemsData.map((item, idx) => (
 //                           <tr key={idx}>
 //                             <td className="px-2 py-1.5 font-mono">{item.materialCode}</td>
 //                             <td className="px-2 py-1.5">{item.materialDesc}</td>
 //                             <td className="px-2 py-1.5">{item.uom}</td>
 //                             <td className="px-2 py-1.5 text-right">{item.invoiceQty}</td>
-//                             <td className="px-2 py-1.5 text-right">₹{item.totalPrice.toFixed(2)}</td>
+//                             <td className="px-2 py-1.5 text-right">₹{formatCurrency(item.enteredTotalPrice)}</td>
 //                           </tr>
 //                         ))}
 //                       </tbody>
@@ -586,7 +620,7 @@
 //                         <tr>
 //                           <td colSpan={4} className="px-2 py-1.5 text-right font-semibold">Total:</td>
 //                           <td className="px-2 py-1.5 text-right font-bold text-green-600">
-//                             ₹{selectedLineItems.reduce((sum, item) => sum + item.totalPrice, 0).toFixed(2)}
+//                             ₹{formData.lineItemsData.reduce((sum, item) => sum + safeNumber(item.enteredTotalPrice), 0).toFixed(2)}
 //                           </td>
 //                         </tr>
 //                       </tfoot>
@@ -629,7 +663,6 @@
 //                       <span className="text-green-800 text-sm font-medium">EDI Submitted Successfully!</span>
 //                     </div>
 
-//                     {/* ✅ FIX: use <img> instead of <canvas> so html2canvas can capture it */}
 //                     <div
 //                       className="rounded-lg p-3 mb-3 inline-block"
 //                       style={{ backgroundColor: '#ffffff', border: '1px solid #e5e7eb' }}
@@ -652,13 +685,6 @@
 //                         <span>Print</span>
 //                       </button>
 //                       <button
-//                         onClick={handleDownloadPDF}
-//                         className="px-3 py-1.5 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center space-x-1 text-sm"
-//                       >
-//                         <Download size={14} />
-//                         <span>Download</span>
-//                       </button>
-//                       <button
 //                         onClick={resetForm}
 //                         className="px-3 py-1.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 flex items-center space-x-1 text-sm"
 //                       >
@@ -672,19 +698,13 @@
 //             </div>
 //           </div>
 //         )}
-
-//         {/* No POs Message */}
-//         {!loading && purchaseOrders.length === 0 && !showForm && !formData.isSubmitted && (
-//           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center">
-//             <Package size={40} className="mx-auto mb-3 text-gray-400" />
-//             <h3 className="text-base font-medium text-gray-900 mb-1">No Purchase Orders Found</h3>
-//             <p className="text-sm text-gray-500">You don't have any purchase orders to create EDI for.</p>
-//           </div>
-//         )}
 //       </div>
 //     </VendorLayout>
 //   )
 // }
+
+
+
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
@@ -698,9 +718,10 @@ import {
   Package,
   CheckCircle,
   Printer,
-  Download,
   Zap,
-  RefreshCw
+  RefreshCw,
+  AlertCircle,
+  XCircle
 } from 'lucide-react'
 
 interface LineItem {
@@ -735,24 +756,35 @@ interface EDIInvoice {
     materialDesc: string
     uom: string
     poQty: number
-    remainingQty: number
+    unitPrice: number
+    sapTotalPrice: number
     invoiceQty: number
-    totalPrice: number
-    isSelected: boolean
+    enteredTotalPrice: number
     isVerified: boolean
-    isFirstLine: boolean
+    isValid: boolean
+    errorMessage: string
   }[]
   isSubmitted: boolean
   barcode: string
+}
+
+const formatCurrency = (value: any): string => {
+  if (value === null || value === undefined || isNaN(value)) return '0.00'
+  return Number(value).toFixed(2)
+}
+
+const safeNumber = (value: any): number => {
+  if (value === null || value === undefined || isNaN(value)) return 0
+  return Number(value)
 }
 
 export default function EDIManualPage() {
   const [showForm, setShowForm] = useState(false)
   const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
-  // ✅ FIX: use img ref instead of canvas ref
   const barcodeRef = useRef<HTMLImageElement | null>(null)
   const printRef = useRef<HTMLDivElement | null>(null)
 
@@ -771,7 +803,6 @@ export default function EDIManualPage() {
     fetchPurchaseOrders()
   }, [])
 
-  // ✅ FIX: render barcode to offscreen canvas, then set as img src
   useEffect(() => {
     if (formData.isSubmitted && formData.barcode) {
       setTimeout(() => {
@@ -797,17 +828,36 @@ export default function EDIManualPage() {
 
   const fetchPurchaseOrders = async () => {
     setLoading(true)
+    setError('')
     try {
       const token = localStorage.getItem('vendorToken')
-      const response = await fetch('http://localhost:3001/api/vendor/purchase-orders', {
+      if (!token) {
+        setError('Not authenticated')
+        setLoading(false)
+        return
+      }
+
+      const response = await fetch('http://localhost:3001/api/vendor/sap-purchase-orders', {
         headers: { 'Authorization': `Bearer ${token}` }
       })
+
+      if (response.status === 401) {
+        localStorage.removeItem('vendorToken')
+        localStorage.removeItem('vendor')
+        window.location.href = '/vendor-login'
+        return
+      }
+
       const data = await response.json()
+      
       if (data.success) {
-        setPurchaseOrders(data.data)
+        setPurchaseOrders(data.data || [])
+      } else {
+        setError(data.error || 'Failed to fetch purchase orders')
       }
     } catch (error) {
       console.error('Error fetching POs:', error)
+      setError('Error connecting to server')
     } finally {
       setLoading(false)
     }
@@ -816,20 +866,24 @@ export default function EDIManualPage() {
   const handlePONumberChange = (poNumber: string) => {
     const selectedPO = purchaseOrders.find(po => po.poNumber === poNumber) || null
 
-    const lineItemsData = selectedPO?.lineItems.map((item, index) => {
-      const isFirstLine = index === 0
+    const lineItemsData = selectedPO?.lineItems.map((item) => {
+      const unitPrice = safeNumber(item.unitPrice)
+      const quantity = safeNumber(item.quantity)
+      const sapTotalPrice = unitPrice * quantity
+      
       return {
-        lineItemId: item.id,
-        materialCode: item.materialCode,
-        materialDesc: item.materialDesc,
-        uom: item.uom,
-        poQty: item.quantity,
-        remainingQty: isFirstLine ? 0 : item.quantity,
-        invoiceQty: isFirstLine ? item.quantity : 0,
-        totalPrice: isFirstLine ? item.totalAmount : 0,
-        isSelected: isFirstLine,
-        isVerified: isFirstLine,
-        isFirstLine: isFirstLine
+        lineItemId: item.id || '',
+        materialCode: item.materialCode || '',
+        materialDesc: item.materialDesc || '',
+        uom: item.uom || '',
+        poQty: quantity,
+        unitPrice: unitPrice,
+        sapTotalPrice: sapTotalPrice,
+        invoiceQty: 0,
+        enteredTotalPrice: 0,
+        isVerified: false,
+        isValid: false,
+        errorMessage: ''
       }
     }) || []
 
@@ -840,30 +894,12 @@ export default function EDIManualPage() {
       lineItemsData,
       invoiceNo: `INV-${Date.now()}`,
       invoiceDate: new Date().toISOString().split('T')[0],
-      vehicleNo: 'TEST-VH-1234'
+      vehicleNo: ''
     })
-  }
-
-  const toggleLineSelection = (index: number) => {
-    const updatedLineItems = [...formData.lineItemsData]
-    if (updatedLineItems[index].isFirstLine) return
-
-    updatedLineItems[index].isSelected = !updatedLineItems[index].isSelected
-
-    if (!updatedLineItems[index].isSelected) {
-      updatedLineItems[index].isVerified = false
-      updatedLineItems[index].invoiceQty = 0
-      updatedLineItems[index].totalPrice = 0
-      updatedLineItems[index].remainingQty = updatedLineItems[index].poQty
-    }
-
-    setFormData({ ...formData, lineItemsData: updatedLineItems })
   }
 
   const handleInvoiceQtyChange = (index: number, value: number) => {
     const updatedLineItems = [...formData.lineItemsData]
-    if (updatedLineItems[index].isFirstLine) return
-
     const item = updatedLineItems[index]
     const maxQty = item.poQty
 
@@ -874,18 +910,19 @@ export default function EDIManualPage() {
     }
 
     item.invoiceQty = invoiceQty
-    item.remainingQty = item.poQty - invoiceQty
     item.isVerified = false
+    item.isValid = false
+    item.errorMessage = ''
 
     setFormData({ ...formData, lineItemsData: updatedLineItems })
   }
 
-  const handleTotalPriceChange = (index: number, value: number) => {
+  const handleEnteredTotalPriceChange = (index: number, value: number) => {
     const updatedLineItems = [...formData.lineItemsData]
-    if (updatedLineItems[index].isFirstLine) return
-
-    updatedLineItems[index].totalPrice = value
+    updatedLineItems[index].enteredTotalPrice = value
     updatedLineItems[index].isVerified = false
+    updatedLineItems[index].isValid = false
+    updatedLineItems[index].errorMessage = ''
     setFormData({ ...formData, lineItemsData: updatedLineItems })
   }
 
@@ -893,20 +930,43 @@ export default function EDIManualPage() {
     const updatedLineItems = [...formData.lineItemsData]
     const item = updatedLineItems[index]
 
-    if (item.invoiceQty > 0 && item.totalPrice > 0) {
-      item.isVerified = true
-    } else {
-      alert('Please enter both quantity and price before checking')
+    if (item.invoiceQty <= 0) {
+      item.errorMessage = 'Invoice quantity must be greater than 0'
+      item.isValid = false
       item.isVerified = false
+      setFormData({ ...formData, lineItemsData: updatedLineItems })
+      return
+    }
+
+    if (item.enteredTotalPrice <= 0) {
+      item.errorMessage = 'Total price must be greater than 0'
+      item.isValid = false
+      item.isVerified = false
+      setFormData({ ...formData, lineItemsData: updatedLineItems })
+      return
+    }
+
+    const expectedTotalPrice = item.unitPrice * item.invoiceQty
+    const tolerance = 0.01
+    const diff = Math.abs(item.enteredTotalPrice - expectedTotalPrice)
+    const isPriceValid = diff <= (expectedTotalPrice * tolerance)
+
+    if (isPriceValid) {
+      item.isValid = true
+      item.isVerified = true
+      item.errorMessage = ''
+    } else {
+      item.isValid = false
+      item.isVerified = false
+      item.errorMessage = `Expected: ₹${formatCurrency(expectedTotalPrice)}`
     }
 
     setFormData({ ...formData, lineItemsData: updatedLineItems })
   }
 
-  const allSelectedLinesVerified = () => {
-    const selectedLines = formData.lineItemsData.filter(item => item.isSelected === true)
-    if (selectedLines.length === 0) return false
-    return selectedLines.every(item => item.isVerified === true)
+  const allLinesVerified = () => {
+    if (formData.lineItemsData.length === 0) return false
+    return formData.lineItemsData.every(item => item.isVerified === true && item.isValid === true)
   }
 
   const generateBarcodeNumber = () => {
@@ -914,8 +974,8 @@ export default function EDIManualPage() {
   }
 
   const handleSubmit = async () => {
-    if (!allSelectedLinesVerified()) {
-      alert('Please check all selected line items before submitting')
+    if (!allLinesVerified()) {
+      alert('Please verify all line items before submitting')
       return
     }
 
@@ -936,35 +996,6 @@ export default function EDIManualPage() {
     })
 
     setSubmitting(false)
-  }
-
-  const handleDownloadPDF = async () => {
-    if (!printRef.current) return
-
-    // ✅ FIX: wait longer to ensure the img src is fully loaded
-    await new Promise((resolve) => setTimeout(resolve, 800))
-
-    const canvas = await html2canvas(printRef.current, {
-      scale: 2,
-      backgroundColor: '#ffffff',
-      useCORS: true,
-      allowTaint: true,
-      logging: false
-    })
-
-    const imgData = canvas.toDataURL('image/png')
-
-    const pdf = new jsPDF({
-      orientation: 'portrait',
-      unit: 'mm',
-      format: 'a4'
-    })
-
-    const imgWidth = 190
-    const imgHeight = (canvas.height * imgWidth) / canvas.width
-
-    pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight)
-    pdf.save(`EDI_Invoice_${formData.invoiceNo}.pdf`)
   }
 
   const handlePrint = () => {
@@ -997,10 +1028,8 @@ export default function EDIManualPage() {
       formData.invoiceDate &&
       formData.vehicleNo &&
       formData.poNumber &&
-      allSelectedLinesVerified()
+      allLinesVerified()
   }
-
-  const selectedLineItems = formData.lineItemsData.filter(item => item.isSelected)
 
   if (loading) {
     return (
@@ -1031,6 +1060,28 @@ export default function EDIManualPage() {
             </button>
           )}
         </div>
+
+        {error && (
+          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center text-red-700 text-sm">
+            <AlertCircle size={16} className="mr-2" />
+            {error}
+          </div>
+        )}
+
+        {!loading && purchaseOrders.length === 0 && !showForm && !formData.isSubmitted && !error && (
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center">
+            <Package size={40} className="mx-auto mb-3 text-gray-400" />
+            <h3 className="text-base font-medium text-gray-900 mb-1">No Purchase Orders Found</h3>
+            <p className="text-sm text-gray-500">You don't have any purchase orders to create EDI for.</p>
+            <button
+              onClick={fetchPurchaseOrders}
+              className="mt-4 px-4 py-2 text-sm text-green-600 border border-green-200 rounded-lg hover:bg-green-50"
+            >
+              <RefreshCw size={14} className="inline mr-1" />
+              Refresh from SAP
+            </button>
+          </div>
+        )}
 
         {/* EDI Form */}
         {showForm && (
@@ -1114,74 +1165,65 @@ export default function EDIManualPage() {
                   <table className="w-full text-xs border border-gray-200 rounded-lg">
                     <thead className="bg-gray-50">
                       <tr>
-                        <th className="px-2 py-1.5 text-left w-8">Sel</th>
                         <th className="px-2 py-1.5 text-left">Material</th>
                         <th className="px-2 py-1.5 text-left">Description</th>
                         <th className="px-2 py-1.5 text-left w-10">UOM</th>
-                        <th className="px-2 py-1.5 text-right w-14">Rem Qty</th>
+                        <th className="px-2 py-1.5 text-right w-14">PO Qty</th>
+                        <th className="px-2 py-1.5 text-right w-16">Unit Price</th>
                         <th className="px-2 py-1.5 text-right w-20">Invoice Qty</th>
-                        <th className="px-2 py-1.5 text-right w-24">Total Price</th>
+                        <th className="px-2 py-1.5 text-right w-24">Entered Total</th>
                         <th className="px-2 py-1.5 text-center w-16">Action</th>
                         <th className="px-2 py-1.5 text-center w-12">Status</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
                       {formData.lineItemsData.map((item, idx) => {
-                        const isSelected = item.isSelected
                         const isVerified = item.isVerified
-                        const isFirstLine = item.isFirstLine
-                        const rowClass = isFirstLine
-                          ? 'bg-green-50'
-                          : isSelected && isVerified
-                          ? 'bg-green-50'
-                          : isSelected
-                          ? 'bg-yellow-50'
-                          : 'bg-gray-50 opacity-60'
+                        const isValid = item.isValid
+                        const hasError = !isValid && !isVerified && item.errorMessage
 
                         return (
-                          <tr key={idx} className={rowClass}>
-                            <td className="px-2 py-1.5 text-center">
-                              <input
-                                type="checkbox"
-                                checked={isSelected}
-                                onChange={() => toggleLineSelection(idx)}
-                                className="w-3.5 h-3.5 text-green-600 rounded"
-                                disabled={formData.isSubmitted || isFirstLine}
-                              />
-                             </td>
+                          <tr key={idx} className={isVerified && isValid ? 'bg-green-50' : hasError ? 'bg-red-50' : 'bg-white'}>
                             <td className="px-2 py-1.5 font-mono">{item.materialCode}</td>
-                            <td className="px-2 py-1.5 truncate max-w-[150px]">{item.materialDesc}</td>
+                            <td className="px-2 py-1.5 truncate max-w-[120px]">{item.materialDesc}</td>
                             <td className="px-2 py-1.5">{item.uom}</td>
-                            <td className="px-2 py-1.5 text-right text-red-600 font-medium">{item.remainingQty}</td>
+                            <td className="px-2 py-1.5 text-right font-medium">{item.poQty}</td>
+                            <td className="px-2 py-1.5 text-right">₹{formatCurrency(item.unitPrice)}</td>
                             <td className="px-2 py-1.5">
                               <input
                                 type="number"
                                 value={item.invoiceQty || ''}
                                 onChange={(e) => handleInvoiceQtyChange(idx, parseFloat(e.target.value) || 0)}
-                                className={`w-full px-1 py-0.5 text-right text-xs border rounded ${!isSelected || formData.isSubmitted || isFirstLine ? 'bg-gray-100' : 'bg-white'}`}
-                                disabled={!isSelected || formData.isSubmitted || isFirstLine}
+                                className={`w-full px-1 py-0.5 text-right text-xs border rounded bg-white focus:ring-1 focus:ring-green-500 ${hasError ? 'border-red-500' : 'border-gray-300'}`}
+                                disabled={formData.isSubmitted || isVerified}
                                 placeholder="Qty"
                                 step="1"
+                                min="0"
+                                max={item.poQty}
                               />
-                             </td>
+                            </td>
                             <td className="px-2 py-1.5">
                               <input
                                 type="number"
-                                value={item.totalPrice || ''}
-                                onChange={(e) => handleTotalPriceChange(idx, parseFloat(e.target.value) || 0)}
-                                className={`w-full px-1 py-0.5 text-right text-xs border rounded ${!isSelected || formData.isSubmitted || isFirstLine ? 'bg-gray-100' : 'bg-white'}`}
-                                disabled={!isSelected || formData.isSubmitted || isFirstLine}
-                                placeholder="Price"
+                                value={item.enteredTotalPrice || ''}
+                                onChange={(e) => handleEnteredTotalPriceChange(idx, parseFloat(e.target.value) || 0)}
+                                className={`w-full px-1 py-0.5 text-right text-xs border rounded bg-white focus:ring-1 focus:ring-green-500 ${hasError ? 'border-red-500' : 'border-gray-300'}`}
+                                disabled={formData.isSubmitted || isVerified}
+                                placeholder="Total"
                                 step="0.01"
+                                min="0"
                               />
-                             </td>
+                              {hasError && (
+                                <div className="text-red-500 text-[10px] mt-0.5">{item.errorMessage}</div>
+                              )}
+                            </td>
                             <td className="px-2 py-1.5 text-center">
-                              {!formData.isSubmitted && isSelected && !isVerified && !isFirstLine && (
+                              {!formData.isSubmitted && !isVerified && (
                                 <button
                                   onClick={() => handleCheckLine(idx)}
-                                  disabled={!item.invoiceQty || !item.totalPrice}
+                                  disabled={!item.invoiceQty || !item.enteredTotalPrice}
                                   className={`px-2 py-0.5 rounded text-xs ${
-                                    item.invoiceQty && item.totalPrice
+                                    item.invoiceQty && item.enteredTotalPrice
                                       ? 'bg-blue-600 text-white hover:bg-blue-700'
                                       : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                                   }`}
@@ -1189,22 +1231,29 @@ export default function EDIManualPage() {
                                   Check
                                 </button>
                               )}
-                              {(isVerified || isFirstLine) && (
+                              {isVerified && isValid && (
                                 <span className="inline-flex items-center px-1.5 py-0.5 text-xs font-medium text-green-800 bg-green-100 rounded-full">
                                   <CheckCircle size={10} className="mr-0.5" />
                                   OK
                                 </span>
                               )}
-                             </td>
-                            <td className="px-2 py-1.5 text-center">
-                              {(isVerified || isFirstLine) && (
-                                <span className="inline-flex items-center px-1.5 py-0.5 text-xs font-medium text-green-800 bg-green-100 rounded-full">✓</span>
+                              {isVerified && !isValid && (
+                                <span className="inline-flex items-center px-1.5 py-0.5 text-xs font-medium text-red-800 bg-red-100 rounded-full">
+                                  <XCircle size={10} className="mr-0.5" />
+                                  Error
+                                </span>
                               )}
-                              {isSelected && !isVerified && !formData.isSubmitted && !isFirstLine && (
+                            </td>
+                            <td className="px-2 py-1.5 text-center">
+                              {isVerified && isValid ? (
+                                <span className="inline-flex items-center px-1.5 py-0.5 text-xs font-medium text-green-800 bg-green-100 rounded-full">✓</span>
+                              ) : isVerified && !isValid ? (
+                                <span className="inline-flex items-center px-1.5 py-0.5 text-xs font-medium text-red-800 bg-red-100 rounded-full">✗</span>
+                              ) : (
                                 <span className="inline-flex items-center px-1.5 py-0.5 text-xs font-medium text-yellow-800 bg-yellow-100 rounded-full">Pending</span>
                               )}
-                             </td>
-                           </tr>
+                            </td>
+                          </tr>
                         )
                       })}
                     </tbody>
@@ -1240,10 +1289,10 @@ export default function EDIManualPage() {
               </div>
             )}
 
-            {/* Print Area - Everything for PDF/Print */}
+            {/* Print Area */}
             <div ref={printRef}>
               {/* Submitted Line Items */}
-              {formData.isSubmitted && selectedLineItems.length > 0 && (
+              {formData.isSubmitted && formData.lineItemsData.length > 0 && (
                 <div className="mt-6 pt-4 border-t border-gray-200">
                   <h3 className="text-sm font-semibold text-gray-900 mb-3">Submitted Line Items</h3>
                   <div className="overflow-x-auto">
@@ -1258,13 +1307,13 @@ export default function EDIManualPage() {
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-200">
-                        {selectedLineItems.map((item, idx) => (
+                        {formData.lineItemsData.map((item, idx) => (
                           <tr key={idx}>
                             <td className="px-2 py-1.5 font-mono">{item.materialCode}</td>
                             <td className="px-2 py-1.5">{item.materialDesc}</td>
                             <td className="px-2 py-1.5">{item.uom}</td>
                             <td className="px-2 py-1.5 text-right">{item.invoiceQty}</td>
-                            <td className="px-2 py-1.5 text-right">₹{item.totalPrice.toFixed(2)}</td>
+                            <td className="px-2 py-1.5 text-right">₹{formatCurrency(item.enteredTotalPrice)}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -1272,7 +1321,7 @@ export default function EDIManualPage() {
                         <tr>
                           <td colSpan={4} className="px-2 py-1.5 text-right font-semibold">Total:</td>
                           <td className="px-2 py-1.5 text-right font-bold text-green-600">
-                            ₹{selectedLineItems.reduce((sum, item) => sum + item.totalPrice, 0).toFixed(2)}
+                            ₹{formData.lineItemsData.reduce((sum, item) => sum + safeNumber(item.enteredTotalPrice), 0).toFixed(2)}
                           </td>
                         </tr>
                       </tfoot>
@@ -1315,7 +1364,6 @@ export default function EDIManualPage() {
                       <span className="text-green-800 text-sm font-medium">EDI Submitted Successfully!</span>
                     </div>
 
-                    {/* ✅ FIX: use <img> instead of <canvas> so html2canvas can capture it */}
                     <div
                       className="rounded-lg p-3 mb-3 inline-block"
                       style={{ backgroundColor: '#ffffff', border: '1px solid #e5e7eb' }}
@@ -1337,7 +1385,6 @@ export default function EDIManualPage() {
                         <Printer size={14} />
                         <span>Print</span>
                       </button>
-                      {/* Download button removed */}
                       <button
                         onClick={resetForm}
                         className="px-3 py-1.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 flex items-center space-x-1 text-sm"
@@ -1350,15 +1397,6 @@ export default function EDIManualPage() {
                 </div>
               )}
             </div>
-          </div>
-        )}
-
-        {/* No POs Message */}
-        {!loading && purchaseOrders.length === 0 && !showForm && !formData.isSubmitted && (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center">
-            <Package size={40} className="mx-auto mb-3 text-gray-400" />
-            <h3 className="text-base font-medium text-gray-900 mb-1">No Purchase Orders Found</h3>
-            <p className="text-sm text-gray-500">You don't have any purchase orders to create EDI for.</p>
           </div>
         )}
       </div>
