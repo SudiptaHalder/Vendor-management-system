@@ -36,8 +36,8 @@ export default function VendorsListPage() {
       }
 
       const url = searchTerm 
-        ? `http://localhost:3001/api/erp/vendors/search/${searchTerm}`
-        : `http://localhost:3001/api/erp/vendors?status=${statusFilter}`;
+        ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/erp/vendors/search/${searchTerm}`
+        : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/erp/vendors?status=${statusFilter}`;
       
       const response = await fetch(url, {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -58,7 +58,7 @@ export default function VendorsListPage() {
     setSyncing(true);
     try {
       const token = localStorage.getItem('token');
-      await fetch('http://localhost:3001/api/erp/sync-vendors', {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/erp/sync-vendors`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` }
       });

@@ -105,7 +105,7 @@ const handleDownload = async () => {
   try {
     // Use fetch directly with credentials
     const token = localStorage.getItem('token')
-    const response = await fetch(`http://localhost:3001${document.fileUrl}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}${document.fileUrl}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -287,7 +287,7 @@ const handleDownload = async () => {
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Preview</h2>
           <div className="flex justify-center">
             <img 
-              src={`http://localhost:3001${document.fileUrl}`} 
+              src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}${document.fileUrl}`} 
               alt={document.name}
               className="max-h-96 rounded-lg shadow-sm"
             />

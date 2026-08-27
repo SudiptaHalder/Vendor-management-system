@@ -378,13 +378,13 @@ export default function DashboardPage() {
 
     try {
       const [vendorsRes, posRes, docsRes] = await Promise.all([
-        fetch('http://localhost:3001/api/sap/live/vendors/count', {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/sap/live/vendors/count`, {
           headers: { 'Authorization': `Bearer ${authToken}` }
         }),
-        fetch('http://localhost:3001/api/sap/live/purchase-orders/count', {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/sap/live/purchase-orders/count`, {
           headers: { 'Authorization': `Bearer ${authToken}` }
         }),
-        fetch('http://localhost:3001/api/sap/live/material-documents/count', {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/sap/live/material-documents/count`, {
           headers: { 'Authorization': `Bearer ${authToken}` }
         })
       ])

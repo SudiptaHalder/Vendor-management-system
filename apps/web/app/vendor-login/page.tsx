@@ -28,7 +28,7 @@
 
 //     try {
 //       const response = await 
-// fetch('http://localhost:3001/api/vendor/public/login', {
+// fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/vendor/public/login`, {
 //         method: 'POST',
 //         headers: { 'Content-Type': 'application/json' },
 //         body: JSON.stringify({ username, password })
@@ -149,7 +149,7 @@
 //   useState(() => {
 //     const verifyToken = async () => {
 //       try {
-//         const response = await fetch(`http://localhost:3001/api/vendor/verify-invitation?token=${token}`)
+//         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/vendor/verify-invitation?token=${token}`)
 //         const data = await response.json()
         
 //         if (data.success) {
@@ -185,7 +185,7 @@
 //     setLoading(true)
     
 //     try {
-//       const response = await fetch('http://localhost:3001/api/vendor/set-password', {
+//       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/vendor/set-password`, {
 //         method: 'POST',
 //         headers: { 'Content-Type': 'application/json' },
 //         body: JSON.stringify({ token, password })
@@ -377,7 +377,7 @@ export default function VendorLoginPage() {
     try {
       console.log('🔐 Vendor login attempt for:', username)
       
-      const response = await fetch('http://localhost:3001/api/vendor/public/login', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/vendor/public/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
@@ -501,7 +501,7 @@ function TokenSetup({ token, onComplete }: { token: string; onComplete: () => vo
   useEffect(() => {
     const verifyToken = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/api/vendor/public/verify-invitation?token=${token}`)
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/vendor/public/verify-invitation?token=${token}`)
         const data = await response.json()
         
         if (data.success) {
@@ -537,7 +537,7 @@ function TokenSetup({ token, onComplete }: { token: string; onComplete: () => vo
     setLoading(true)
     
     try {
-      const response = await fetch('http://localhost:3001/api/vendor/public/set-password', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/vendor/public/set-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token, password })

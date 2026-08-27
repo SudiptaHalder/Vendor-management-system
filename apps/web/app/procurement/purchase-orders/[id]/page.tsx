@@ -115,7 +115,7 @@ export default function PurchaseOrderDetailPage() {
       setRefreshing(true)
       setError('')
 
-      const response = await fetch(`http://localhost:3001/api/sap/purchase-orders/${id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/sap/purchase-orders/${id}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
       

@@ -120,7 +120,7 @@ export default function SAPDataExplorer() {
       setError('');
 
       // Fetch vendors
-      const vendorsRes = await fetch('http://localhost:3001/api/erp/vendors?limit=200', {
+      const vendorsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/erp/vendors?limit=200`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const vendorsData = await vendorsRes.json();
@@ -129,7 +129,7 @@ export default function SAPDataExplorer() {
       }
 
       // Fetch purchase orders
-      const poRes = await fetch('http://localhost:3001/api/purchase-orders', {
+      const poRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/purchase-orders`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const poData = await poRes.json();
@@ -138,7 +138,7 @@ export default function SAPDataExplorer() {
       }
 
       // Fetch material documents
-      const docsRes = await fetch('http://localhost:3001/api/sap/material-documents?limit=100', {
+      const docsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/sap/material-documents?limit=100`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const docsData = await docsRes.json();
@@ -147,7 +147,7 @@ export default function SAPDataExplorer() {
       }
 
       // Fetch metrics
-      const metricsRes = await fetch('http://localhost:3001/api/erp/vendor-metrics', {
+      const metricsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/erp/vendor-metrics`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const metricsData = await metricsRes.json();

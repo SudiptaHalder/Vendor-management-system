@@ -46,7 +46,7 @@ export default function VendorDetailPage() {
         return;
       }
 
-      const response = await fetch(`http://localhost:3001/api/erp/vendors/${vendorId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/erp/vendors/${vendorId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await response.json();
@@ -66,7 +66,7 @@ export default function VendorDetailPage() {
     setSyncing(true);
     try {
       const token = localStorage.getItem('token');
-      await fetch(`http://localhost:3001/api/erp/sync-vendors/${vendor.supplierCode}`, {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/erp/sync-vendors/${vendor.supplierCode}`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` }
       });

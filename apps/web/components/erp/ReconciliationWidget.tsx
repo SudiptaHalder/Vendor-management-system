@@ -14,7 +14,7 @@ export default function ReconciliationWidget() {
   const fetchReconciliationSummary = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3001/api/erp/reconciliation', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/erp/reconciliation`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await response.json();

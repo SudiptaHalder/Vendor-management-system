@@ -13,7 +13,7 @@ export default function EnterpriseDashboard() {
   const fetchMetrics = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3001/api/erp/vendor-metrics', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/erp/vendor-metrics`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await response.json();
@@ -29,7 +29,7 @@ export default function EnterpriseDashboard() {
     setSyncing(true);
     try {
       const token = localStorage.getItem('token');
-      await fetch('http://localhost:3001/api/erp/sync-vendors', {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/erp/sync-vendors`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` }
       });

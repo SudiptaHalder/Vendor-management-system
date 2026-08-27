@@ -10,8 +10,12 @@ const router = Router()
 
 // Ensure upload directory exists
 const uploadDir = path.join(__dirname, '../../../uploads')
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true })
+try {
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true })
+  }
+} catch (error: any) {
+  console.warn('⚠️ Could not create uploads directory (expected on serverless):', error.message)
 }
 
 // Configure multer for file upload

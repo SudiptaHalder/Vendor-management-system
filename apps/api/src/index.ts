@@ -239,15 +239,25 @@ import sapPurchaseOrderRoutes from './routes/sapPurchaseOrderRoutes'
 import vendorSAPPurchaseOrdersRoutes from './routes/vendor/sap-purchase-orders.routes'
 import adminSyncRoutes from './routes/adminSyncRoutes'
 import sapInvitationRoutes from './routes/sapInvitation.routes'
+import cronRoutes from './routes/cron.routes'
 
 const app = express()
 const PORT = process.env.PORT || 3001
 
-// Create uploads directory if it doesn't exist
+// Vercel's serverless filesystem is read-only outside /tmp, and /tmp doesn't
+// persist between invocations - local disk upload storage doesn't work there.
+// Guarded so a read-only FS doesn't crash the whole function on cold start.
 const uploadsDir = path.join(__dirname, '../uploads')
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true })
+try {
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true })
+  }
+} catch (error: any) {
+  console.warn('⚠️ Could not create uploads directory (expected on serverless):', error.message)
 }
+
+// Vercel sits in front as a proxy; needed for correct req.ip / express-rate-limit
+app.set('trust proxy', 1)
 
 // Database connection test
 async function testDatabaseConnection() {
@@ -267,7 +277,7 @@ app.use(cors({
   origin: process.env.FRONTEND_URL || 'http://localhost:3000',
   credentials: true,
 }))
-app.use(compression())
+app.use(compression() as unknown as express.RequestHandler)
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
@@ -302,6 +312,9 @@ app.use('/api/vendor/public', vendorAuthRoutes)
 app.use('/api/sap', sapRoutes)
 app.use('/api/sap/invitations', sapInvitationRoutes)
 
+// Cron-triggered routes (own CRON_SECRET check instead of user JWT auth)
+app.use('/api/cron', cronRoutes)
+
 // ============= VENDOR ROUTES (Use their own middleware) =============
 app.use('/api/vendor/sap-purchase-orders', vendorSAPPurchaseOrdersRoutes)
 
@@ -330,18 +343,21 @@ app.use('/api/sap', sapVendorDirectRoutes)
 app.use('/api/admin/sync', adminSyncRoutes)
 app.use('/api/sap/purchase-orders', sapPurchaseOrderRoutes)
 
-// SAP Background Sync
-if (process.env.SAP_ENABLED === 'true') {
+// SAP Background Sync - a setInterval loop can't survive between invocations
+// on Vercel's serverless functions, so it's replaced there by Vercel Cron
+// hitting /api/cron/sap-sync (see vercel.json). Only run the old in-process
+// timer loop on a traditional long-running host (local dev, Railway, etc.)
+if (process.env.SAP_ENABLED === 'true' && !process.env.VERCEL) {
   try {
     const sapSyncService = new SAPSyncService()
     setTimeout(() => {
       console.log('🔄 Starting SAP background sync service...')
       sapSyncService.startBackgroundSync()
     }, 5000)
-  } catch (error) {
+  } catch (error: any) {
     console.error('❌ Failed to initialize SAP service:', error.message)
   }
-} else {
+} else if (process.env.SAP_ENABLED !== 'true') {
   console.log('ℹ️ SAP integration is disabled. Set SAP_ENABLED=true to enable.')
 }
 
@@ -352,6 +368,9 @@ app.use('*', (req, res) => {
 
 app.use(errorHandler)
 
+// On Vercel, the exported app is invoked per-request by the platform's own
+// handler - calling app.listen() there would try to bind a port for nothing.
+if (!process.env.VERCEL) {
 app.listen(PORT, () => {
   console.log(`\n🚀 API server running on port ${PORT}`)
   console.log(`📝 Health: http://localhost:${PORT}/api/health`)
@@ -377,5 +396,6 @@ app.listen(PORT, () => {
     console.log(`🔄 SAP Integration: DISABLED (set SAP_ENABLED=true to enable)`)
   }
 })
+}
 
 export default app

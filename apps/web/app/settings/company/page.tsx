@@ -269,7 +269,7 @@ export default function CompanyProfilePage() {
             <div className="relative">
               {logoPreview ? (
                 <img
-                  src={logoPreview.startsWith('data:') ? logoPreview : `http://localhost:3001${logoPreview}`}
+                  src={logoPreview.startsWith('data:') ? logoPreview : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}${logoPreview}`}
                   alt="Company logo"
                   className="w-24 h-24 rounded-lg object-cover border border-gray-200"
                 />

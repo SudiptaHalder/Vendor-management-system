@@ -33,7 +33,7 @@ export default function VendorSignupPage() {
 
   const verifyInvitation = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/api/vendor/auth/verify-invitation?token=${token}`)
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/vendor/auth/verify-invitation?token=${token}`)
       const data = await response.json()
 
       if (data.success) {
@@ -66,7 +66,7 @@ export default function VendorSignupPage() {
     setSubmitting(true)
 
     try {
-      const response = await fetch('http://localhost:3001/api/vendor/auth/set-password', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/vendor/auth/set-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token, password })

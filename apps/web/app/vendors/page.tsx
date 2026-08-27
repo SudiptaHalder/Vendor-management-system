@@ -45,7 +45,7 @@ export default function VendorsPage() {
       setError('');
 
       // First, get the total count from SAP
-      const countRes = await fetch('http://localhost:3001/api/sap/live/vendors/count', {
+      const countRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/sap/live/vendors/count`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const countData = await countRes.json();
@@ -53,8 +53,8 @@ export default function VendorsPage() {
 
       // Then fetch the vendors (limit 200 for display)
       const url = searchTerm 
-        ? `http://localhost:3001/api/sap/vendors/search?term=${encodeURIComponent(searchTerm)}&limit=200`
-        : 'http://localhost:3001/api/sap/vendors?limit=200';
+        ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/sap/vendors/search?term=${encodeURIComponent(searchTerm)}&limit=200`
+        : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/sap/vendors?limit=200`;
       
       const vendorsRes = await fetch(url, {
         headers: { 'Authorization': `Bearer ${token}` }

@@ -133,7 +133,7 @@
 //         return
 //       }
 
-//       const response = await fetch('http://localhost:3001/api/vendor/sap-purchase-orders', {
+//       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/vendor/sap-purchase-orders`, {
 //         headers: { 'Authorization': `Bearer ${token}` }
 //       })
 
@@ -837,7 +837,7 @@ export default function EDIManualPage() {
         return
       }
 
-      const response = await fetch('http://localhost:3001/api/vendor/sap-purchase-orders', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/vendor/sap-purchase-orders`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
 

@@ -44,8 +44,8 @@ export default function VendorsPage() {
 
       // Fetch vendors
       const url = searchTerm 
-        ? `http://localhost:3001/api/erp/vendors/search/${encodeURIComponent(searchTerm)}`
-        : 'http://localhost:3001/api/erp/vendors?limit=100';
+        ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/erp/vendors/search/${encodeURIComponent(searchTerm)}`
+        : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/erp/vendors?limit=100`;
       
       const vendorsRes = await fetch(url, {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -57,7 +57,7 @@ export default function VendorsPage() {
       }
 
       // Fetch metrics
-      const metricsRes = await fetch('http://localhost:3001/api/erp/vendor-metrics', {
+      const metricsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/erp/vendor-metrics`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const metricsData = await metricsRes.json();
@@ -78,7 +78,7 @@ export default function VendorsPage() {
     setSyncing(true);
     try {
       const token = localStorage.getItem('token');
-      await fetch('http://localhost:3001/api/erp/sync-vendors', {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/erp/sync-vendors`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` }
       });

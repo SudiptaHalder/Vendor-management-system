@@ -49,7 +49,7 @@ export default function VendorDetailPage() {
       setError('');
 
       // Use the correct API endpoint
-      const response = await fetch(`http://localhost:3001/api/sap/vendors/complete/${vendorId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/sap/vendors/complete/${vendorId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       

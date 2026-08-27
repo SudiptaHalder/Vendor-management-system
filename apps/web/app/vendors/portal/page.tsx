@@ -833,7 +833,7 @@ export default function VendorPortalManagementPage() {
         return
       }
 
-      const response = await fetch('http://localhost:3001/api/sap/vendors?limit=200', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/sap/vendors?limit=200`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -915,7 +915,7 @@ export default function VendorPortalManagementPage() {
 
       console.log('📤 Sending invitations for vendors:', selectedVendors)
 
-      const response = await fetch('http://localhost:3001/api/sap/invitations/bulk-invite', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/sap/invitations/bulk-invite`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -963,7 +963,7 @@ export default function VendorPortalManagementPage() {
 
       console.log('📤 Sending invitation to vendor:', vendorId)
 
-      const response = await fetch('http://localhost:3001/api/sap/invitations/invite', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/sap/invitations/invite`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

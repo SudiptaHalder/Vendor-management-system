@@ -49,7 +49,7 @@
 //         return
 //       }
 
-//       const response = await fetch('http://localhost:3001/api/vendor/profile', {
+//       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/vendor/profile`, {
 //         headers: {
 //           'Authorization': `Bearer ${token}`,
 //           'Content-Type': 'application/json'
@@ -290,7 +290,7 @@ export default function VendorProfilePage() {
         return
       }
 
-      const response = await fetch('http://localhost:3001/api/vendor/profile', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/vendor/profile`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'

@@ -98,7 +98,7 @@ export default function AdminPurchaseOrdersPage() {
         return
       }
 
-      const response = await fetch(`http://localhost:3001/api/sap/purchase-orders?limit=200`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/sap/purchase-orders?limit=200`, {
         headers: {
           'Authorization': `Bearer ${authToken}`,
           'Content-Type': 'application/json'

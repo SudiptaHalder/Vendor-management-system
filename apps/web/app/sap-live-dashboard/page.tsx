@@ -33,25 +33,25 @@ export default function SAPLiveDashboard() {
       }
 
       // Fetch vendor metrics
-      const metricsRes = await fetch('http://localhost:3001/api/erp/vendor-metrics', {
+      const metricsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/erp/vendor-metrics`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
       const metrics = await metricsRes.json()
 
       // Fetch PO summary
-      const poRes = await fetch('http://localhost:3001/api/erp/purchase-orders/summary', {
+      const poRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/erp/purchase-orders/summary`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
       const poData = await poRes.json()
 
       // Fetch material documents count
-      const docsRes = await fetch('http://localhost:3001/api/sap/material-documents?limit=1', {
+      const docsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/sap/material-documents?limit=1`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
       const docsData = await docsRes.json()
 
       // Fetch sync status
-      const syncRes = await fetch('http://localhost:3001/api/admin/sync/status', {
+      const syncRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/admin/sync/status`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
       const syncData = await syncRes.json()
@@ -82,7 +82,7 @@ export default function SAPLiveDashboard() {
     setRefreshing(true)
     try {
       const token = localStorage.getItem('token')
-      await fetch('http://localhost:3001/api/admin/sync/all', {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/admin/sync/all`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
