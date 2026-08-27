@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { prisma } from '@vendor-management/database';
 import { authMiddleware } from '../middleware/auth.middleware';
 import { VendorDetailService } from '../services/sap/vendorDetailService';
 import { SAPAuth } from '../services/sap/shared/sapAuth';
@@ -8,8 +9,18 @@ const router = Router();
 router.get('/vendors/complete/:id', authMiddleware, async (req, res) => {
   try {
     const { id } = req.params;
+
+    // The route param is our local vendor id (cuid), but SAP's Business Partner
+    // key is the sapCode/sapBusinessPartnerId - resolve it before calling SAP.
+    const vendor = await prisma.vendors.findUnique({
+      where: { id },
+      select: { sapBusinessPartnerId: true, sapCode: true }
+    });
+
+    const businessPartnerId = vendor?.sapBusinessPartnerId || vendor?.sapCode || id;
+
     const service = new VendorDetailService();
-    const result = await service.getVendorDetailsWithRawData(id);
+    const result = await service.getVendorDetailsWithRawData(businessPartnerId);
     res.json(result);
   } catch (error: any) {
     console.error('Error fetching vendor details:', error);
