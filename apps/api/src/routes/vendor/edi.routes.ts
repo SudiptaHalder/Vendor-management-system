@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { vendorMiddleware } from '../../middleware/vendor.middleware';
+import { authMiddleware } from '../../middleware/auth.middleware';
 import { SAPAuth } from '../../services/sap/shared/sapAuth';
 import { createInboundDeliveryFromEDI } from '../../services/sap/inboundDeliveryService';
 
@@ -98,6 +99,72 @@ router.post('/submit', vendorMiddleware, async (req, res) => {
     res.status(500).json({
       success: false,
       error: error?.response?.data?.error?.message?.value || error.message || 'Failed to submit EDI to SAP'
+    });
+  }
+});
+
+// Gate-verification lookup: scan the barcode (SAP DeliveryDocument number),
+// fetch the delivery LIVE from SAP (never from our own DB) so a vendor can't
+// forge what the gateman sees - the only way to fake this is to fake SAP itself.
+router.get('/verify/:deliveryDocument', authMiddleware, async (req, res) => {
+  try {
+    // Strip anything that isn't alphanumeric before it goes anywhere near
+    // the SAP URL - a stray quote/space (mistyped, or copy-pasted from
+    // somewhere that quoted the value) breaks OData's string literal syntax
+    // and SAP rejects it with a generic "Malformed URI literal syntax".
+    const deliveryDocument = req.params.deliveryDocument.replace(/[^a-zA-Z0-9]/g, '');
+
+    if (!deliveryDocument) {
+      return res.status(400).json({ success: false, error: 'Invalid delivery document number scanned' });
+    }
+
+    const sapAuth = SAPAuth.getInstance();
+    const client = sapAuth.getClient();
+
+    const response = await client.get(
+      `/sap/opu/odata/sap/API_INBOUND_DELIVERY_SRV;v=0002/A_InbDeliveryHeader('${deliveryDocument}')`,
+      { params: { $format: 'json', $expand: 'to_DeliveryDocumentItem' } }
+    );
+
+    const header = response.data.d;
+    if (!header) {
+      return res.status(404).json({ success: false, error: 'No delivery found for this barcode' });
+    }
+
+    const items = header.to_DeliveryDocumentItem?.results || [];
+
+    // header.OrderID is not populated by SAP for deliveries created with a
+    // ReferenceSDDocument - the real PO number only lives on each item.
+    const poNumber = items[0]?.ReferenceSDDocument || null;
+
+    res.json({
+      success: true,
+      data: {
+        deliveryDocument: header.DeliveryDocument,
+        supplier: header.Supplier,
+        vehicleNo: header.BillOfLading || null,
+        supplierReference: header.DeliveryDocumentBySupplier || null,
+        deliveryDate: header.DeliveryDate,
+        poNumber,
+        lineItems: items.map((item: any) => ({
+          poItemNumber: item.ReferenceSDDocumentItem,
+          materialCode: item.Material,
+          quantity: item.ActualDeliveryQuantity,
+          uom: item.DeliveryQuantityUnit
+        }))
+      }
+    });
+  } catch (error: any) {
+    if (error?.response?.status === 404) {
+      return res.status(404).json({ success: false, error: 'No delivery found for this barcode' });
+    }
+    console.error(
+      'Error verifying delivery:',
+      JSON.stringify(error?.response?.data || { message: error.message }, null, 2)
+    );
+    res.status(500).json({
+      success: false,
+      error: error?.response?.data?.error?.message?.value || error.message || 'Failed to verify delivery'
     });
   }
 });

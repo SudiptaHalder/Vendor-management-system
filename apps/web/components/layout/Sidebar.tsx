@@ -40,7 +40,8 @@ import {
   ChevronRight as ChevronRightIcon,
   Upload,
   Lock,
-  TrendingUp // Added for SAP Data Explorer
+  TrendingUp, // Added for SAP Data Explorer
+  ScanLine
 } from 'lucide-react'
 
 interface SubMenuItem {
@@ -155,6 +156,7 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsO
         { name: 'SAP Data Explorer', href: '/sap-data-explorer', icon: TrendingUp },
         { name: 'SAP Live Dashboard', href: '/sap-live-dashboard', icon: BarChart3 },
         { name: 'Enterprise Dashboard', href: '/enterprise-dashboard', icon: Building2 },
+        { name: 'Verify Delivery', href: '/verify-delivery', icon: ScanLine },
         { name: 'Sync Status', href: '/sap-sync-status', icon: CheckCircle, disabled: true },
       ]
     },
