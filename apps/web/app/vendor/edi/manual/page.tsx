@@ -674,7 +674,7 @@
 //                       />
 //                     </div>
 
-//                     <p className="text-xs text-gray-500 mb-3">16-digit ID: {formData.barcode}</p>
+//                     <p className="text-xs text-gray-500 mb-3">SAP Delivery Document: {formData.barcode}</p>
 
 //                     <div className="flex justify-center space-x-3">
 //                       <button
@@ -892,9 +892,8 @@ export default function EDIManualPage() {
       poNumber,
       selectedPO,
       lineItemsData,
-      invoiceNo: `INV-${Date.now()}`,
-      invoiceDate: new Date().toISOString().split('T')[0],
-      vehicleNo: ''
+      invoiceNo: formData.invoiceNo || `INV-${Date.now()}`,
+      invoiceDate: formData.invoiceDate || new Date().toISOString().split('T')[0]
     })
   }
 
@@ -969,10 +968,6 @@ export default function EDIManualPage() {
     return formData.lineItemsData.every(item => item.isVerified === true && item.isValid === true)
   }
 
-  const generateBarcodeNumber = () => {
-    return Math.floor(1000000000000000 + Math.random() * 9000000000000000).toString()
-  }
-
   const handleSubmit = async () => {
     if (!allLinesVerified()) {
       alert('Please verify all line items before submitting')
@@ -985,17 +980,47 @@ export default function EDIManualPage() {
     }
 
     setSubmitting(true)
+    setError('')
 
-    const barcode = generateBarcodeNumber()
-    await new Promise(resolve => setTimeout(resolve, 500))
+    try {
+      const token = localStorage.getItem('vendorToken')
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/vendor/edi/submit`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          poNumber: formData.poNumber,
+          vehicleNo: formData.vehicleNo,
+          invoiceNo: formData.invoiceNo,
+          lineItems: formData.lineItemsData.map(item => ({
+            poItemNumber: item.lineItemId,
+            quantity: item.invoiceQty
+          }))
+        })
+      })
 
-    setFormData({
-      ...formData,
-      isSubmitted: true,
-      barcode
-    })
+      const data = await response.json()
 
-    setSubmitting(false)
+      if (!data.success) {
+        setError(data.error || 'Failed to submit EDI to SAP')
+        setSubmitting(false)
+        return
+      }
+
+      // Real SAP Inbound Delivery document number - not a locally generated one
+      setFormData({
+        ...formData,
+        isSubmitted: true,
+        barcode: data.data.deliveryDocument
+      })
+    } catch (err) {
+      console.error('Error submitting EDI:', err)
+      setError('Error connecting to server')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   const handlePrint = () => {
@@ -1029,6 +1054,17 @@ export default function EDIManualPage() {
       formData.vehicleNo &&
       formData.poNumber &&
       allLinesVerified()
+  }
+
+  const getMissingFieldsMessage = () => {
+    const missing: string[] = []
+    if (!formData.poNumber) missing.push('PO Number')
+    if (!formData.invoiceNo) missing.push('Invoice Number')
+    if (!formData.invoiceDate) missing.push('Invoice Date')
+    if (!formData.vehicleNo) missing.push('Vehicle Number')
+    if (formData.poNumber && !allLinesVerified()) missing.push('all line items checked (click "Check" on each)')
+    if (missing.length === 0) return ''
+    return `Still needed: ${missing.join(', ')}`
   }
 
   if (loading) {
@@ -1264,7 +1300,10 @@ export default function EDIManualPage() {
 
             {/* Submit Button */}
             {!formData.isSubmitted && (
-              <div className="mt-4 flex justify-end">
+              <div className="mt-4 flex justify-end items-center space-x-3">
+                {!isFormValid() && !submitting && getMissingFieldsMessage() && (
+                  <span className="text-xs text-amber-600">{getMissingFieldsMessage()}</span>
+                )}
                 <button
                   onClick={handleSubmit}
                   disabled={!isFormValid() || submitting}
@@ -1375,7 +1414,7 @@ export default function EDIManualPage() {
                       />
                     </div>
 
-                    <p className="text-xs text-gray-500 mb-3">16-digit ID: {formData.barcode}</p>
+                    <p className="text-xs text-gray-500 mb-3">SAP Delivery Document: {formData.barcode}</p>
 
                     <div className="flex justify-center space-x-3">
                       <button

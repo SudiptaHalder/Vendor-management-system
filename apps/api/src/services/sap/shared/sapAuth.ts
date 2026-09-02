@@ -59,4 +59,39 @@ export class SAPAuth {
   getClient(): AxiosInstance {
     return this.axiosInstance;
   }
+
+  /**
+   * SAP OData V2 write operations (POST/PUT/DELETE) require a CSRF token
+   * fetched via a preceding GET with "X-CSRF-Token: Fetch", tied to the
+   * session cookie SAP returns alongside it. Basic auth alone (used for our
+   * reads) is not enough for writes.
+   */
+  async postWithCsrf<T = any>(url: string, data: any, options: any = {}): Promise<T> {
+    const csrfResponse = await this.axiosInstance.get(url, {
+      params: { $top: 1 },
+      headers: {
+        ...(options.headers || {}),
+        'X-CSRF-Token': 'Fetch'
+      }
+    });
+
+    const token = csrfResponse.headers['x-csrf-token'];
+    const setCookie = csrfResponse.headers['set-cookie'] as string[] | undefined;
+    const cookie = (setCookie || []).map((c) => c.split(';')[0]).join('; ');
+
+    if (!token) {
+      throw new Error('SAP did not return a CSRF token - this write operation may not be authorized for this technical user/communication scenario');
+    }
+
+    const response = await this.axiosInstance.post<T>(url, data, {
+      ...options,
+      headers: {
+        ...(options.headers || {}),
+        'X-CSRF-Token': token,
+        ...(cookie ? { Cookie: cookie } : {})
+      }
+    });
+
+    return response.data;
+  }
 }

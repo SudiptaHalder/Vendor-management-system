@@ -237,6 +237,7 @@ import sapVendorDirectRoutes from './routes/sapVendorDirectRoutes'
 import sapPurchaseOrderRoutes from './routes/sapPurchaseOrderRoutes'
 // Admin Sync Routes
 import vendorSAPPurchaseOrdersRoutes from './routes/vendor/sap-purchase-orders.routes'
+import vendorEdiRoutes from './routes/vendor/edi.routes'
 import adminSyncRoutes from './routes/adminSyncRoutes'
 import sapInvitationRoutes from './routes/sapInvitation.routes'
 import cronRoutes from './routes/cron.routes'
@@ -317,6 +318,7 @@ app.use('/api/cron', cronRoutes)
 
 // ============= VENDOR ROUTES (Use their own middleware) =============
 app.use('/api/vendor/sap-purchase-orders', vendorSAPPurchaseOrdersRoutes)
+app.use('/api/vendor/edi', vendorEdiRoutes)
 
 // ============= AUTH MIDDLEWARE - APPLIED TO ALL PROTECTED ROUTES =============
 // Note: This applies to all /api/* routes EXCEPT those registered above
