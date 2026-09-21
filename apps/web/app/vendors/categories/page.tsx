@@ -70,14 +70,14 @@ export default function CategoriesPage() {
   })
 
   const colors = [
-    { name: 'blue', bg: 'bg-blue-100', text: 'text-blue-600', hover: 'hover:bg-blue-200' },
-    { name: 'green', bg: 'bg-green-100', text: 'text-green-600', hover: 'hover:bg-green-200' },
-    { name: 'purple', bg: 'bg-purple-100', text: 'text-purple-600', hover: 'hover:bg-purple-200' },
-    { name: 'orange', bg: 'bg-orange-100', text: 'text-orange-600', hover: 'hover:bg-orange-200' },
-    { name: 'red', bg: 'bg-red-100', text: 'text-red-600', hover: 'hover:bg-red-200' },
-    { name: 'indigo', bg: 'bg-indigo-100', text: 'text-indigo-600', hover: 'hover:bg-indigo-200' },
-    { name: 'yellow', bg: 'bg-yellow-100', text: 'text-yellow-600', hover: 'hover:bg-yellow-200' },
-    { name: 'pink', bg: 'bg-pink-100', text: 'text-pink-600', hover: 'hover:bg-pink-200' }
+    { name: 'blue', bg: 'bg-blue-100 dark:bg-blue-900/30', text: 'text-blue-600 dark:text-blue-400', hover: 'hover:bg-blue-200' },
+    { name: 'green', bg: 'bg-green-100 dark:bg-green-900/30', text: 'text-green-600 dark:text-green-400', hover: 'hover:bg-green-200' },
+    { name: 'purple', bg: 'bg-purple-100 dark:bg-purple-900/30', text: 'text-purple-600 dark:text-purple-400', hover: 'hover:bg-purple-200' },
+    { name: 'orange', bg: 'bg-orange-100 dark:bg-orange-900/30', text: 'text-orange-600 dark:text-orange-400', hover: 'hover:bg-orange-200' },
+    { name: 'red', bg: 'bg-red-100 dark:bg-red-900/30', text: 'text-red-600 dark:text-red-400', hover: 'hover:bg-red-200' },
+    { name: 'indigo', bg: 'bg-indigo-100 dark:bg-indigo-900/30', text: 'text-indigo-600 dark:text-indigo-400', hover: 'hover:bg-indigo-200' },
+    { name: 'yellow', bg: 'bg-yellow-100 dark:bg-yellow-900/30', text: 'text-yellow-600 dark:text-yellow-400', hover: 'hover:bg-yellow-200' },
+    { name: 'pink', bg: 'bg-pink-100 dark:bg-pink-900/30', text: 'text-pink-600 dark:text-pink-400', hover: 'hover:bg-pink-200' }
   ]
 
   const icons = [
@@ -229,18 +229,18 @@ export default function CategoriesPage() {
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <div>
-          <div className="flex items-center space-x-2 text-sm text-gray-500 mb-2">
+          <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 mb-2">
             <span>Vendors</span>
             <ChevronRight size={14} />
-            <span className="text-gray-900">Categories</span>
+            <span className="text-gray-900 dark:text-gray-100">Categories</span>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">Vendor Categories</h1>
-          <p className="text-gray-600 mt-1">Organize vendors by category for better management</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Vendor Categories</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">Organize vendors by category for better management</p>
         </div>
         <div className="flex items-center space-x-3">
           <button
             onClick={fetchCategories}
-            className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center space-x-2"
+            className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-2"
           >
             <RefreshCw size={16} />
             <span>Refresh</span>
@@ -257,22 +257,22 @@ export default function CategoriesPage() {
 
       {/* Error Message */}
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded-lg mb-6">
           {error}
         </div>
       )}
 
       {/* Categories Grid */}
       {loading ? (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-12 text-center">
           <div className="animate-spin w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p className="text-gray-500">Loading categories...</p>
+          <p className="text-gray-500 dark:text-gray-400">Loading categories...</p>
         </div>
       ) : categories.length === 0 ? (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
-          <FolderTree className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">No categories yet</h3>
-          <p className="text-gray-500 mb-6">Create your first category to organize vendors.</p>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-12 text-center">
+          <FolderTree className="w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">No categories yet</h3>
+          <p className="text-gray-500 dark:text-gray-400 mb-6">Create your first category to organize vendors.</p>
           <button
             onClick={() => setIsAddModalOpen(true)}
             className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 inline-flex items-center space-x-2"
@@ -290,7 +290,7 @@ export default function CategoriesPage() {
             return (
               <div
                 key={category.id}
-                className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition relative group"
+                className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 hover:shadow-md transition relative group"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className={`p-3 ${colors.bg} rounded-lg ${colors.text}`}>
@@ -301,7 +301,7 @@ export default function CategoriesPage() {
                   <div className="relative">
                     <button 
                       onClick={() => setActiveMenuId(activeMenuId === category.id ? null : category.id)}
-                      className="p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition"
+                      className="p-1 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
                     >
                       <MoreVertical size={18} />
                     </button>
@@ -313,25 +313,25 @@ export default function CategoriesPage() {
                           className="fixed inset-0 z-10" 
                           onClick={() => setActiveMenuId(null)}
                         />
-                        <div className="absolute right-0 mt-1 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-20 py-1">
+                        <div className="absolute right-0 mt-1 w-48 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-20 py-1">
                           <button
                             onClick={() => handleEditClick(category)}
-                            className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
+                            className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center space-x-2"
                           >
                             <Edit2 size={14} />
                             <span>Edit Category</span>
                           </button>
                           <button
                             onClick={() => handleViewCategory(category)}
-                            className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
+                            className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center space-x-2"
                           >
                             <Eye size={14} />
                             <span>View Vendors</span>
                           </button>
-                          <div className="border-t border-gray-100 my-1"></div>
+                          <div className="border-t border-gray-100 dark:border-gray-800 my-1"></div>
                           <button
                             onClick={() => handleDeleteClick(category)}
-                            className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center space-x-2"
+                            className="w-full px-4 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center space-x-2"
                           >
                             <Trash2 size={14} />
                             <span>Delete Category</span>
@@ -342,18 +342,18 @@ export default function CategoriesPage() {
                   </div>
                 </div>
                 
-                <h3 className="text-lg font-semibold text-gray-900 mb-1">{category.name}</h3>
-                <p className="text-sm text-gray-500 mb-4 line-clamp-2">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1">{category.name}</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 line-clamp-2">
                   {category.description || 'No description'}
                 </p>
                 
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-gray-700">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                     {category.vendorCount} {category.vendorCount === 1 ? 'vendor' : 'vendors'}
                   </span>
                   <button 
                     onClick={() => handleViewCategory(category)}
-                    className="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center space-x-1"
+                    className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm font-medium flex items-center space-x-1"
                   >
                     <span>View all</span>
                     <ChevronRight size={14} />
@@ -366,13 +366,13 @@ export default function CategoriesPage() {
           {/* Add Category Card */}
           <div
             onClick={() => setIsAddModalOpen(true)}
-            className="bg-gray-50 rounded-xl border-2 border-dashed border-gray-300 p-6 hover:border-blue-500 hover:bg-blue-50 transition cursor-pointer flex flex-col items-center justify-center text-center group"
+            className="bg-gray-50 dark:bg-gray-800 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 p-6 hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition cursor-pointer flex flex-col items-center justify-center text-center group"
           >
-            <div className="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center group-hover:bg-blue-200 mb-3">
-              <Plus className="w-6 h-6 text-gray-500 group-hover:text-blue-600" />
+            <div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center group-hover:bg-blue-200 mb-3">
+              <Plus className="w-6 h-6 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-1">Add New Category</h3>
-            <p className="text-sm text-gray-500">Create a new vendor category</p>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1">Add New Category</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Create a new vendor category</p>
           </div>
         </div>
       )}
@@ -382,21 +382,21 @@ export default function CategoriesPage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity" onClick={() => setIsAddModalOpen(false)} />
           <div className="flex min-h-full items-center justify-center p-4">
-            <div className="relative w-full max-w-lg bg-white rounded-xl shadow-2xl">
+            <div className="relative w-full max-w-lg bg-white dark:bg-gray-900 rounded-xl shadow-2xl">
               
-              <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+              <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                 <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-blue-100 rounded-lg">
-                    <FolderTree className="w-5 h-5 text-blue-600" />
+                  <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                    <FolderTree className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                   </div>
                   <div>
-                    <h2 className="text-xl font-semibold text-gray-900">Add New Category</h2>
-                    <p className="text-sm text-gray-600">Create a category to organize vendors</p>
+                    <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Add New Category</h2>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">Create a category to organize vendors</p>
                   </div>
                 </div>
                 <button
                   onClick={() => setIsAddModalOpen(false)}
-                  className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100"
+                  className="p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -405,34 +405,34 @@ export default function CategoriesPage() {
               <div className="p-6">
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       Category Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       value={newCategory.name}
                       onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                       placeholder="e.g., Electrical Suppliers"
                       autoFocus
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       Description
                     </label>
                     <textarea
                       value={newCategory.description}
                       onChange={(e) => setNewCategory({ ...newCategory, description: e.target.value })}
                       rows={3}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 resize-none"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 resize-none"
                       placeholder="Describe what kind of vendors belong in this category..."
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Category Color
                     </label>
                     <div className="flex flex-wrap gap-2">
@@ -453,7 +453,7 @@ export default function CategoriesPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Category Icon
                     </label>
                     <div className="flex flex-wrap gap-2">
@@ -464,8 +464,8 @@ export default function CategoriesPage() {
                           onClick={() => setNewCategory({ ...newCategory, icon: icon.name })}
                           className={`p-2 rounded-lg ${
                             newCategory.icon === icon.name 
-                              ? 'bg-blue-100 text-blue-600 ring-2 ring-blue-500' 
-                              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                              ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 ring-2 ring-blue-500' 
+                              : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'
                           }`}
                           title={icon.name}
                         >
@@ -477,10 +477,10 @@ export default function CategoriesPage() {
                 </div>
               </div>
 
-              <div className="flex items-center justify-end space-x-3 px-6 py-4 border-t border-gray-200">
+              <div className="flex items-center justify-end space-x-3 px-6 py-4 border-t border-gray-200 dark:border-gray-700">
                 <button
                   onClick={() => setIsAddModalOpen(false)}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+                  className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800"
                 >
                   Cancel
                 </button>
@@ -502,21 +502,21 @@ export default function CategoriesPage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity" onClick={() => setIsEditModalOpen(false)} />
           <div className="flex min-h-full items-center justify-center p-4">
-            <div className="relative w-full max-w-lg bg-white rounded-xl shadow-2xl">
+            <div className="relative w-full max-w-lg bg-white dark:bg-gray-900 rounded-xl shadow-2xl">
               
-              <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+              <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                 <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-blue-100 rounded-lg">
-                    <Edit2 className="w-5 h-5 text-blue-600" />
+                  <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                    <Edit2 className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                   </div>
                   <div>
-                    <h2 className="text-xl font-semibold text-gray-900">Edit Category</h2>
-                    <p className="text-sm text-gray-600">Update category information</p>
+                    <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Edit Category</h2>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">Update category information</p>
                   </div>
                 </div>
                 <button
                   onClick={() => setIsEditModalOpen(false)}
-                  className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100"
+                  className="p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -525,33 +525,33 @@ export default function CategoriesPage() {
               <div className="p-6">
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       Category Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       value={editCategory.name}
                       onChange={(e) => setEditCategory({ ...editCategory, name: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                       placeholder="Category name"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       Description
                     </label>
                     <textarea
                       value={editCategory.description}
                       onChange={(e) => setEditCategory({ ...editCategory, description: e.target.value })}
                       rows={3}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 resize-none"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 resize-none"
                       placeholder="Category description"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Category Color
                     </label>
                     <div className="flex flex-wrap gap-2">
@@ -572,7 +572,7 @@ export default function CategoriesPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Category Icon
                     </label>
                     <div className="flex flex-wrap gap-2">
@@ -583,8 +583,8 @@ export default function CategoriesPage() {
                           onClick={() => setEditCategory({ ...editCategory, icon: icon.name })}
                           className={`p-2 rounded-lg ${
                             editCategory.icon === icon.name 
-                              ? 'bg-blue-100 text-blue-600 ring-2 ring-blue-500' 
-                              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                              ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 ring-2 ring-blue-500' 
+                              : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'
                           }`}
                           title={icon.name}
                         >
@@ -596,10 +596,10 @@ export default function CategoriesPage() {
                 </div>
               </div>
 
-              <div className="flex items-center justify-end space-x-3 px-6 py-4 border-t border-gray-200">
+              <div className="flex items-center justify-end space-x-3 px-6 py-4 border-t border-gray-200 dark:border-gray-700">
                 <button
                   onClick={() => setIsEditModalOpen(false)}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+                  className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800"
                 >
                   Cancel
                 </button>
@@ -621,28 +621,28 @@ export default function CategoriesPage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity" onClick={() => setIsDeleteModalOpen(false)} />
           <div className="flex min-h-full items-center justify-center p-4">
-            <div className="relative w-full max-w-md bg-white rounded-xl shadow-2xl p-6">
+            <div className="relative w-full max-w-md bg-white dark:bg-gray-900 rounded-xl shadow-2xl p-6">
               <div className="text-center">
-                <div className="mx-auto w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mb-4">
-                  <Trash2 className="w-6 h-6 text-red-600" />
+                <div className="mx-auto w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mb-4">
+                  <Trash2 className="w-6 h-6 text-red-600 dark:text-red-400" />
                 </div>
-                <h2 className="text-xl font-semibold text-gray-900 mb-2">Delete Category</h2>
-                <p className="text-gray-600 mb-2">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">Delete Category</h2>
+                <p className="text-gray-600 dark:text-gray-400 mb-2">
                   Are you sure you want to delete <span className="font-semibold">{selectedCategory.name}</span>?
                 </p>
-                <p className="text-sm text-gray-500 mb-6">
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
                   This action cannot be undone.
                 </p>
                 
                 {selectedCategory.vendorCount > 0 && (
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                  <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 mb-6">
                     <div className="flex items-start">
-                      <AlertCircle className="w-5 h-5 text-yellow-600 mr-2 flex-shrink-0 mt-0.5" />
+                      <AlertCircle className="w-5 h-5 text-yellow-600 dark:text-yellow-400 mr-2 flex-shrink-0 mt-0.5" />
                       <div className="text-left">
-                        <p className="text-sm font-medium text-yellow-800">
+                        <p className="text-sm font-medium text-yellow-800 dark:text-yellow-300">
                           Cannot delete category with vendors
                         </p>
-                        <p className="text-xs text-yellow-700 mt-1">
+                        <p className="text-xs text-yellow-700 dark:text-yellow-300 mt-1">
                           This category has {selectedCategory.vendorCount} vendors. 
                           Please reassign or delete them first.
                         </p>
@@ -654,7 +654,7 @@ export default function CategoriesPage() {
                 <div className="flex items-center justify-center space-x-3">
                   <button
                     onClick={() => setIsDeleteModalOpen(false)}
-                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+                    className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800"
                   >
                     Cancel
                   </button>

@@ -230,7 +230,7 @@ export default function EditWorkOrderPage() {
     return (
       <MainLayout>
         <div className="flex items-center justify-center h-64">
-          <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+          <Loader2 className="w-8 h-8 text-blue-600 dark:text-blue-400 animate-spin" />
         </div>
       </MainLayout>
     )
@@ -240,34 +240,34 @@ export default function EditWorkOrderPage() {
     <MainLayout>
       {/* Header */}
       <div className="mb-6">
-        <div className="flex items-center space-x-3 text-sm text-gray-500 mb-4">
-          <Link href="/work-orders" className="hover:text-blue-600">
+        <div className="flex items-center space-x-3 text-sm text-gray-500 dark:text-gray-400 mb-4">
+          <Link href="/work-orders" className="hover:text-blue-600 dark:hover:text-blue-400">
             Work Orders
           </Link>
           <span>/</span>
-          <Link href={`/work-orders/${params.id}`} className="hover:text-blue-600">
+          <Link href={`/work-orders/${params.id}`} className="hover:text-blue-600 dark:hover:text-blue-400">
             {params.id}
           </Link>
           <span>/</span>
-          <span className="text-gray-900 font-medium">Edit</span>
+          <span className="text-gray-900 dark:text-gray-100 font-medium">Edit</span>
         </div>
 
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <Link
               href={`/work-orders/${params.id}`}
-              className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg"
+              className="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
             >
               <ArrowLeft size={20} />
             </Link>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Edit Work Order</h1>
-              <p className="text-sm text-gray-500 mt-1">Update work order details</p>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Edit Work Order</h1>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Update work order details</p>
             </div>
           </div>
           <Link
             href={`/work-orders/${params.id}`}
-            className="px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center space-x-2"
+            className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-2"
           >
             <X size={16} />
             <span>Cancel</span>
@@ -276,7 +276,7 @@ export default function EditWorkOrderPage() {
       </div>
 
       {error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-center space-x-2">
+        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 rounded-lg flex items-center space-x-2">
           <AlertCircle size={16} />
           <span>{error}</span>
         </div>
@@ -284,12 +284,12 @@ export default function EditWorkOrderPage() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Basic Information */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h2>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Basic Information</h2>
           <div className="space-y-4">
             {/* Title */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Title <span className="text-red-500">*</span>
               </label>
               <input
@@ -297,14 +297,14 @@ export default function EditWorkOrderPage() {
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 required
               />
             </div>
 
             {/* Description */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Description
               </label>
               <textarea
@@ -312,21 +312,21 @@ export default function EditWorkOrderPage() {
                 rows={4}
                 value={formData.description}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 resize-none"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 resize-none"
               />
             </div>
 
             {/* Project and Vendor */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Project
                 </label>
                 <select
                   name="projectId"
                   value={formData.projectId}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 >
                   <option value="">No Project</option>
                   {projects.map(project => (
@@ -337,14 +337,14 @@ export default function EditWorkOrderPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Vendor <span className="text-red-500">*</span>
                 </label>
                 <select
                   name="vendorId"
                   value={formData.vendorId}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                   required
                 >
                   <option value="">Select Vendor</option>
@@ -360,14 +360,14 @@ export default function EditWorkOrderPage() {
             {/* Type, Priority, Status */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Work Order Type
                 </label>
                 <select
                   name="type"
                   value={formData.type}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 >
                   <option value="maintenance">Maintenance</option>
                   <option value="repair">Repair</option>
@@ -378,14 +378,14 @@ export default function EditWorkOrderPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Priority
                 </label>
                 <select
                   name="priority"
                   value={formData.priority}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 >
                   <option value="low">Low</option>
                   <option value="medium">Medium</option>
@@ -394,14 +394,14 @@ export default function EditWorkOrderPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Status
                 </label>
                 <select
                   name="status"
                   value={formData.status}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 >
                   <option value="pending">Pending</option>
                   <option value="in_progress">In Progress</option>
@@ -415,36 +415,36 @@ export default function EditWorkOrderPage() {
         </div>
 
         {/* Schedule */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Schedule</h2>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Schedule</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Scheduled Date
               </label>
               <div className="relative">
-                <Calendar className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                <Calendar className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                 <input
                   type="datetime-local"
                   name="scheduledDate"
                   value={formData.scheduledDate}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 />
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Due Date
               </label>
               <div className="relative">
-                <Calendar className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                <Calendar className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                 <input
                   type="datetime-local"
                   name="dueDate"
                   value={formData.dueDate}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 />
               </div>
             </div>
@@ -452,20 +452,20 @@ export default function EditWorkOrderPage() {
         </div>
 
         {/* Assignment */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Assignment</h2>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Assignment</h2>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Assign To (Internal)
               </label>
               <div className="relative">
-                <User className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                <User className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                 <select
                   name="assignedToId"
                   value={formData.assignedToId}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 >
                   <option value="">Unassigned</option>
                   {users.map(user => (
@@ -479,17 +479,17 @@ export default function EditWorkOrderPage() {
 
             {/* Location */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Location
               </label>
               <div className="relative">
-                <MapPin className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                <MapPin className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                 <input
                   type="text"
                   name="location"
                   value={formData.location}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                   placeholder="e.g., Building A, Floor 3"
                 />
               </div>
@@ -497,33 +497,33 @@ export default function EditWorkOrderPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Site Contact
                 </label>
                 <div className="relative">
-                  <User className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                  <User className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                   <input
                     type="text"
                     name="siteContact"
                     value={formData.siteContact}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                    className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                     placeholder="Contact person"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Site Phone
                 </label>
                 <div className="relative">
-                  <Phone className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                  <Phone className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                   <input
                     type="text"
                     name="sitePhone"
                     value={formData.sitePhone}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                    className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                     placeholder="Contact phone"
                   />
                 </div>
@@ -533,11 +533,11 @@ export default function EditWorkOrderPage() {
         </div>
 
         {/* Cost Estimates */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Cost Estimates</h2>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Cost Estimates</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Estimated Hours
               </label>
               <input
@@ -545,26 +545,26 @@ export default function EditWorkOrderPage() {
                 name="estimatedHours"
                 value={formData.estimatedHours}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 placeholder="0"
                 step="0.5"
                 min="0"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Estimated Cost
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <span className="text-gray-500 sm:text-sm">$</span>
+                  <span className="text-gray-500 dark:text-gray-400 sm:text-sm">$</span>
                 </div>
                 <input
                   type="number"
                   name="estimatedCost"
                   value={formData.estimatedCost}
                   onChange={handleChange}
-                  className="w-full pl-7 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full pl-7 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                   placeholder="0.00"
                   step="0.01"
                   min="0"
@@ -572,14 +572,14 @@ export default function EditWorkOrderPage() {
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Currency
               </label>
               <select
                 name="currency"
                 value={formData.currency}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
               >
                 <option value="USD">USD</option>
                 <option value="EUR">EUR</option>
@@ -596,7 +596,7 @@ export default function EditWorkOrderPage() {
         <div className="flex justify-end space-x-3">
           <Link
             href={`/work-orders/${params.id}`}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+            className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800"
           >
             Cancel
           </Link>

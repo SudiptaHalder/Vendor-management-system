@@ -217,7 +217,7 @@ export default function NewPaymentPage() {
         return (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Check Number
               </label>
               <input
@@ -225,12 +225,12 @@ export default function NewPaymentPage() {
                 name="checkNumber"
                 value={formData.checkNumber}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 placeholder="Check #"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Bank Name
               </label>
               <input
@@ -238,7 +238,7 @@ export default function NewPaymentPage() {
                 name="bankName"
                 value={formData.bankName}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 placeholder="Bank name"
               />
             </div>
@@ -248,7 +248,7 @@ export default function NewPaymentPage() {
         return (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Transaction ID
               </label>
               <input
@@ -256,12 +256,12 @@ export default function NewPaymentPage() {
                 name="transactionId"
                 value={formData.transactionId}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 placeholder="Transaction ID"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Bank Name
               </label>
               <input
@@ -269,12 +269,12 @@ export default function NewPaymentPage() {
                 name="bankName"
                 value={formData.bankName}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 placeholder="Bank name"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Account Number
               </label>
               <input
@@ -282,7 +282,7 @@ export default function NewPaymentPage() {
                 name="accountNumber"
                 value={formData.accountNumber}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 placeholder="Last 4 digits"
               />
             </div>
@@ -293,14 +293,14 @@ export default function NewPaymentPage() {
         return (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Card Brand
               </label>
               <select
                 name="cardBrand"
                 value={formData.cardBrand}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
               >
                 <option value="">Select Card Brand</option>
                 <option value="visa">Visa</option>
@@ -311,7 +311,7 @@ export default function NewPaymentPage() {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Last 4 Digits
               </label>
               <input
@@ -319,13 +319,13 @@ export default function NewPaymentPage() {
                 name="cardLast4"
                 value={formData.cardLast4}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 placeholder="1234"
                 maxLength={4}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Authorization Code
               </label>
               <input
@@ -333,7 +333,7 @@ export default function NewPaymentPage() {
                 name="transactionId"
                 value={formData.transactionId}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 placeholder="Auth code"
               />
             </div>
@@ -348,7 +348,7 @@ export default function NewPaymentPage() {
     return (
       <MainLayout>
         <div className="flex items-center justify-center h-64">
-          <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+          <Loader2 className="w-8 h-8 text-blue-600 dark:text-blue-400 animate-spin" />
         </div>
       </MainLayout>
     )
@@ -358,30 +358,30 @@ export default function NewPaymentPage() {
     <MainLayout>
       {/* Header */}
       <div className="mb-6">
-        <div className="flex items-center space-x-3 text-sm text-gray-500 mb-4">
-          <Link href="/payments" className="hover:text-blue-600">
+        <div className="flex items-center space-x-3 text-sm text-gray-500 dark:text-gray-400 mb-4">
+          <Link href="/payments" className="hover:text-blue-600 dark:hover:text-blue-400">
             Payments
           </Link>
           <span>/</span>
-          <span className="text-gray-900 font-medium">Record Payment</span>
+          <span className="text-gray-900 dark:text-gray-100 font-medium">Record Payment</span>
         </div>
 
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <Link
               href="/payments"
-              className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg"
+              className="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
             >
               <ArrowLeft size={20} />
             </Link>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Record Payment</h1>
-              <p className="text-sm text-gray-500 mt-1">Record a payment against an invoice</p>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Record Payment</h1>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Record a payment against an invoice</p>
             </div>
           </div>
           <Link
             href="/payments"
-            className="px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center space-x-2"
+            className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-2"
           >
             <X size={16} />
             <span>Cancel</span>
@@ -390,14 +390,14 @@ export default function NewPaymentPage() {
       </div>
 
       {error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-center space-x-2">
+        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 rounded-lg flex items-center space-x-2">
           <AlertCircle size={16} />
           <span>{error}</span>
         </div>
       )}
 
       {success && (
-        <div className="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg flex items-center space-x-2">
+        <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-300 rounded-lg flex items-center space-x-2">
           <CheckCircle size={16} />
           <span>{success}</span>
         </div>
@@ -405,20 +405,20 @@ export default function NewPaymentPage() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Invoice Selection */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Invoice Information</h2>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Invoice Information</h2>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Select Invoice <span className="text-red-500">*</span>
               </label>
               <div className="relative">
-                <Receipt className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                <Receipt className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                 <select
                   name="invoiceId"
                   value={formData.invoiceId}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                   required
                 >
                   <option value="">Select an invoice...</option>
@@ -434,32 +434,32 @@ export default function NewPaymentPage() {
                 </select>
               </div>
               {invoices.length === 0 && (
-                <p className="text-sm text-amber-600 mt-2">
+                <p className="text-sm text-amber-600 dark:text-amber-400 mt-2">
                   No unpaid invoices found. Please check if you have invoices with status: pending, sent, partially_paid, or overdue.
                 </p>
               )}
             </div>
 
             {selectedInvoice && (
-              <div className="bg-blue-50 p-4 rounded-lg">
+              <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div>
-                    <p className="text-xs text-gray-500">Invoice #</p>
-                    <p className="text-sm font-medium text-gray-900">{selectedInvoice.invoiceNumber}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Invoice #</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{selectedInvoice.invoiceNumber}</p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">Vendor</p>
-                    <p className="text-sm font-medium text-gray-900">{selectedInvoice.vendor?.name || 'N/A'}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Vendor</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{selectedInvoice.vendor?.name || 'N/A'}</p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">Total Amount</p>
-                    <p className="text-sm font-medium text-gray-900">
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Total Amount</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
                       {selectedInvoice.currency} {Number(selectedInvoice.total).toLocaleString()}
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">Balance Due</p>
-                    <p className="text-sm font-bold text-blue-600">
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Balance Due</p>
+                    <p className="text-sm font-bold text-blue-600 dark:text-blue-400">
                       {selectedInvoice.currency} {Number(selectedInvoice.balance || selectedInvoice.total).toLocaleString()}
                     </p>
                   </div>
@@ -470,25 +470,25 @@ export default function NewPaymentPage() {
         </div>
 
         {/* Payment Details */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Payment Details</h2>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Payment Details</h2>
           <div className="space-y-4">
             {/* Amount and Currency */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Payment Amount <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <span className="text-gray-500">$</span>
+                    <span className="text-gray-500 dark:text-gray-400">$</span>
                   </div>
                   <input
                     type="number"
                     name="amount"
                     value={formData.amount}
                     onChange={handleChange}
-                    className="w-full pl-7 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                    className="w-full pl-7 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                     placeholder="0.00"
                     step="0.01"
                     min="0.01"
@@ -497,14 +497,14 @@ export default function NewPaymentPage() {
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Currency
                 </label>
                 <select
                   name="currency"
                   value={formData.currency}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 >
                   <option value="USD">USD - US Dollar</option>
                   <option value="EUR">EUR - Euro</option>
@@ -518,14 +518,14 @@ export default function NewPaymentPage() {
             {/* Payment Method and Status */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Payment Method <span className="text-red-500">*</span>
                 </label>
                 <select
                   name="method"
                   value={formData.method}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                   required
                 >
                   <option value="bank_transfer">Bank Transfer</option>
@@ -538,14 +538,14 @@ export default function NewPaymentPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Payment Status
                 </label>
                 <select
                   name="status"
                   value={formData.status}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 >
                   <option value="completed">Completed</option>
                   <option value="pending">Pending</option>
@@ -557,23 +557,23 @@ export default function NewPaymentPage() {
             {/* Payment Date */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Payment Date <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
-                  <Calendar className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                  <Calendar className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                   <input
                     type="date"
                     name="paymentDate"
                     value={formData.paymentDate}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                    className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                     required
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Reference / Check #
                 </label>
                 <input
@@ -581,7 +581,7 @@ export default function NewPaymentPage() {
                   name="reference"
                   value={formData.reference}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                   placeholder="Reference number"
                 />
               </div>
@@ -592,7 +592,7 @@ export default function NewPaymentPage() {
 
             {/* Notes */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Notes
               </label>
               <textarea
@@ -600,7 +600,7 @@ export default function NewPaymentPage() {
                 rows={3}
                 value={formData.notes}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 resize-none"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 resize-none"
                 placeholder="Additional payment notes..."
               />
             </div>
@@ -610,7 +610,7 @@ export default function NewPaymentPage() {
        <div className="flex justify-end space-x-3">
           <Link
             href="/payments"
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+            className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800"
           >
             Cancel
           </Link>

@@ -130,7 +130,7 @@ export default function FinancialReportsPage() {
     return (
       <MainLayout>
         <div className="flex items-center justify-center h-64">
-          <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+          <Loader2 className="w-8 h-8 text-blue-600 dark:text-blue-400 animate-spin" />
         </div>
       </MainLayout>
     )
@@ -140,38 +140,38 @@ export default function FinancialReportsPage() {
     <MainLayout>
       {/* Header */}
       <div className="mb-6">
-        <div className="flex items-center space-x-3 text-sm text-gray-500 mb-4">
-          <Link href="/reports" className="hover:text-blue-600">
+        <div className="flex items-center space-x-3 text-sm text-gray-500 dark:text-gray-400 mb-4">
+          <Link href="/reports" className="hover:text-blue-600 dark:hover:text-blue-400">
             Reports
           </Link>
           <span>/</span>
-          <span className="text-gray-900 font-medium">Financial Reports</span>
+          <span className="text-gray-900 dark:text-gray-100 font-medium">Financial Reports</span>
         </div>
 
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Financial Reports</h1>
-            <p className="text-gray-600 mt-1">Track income, expenses, and financial performance</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Financial Reports</h1>
+            <p className="text-gray-600 dark:text-gray-400 mt-1">Track income, expenses, and financial performance</p>
           </div>
           <div className="flex items-center space-x-3">
-            <div className="flex items-center bg-white border border-gray-200 rounded-lg p-1">
+            <div className="flex items-center bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-1">
               <button
                 onClick={() => handleExport('pdf')}
-                className="px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md flex items-center space-x-1"
+                className="px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md flex items-center space-x-1"
               >
                 <Download size={14} />
                 <span>PDF</span>
               </button>
               <button
                 onClick={() => handleExport('csv')}
-                className="px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md flex items-center space-x-1"
+                className="px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md flex items-center space-x-1"
               >
                 <Download size={14} />
                 <span>CSV</span>
               </button>
               <button
                 onClick={() => handleExport('excel')}
-                className="px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md flex items-center space-x-1"
+                className="px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md flex items-center space-x-1"
               >
                 <Download size={14} />
                 <span>Excel</span>
@@ -179,7 +179,7 @@ export default function FinancialReportsPage() {
             </div>
             <button
               onClick={generateReport}
-              className="px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center space-x-2"
+              className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-2"
             >
               <RefreshCw size={16} />
               <span>Refresh</span>
@@ -189,21 +189,21 @@ export default function FinancialReportsPage() {
       </div>
 
       {error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-center space-x-2">
+        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 rounded-lg flex items-center space-x-2">
           <AlertCircle size={16} />
           <span>{error}</span>
         </div>
       )}
 
       {/* Filters */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-4 mb-6">
         <div className="flex flex-col lg:flex-row lg:items-center gap-4">
           <div className="flex items-center space-x-2">
-            <Calendar size={16} className="text-gray-400" />
+            <Calendar size={16} className="text-gray-400 dark:text-gray-500" />
             <select
               value={period}
               onChange={(e) => setPeriod(e.target.value)}
-              className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900"
+              className="px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900 dark:text-gray-100"
             >
               <option value="year">Fiscal Year</option>
               <option value="quarter">Current Quarter</option>
@@ -215,7 +215,7 @@ export default function FinancialReportsPage() {
               <select
                 value={fiscalYear}
                 onChange={(e) => setFiscalYear(e.target.value)}
-                className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900"
+                className="px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900 dark:text-gray-100"
               >
                 <option value="2024">2024</option>
                 <option value="2023">2023</option>
@@ -231,68 +231,68 @@ export default function FinancialReportsPage() {
         <>
           {/* Summary Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-            <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Total Invoiced</p>
-                  <p className="text-2xl font-bold text-gray-900 mt-1">
+                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Invoiced</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-1">
                     ${reportData.summary.totalInvoiced.toLocaleString()}
                   </p>
                 </div>
-                <div className="p-3 bg-blue-100 rounded-lg">
-                  <Receipt className="w-5 h-5 text-blue-600" />
+                <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                  <Receipt className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                 </div>
               </div>
-              <p className="text-xs text-gray-500 mt-2">{reportData.summary.totalInvoices} invoices</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">{reportData.summary.totalInvoices} invoices</p>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Total Paid</p>
-                  <p className="text-2xl font-bold text-green-600 mt-1">
+                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Paid</p>
+                  <p className="text-2xl font-bold text-green-600 dark:text-green-400 mt-1">
                     ${reportData.summary.totalPaid.toLocaleString()}
                   </p>
                 </div>
-                <div className="p-3 bg-green-100 rounded-lg">
-                  <CreditCard className="w-5 h-5 text-green-600" />
+                <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                  <CreditCard className="w-5 h-5 text-green-600 dark:text-green-400" />
                 </div>
               </div>
-              <p className="text-xs text-gray-500 mt-2">{reportData.summary.totalPayments} payments</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">{reportData.summary.totalPayments} payments</p>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Total Expenses</p>
-                  <p className="text-2xl font-bold text-orange-600 mt-1">
+                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Expenses</p>
+                  <p className="text-2xl font-bold text-orange-600 dark:text-orange-400 mt-1">
                     ${reportData.summary.totalExpensesAmount.toLocaleString()}
                   </p>
                 </div>
-                <div className="p-3 bg-orange-100 rounded-lg">
-                  <FileText className="w-5 h-5 text-orange-600" />
+                <div className="p-3 bg-orange-100 dark:bg-orange-900/30 rounded-lg">
+                  <FileText className="w-5 h-5 text-orange-600 dark:text-orange-400" />
                 </div>
               </div>
-              <p className="text-xs text-gray-500 mt-2">{reportData.summary.totalExpenses} expenses</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">{reportData.summary.totalExpenses} expenses</p>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Net Income</p>
-                  <p className={`text-2xl font-bold ${reportData.summary.netIncome >= 0 ? 'text-green-600' : 'text-red-600'} mt-1`}>
+                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Net Income</p>
+                  <p className={`text-2xl font-bold ${reportData.summary.netIncome >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'} mt-1`}>
                     ${Math.abs(reportData.summary.netIncome).toLocaleString()}
                   </p>
                 </div>
-                <div className="p-3 bg-purple-100 rounded-lg">
+                <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
                   {reportData.summary.netIncome >= 0 ? (
-                    <TrendingUp className="w-5 h-5 text-purple-600" />
+                    <TrendingUp className="w-5 h-5 text-purple-600 dark:text-purple-400" />
                   ) : (
-                    <TrendingDown className="w-5 h-5 text-purple-600" />
+                    <TrendingDown className="w-5 h-5 text-purple-600 dark:text-purple-400" />
                   )}
                 </div>
               </div>
-              <p className="text-xs text-gray-500 mt-2">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                 {reportData.summary.netIncome >= 0 ? 'Profit' : 'Loss'}
               </p>
             </div>
@@ -300,17 +300,17 @@ export default function FinancialReportsPage() {
 
           {/* Secondary Stats */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-              <h3 className="text-sm font-medium text-gray-500 mb-4">Outstanding Balance</h3>
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
+              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-4">Outstanding Balance</h3>
               <div className="flex items-end justify-between">
-                <p className="text-3xl font-bold text-yellow-600">
+                <p className="text-3xl font-bold text-yellow-600 dark:text-yellow-400">
                   ${reportData.summary.outstandingBalance.toLocaleString()}
                 </p>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
                   {((reportData.summary.outstandingBalance / reportData.summary.totalInvoiced) * 100).toFixed(1)}% of total
                 </p>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2 mt-3">
+              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-3">
                 <div 
                   className="bg-yellow-500 h-2 rounded-full" 
                   style={{ width: `${(reportData.summary.outstandingBalance / reportData.summary.totalInvoiced) * 100}%` }}
@@ -318,15 +318,15 @@ export default function FinancialReportsPage() {
               </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-              <h3 className="text-sm font-medium text-gray-500 mb-4">Payment Collection</h3>
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
+              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-4">Payment Collection</h3>
               <div className="flex items-end justify-between">
-                <p className="text-3xl font-bold text-green-600">
+                <p className="text-3xl font-bold text-green-600 dark:text-green-400">
                   {((reportData.summary.totalPaid / reportData.summary.totalInvoiced) * 100).toFixed(1)}%
                 </p>
-                <p className="text-sm text-gray-500">Collection Rate</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Collection Rate</p>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2 mt-3">
+              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-3">
                 <div 
                   className="bg-green-500 h-2 rounded-full" 
                   style={{ width: `${(reportData.summary.totalPaid / reportData.summary.totalInvoiced) * 100}%` }}
@@ -336,44 +336,44 @@ export default function FinancialReportsPage() {
           </div>
 
           {/* Recent Invoices */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="px-6 py-4 border-b bg-gray-50">
-              <h2 className="text-lg font-semibold text-gray-900">Recent Invoices</h2>
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+            <div className="px-6 py-4 border-b bg-gray-50 dark:bg-gray-800">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Recent Invoices</h2>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-gray-50">
+                <thead className="bg-gray-50 dark:bg-gray-800">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Invoice #</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Vendor</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Amount</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Invoice #</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Vendor</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Date</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Status</th>
+                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Amount</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200">
+                <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                   {reportData.invoices.map((invoice, index) => (
-                    <tr key={index} className="hover:bg-gray-50">
+                    <tr key={index} className="hover:bg-gray-50 dark:hover:bg-gray-800">
                       <td className="px-6 py-4">
-                        <span className="text-sm font-mono font-medium text-gray-900">{invoice.number}</span>
+                        <span className="text-sm font-mono font-medium text-gray-900 dark:text-gray-100">{invoice.number}</span>
                       </td>
                       <td className="px-6 py-4">
-                        <span className="text-sm text-gray-900">{invoice.vendor}</span>
+                        <span className="text-sm text-gray-900 dark:text-gray-100">{invoice.vendor}</span>
                       </td>
                       <td className="px-6 py-4">
-                        <span className="text-sm text-gray-500">{new Date(invoice.date).toLocaleDateString()}</span>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">{new Date(invoice.date).toLocaleDateString()}</span>
                       </td>
                       <td className="px-6 py-4">
                         <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                          invoice.status === 'paid' ? 'bg-green-100 text-green-800' :
-                          invoice.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                          'bg-gray-100 text-gray-800'
+                          invoice.status === 'paid' ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300' :
+                          invoice.status === 'pending' ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300' :
+                          'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200'
                         }`}>
                           {invoice.status}
                         </span>
                       </td>
                       <td className="px-6 py-4 text-right">
-                        <span className="text-sm font-medium text-gray-900">
+                        <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
                           ${Number(invoice.total).toLocaleString()}
                         </span>
                       </td>

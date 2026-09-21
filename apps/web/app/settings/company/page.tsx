@@ -214,7 +214,7 @@ export default function CompanyProfilePage() {
     return (
       <MainLayout>
         <div className="flex items-center justify-center h-64">
-          <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+          <Loader2 className="w-8 h-8 text-blue-600 dark:text-blue-400 animate-spin" />
         </div>
       </MainLayout>
     )
@@ -224,22 +224,22 @@ export default function CompanyProfilePage() {
     <MainLayout>
       {/* Header */}
       <div className="mb-6">
-        <div className="flex items-center space-x-3 text-sm text-gray-500 mb-4">
-          <Link href="/settings" className="hover:text-blue-600">
+        <div className="flex items-center space-x-3 text-sm text-gray-500 dark:text-gray-400 mb-4">
+          <Link href="/settings" className="hover:text-blue-600 dark:hover:text-blue-400">
             Settings
           </Link>
           <span>/</span>
-          <span className="text-gray-900 font-medium">Company Profile</span>
+          <span className="text-gray-900 dark:text-gray-100 font-medium">Company Profile</span>
         </div>
 
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Company Profile</h1>
-            <p className="text-gray-600 mt-1">Manage your company information and branding</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Company Profile</h1>
+            <p className="text-gray-600 dark:text-gray-400 mt-1">Manage your company information and branding</p>
           </div>
           <button
             onClick={() => currentUser?.companyId && fetchCompany(currentUser.companyId)}
-            className="px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center space-x-2"
+            className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-2"
           >
             <RefreshCw size={16} />
             <span>Refresh</span>
@@ -248,14 +248,14 @@ export default function CompanyProfilePage() {
       </div>
 
       {error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-center space-x-2">
+        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 rounded-lg flex items-center space-x-2">
           <AlertCircle size={16} />
           <span>{error}</span>
         </div>
       )}
 
       {success && (
-        <div className="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg flex items-center space-x-2">
+        <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-300 rounded-lg flex items-center space-x-2">
           <CheckCircle size={16} />
           <span>{success}</span>
         </div>
@@ -263,19 +263,19 @@ export default function CompanyProfilePage() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Company Logo */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Company Logo</h2>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Company Logo</h2>
           <div className="flex items-center space-x-6">
             <div className="relative">
               {logoPreview ? (
                 <img
                   src={logoPreview.startsWith('data:') ? logoPreview : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}${logoPreview}`}
                   alt="Company logo"
-                  className="w-24 h-24 rounded-lg object-cover border border-gray-200"
+                  className="w-24 h-24 rounded-lg object-cover border border-gray-200 dark:border-gray-700"
                 />
               ) : (
-                <div className="w-24 h-24 rounded-lg bg-gray-100 flex items-center justify-center border border-gray-200">
-                  <Building2 className="w-8 h-8 text-gray-400" />
+                <div className="w-24 h-24 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center border border-gray-200 dark:border-gray-700">
+                  <Building2 className="w-8 h-8 text-gray-400 dark:text-gray-500" />
                 </div>
               )}
               {uploadingLogo && (
@@ -285,35 +285,35 @@ export default function CompanyProfilePage() {
               )}
             </div>
             <div>
-              <p className="text-sm text-gray-600">Upload a company logo (recommended size: 200x200px)</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Upload a company logo (recommended size: 200x200px)</p>
               <input
                 type="file"
                 accept="image/*"
                 onChange={handleLogoChange}
                 disabled={uploadingLogo}
-                className="mt-2 text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 disabled:opacity-50"
+                className="mt-2 text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 dark:bg-blue-900/20 file:text-blue-700 dark:text-blue-300 hover:file:bg-blue-100 dark:bg-blue-900/30 disabled:opacity-50"
               />
             </div>
           </div>
         </div>
 
         {/* Basic Information */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h2>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Basic Information</h2>
           <div className="space-y-4">
             {/* Company Name */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Company Name <span className="text-red-500">*</span>
               </label>
               <div className="relative">
-                <Building2 className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                <Building2 className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                 <input
                   type="text"
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                   placeholder="Acme Corporation"
                   required
                 />
@@ -322,58 +322,58 @@ export default function CompanyProfilePage() {
 
             {/* Subdomain */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Subdomain
               </label>
               <div className="flex items-center">
                 <div className="relative flex-1">
-                  <Globe className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                  <Globe className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                   <input
                     type="text"
                     name="subdomain"
                     value={formData.subdomain}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                    className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                     placeholder="acme"
                   />
                 </div>
-                <span className="px-3 py-2 bg-gray-50 border border-l-0 border-gray-300 rounded-r-lg text-gray-500">
+                <span className="px-3 py-2 bg-gray-50 dark:bg-gray-800 border border-l-0 border-gray-300 dark:border-gray-600 rounded-r-lg text-gray-500 dark:text-gray-400">
                   .vendorflow.com
                 </span>
               </div>
-              <p className="text-xs text-gray-500 mt-1">Your company's unique URL</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Your company's unique URL</p>
             </div>
 
             {/* Email and Phone */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Email Address
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                  <Mail className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                   <input
                     type="email"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                    className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                     placeholder="info@company.com"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Phone Number
                 </label>
                 <div className="relative">
-                  <Phone className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                  <Phone className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                   <input
                     type="tel"
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                    className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                     placeholder="+1 (555) 123-4567"
                   />
                 </div>
@@ -382,17 +382,17 @@ export default function CompanyProfilePage() {
 
             {/* Website */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Website
               </label>
               <div className="relative">
-                <Globe className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                <Globe className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                 <input
                   type="url"
                   name="website"
                   value={formData.website}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                   placeholder="https://www.company.com"
                 />
               </div>
@@ -401,21 +401,21 @@ export default function CompanyProfilePage() {
         </div>
 
         {/* Address */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Address</h2>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Address</h2>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Street Address
               </label>
               <div className="relative">
-                <MapPin className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                <MapPin className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                 <input
                   type="text"
                   name="address"
                   value={formData.address}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                   placeholder="123 Business St"
                 />
               </div>
@@ -423,7 +423,7 @@ export default function CompanyProfilePage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   City
                 </label>
                 <input
@@ -431,12 +431,12 @@ export default function CompanyProfilePage() {
                   name="city"
                   value={formData.city}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                   placeholder="San Francisco"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   State / Province
                 </label>
                 <input
@@ -444,7 +444,7 @@ export default function CompanyProfilePage() {
                   name="state"
                   value={formData.state}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                   placeholder="CA"
                 />
               </div>
@@ -452,7 +452,7 @@ export default function CompanyProfilePage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Country
                 </label>
                 <input
@@ -460,12 +460,12 @@ export default function CompanyProfilePage() {
                   name="country"
                   value={formData.country}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                   placeholder="United States"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Postal Code
                 </label>
                 <input
@@ -473,7 +473,7 @@ export default function CompanyProfilePage() {
                   name="postalCode"
                   value={formData.postalCode}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                   placeholder="94105"
                 />
               </div>
@@ -482,37 +482,37 @@ export default function CompanyProfilePage() {
         </div>
 
         {/* Business Details */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Business Details</h2>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Business Details</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Tax ID / VAT Number
               </label>
               <div className="relative">
-                <FileText className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                <FileText className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                 <input
                   type="text"
                   name="taxId"
                   value={formData.taxId}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                   placeholder="12-3456789"
                 />
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Registration Number
               </label>
               <div className="relative">
-                <CreditCard className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                <CreditCard className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                 <input
                   type="text"
                   name="registrationNumber"
                   value={formData.registrationNumber}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                   placeholder="12345678"
                 />
               </div>
@@ -522,20 +522,20 @@ export default function CompanyProfilePage() {
 
         {/* Plan Information (Read-only) */}
         {company && (
-          <div className="bg-blue-50 rounded-xl border border-blue-200 p-6">
+          <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800 p-6">
             <h2 className="text-lg font-semibold text-blue-900 mb-4">Current Plan</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <p className="text-sm text-blue-700">Plan</p>
+                <p className="text-sm text-blue-700 dark:text-blue-300">Plan</p>
                 <p className="text-lg font-semibold text-blue-900 capitalize">{company.plan}</p>
               </div>
               <div>
-                <p className="text-sm text-blue-700">Status</p>
+                <p className="text-sm text-blue-700 dark:text-blue-300">Status</p>
                 <p className="text-lg font-semibold capitalize text-blue-900">{company.planStatus}</p>
               </div>
               {company.trialEndsAt && (
                 <div>
-                  <p className="text-sm text-blue-700">Trial Ends</p>
+                  <p className="text-sm text-blue-700 dark:text-blue-300">Trial Ends</p>
                   <p className="text-lg font-semibold text-blue-900">
                     {new Date(company.trialEndsAt).toLocaleDateString()}
                   </p>
@@ -545,7 +545,7 @@ export default function CompanyProfilePage() {
             <div className="mt-4">
               <Link
                 href="/settings/billing"
-                className="text-sm text-blue-700 hover:text-blue-800 font-medium inline-flex items-center"
+                className="text-sm text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-300 font-medium inline-flex items-center"
               >
                 Manage billing and subscription
                 <span className="ml-1">→</span>
@@ -559,7 +559,7 @@ export default function CompanyProfilePage() {
           <button
             type="button"
             onClick={() => currentUser?.companyId && fetchCompany(currentUser.companyId)}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+            className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800"
           >
             Cancel
           </button>

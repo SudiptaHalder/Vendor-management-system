@@ -22,6 +22,7 @@ import {
   X
 } from 'lucide-react'
 import { getCurrentUser, clearAuth } from '@/lib/dev-auth'
+import FontSizeToggle from './FontSizeToggle'
 
 interface NavbarProps {
   onMenuClick: () => void
@@ -54,7 +55,15 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
 
   useEffect(() => {
     setMounted(true)
+    setIsDarkMode(document.documentElement.classList.contains('dark'))
   }, [])
+
+  const toggleDarkMode = () => {
+    const next = !isDarkMode
+    setIsDarkMode(next)
+    document.documentElement.classList.toggle('dark', next)
+    localStorage.setItem('vms-dark-mode', String(next))
+  }
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -114,12 +123,12 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
   // Don't render until mounted to prevent hydration mismatch
   if (!mounted) {
     return (
-      <nav className="bg-white border-b border-gray-200 sticky top-0 z-10 h-16" />
+      <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10 h-16" />
     )
   }
 
   return (
-    <nav className="bg-white border-b border-gray-200 sticky top-0 z-40 h-16">
+    <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40 h-16">
       <div className="h-full px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-full">
           {/* Left side - Menu button and Search */}
@@ -127,7 +136,7 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
             {/* Mobile menu button */}
             <button
               onClick={onMenuClick}
-              className="lg:hidden p-2 rounded-lg text-gray-500 hover:bg-gray-100 mr-2 flex-shrink-0"
+              className="lg:hidden p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 mr-2 flex-shrink-0"
               aria-label="Toggle menu"
             >
               <Menu size={20} />
@@ -137,34 +146,34 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
             <div className="hidden md:block flex-1 max-w-2xl" ref={searchRef}>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Search className="h-4 w-4 text-gray-400" />
+                  <Search className="h-4 w-4 text-gray-400 dark:text-gray-500" />
                 </div>
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => handleSearch(e.target.value)}
                   placeholder="Search vendors, projects, invoices..."
-                  className="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg text-sm placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="block w-full pl-10 pr-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                 />
                 
                 {/* Search Results Dropdown */}
                 {showSearchResults && searchResults.length > 0 && (
-                  <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden z-50">
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden z-50">
                     {searchResults.map((result, index) => {
                       const Icon = result.icon
                       return (
                         <Link
                           key={index}
                           href={result.url}
-                          className="flex items-center px-4 py-3 hover:bg-gray-50 border-b last:border-b-0"
+                          className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 border-b last:border-b-0"
                           onClick={() => setShowSearchResults(false)}
                         >
-                          <div className="p-2 bg-gray-100 rounded-lg mr-3">
-                            <Icon size={16} className="text-gray-600" />
+                          <div className="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg mr-3">
+                            <Icon size={16} className="text-gray-600 dark:text-gray-400" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-900 truncate">{result.name}</p>
-                            <p className="text-xs text-gray-500 capitalize">{result.type}</p>
+                            <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">{result.name}</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 capitalize">{result.type}</p>
                           </div>
                         </Link>
                       )
@@ -177,7 +186,7 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
             {/* Mobile search button */}
             <button
               onClick={() => setIsSearchOpen(!isSearchOpen)}
-              className="md:hidden p-2 rounded-lg text-gray-500 hover:bg-gray-100 ml-auto"
+              className="md:hidden p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 ml-auto"
             >
               <Search size={20} />
             </button>
@@ -194,7 +203,7 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
                   className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors flex items-center space-x-1 ${
                     pathname.startsWith(filter.href)
                       ? `bg-${filter.color}-100 text-${filter.color}-700`
-                      : 'text-gray-600 hover:bg-gray-100'
+                      : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
                   }`}
                 >
                   <Icon size={16} />
@@ -206,17 +215,20 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
 
           {/* Right side */}
           <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
+            {/* Font size toggle */}
+            <FontSizeToggle />
+
             {/* Dark mode toggle */}
             <button
-              onClick={() => setIsDarkMode(!isDarkMode)}
-              className="p-2 text-gray-500 rounded-lg hover:bg-gray-100"
+              onClick={toggleDarkMode}
+              className="p-2 text-gray-500 dark:text-gray-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
               aria-label="Toggle dark mode"
             >
               {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
             </button>
 
             {/* Notifications - Simple bell without component */}
-            <button className="p-2 text-gray-500 rounded-lg hover:bg-gray-100 relative">
+            <button className="p-2 text-gray-500 dark:text-gray-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 relative">
               <Bell size={18} />
             </button>
 
@@ -224,34 +236,34 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
             <div className="relative" ref={profileRef}>
               <button
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
-                className="flex items-center space-x-2 p-1.5 rounded-lg hover:bg-gray-100"
+                className="flex items-center space-x-2 p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
                 aria-label="User menu"
               >
                 <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-semibold text-sm flex-shrink-0">
                   {user.initials}
                 </div>
                 <div className="hidden md:block text-left min-w-0">
-                  <p className="text-sm font-medium text-gray-900 truncate max-w-[120px]">
+                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate max-w-[120px]">
                     {user.name}
                   </p>
-                  <p className="text-xs text-gray-500 truncate max-w-[120px]">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate max-w-[120px]">
                     {user.role}
                   </p>
                 </div>
-                <ChevronDown size={16} className="text-gray-500 hidden md:block flex-shrink-0" />
+                <ChevronDown size={16} className="text-gray-500 dark:text-gray-400 hidden md:block flex-shrink-0" />
               </button>
 
               {/* Profile dropdown */}
               {isProfileOpen && (
-                <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden z-50">
-                  <div className="p-4 border-b border-gray-200 bg-gray-50">
+                <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden z-50">
+                  <div className="p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-semibold flex-shrink-0">
                         {user.initials}
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="text-sm font-medium text-gray-900 truncate">{user.name}</p>
-                        <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                        <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">{user.name}</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user.email}</p>
                       </div>
                     </div>
                   </div>
@@ -259,36 +271,36 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
                   <div className="p-2">
                     <button
                       onClick={() => handleNavigation('/profile')}
-                      className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100"
+                      className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
                     >
                       <User size={16} />
                       <span>Your Profile</span>
                     </button>
                     <button
                       onClick={() => handleNavigation('/settings')}
-                      className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100"
+                      className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
                     >
                       <Settings size={16} />
                       <span>Settings</span>
                     </button>
                     <button
                       onClick={() => handleNavigation('/calendar')}
-                      className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100"
+                      className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
                     >
                       <Calendar size={16} />
                       <span>Calendar</span>
                     </button>
                     <button
                       onClick={() => handleNavigation('/support')}
-                      className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100"
+                      className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
                     >
                       <HelpCircle size={16} />
                       <span>Help & Support</span>
                     </button>
-                    <div className="border-t border-gray-200 my-2"></div>
+                    <div className="border-t border-gray-200 dark:border-gray-700 my-2"></div>
                     <button 
                       onClick={handleLogout}
-                      className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-red-600 rounded-lg hover:bg-red-50"
+                      className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-red-600 dark:text-red-400 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20"
                     >
                       <LogOut size={16} />
                       <span>Logout</span>
@@ -302,20 +314,20 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
 
         {/* Mobile search panel */}
         {isSearchOpen && (
-          <div className="md:hidden absolute left-0 right-0 top-16 bg-white border-b border-gray-200 p-4 z-30">
+          <div className="md:hidden absolute left-0 right-0 top-16 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 p-4 z-30">
             <div className="relative">
-              <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => handleSearch(e.target.value)}
                 placeholder="Search..."
-                className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-10 pr-10 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 autoFocus
               />
               <button
                 onClick={() => setIsSearchOpen(false)}
-                className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"
+                className="absolute right-3 top-2.5 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400"
               >
                 <X size={16} />
               </button>
@@ -330,18 +342,18 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
                     <Link
                       key={index}
                       href={result.url}
-                      className="flex items-center p-3 hover:bg-gray-50 rounded-lg"
+                      className="flex items-center p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg"
                       onClick={() => {
                         setShowSearchResults(false)
                         setIsSearchOpen(false)
                       }}
                     >
-                      <div className="p-2 bg-gray-100 rounded-lg mr-3">
-                        <Icon size={16} className="text-gray-600" />
+                      <div className="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg mr-3">
+                        <Icon size={16} className="text-gray-600 dark:text-gray-400" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-900">{result.name}</p>
-                        <p className="text-xs text-gray-500 capitalize">{result.type}</p>
+                        <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{result.name}</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 capitalize">{result.type}</p>
                       </div>
                     </Link>
                   )

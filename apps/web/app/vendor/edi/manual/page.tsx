@@ -343,8 +343,8 @@
 //         {/* Header */}
 //         <div className="flex justify-between items-center mb-6">
 //           <div>
-//             <h1 className="text-2xl font-bold text-gray-900">Manual EDI</h1>
-//             <p className="text-gray-600 mt-1">Create and submit manual EDI invoices</p>
+//             <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Manual EDI</h1>
+//             <p className="text-gray-600 dark:text-gray-400 mt-1">Create and submit manual EDI invoices</p>
 //           </div>
 //           {!showForm && !formData.isSubmitted && (
 //             <button
@@ -358,20 +358,20 @@
 //         </div>
 
 //         {error && (
-//           <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center text-red-700 text-sm">
+//           <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-center text-red-700 dark:text-red-300 text-sm">
 //             <AlertCircle size={16} className="mr-2" />
 //             {error}
 //           </div>
 //         )}
 
 //         {!loading && purchaseOrders.length === 0 && !showForm && !formData.isSubmitted && !error && (
-//           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center">
-//             <Package size={40} className="mx-auto mb-3 text-gray-400" />
-//             <h3 className="text-base font-medium text-gray-900 mb-1">No Purchase Orders Found</h3>
-//             <p className="text-sm text-gray-500">You don't have any purchase orders to create EDI for.</p>
+//           <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8 text-center">
+//             <Package size={40} className="mx-auto mb-3 text-gray-400 dark:text-gray-500" />
+//             <h3 className="text-base font-medium text-gray-900 dark:text-gray-100 mb-1">No Purchase Orders Found</h3>
+//             <p className="text-sm text-gray-500 dark:text-gray-400">You don't have any purchase orders to create EDI for.</p>
 //             <button
 //               onClick={fetchPurchaseOrders}
-//               className="mt-4 px-4 py-2 text-sm text-green-600 border border-green-200 rounded-lg hover:bg-green-50"
+//               className="mt-4 px-4 py-2 text-sm text-green-600 dark:text-green-400 border border-green-200 dark:border-green-800 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20"
 //             >
 //               <RefreshCw size={14} className="inline mr-1" />
 //               Refresh from SAP
@@ -381,11 +381,11 @@
 
 //         {/* EDI Form */}
 //         {showForm && (
-//           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6">
+//           <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 mb-6">
 //             <div className="flex justify-between items-center mb-4">
-//               <h2 className="text-lg font-semibold text-gray-900">Create EDI Invoice</h2>
+//               <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Create EDI Invoice</h2>
 //               {!formData.isSubmitted && (
-//                 <button onClick={resetForm} className="p-1 hover:bg-gray-100 rounded-lg">
+//                 <button onClick={resetForm} className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg">
 //                   <X size={20} />
 //                 </button>
 //               )}
@@ -394,39 +394,39 @@
 //             {/* Basic Information */}
 //             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
 //               <div>
-//                 <label className="block text-xs font-medium text-gray-700 mb-1">
+//                 <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
 //                   Invoice Number <span className="text-red-500">*</span>
 //                 </label>
 //                 <input
 //                   type="text"
 //                   value={formData.invoiceNo}
 //                   onChange={(e) => setFormData({ ...formData, invoiceNo: e.target.value })}
-//                   className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 text-gray-900 bg-white"
+//                   className="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900"
 //                   placeholder="INV-2024-001"
 //                   disabled={formData.isSubmitted}
 //                 />
 //               </div>
 //               <div>
-//                 <label className="block text-xs font-medium text-gray-700 mb-1">
+//                 <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
 //                   Invoice Date <span className="text-red-500">*</span>
 //                 </label>
 //                 <input
 //                   type="date"
 //                   value={formData.invoiceDate}
 //                   onChange={(e) => setFormData({ ...formData, invoiceDate: e.target.value })}
-//                   className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 text-gray-900 bg-white"
+//                   className="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900"
 //                   disabled={formData.isSubmitted}
 //                 />
 //               </div>
 //               <div>
-//                 <label className="block text-xs font-medium text-gray-700 mb-1">
+//                 <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
 //                   Vehicle Number <span className="text-red-500">*</span>
 //                 </label>
 //                 <input
 //                   type="text"
 //                   value={formData.vehicleNo}
 //                   onChange={(e) => setFormData({ ...formData, vehicleNo: e.target.value })}
-//                   className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 text-gray-900 bg-white"
+//                   className="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900"
 //                   placeholder="MH-12-AB-1234"
 //                   disabled={formData.isSubmitted}
 //                 />
@@ -435,13 +435,13 @@
 
 //             {/* PO Selection */}
 //             <div className="mb-4">
-//               <label className="block text-xs font-medium text-gray-700 mb-1">
+//               <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
 //                 Select PO Number <span className="text-red-500">*</span>
 //               </label>
 //               <select
 //                 value={formData.poNumber}
 //                 onChange={(e) => handlePONumberChange(e.target.value)}
-//                 className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 text-gray-900 bg-white"
+//                 className="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900"
 //                 disabled={formData.isSubmitted}
 //               >
 //                 <option value="">-- Select Purchase Order --</option>
@@ -456,10 +456,10 @@
 //             {/* Line Items Table */}
 //             {formData.selectedPO && formData.lineItemsData.length > 0 && (
 //               <div className="mt-4">
-//                 <h3 className="text-sm font-semibold text-gray-900 mb-2">Line Items</h3>
+//                 <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">Line Items</h3>
 //                 <div className="overflow-x-auto">
-//                   <table className="w-full text-xs border border-gray-200 rounded-lg">
-//                     <thead className="bg-gray-50">
+//                   <table className="w-full text-xs border border-gray-200 dark:border-gray-700 rounded-lg">
+//                     <thead className="bg-gray-50 dark:bg-gray-800">
 //                       <tr>
 //                         <th className="px-2 py-1.5 text-left">Material</th>
 //                         <th className="px-2 py-1.5 text-left">Description</th>
@@ -472,14 +472,14 @@
 //                         <th className="px-2 py-1.5 text-center w-12">Status</th>
 //                       </tr>
 //                     </thead>
-//                     <tbody className="divide-y divide-gray-200">
+//                     <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
 //                       {formData.lineItemsData.map((item, idx) => {
 //                         const isVerified = item.isVerified
 //                         const isValid = item.isValid
 //                         const hasError = !isValid && !isVerified && item.errorMessage
 
 //                         return (
-//                           <tr key={idx} className={isVerified && isValid ? 'bg-green-50' : hasError ? 'bg-red-50' : 'bg-white'}>
+//                           <tr key={idx} className={isVerified && isValid ? 'bg-green-50 dark:bg-green-900/20' : hasError ? 'bg-red-50 dark:bg-red-900/20' : 'bg-white dark:bg-gray-900'}>
 //                             <td className="px-2 py-1.5 font-mono">{item.materialCode}</td>
 //                             <td className="px-2 py-1.5 truncate max-w-[120px]">{item.materialDesc}</td>
 //                             <td className="px-2 py-1.5">{item.uom}</td>
@@ -490,7 +490,7 @@
 //                                 type="number"
 //                                 value={item.invoiceQty || ''}
 //                                 onChange={(e) => handleInvoiceQtyChange(idx, parseFloat(e.target.value) || 0)}
-//                                 className={`w-full px-1 py-0.5 text-right text-xs border rounded bg-white focus:ring-1 focus:ring-green-500 ${hasError ? 'border-red-500' : 'border-gray-300'}`}
+//                                 className={`w-full px-1 py-0.5 text-right text-xs border rounded bg-white dark:bg-gray-900 focus:ring-1 focus:ring-green-500 ${hasError ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'}`}
 //                                 disabled={formData.isSubmitted || isVerified}
 //                                 placeholder="Qty"
 //                                 step="1"
@@ -503,7 +503,7 @@
 //                                 type="number"
 //                                 value={item.enteredTotalPrice || ''}
 //                                 onChange={(e) => handleEnteredTotalPriceChange(idx, parseFloat(e.target.value) || 0)}
-//                                 className={`w-full px-1 py-0.5 text-right text-xs border rounded bg-white focus:ring-1 focus:ring-green-500 ${hasError ? 'border-red-500' : 'border-gray-300'}`}
+//                                 className={`w-full px-1 py-0.5 text-right text-xs border rounded bg-white dark:bg-gray-900 focus:ring-1 focus:ring-green-500 ${hasError ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'}`}
 //                                 disabled={formData.isSubmitted || isVerified}
 //                                 placeholder="Total"
 //                                 step="0.01"
@@ -513,7 +513,7 @@
 //                                 <div className="text-red-500 text-[10px] mt-0.5">{item.errorMessage}</div>
 //                               )}
 //                               {isValid && isVerified && (
-//                                 <div className="text-green-600 text-[10px] mt-0.5">✓ Verified (₹{formatCurrency(item.unitPrice * item.invoiceQty)})</div>
+//                                 <div className="text-green-600 dark:text-green-400 text-[10px] mt-0.5">✓ Verified (₹{formatCurrency(item.unitPrice * item.invoiceQty)})</div>
 //                               )}
 //                             </td>
 //                             <td className="px-2 py-1.5 text-center">
@@ -524,20 +524,20 @@
 //                                   className={`px-2 py-0.5 rounded text-xs ${
 //                                     item.invoiceQty && item.enteredTotalPrice
 //                                       ? 'bg-blue-600 text-white hover:bg-blue-700'
-//                                       : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+//                                       : 'bg-gray-300 text-gray-500 dark:text-gray-400 cursor-not-allowed'
 //                                   }`}
 //                                 >
 //                                   Check
 //                                 </button>
 //                               )}
 //                               {isVerified && isValid && (
-//                                 <span className="inline-flex items-center px-1.5 py-0.5 text-xs font-medium text-green-800 bg-green-100 rounded-full">
+//                                 <span className="inline-flex items-center px-1.5 py-0.5 text-xs font-medium text-green-800 dark:text-green-300 bg-green-100 dark:bg-green-900/30 rounded-full">
 //                                   <CheckCircle size={10} className="mr-0.5" />
 //                                   OK
 //                                 </span>
 //                               )}
 //                               {isVerified && !isValid && (
-//                                 <span className="inline-flex items-center px-1.5 py-0.5 text-xs font-medium text-red-800 bg-red-100 rounded-full">
+//                                 <span className="inline-flex items-center px-1.5 py-0.5 text-xs font-medium text-red-800 dark:text-red-300 bg-red-100 dark:bg-red-900/30 rounded-full">
 //                                   <XCircle size={10} className="mr-0.5" />
 //                                   Error
 //                                 </span>
@@ -545,11 +545,11 @@
 //                             </td>
 //                             <td className="px-2 py-1.5 text-center">
 //                               {isVerified && isValid ? (
-//                                 <span className="inline-flex items-center px-1.5 py-0.5 text-xs font-medium text-green-800 bg-green-100 rounded-full">✓</span>
+//                                 <span className="inline-flex items-center px-1.5 py-0.5 text-xs font-medium text-green-800 dark:text-green-300 bg-green-100 dark:bg-green-900/30 rounded-full">✓</span>
 //                               ) : isVerified && !isValid ? (
-//                                 <span className="inline-flex items-center px-1.5 py-0.5 text-xs font-medium text-red-800 bg-red-100 rounded-full">✗</span>
+//                                 <span className="inline-flex items-center px-1.5 py-0.5 text-xs font-medium text-red-800 dark:text-red-300 bg-red-100 dark:bg-red-900/30 rounded-full">✗</span>
 //                               ) : (
-//                                 <span className="inline-flex items-center px-1.5 py-0.5 text-xs font-medium text-yellow-800 bg-yellow-100 rounded-full">Pending</span>
+//                                 <span className="inline-flex items-center px-1.5 py-0.5 text-xs font-medium text-yellow-800 dark:text-yellow-300 bg-yellow-100 dark:bg-yellow-900/30 rounded-full">Pending</span>
 //                               )}
 //                             </td>
 //                           </tr>
@@ -570,7 +570,7 @@
 //                   className={`px-4 py-1.5 rounded-lg flex items-center space-x-2 text-sm ${
 //                     isFormValid() && !submitting
 //                       ? 'bg-green-600 text-white hover:bg-green-700'
-//                       : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+//                       : 'bg-gray-300 text-gray-500 dark:text-gray-400 cursor-not-allowed'
 //                   }`}
 //                 >
 //                   {submitting ? (
@@ -592,11 +592,11 @@
 //             <div ref={printRef}>
 //               {/* Submitted Line Items */}
 //               {formData.isSubmitted && formData.lineItemsData.length > 0 && (
-//                 <div className="mt-6 pt-4 border-t border-gray-200">
-//                   <h3 className="text-sm font-semibold text-gray-900 mb-3">Submitted Line Items</h3>
+//                 <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+//                   <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">Submitted Line Items</h3>
 //                   <div className="overflow-x-auto">
-//                     <table className="w-full text-xs border border-gray-200 rounded-lg">
-//                       <thead className="bg-gray-50">
+//                     <table className="w-full text-xs border border-gray-200 dark:border-gray-700 rounded-lg">
+//                       <thead className="bg-gray-50 dark:bg-gray-800">
 //                         <tr>
 //                           <th className="px-2 py-1.5 text-left">Material Code</th>
 //                           <th className="px-2 py-1.5 text-left">Description</th>
@@ -605,7 +605,7 @@
 //                           <th className="px-2 py-1.5 text-right">Total Price (₹)</th>
 //                         </tr>
 //                       </thead>
-//                       <tbody className="divide-y divide-gray-200">
+//                       <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
 //                         {formData.lineItemsData.map((item, idx) => (
 //                           <tr key={idx}>
 //                             <td className="px-2 py-1.5 font-mono">{item.materialCode}</td>
@@ -616,10 +616,10 @@
 //                           </tr>
 //                         ))}
 //                       </tbody>
-//                       <tfoot className="bg-gray-50">
+//                       <tfoot className="bg-gray-50 dark:bg-gray-800">
 //                         <tr>
 //                           <td colSpan={4} className="px-2 py-1.5 text-right font-semibold">Total:</td>
-//                           <td className="px-2 py-1.5 text-right font-bold text-green-600">
+//                           <td className="px-2 py-1.5 text-right font-bold text-green-600 dark:text-green-400">
 //                             ₹{formData.lineItemsData.reduce((sum, item) => sum + safeNumber(item.enteredTotalPrice), 0).toFixed(2)}
 //                           </td>
 //                         </tr>
@@ -631,24 +631,24 @@
 
 //               {/* Invoice Summary */}
 //               {formData.isSubmitted && (
-//                 <div className="mt-4 pt-4 border-t border-gray-200">
-//                   <h3 className="text-sm font-semibold text-gray-900 mb-2">Invoice Summary</h3>
+//                 <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+//                   <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">Invoice Summary</h3>
 //                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
-//                     <div className="bg-gray-50 p-2 rounded">
-//                       <p className="text-xs text-gray-500">Invoice Number</p>
-//                       <p className="font-medium text-gray-900">{formData.invoiceNo}</p>
+//                     <div className="bg-gray-50 dark:bg-gray-800 p-2 rounded">
+//                       <p className="text-xs text-gray-500 dark:text-gray-400">Invoice Number</p>
+//                       <p className="font-medium text-gray-900 dark:text-gray-100">{formData.invoiceNo}</p>
 //                     </div>
-//                     <div className="bg-gray-50 p-2 rounded">
-//                       <p className="text-xs text-gray-500">Invoice Date</p>
-//                       <p className="font-medium text-gray-900">{new Date(formData.invoiceDate).toLocaleDateString()}</p>
+//                     <div className="bg-gray-50 dark:bg-gray-800 p-2 rounded">
+//                       <p className="text-xs text-gray-500 dark:text-gray-400">Invoice Date</p>
+//                       <p className="font-medium text-gray-900 dark:text-gray-100">{new Date(formData.invoiceDate).toLocaleDateString()}</p>
 //                     </div>
-//                     <div className="bg-gray-50 p-2 rounded">
-//                       <p className="text-xs text-gray-500">Vehicle Number</p>
-//                       <p className="font-medium text-gray-900">{formData.vehicleNo}</p>
+//                     <div className="bg-gray-50 dark:bg-gray-800 p-2 rounded">
+//                       <p className="text-xs text-gray-500 dark:text-gray-400">Vehicle Number</p>
+//                       <p className="font-medium text-gray-900 dark:text-gray-100">{formData.vehicleNo}</p>
 //                     </div>
-//                     <div className="bg-gray-50 p-2 rounded">
-//                       <p className="text-xs text-gray-500">PO Number</p>
-//                       <p className="font-medium text-gray-900">{formData.poNumber}</p>
+//                     <div className="bg-gray-50 dark:bg-gray-800 p-2 rounded">
+//                       <p className="text-xs text-gray-500 dark:text-gray-400">PO Number</p>
+//                       <p className="font-medium text-gray-900 dark:text-gray-100">{formData.poNumber}</p>
 //                     </div>
 //                   </div>
 //                 </div>
@@ -656,11 +656,11 @@
 
 //               {/* Barcode and Buttons */}
 //               {formData.isSubmitted && (
-//                 <div className="mt-6 pt-4 border-t border-gray-200">
-//                   <div className="bg-green-50 rounded-lg p-4 text-center">
+//                 <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+//                   <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 text-center">
 //                     <div className="flex items-center justify-center mb-2">
-//                       <CheckCircle size={16} className="text-green-600 mr-1" />
-//                       <span className="text-green-800 text-sm font-medium">EDI Submitted Successfully!</span>
+//                       <CheckCircle size={16} className="text-green-600 dark:text-green-400 mr-1" />
+//                       <span className="text-green-800 dark:text-green-300 text-sm font-medium">EDI Submitted Successfully!</span>
 //                     </div>
 
 //                     <div
@@ -674,19 +674,19 @@
 //                       />
 //                     </div>
 
-//                     <p className="text-xs text-gray-500 mb-3">SAP Delivery Document: {formData.barcode}</p>
+//                     <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">SAP Delivery Document: {formData.barcode}</p>
 
 //                     <div className="flex justify-center space-x-3">
 //                       <button
 //                         onClick={handlePrint}
-//                         className="px-3 py-1.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 flex items-center space-x-1 text-sm"
+//                         className="px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-1 text-sm"
 //                       >
 //                         <Printer size={14} />
 //                         <span>Print</span>
 //                       </button>
 //                       <button
 //                         onClick={resetForm}
-//                         className="px-3 py-1.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 flex items-center space-x-1 text-sm"
+//                         className="px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-1 text-sm"
 //                       >
 //                         <Plus size={14} />
 //                         <span>Create New</span>
@@ -1096,8 +1096,8 @@ export default function EDIManualPage() {
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Manual EDI</h1>
-            <p className="text-gray-600 mt-1">Create and submit manual EDI invoices</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Manual EDI</h1>
+            <p className="text-gray-600 dark:text-gray-400 mt-1">Create and submit manual EDI invoices</p>
           </div>
           {!showForm && !formData.isSubmitted && (
             <button
@@ -1111,20 +1111,20 @@ export default function EDIManualPage() {
         </div>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center text-red-700 text-sm">
+          <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-center text-red-700 dark:text-red-300 text-sm">
             <AlertCircle size={16} className="mr-2" />
             {error}
           </div>
         )}
 
         {!loading && purchaseOrders.length === 0 && !showForm && !formData.isSubmitted && !error && (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center">
-            <Package size={40} className="mx-auto mb-3 text-gray-400" />
-            <h3 className="text-base font-medium text-gray-900 mb-1">No Purchase Orders Found</h3>
-            <p className="text-sm text-gray-500">You don't have any purchase orders to create EDI for.</p>
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8 text-center">
+            <Package size={40} className="mx-auto mb-3 text-gray-400 dark:text-gray-500" />
+            <h3 className="text-base font-medium text-gray-900 dark:text-gray-100 mb-1">No Purchase Orders Found</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400">You don't have any purchase orders to create EDI for.</p>
             <button
               onClick={fetchPurchaseOrders}
-              className="mt-4 px-4 py-2 text-sm text-green-600 border border-green-200 rounded-lg hover:bg-green-50"
+              className="mt-4 px-4 py-2 text-sm text-green-600 dark:text-green-400 border border-green-200 dark:border-green-800 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20"
             >
               <RefreshCw size={14} className="inline mr-1" />
               Refresh from SAP
@@ -1134,11 +1134,11 @@ export default function EDIManualPage() {
 
         {/* EDI Form */}
         {showForm && (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 mb-6">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold text-gray-900">Create EDI Invoice</h2>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Create EDI Invoice</h2>
               {!formData.isSubmitted && (
-                <button onClick={resetForm} className="p-1 hover:bg-gray-100 rounded-lg">
+                <button onClick={resetForm} className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg">
                   <X size={20} />
                 </button>
               )}
@@ -1147,39 +1147,39 @@ export default function EDIManualPage() {
             {/* Basic Information */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">
+                <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Invoice Number <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
                   value={formData.invoiceNo}
                   onChange={(e) => setFormData({ ...formData, invoiceNo: e.target.value })}
-                  className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 text-gray-900 bg-white"
+                  className="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900"
                   placeholder="INV-2024-001"
                   disabled={formData.isSubmitted}
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">
+                <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Invoice Date <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="date"
                   value={formData.invoiceDate}
                   onChange={(e) => setFormData({ ...formData, invoiceDate: e.target.value })}
-                  className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 text-gray-900 bg-white"
+                  className="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900"
                   disabled={formData.isSubmitted}
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">
+                <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Vehicle Number <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
                   value={formData.vehicleNo}
                   onChange={(e) => setFormData({ ...formData, vehicleNo: e.target.value })}
-                  className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 text-gray-900 bg-white"
+                  className="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900"
                   placeholder="MH-12-AB-1234"
                   disabled={formData.isSubmitted}
                 />
@@ -1188,13 +1188,13 @@ export default function EDIManualPage() {
 
             {/* PO Selection */}
             <div className="mb-4">
-              <label className="block text-xs font-medium text-gray-700 mb-1">
+              <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Select PO Number <span className="text-red-500">*</span>
               </label>
               <select
                 value={formData.poNumber}
                 onChange={(e) => handlePONumberChange(e.target.value)}
-                className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 text-gray-900 bg-white"
+                className="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900"
                 disabled={formData.isSubmitted}
               >
                 <option value="">-- Select Purchase Order --</option>
@@ -1205,7 +1205,7 @@ export default function EDIManualPage() {
                 ))}
               </select>
               {formData.selectedPO?.isSchedulingAgreement && (
-                <p className="mt-1 text-xs text-blue-600">
+                <p className="mt-1 text-xs text-blue-600 dark:text-blue-400">
                   This is an Open PO (Scheduling Agreement) - each line below is one month's scheduled delivery, not a one-time order.
                 </p>
               )}
@@ -1214,10 +1214,10 @@ export default function EDIManualPage() {
             {/* Line Items Table */}
             {formData.selectedPO && formData.lineItemsData.length > 0 && (
               <div className="mt-4">
-                <h3 className="text-sm font-semibold text-gray-900 mb-2">Line Items</h3>
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">Line Items</h3>
                 <div className="overflow-x-auto">
-                  <table className="w-full text-xs border border-gray-200 rounded-lg">
-                    <thead className="bg-gray-50">
+                  <table className="w-full text-xs border border-gray-200 dark:border-gray-700 rounded-lg">
+                    <thead className="bg-gray-50 dark:bg-gray-800">
                       <tr>
                         <th className="px-2 py-1.5 text-left">Material</th>
                         <th className="px-2 py-1.5 text-left">Description</th>
@@ -1233,14 +1233,14 @@ export default function EDIManualPage() {
                         <th className="px-2 py-1.5 text-center w-12">Status</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-200">
+                    <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                       {formData.lineItemsData.map((item, idx) => {
                         const isVerified = item.isVerified
                         const isValid = item.isValid
                         const hasError = !isValid && !isVerified && item.errorMessage
 
                         return (
-                          <tr key={idx} className={isVerified && isValid ? 'bg-green-50' : hasError ? 'bg-red-50' : 'bg-white'}>
+                          <tr key={idx} className={isVerified && isValid ? 'bg-green-50 dark:bg-green-900/20' : hasError ? 'bg-red-50 dark:bg-red-900/20' : 'bg-white dark:bg-gray-900'}>
                             <td className="px-2 py-1.5 font-mono">{item.materialCode}</td>
                             <td className="px-2 py-1.5 truncate max-w-[120px]">{item.materialDesc}</td>
                             <td className="px-2 py-1.5">{item.uom}</td>
@@ -1254,7 +1254,7 @@ export default function EDIManualPage() {
                                 type="number"
                                 value={item.invoiceQty || ''}
                                 onChange={(e) => handleInvoiceQtyChange(idx, parseFloat(e.target.value) || 0)}
-                                className={`w-full px-1 py-0.5 text-right text-xs border rounded bg-white focus:ring-1 focus:ring-green-500 ${hasError ? 'border-red-500' : 'border-gray-300'}`}
+                                className={`w-full px-1 py-0.5 text-right text-xs border rounded bg-white dark:bg-gray-900 focus:ring-1 focus:ring-green-500 ${hasError ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'}`}
                                 disabled={formData.isSubmitted || isVerified}
                                 placeholder="Qty"
                                 step="1"
@@ -1267,7 +1267,7 @@ export default function EDIManualPage() {
                                 type="number"
                                 value={item.enteredTotalPrice || ''}
                                 onChange={(e) => handleEnteredTotalPriceChange(idx, parseFloat(e.target.value) || 0)}
-                                className={`w-full px-1 py-0.5 text-right text-xs border rounded bg-white focus:ring-1 focus:ring-green-500 ${hasError ? 'border-red-500' : 'border-gray-300'}`}
+                                className={`w-full px-1 py-0.5 text-right text-xs border rounded bg-white dark:bg-gray-900 focus:ring-1 focus:ring-green-500 ${hasError ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'}`}
                                 disabled={formData.isSubmitted || isVerified}
                                 placeholder="Total"
                                 step="0.01"
@@ -1285,20 +1285,20 @@ export default function EDIManualPage() {
                                   className={`px-2 py-0.5 rounded text-xs ${
                                     item.invoiceQty && item.enteredTotalPrice
                                       ? 'bg-blue-600 text-white hover:bg-blue-700'
-                                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                      : 'bg-gray-300 text-gray-500 dark:text-gray-400 cursor-not-allowed'
                                   }`}
                                 >
                                   Check
                                 </button>
                               )}
                               {isVerified && isValid && (
-                                <span className="inline-flex items-center px-1.5 py-0.5 text-xs font-medium text-green-800 bg-green-100 rounded-full">
+                                <span className="inline-flex items-center px-1.5 py-0.5 text-xs font-medium text-green-800 dark:text-green-300 bg-green-100 dark:bg-green-900/30 rounded-full">
                                   <CheckCircle size={10} className="mr-0.5" />
                                   OK
                                 </span>
                               )}
                               {isVerified && !isValid && (
-                                <span className="inline-flex items-center px-1.5 py-0.5 text-xs font-medium text-red-800 bg-red-100 rounded-full">
+                                <span className="inline-flex items-center px-1.5 py-0.5 text-xs font-medium text-red-800 dark:text-red-300 bg-red-100 dark:bg-red-900/30 rounded-full">
                                   <XCircle size={10} className="mr-0.5" />
                                   Error
                                 </span>
@@ -1306,11 +1306,11 @@ export default function EDIManualPage() {
                             </td>
                             <td className="px-2 py-1.5 text-center">
                               {isVerified && isValid ? (
-                                <span className="inline-flex items-center px-1.5 py-0.5 text-xs font-medium text-green-800 bg-green-100 rounded-full">✓</span>
+                                <span className="inline-flex items-center px-1.5 py-0.5 text-xs font-medium text-green-800 dark:text-green-300 bg-green-100 dark:bg-green-900/30 rounded-full">✓</span>
                               ) : isVerified && !isValid ? (
-                                <span className="inline-flex items-center px-1.5 py-0.5 text-xs font-medium text-red-800 bg-red-100 rounded-full">✗</span>
+                                <span className="inline-flex items-center px-1.5 py-0.5 text-xs font-medium text-red-800 dark:text-red-300 bg-red-100 dark:bg-red-900/30 rounded-full">✗</span>
                               ) : (
-                                <span className="inline-flex items-center px-1.5 py-0.5 text-xs font-medium text-yellow-800 bg-yellow-100 rounded-full">Pending</span>
+                                <span className="inline-flex items-center px-1.5 py-0.5 text-xs font-medium text-yellow-800 dark:text-yellow-300 bg-yellow-100 dark:bg-yellow-900/30 rounded-full">Pending</span>
                               )}
                             </td>
                           </tr>
@@ -1326,7 +1326,7 @@ export default function EDIManualPage() {
             {!formData.isSubmitted && (
               <div className="mt-4 flex justify-end items-center space-x-3">
                 {!isFormValid() && !submitting && getMissingFieldsMessage() && (
-                  <span className="text-xs text-amber-600">{getMissingFieldsMessage()}</span>
+                  <span className="text-xs text-amber-600 dark:text-amber-400">{getMissingFieldsMessage()}</span>
                 )}
                 <button
                   onClick={handleSubmit}
@@ -1334,7 +1334,7 @@ export default function EDIManualPage() {
                   className={`px-4 py-1.5 rounded-lg flex items-center space-x-2 text-sm ${
                     isFormValid() && !submitting
                       ? 'bg-green-600 text-white hover:bg-green-700'
-                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                      : 'bg-gray-300 text-gray-500 dark:text-gray-400 cursor-not-allowed'
                   }`}
                 >
                   {submitting ? (
@@ -1356,11 +1356,11 @@ export default function EDIManualPage() {
             <div ref={printRef}>
               {/* Submitted Line Items */}
               {formData.isSubmitted && formData.lineItemsData.length > 0 && (
-                <div className="mt-6 pt-4 border-t border-gray-200">
-                  <h3 className="text-sm font-semibold text-gray-900 mb-3">Submitted Line Items</h3>
+                <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">Submitted Line Items</h3>
                   <div className="overflow-x-auto">
-                    <table className="w-full text-xs border border-gray-200 rounded-lg">
-                      <thead className="bg-gray-50">
+                    <table className="w-full text-xs border border-gray-200 dark:border-gray-700 rounded-lg">
+                      <thead className="bg-gray-50 dark:bg-gray-800">
                         <tr>
                           <th className="px-2 py-1.5 text-left">Material Code</th>
                           <th className="px-2 py-1.5 text-left">Description</th>
@@ -1372,7 +1372,7 @@ export default function EDIManualPage() {
                           <th className="px-2 py-1.5 text-right">Total Price (₹)</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-gray-200">
+                      <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                         {formData.lineItemsData.map((item, idx) => (
                           <tr key={idx}>
                             <td className="px-2 py-1.5 font-mono">{item.materialCode}</td>
@@ -1386,10 +1386,10 @@ export default function EDIManualPage() {
                           </tr>
                         ))}
                       </tbody>
-                      <tfoot className="bg-gray-50">
+                      <tfoot className="bg-gray-50 dark:bg-gray-800">
                         <tr>
                           <td colSpan={formData.selectedPO?.isSchedulingAgreement ? 5 : 4} className="px-2 py-1.5 text-right font-semibold">Total:</td>
-                          <td className="px-2 py-1.5 text-right font-bold text-green-600">
+                          <td className="px-2 py-1.5 text-right font-bold text-green-600 dark:text-green-400">
                             ₹{formData.lineItemsData.reduce((sum, item) => sum + safeNumber(item.enteredTotalPrice), 0).toFixed(2)}
                           </td>
                         </tr>
@@ -1401,27 +1401,27 @@ export default function EDIManualPage() {
 
               {/* Invoice Summary */}
               {formData.isSubmitted && (
-                <div className="mt-4 pt-4 border-t border-gray-200">
-                  <h3 className="text-sm font-semibold text-gray-900 mb-2">Invoice Summary</h3>
+                <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">Invoice Summary</h3>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
-                    <div className="bg-gray-50 p-2 rounded">
-                      <p className="text-xs text-gray-500">Invoice Number</p>
-                      <p className="font-medium text-gray-900">{formData.invoiceNo}</p>
+                    <div className="bg-gray-50 dark:bg-gray-800 p-2 rounded">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Invoice Number</p>
+                      <p className="font-medium text-gray-900 dark:text-gray-100">{formData.invoiceNo}</p>
                     </div>
-                    <div className="bg-gray-50 p-2 rounded">
-                      <p className="text-xs text-gray-500">Invoice Date</p>
-                      <p className="font-medium text-gray-900">{new Date(formData.invoiceDate).toLocaleDateString()}</p>
+                    <div className="bg-gray-50 dark:bg-gray-800 p-2 rounded">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Invoice Date</p>
+                      <p className="font-medium text-gray-900 dark:text-gray-100">{new Date(formData.invoiceDate).toLocaleDateString()}</p>
                     </div>
-                    <div className="bg-gray-50 p-2 rounded">
-                      <p className="text-xs text-gray-500">Vehicle Number</p>
-                      <p className="font-medium text-gray-900">{formData.vehicleNo}</p>
+                    <div className="bg-gray-50 dark:bg-gray-800 p-2 rounded">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Vehicle Number</p>
+                      <p className="font-medium text-gray-900 dark:text-gray-100">{formData.vehicleNo}</p>
                     </div>
-                    <div className="bg-gray-50 p-2 rounded">
-                      <p className="text-xs text-gray-500">PO Number</p>
-                      <p className="font-medium text-gray-900">
+                    <div className="bg-gray-50 dark:bg-gray-800 p-2 rounded">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">PO Number</p>
+                      <p className="font-medium text-gray-900 dark:text-gray-100">
                         {formData.poNumber}
                         {formData.selectedPO?.isSchedulingAgreement && (
-                          <span className="ml-1.5 inline-block px-1.5 py-0.5 text-[10px] font-medium bg-blue-100 text-blue-700 rounded">Open PO</span>
+                          <span className="ml-1.5 inline-block px-1.5 py-0.5 text-[10px] font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded">Open PO</span>
                         )}
                       </p>
                     </div>
@@ -1431,11 +1431,11 @@ export default function EDIManualPage() {
 
               {/* Barcode and Buttons */}
               {formData.isSubmitted && (
-                <div className="mt-6 pt-4 border-t border-gray-200">
-                  <div className="bg-green-50 rounded-lg p-4 text-center">
+                <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 text-center">
                     <div className="flex items-center justify-center mb-2">
-                      <CheckCircle size={16} className="text-green-600 mr-1" />
-                      <span className="text-green-800 text-sm font-medium">EDI Submitted Successfully!</span>
+                      <CheckCircle size={16} className="text-green-600 dark:text-green-400 mr-1" />
+                      <span className="text-green-800 dark:text-green-300 text-sm font-medium">EDI Submitted Successfully!</span>
                     </div>
 
                     <div
@@ -1449,19 +1449,19 @@ export default function EDIManualPage() {
                       />
                     </div>
 
-                    <p className="text-xs text-gray-500 mb-3">SAP Delivery Document: {formData.barcode}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">SAP Delivery Document: {formData.barcode}</p>
 
                     <div className="flex justify-center space-x-3">
                       <button
                         onClick={handlePrint}
-                        className="px-3 py-1.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 flex items-center space-x-1 text-sm"
+                        className="px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-1 text-sm"
                       >
                         <Printer size={14} />
                         <span>Print</span>
                       </button>
                       <button
                         onClick={resetForm}
-                        className="px-3 py-1.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 flex items-center space-x-1 text-sm"
+                        className="px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-1 text-sm"
                       >
                         <Plus size={14} />
                         <span>Create New</span>

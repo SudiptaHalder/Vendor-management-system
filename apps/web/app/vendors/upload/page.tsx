@@ -315,76 +315,76 @@ const handleUpload = async () => {
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Vendor Data Upload</h1>
-            <p className="text-gray-600 mt-1">Upload vendor master data, purchase orders, or reference data</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Vendor Data Upload</h1>
+            <p className="text-gray-600 dark:text-gray-400 mt-1">Upload vendor master data, purchase orders, or reference data</p>
           </div>
-          <Link href="/vendors" className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center space-x-2">
+          <Link href="/vendors" className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-2">
             <Users size={16} />
             <span>View Vendors</span>
           </Link>
         </div>
 
         {/* Category Selection */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Select Upload Category</h2>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Select Upload Category</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <button
               onClick={() => { setUploadCategory('vendor-master'); setFile(null); setShowPreview(false); setSummary(null); }}
-              className={`p-4 rounded-xl border-2 transition text-left ${uploadCategory === 'vendor-master' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50'}`}
+              className={`p-4 rounded-xl border-2 transition text-left ${uploadCategory === 'vendor-master' ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' : 'border-gray-200 dark:border-gray-700 hover:border-blue-300 hover:bg-gray-50 dark:hover:bg-gray-800'}`}
             >
-              <div className={`p-2 rounded-lg w-10 h-10 flex items-center justify-center mb-3 ${uploadCategory === 'vendor-master' ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-600'}`}>
+              <div className={`p-2 rounded-lg w-10 h-10 flex items-center justify-center mb-3 ${uploadCategory === 'vendor-master' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'}`}>
                 <Building2 className="w-5 h-5" />
               </div>
-              <h3 className="font-semibold text-gray-900">Vendor Master Data</h3>
-              <p className="text-xs text-gray-500 mt-1">70+ fields including bank, tax, address</p>
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100">Vendor Master Data</h3>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">70+ fields including bank, tax, address</p>
             </button>
 
             <button
               onClick={() => { setUploadCategory('po-details'); setFile(null); setShowPreview(false); setSummary(null); }}
-              className={`p-4 rounded-xl border-2 transition text-left ${uploadCategory === 'po-details' ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-green-300 hover:bg-gray-50'}`}
+              className={`p-4 rounded-xl border-2 transition text-left ${uploadCategory === 'po-details' ? 'border-green-500 bg-green-50 dark:bg-green-900/20' : 'border-gray-200 dark:border-gray-700 hover:border-green-300 hover:bg-gray-50 dark:hover:bg-gray-800'}`}
             >
-              <div className={`p-2 rounded-lg w-10 h-10 flex items-center justify-center mb-3 ${uploadCategory === 'po-details' ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-600'}`}>
+              <div className={`p-2 rounded-lg w-10 h-10 flex items-center justify-center mb-3 ${uploadCategory === 'po-details' ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'}`}>
                 <Package className="w-5 h-5" />
               </div>
-              <h3 className="font-semibold text-gray-900">Purchase Orders</h3>
-              <p className="text-xs text-gray-500 mt-1">PO details with line items & GST</p>
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100">Purchase Orders</h3>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">PO details with line items & GST</p>
             </button>
 
             <button
               onClick={() => { setUploadCategory('tax-codes'); setFile(null); setShowPreview(false); setSummary(null); }}
-              className={`p-4 rounded-xl border-2 transition text-left ${uploadCategory === 'tax-codes' ? 'border-purple-500 bg-purple-50' : 'border-gray-200 hover:border-purple-300 hover:bg-gray-50'}`}
+              className={`p-4 rounded-xl border-2 transition text-left ${uploadCategory === 'tax-codes' ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20' : 'border-gray-200 dark:border-gray-700 hover:border-purple-300 hover:bg-gray-50 dark:hover:bg-gray-800'}`}
             >
-              <div className={`p-2 rounded-lg w-10 h-10 flex items-center justify-center mb-3 ${uploadCategory === 'tax-codes' ? 'bg-purple-100 text-purple-600' : 'bg-gray-100 text-gray-600'}`}>
+              <div className={`p-2 rounded-lg w-10 h-10 flex items-center justify-center mb-3 ${uploadCategory === 'tax-codes' ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'}`}>
                 <Tag className="w-5 h-5" />
               </div>
-              <h3 className="font-semibold text-gray-900">Tax Codes</h3>
-              <p className="text-xs text-gray-500 mt-1">SGST, CGST, IGST mappings</p>
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100">Tax Codes</h3>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">SGST, CGST, IGST mappings</p>
             </button>
 
             <button
               onClick={() => { setUploadCategory('subdivisions'); setFile(null); setShowPreview(false); setSummary(null); }}
-              className={`p-4 rounded-xl border-2 transition text-left ${uploadCategory === 'subdivisions' ? 'border-orange-500 bg-orange-50' : 'border-gray-200 hover:border-orange-300 hover:bg-gray-50'}`}
+              className={`p-4 rounded-xl border-2 transition text-left ${uploadCategory === 'subdivisions' ? 'border-orange-500 bg-orange-50 dark:bg-orange-900/20' : 'border-gray-200 dark:border-gray-700 hover:border-orange-300 hover:bg-gray-50 dark:hover:bg-gray-800'}`}
             >
-              <div className={`p-2 rounded-lg w-10 h-10 flex items-center justify-center mb-3 ${uploadCategory === 'subdivisions' ? 'bg-orange-100 text-orange-600' : 'bg-gray-100 text-gray-600'}`}>
+              <div className={`p-2 rounded-lg w-10 h-10 flex items-center justify-center mb-3 ${uploadCategory === 'subdivisions' ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'}`}>
                 <MapPin className="w-5 h-5" />
               </div>
-              <h3 className="font-semibold text-gray-900">Sub-Divisions</h3>
-              <p className="text-xs text-gray-500 mt-1">Plant codes and locations</p>
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100">Sub-Divisions</h3>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Plant codes and locations</p>
             </button>
           </div>
         </div>
 
         {/* Template Download */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center space-x-3">
               {getCategoryIcon()}
               <div>
-                <p className="text-sm font-medium text-blue-800">Download {getCategoryTitle()} Template</p>
-                <p className="text-xs text-blue-600">{getCategoryDescription()}</p>
+                <p className="text-sm font-medium text-blue-800 dark:text-blue-300">Download {getCategoryTitle()} Template</p>
+                <p className="text-xs text-blue-600 dark:text-blue-400">{getCategoryDescription()}</p>
               </div>
             </div>
-            <button onClick={downloadTemplate} className="px-4 py-2 bg-white text-blue-600 border border-blue-300 rounded-lg hover:bg-blue-50 flex items-center space-x-2 text-sm">
+            <button onClick={downloadTemplate} className="px-4 py-2 bg-white dark:bg-gray-900 text-blue-600 dark:text-blue-400 border border-blue-300 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 flex items-center space-x-2 text-sm">
               <Download size={16} />
               <span>Excel Template</span>
             </button>
@@ -392,11 +392,11 @@ const handleUpload = async () => {
         </div>
 
         {/* Upload Area */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
-          <div className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition ${file ? 'border-green-500 bg-green-50' : 'border-gray-300 hover:border-blue-500 hover:bg-gray-50'}`} onClick={() => fileInputRef.current?.click()}>
-            <Upload className={`w-12 h-12 mx-auto mb-3 ${file ? 'text-green-500' : 'text-gray-400'}`} />
-            <p className="text-sm text-gray-600 mb-1">{file ? file.name : 'Click to select or drag and drop'}</p>
-            <p className="text-xs text-gray-500">Excel files only (.xlsx, .xls) - Max 10MB</p>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
+          <div className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition ${file ? 'border-green-500 bg-green-50 dark:bg-green-900/20' : 'border-gray-300 dark:border-gray-600 hover:border-blue-500 hover:bg-gray-50 dark:hover:bg-gray-800'}`} onClick={() => fileInputRef.current?.click()}>
+            <Upload className={`w-12 h-12 mx-auto mb-3 ${file ? 'text-green-500' : 'text-gray-400 dark:text-gray-500'}`} />
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{file ? file.name : 'Click to select or drag and drop'}</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">Excel files only (.xlsx, .xls) - Max 10MB</p>
             <input ref={fileInputRef} type="file" className="hidden" accept=".xlsx,.xls" onChange={handleFileSelect} />
           </div>
 
@@ -421,28 +421,28 @@ const handleUpload = async () => {
 
         {/* Preview Section */}
         {showPreview && previewHeaders.length > 0 && (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-              <Eye className="w-5 h-5 mr-2 text-gray-500" />
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+              <Eye className="w-5 h-5 mr-2 text-gray-500 dark:text-gray-400" />
               Data Preview (First 5 Rows) - {getCategoryTitle()}
             </h3>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="bg-gray-50">
+                <thead className="bg-gray-50 dark:bg-gray-800">
                   <tr>
                     {previewHeaders.slice(0, 6).map((header, idx) => (
-                      <th key={idx} className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap">{header}</th>
+                      <th key={idx} className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase whitespace-nowrap">{header}</th>
                     ))}
-                    {previewHeaders.length > 6 && <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">... and {previewHeaders.length - 6} more columns</th>}
+                    {previewHeaders.length > 6 && <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">... and {previewHeaders.length - 6} more columns</th>}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200">
+                <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                   {previewData.map((row, rowIdx) => (
                     <tr key={rowIdx}>
                       {previewHeaders.slice(0, 6).map((header, colIdx) => (
-                        <td key={colIdx} className="px-4 py-2 text-sm text-gray-900 whitespace-nowrap">{row[header] || '—'}</td>
+                        <td key={colIdx} className="px-4 py-2 text-sm text-gray-900 dark:text-gray-100 whitespace-nowrap">{row[header] || '—'}</td>
                       ))}
-                      {previewHeaders.length > 6 && <td className="px-4 py-2 text-sm text-gray-500">{previewHeaders.length - 6} more fields</td>}
+                      {previewHeaders.length > 6 && <td className="px-4 py-2 text-sm text-gray-500 dark:text-gray-400">{previewHeaders.length - 6} more fields</td>}
                     </tr>
                   ))}
                 </tbody>
@@ -453,7 +453,7 @@ const handleUpload = async () => {
 
         {/* Error Message */}
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-600 p-4 rounded-lg mb-6 flex items-center space-x-2">
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 p-4 rounded-lg mb-6 flex items-center space-x-2">
             <XCircle size={18} />
             <span>{error}</span>
           </div>
@@ -461,50 +461,50 @@ const handleUpload = async () => {
 
         {/* Summary Report */}
         {summary && (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
               <CheckCircle className="w-5 h-5 mr-2 text-green-500" />
               Upload Summary - {getCategoryTitle()}
             </h3>
             
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-              <div className="bg-blue-50 p-4 rounded-lg">
-                <p className="text-2xl font-bold text-blue-600">{summary.totalRows}</p>
-                <p className="text-sm text-gray-600">Total Rows</p>
+              <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+                <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{summary.totalRows}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Total Rows</p>
               </div>
               {(summary.vendorsCreated !== undefined || summary.created !== undefined) && (
-                <div className="bg-green-50 p-4 rounded-lg">
-                  <p className="text-2xl font-bold text-green-600">{summary.vendorsCreated || summary.created || 0}</p>
-                  <p className="text-sm text-gray-600">Created</p>
+                <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
+                  <p className="text-2xl font-bold text-green-600 dark:text-green-400">{summary.vendorsCreated || summary.created || 0}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Created</p>
                 </div>
               )}
               {(summary.vendorsUpdated !== undefined || summary.updated !== undefined) && (
-                <div className="bg-yellow-50 p-4 rounded-lg">
-                  <p className="text-2xl font-bold text-yellow-600">{summary.vendorsUpdated || summary.updated || 0}</p>
-                  <p className="text-sm text-gray-600">Updated</p>
+                <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg">
+                  <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">{summary.vendorsUpdated || summary.updated || 0}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Updated</p>
                 </div>
               )}
               {summary.purchaseOrders !== undefined && (
-                <div className="bg-purple-50 p-4 rounded-lg">
-                  <p className="text-2xl font-bold text-purple-600">{summary.purchaseOrders}</p>
-                  <p className="text-sm text-gray-600">Purchase Orders</p>
+                <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg">
+                  <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">{summary.purchaseOrders}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Purchase Orders</p>
                 </div>
               )}
               {summary.lineItems !== undefined && (
-                <div className="bg-orange-50 p-4 rounded-lg">
-                  <p className="text-2xl font-bold text-orange-600">{summary.lineItems}</p>
-                  <p className="text-sm text-gray-600">Line Items</p>
+                <div className="bg-orange-50 dark:bg-orange-900/20 p-4 rounded-lg">
+                  <p className="text-2xl font-bold text-orange-600 dark:text-orange-400">{summary.lineItems}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Line Items</p>
                 </div>
               )}
             </div>
 
             {summary.errors && summary.errors.length > 0 && (
-              <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <div className="mt-4 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
                 <div className="flex items-center space-x-2 mb-2">
-                  <AlertCircle size={16} className="text-yellow-600" />
-                  <p className="font-medium text-yellow-800">Warnings ({summary.errors.length})</p>
+                  <AlertCircle size={16} className="text-yellow-600 dark:text-yellow-400" />
+                  <p className="font-medium text-yellow-800 dark:text-yellow-300">Warnings ({summary.errors.length})</p>
                 </div>
-                <ul className="list-disc list-inside text-sm text-yellow-700 max-h-40 overflow-y-auto">
+                <ul className="list-disc list-inside text-sm text-yellow-700 dark:text-yellow-300 max-h-40 overflow-y-auto">
                   {summary.errors.map((err, idx) => (
                     <li key={idx}>{err}</li>
                   ))}
@@ -513,7 +513,7 @@ const handleUpload = async () => {
             )}
 
             <div className="mt-6 flex justify-end space-x-3">
-              <button onClick={() => { setFile(null); setSummary(null); setShowPreview(false); if (fileInputRef.current) fileInputRef.current.value = '' }} className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">Upload Another File</button>
+              <button onClick={() => { setFile(null); setSummary(null); setShowPreview(false); if (fileInputRef.current) fileInputRef.current.value = '' }} className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">Upload Another File</button>
               <Link href={uploadCategory === 'vendor-master' ? '/vendors' : uploadCategory === 'po-details' ? '/procurement/purchase-orders' : '/settings/master-data'} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2">
                 <Database size={16} />
                 <span>View Data</span>

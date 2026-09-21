@@ -198,13 +198,13 @@ export default function ContractDetailPage() {
 
   const getStatusBadge = (status: string) => {
     const statusConfig: Record<string, { color: string, icon: any, label: string }> = {
-      draft: { color: 'bg-gray-100 text-gray-800', icon: FileText, label: 'Draft' },
-      pending_approval: { color: 'bg-yellow-100 text-yellow-800', icon: Clock, label: 'Pending Approval' },
-      pending_signature: { color: 'bg-blue-100 text-blue-800', icon: FileCheck, label: 'Pending Signature' },
-      active: { color: 'bg-green-100 text-green-800', icon: CheckCircle, label: 'Active' },
-      expired: { color: 'bg-gray-100 text-gray-800', icon: AlertCircle, label: 'Expired' },
-      terminated: { color: 'bg-red-100 text-red-800', icon: XCircle, label: 'Terminated' },
-      cancelled: { color: 'bg-red-100 text-red-800', icon: XCircle, label: 'Cancelled' }
+      draft: { color: 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200', icon: FileText, label: 'Draft' },
+      pending_approval: { color: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300', icon: Clock, label: 'Pending Approval' },
+      pending_signature: { color: 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300', icon: FileCheck, label: 'Pending Signature' },
+      active: { color: 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300', icon: CheckCircle, label: 'Active' },
+      expired: { color: 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200', icon: AlertCircle, label: 'Expired' },
+      terminated: { color: 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300', icon: XCircle, label: 'Terminated' },
+      cancelled: { color: 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300', icon: XCircle, label: 'Cancelled' }
     }
     const config = statusConfig[status] || statusConfig.draft
     const Icon = config.icon
@@ -226,11 +226,11 @@ export default function ContractDetailPage() {
   }
 
   const getDaysRemainingColor = () => {
-    if (!contract?.endDate || contract.status !== 'active') return 'text-gray-600'
+    if (!contract?.endDate || contract.status !== 'active') return 'text-gray-600 dark:text-gray-400'
     const days = Math.ceil((new Date(contract.endDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
-    if (days <= 7) return 'text-red-600'
-    if (days <= 30) return 'text-amber-600'
-    return 'text-green-600'
+    if (days <= 7) return 'text-red-600 dark:text-red-400'
+    if (days <= 30) return 'text-amber-600 dark:text-amber-400'
+    return 'text-green-600 dark:text-green-400'
   }
 
   if (loading) {
@@ -246,13 +246,13 @@ export default function ContractDetailPage() {
   if (error || !contract) {
     return (
       <MainLayout>
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-12 text-center">
           <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Error Loading Contract</h3>
-          <p className="text-gray-500 mb-6">{error || 'Contract not found'}</p>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Error Loading Contract</h3>
+          <p className="text-gray-500 dark:text-gray-400 mb-6">{error || 'Contract not found'}</p>
           <Link
             href="/procurement/contracts"
-            className="text-purple-600 hover:text-purple-800 font-medium flex items-center justify-center space-x-2"
+            className="text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 font-medium flex items-center justify-center space-x-2"
           >
             <ArrowLeft size={16} />
             <span>Back to Contracts</span>
@@ -266,25 +266,25 @@ export default function ContractDetailPage() {
     <MainLayout>
       {/* Header */}
       <div className="mb-6">
-        <div className="flex items-center space-x-3 text-sm text-gray-500 mb-4">
-          <Link href="/procurement/contracts" className="hover:text-purple-600">
+        <div className="flex items-center space-x-3 text-sm text-gray-500 dark:text-gray-400 mb-4">
+          <Link href="/procurement/contracts" className="hover:text-purple-600 dark:hover:text-purple-400">
             Contracts
           </Link>
           <span>/</span>
-          <span className="text-gray-900 font-medium">{contract.contractNumber}</span>
+          <span className="text-gray-900 dark:text-gray-100 font-medium">{contract.contractNumber}</span>
         </div>
 
         <div className="flex justify-between items-start">
           <div>
             <div className="flex items-center space-x-3 mb-2">
-              <h1 className="text-2xl font-bold text-gray-900">{contract.title}</h1>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{contract.title}</h1>
               {getStatusBadge(contract.status)}
             </div>
-            <p className="text-gray-600">{contract.contractNumber}</p>
+            <p className="text-gray-600 dark:text-gray-400">{contract.contractNumber}</p>
             {contract.project && (
               <Link 
                 href={`/projects/${contract.projectId}`}
-                className="text-sm text-purple-600 hover:text-purple-800 flex items-center space-x-1 mt-2"
+                className="text-sm text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 flex items-center space-x-1 mt-2"
               >
                 <FileText size={14} />
                 <span>Project: {contract.project.name}</span>
@@ -307,14 +307,14 @@ export default function ContractDetailPage() {
               <>
                 <Link
                   href={`/procurement/contracts/${contract.id}/edit`}
-                  className="px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center space-x-2"
+                  className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-2"
                 >
                   <Edit size={16} />
                   <span>Edit</span>
                 </Link>
                 <button
                   onClick={handleDeleteContract}
-                  className="px-4 py-2 text-red-700 bg-white border border-red-200 rounded-lg hover:bg-red-50 flex items-center space-x-2"
+                  className="px-4 py-2 text-red-700 dark:text-red-300 bg-white dark:bg-gray-900 border border-red-200 dark:border-red-800 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center space-x-2"
                 >
                   <Trash2 size={16} />
                   <span>Delete</span>
@@ -336,43 +336,43 @@ export default function ContractDetailPage() {
 
       {/* Overview Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium text-gray-500">Contract Value</p>
-            <DollarSign className="w-4 h-4 text-gray-400" />
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Contract Value</p>
+            <DollarSign className="w-4 h-4 text-gray-400 dark:text-gray-500" />
           </div>
-          <p className="text-2xl font-bold text-gray-900">
+          <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
             {contract.currency} {Number(contract.value || 0).toLocaleString()}
           </p>
           {contract.quote && (
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
               From Quote: {contract.quote.quoteNumber}
             </p>
           )}
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium text-gray-500">Vendor</p>
-            <Building2 className="w-4 h-4 text-gray-400" />
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Vendor</p>
+            <Building2 className="w-4 h-4 text-gray-400 dark:text-gray-500" />
           </div>
-          <p className="text-lg font-semibold text-gray-900">{contract.vendor.name}</p>
+          <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">{contract.vendor.name}</p>
           {contract.vendor.email && (
-            <p className="text-xs text-gray-500 mt-1 flex items-center">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 flex items-center">
               <Mail size={12} className="mr-1" />
               {contract.vendor.email}
             </p>
           )}
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium text-gray-500">Contract Period</p>
-            <Calendar className="w-4 h-4 text-gray-400" />
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Contract Period</p>
+            <Calendar className="w-4 h-4 text-gray-400 dark:text-gray-500" />
           </div>
           {contract.startDate && contract.endDate ? (
             <>
-              <p className="text-sm font-medium text-gray-900">
+              <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
                 {new Date(contract.startDate).toLocaleDateString()} - {new Date(contract.endDate).toLocaleDateString()}
               </p>
               {contract.status === 'active' && (
@@ -382,45 +382,45 @@ export default function ContractDetailPage() {
               )}
             </>
           ) : (
-            <p className="text-sm text-gray-500">Not specified</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Not specified</p>
           )}
           {contract.autoRenew && (
-            <p className="text-xs text-blue-600 mt-1 flex items-center">
+            <p className="text-xs text-blue-600 dark:text-blue-400 mt-1 flex items-center">
               <Clock size={12} className="mr-1" />
               Auto-renews
             </p>
           )}
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium text-gray-500">Signature Status</p>
-            <FileSignature className="w-4 h-4 text-gray-400" />
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Signature Status</p>
+            <FileSignature className="w-4 h-4 text-gray-400 dark:text-gray-500" />
           </div>
           <div className="space-y-1">
             <div className="flex items-center justify-between">
-              <span className="text-xs text-gray-500">Company:</span>
+              <span className="text-xs text-gray-500 dark:text-gray-400">Company:</span>
               {contract.signedByCompany ? (
-                <span className="text-xs text-green-600 flex items-center">
+                <span className="text-xs text-green-600 dark:text-green-400 flex items-center">
                   <CheckCircle size={12} className="mr-1" />
                   Signed
                 </span>
               ) : (
-                <span className="text-xs text-amber-600 flex items-center">
+                <span className="text-xs text-amber-600 dark:text-amber-400 flex items-center">
                   <Clock size={12} className="mr-1" />
                   Pending
                 </span>
               )}
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-xs text-gray-500">Vendor:</span>
+              <span className="text-xs text-gray-500 dark:text-gray-400">Vendor:</span>
               {contract.signedByVendor ? (
-                <span className="text-xs text-green-600 flex items-center">
+                <span className="text-xs text-green-600 dark:text-green-400 flex items-center">
                   <CheckCircle size={12} className="mr-1" />
                   Signed
                 </span>
               ) : (
-                <span className="text-xs text-amber-600 flex items-center">
+                <span className="text-xs text-amber-600 dark:text-amber-400 flex items-center">
                   <Clock size={12} className="mr-1" />
                   Pending
                 </span>
@@ -431,14 +431,14 @@ export default function ContractDetailPage() {
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-gray-200 mb-6">
+      <div className="border-b border-gray-200 dark:border-gray-700 mb-6">
         <nav className="flex space-x-8">
           <button
             onClick={() => setActiveTab('overview')}
             className={`py-4 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'overview'
-                ? 'border-purple-600 text-purple-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                ? 'border-purple-600 text-purple-600 dark:text-purple-400'
+                : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
             }`}
           >
             Overview
@@ -447,8 +447,8 @@ export default function ContractDetailPage() {
             onClick={() => setActiveTab('terms')}
             className={`py-4 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'terms'
-                ? 'border-purple-600 text-purple-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                ? 'border-purple-600 text-purple-600 dark:text-purple-400'
+                : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
             }`}
           >
             Terms & Conditions
@@ -457,13 +457,13 @@ export default function ContractDetailPage() {
             onClick={() => setActiveTab('amendments')}
             className={`py-4 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'amendments'
-                ? 'border-purple-600 text-purple-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                ? 'border-purple-600 text-purple-600 dark:text-purple-400'
+                : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
             }`}
           >
             Amendments
             {contract.amendments.length > 0 && (
-              <span className="ml-2 px-2 py-0.5 text-xs bg-purple-100 text-purple-800 rounded-full">
+              <span className="ml-2 px-2 py-0.5 text-xs bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 rounded-full">
                 {contract.amendments.length}
               </span>
             )}
@@ -472,8 +472,8 @@ export default function ContractDetailPage() {
             onClick={() => setActiveTab('related')}
             className={`py-4 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'related'
-                ? 'border-purple-600 text-purple-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                ? 'border-purple-600 text-purple-600 dark:text-purple-400'
+                : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
             }`}
           >
             Related Documents
@@ -490,19 +490,19 @@ export default function ContractDetailPage() {
             <>
               {/* Description */}
               {contract.description && (
-                <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                  <h2 className="text-lg font-semibold text-gray-900 mb-4">Description</h2>
-                  <p className="text-gray-700 whitespace-pre-wrap">{contract.description}</p>
+                <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Description</h2>
+                  <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{contract.description}</p>
                 </div>
               )}
 
               {/* Payment Terms */}
               {contract.paymentTerms && (
-                <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                  <h2 className="text-lg font-semibold text-gray-900 mb-4">Payment Terms</h2>
-                  <p className="text-gray-700 whitespace-pre-wrap">{contract.paymentTerms}</p>
+                <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Payment Terms</h2>
+                  <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{contract.paymentTerms}</p>
                   {contract.billingCycle && (
-                    <p className="text-sm text-gray-600 mt-2">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
                       <span className="font-medium">Billing Cycle:</span> {contract.billingCycle}
                     </p>
                   )}
@@ -511,19 +511,19 @@ export default function ContractDetailPage() {
 
               {/* Renewal Information */}
               {contract.autoRenew && (
-                <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                  <h2 className="text-lg font-semibold text-gray-900 mb-4">Renewal Information</h2>
+                <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Renewal Information</h2>
                   <div className="space-y-2">
-                    <p className="text-sm text-gray-700">
+                    <p className="text-sm text-gray-700 dark:text-gray-300">
                       <span className="font-medium">Auto-renewal:</span> Enabled
                     </p>
                     {contract.renewalDate && (
-                      <p className="text-sm text-gray-700">
+                      <p className="text-sm text-gray-700 dark:text-gray-300">
                         <span className="font-medium">Next Renewal Date:</span> {new Date(contract.renewalDate).toLocaleDateString()}
                       </p>
                     )}
                     {contract.renewalTerms && (
-                      <p className="text-sm text-gray-700 mt-2">
+                      <p className="text-sm text-gray-700 dark:text-gray-300 mt-2">
                         <span className="font-medium">Renewal Terms:</span><br />
                         {contract.renewalTerms}
                       </p>
@@ -536,21 +536,21 @@ export default function ContractDetailPage() {
 
           {/* Terms Tab */}
           {activeTab === 'terms' && (
-            <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Terms & Conditions</h2>
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Terms & Conditions</h2>
               {contract.terms ? (
                 <div className="prose max-w-none">
-                  <p className="text-gray-700 whitespace-pre-wrap">{contract.terms}</p>
+                  <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{contract.terms}</p>
                 </div>
               ) : (
-                <p className="text-gray-500">No terms and conditions specified.</p>
+                <p className="text-gray-500 dark:text-gray-400">No terms and conditions specified.</p>
               )}
 
               {contract.specialTerms && (
                 <>
-                  <h3 className="text-md font-semibold text-gray-900 mt-6 mb-3">Special Terms</h3>
+                  <h3 className="text-md font-semibold text-gray-900 dark:text-gray-100 mt-6 mb-3">Special Terms</h3>
                   <div className="prose max-w-none">
-                    <p className="text-gray-700 whitespace-pre-wrap">{contract.specialTerms}</p>
+                    <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{contract.specialTerms}</p>
                   </div>
                 </>
               )}
@@ -559,13 +559,13 @@ export default function ContractDetailPage() {
 
           {/* Amendments Tab */}
           {activeTab === 'amendments' && (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-              <div className="px-6 py-4 border-b bg-gray-50 flex items-center justify-between">
-                <h2 className="text-lg font-semibold text-gray-900">Contract Amendments</h2>
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+              <div className="px-6 py-4 border-b bg-gray-50 dark:bg-gray-800 flex items-center justify-between">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Contract Amendments</h2>
                 {contract.status === 'active' && (
                   <Link
                     href={`/procurement/contracts/${contract.id}/amendments/new`}
-                    className="text-sm text-purple-600 hover:text-purple-800 flex items-center space-x-1"
+                    className="text-sm text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 flex items-center space-x-1"
                   >
                     <Plus size={16} />
                     <span>New Amendment</span>
@@ -574,26 +574,26 @@ export default function ContractDetailPage() {
               </div>
               {contract.amendments.length === 0 ? (
                 <div className="p-12 text-center">
-                  <History className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-                  <p className="text-gray-500">No amendments yet</p>
+                  <History className="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-3" />
+                  <p className="text-gray-500 dark:text-gray-400">No amendments yet</p>
                 </div>
               ) : (
-                <div className="divide-y divide-gray-100">
+                <div className="divide-y divide-gray-100 dark:divide-gray-800">
                   {contract.amendments.map((amendment) => (
-                    <div key={amendment.id} className="p-6 hover:bg-gray-50">
+                    <div key={amendment.id} className="p-6 hover:bg-gray-50 dark:hover:bg-gray-800">
                       <div className="flex items-start justify-between mb-2">
                         <div>
-                          <h3 className="font-medium text-gray-900">{amendment.title}</h3>
-                          <p className="text-xs text-gray-500 mt-1">{amendment.amendmentNumber}</p>
+                          <h3 className="font-medium text-gray-900 dark:text-gray-100">{amendment.title}</h3>
+                          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{amendment.amendmentNumber}</p>
                         </div>
-                        <span className="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">
+                        <span className="px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded-full">
                           {amendment.status}
                         </span>
                       </div>
                       {amendment.description && (
-                        <p className="text-sm text-gray-600 mt-2">{amendment.description}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">{amendment.description}</p>
                       )}
-                      <div className="flex items-center space-x-4 mt-3 text-xs text-gray-500">
+                      <div className="flex items-center space-x-4 mt-3 text-xs text-gray-500 dark:text-gray-400">
                         {amendment.valueChange && (
                           <span>
                             Value Change: {amendment.valueChangeType === 'increase' ? '+' : '-'}
@@ -614,30 +614,30 @@ export default function ContractDetailPage() {
             <div className="space-y-6">
               {/* Purchase Orders */}
               {contract.purchaseOrders && contract.purchaseOrders.length > 0 && (
-                <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                  <div className="px-6 py-4 border-b bg-gray-50">
-                    <h2 className="text-lg font-semibold text-gray-900">Purchase Orders</h2>
+                <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+                  <div className="px-6 py-4 border-b bg-gray-50 dark:bg-gray-800">
+                    <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Purchase Orders</h2>
                   </div>
-                  <div className="divide-y divide-gray-100">
+                  <div className="divide-y divide-gray-100 dark:divide-gray-800">
                     {contract.purchaseOrders.map((po: any) => (
                       <Link
                         key={po.id}
                         href={`/procurement/purchase-orders/${po.id}`}
-                        className="block p-4 hover:bg-gray-50"
+                        className="block p-4 hover:bg-gray-50 dark:hover:bg-gray-800"
                       >
                         <div className="flex items-center justify-between">
                           <div>
-                            <p className="font-medium text-gray-900">{po.poNumber}</p>
-                            <p className="text-sm text-gray-500">{po.title}</p>
+                            <p className="font-medium text-gray-900 dark:text-gray-100">{po.poNumber}</p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">{po.title}</p>
                           </div>
                           <div className="text-right">
-                            <p className="font-semibold text-gray-900">
+                            <p className="font-semibold text-gray-900 dark:text-gray-100">
                               {po.currency} {Number(po.total).toLocaleString()}
                             </p>
                             <span className={`text-xs px-2 py-1 rounded-full ${
-                              po.status === 'completed' ? 'bg-green-100 text-green-800' :
-                              po.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                              'bg-gray-100 text-gray-800'
+                              po.status === 'completed' ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300' :
+                              po.status === 'pending' ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300' :
+                              'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200'
                             }`}>
                               {po.status}
                             </span>
@@ -651,26 +651,26 @@ export default function ContractDetailPage() {
 
               {/* Work Orders */}
               {contract.workOrders && contract.workOrders.length > 0 && (
-                <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                  <div className="px-6 py-4 border-b bg-gray-50">
-                    <h2 className="text-lg font-semibold text-gray-900">Work Orders</h2>
+                <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+                  <div className="px-6 py-4 border-b bg-gray-50 dark:bg-gray-800">
+                    <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Work Orders</h2>
                   </div>
-                  <div className="divide-y divide-gray-100">
+                  <div className="divide-y divide-gray-100 dark:divide-gray-800">
                     {contract.workOrders.map((wo: any) => (
                       <Link
                         key={wo.id}
                         href={`/work-orders/${wo.id}`}
-                        className="block p-4 hover:bg-gray-50"
+                        className="block p-4 hover:bg-gray-50 dark:hover:bg-gray-800"
                       >
                         <div className="flex items-center justify-between">
                           <div>
-                            <p className="font-medium text-gray-900">{wo.workOrderNumber}</p>
-                            <p className="text-sm text-gray-500">{wo.title}</p>
+                            <p className="font-medium text-gray-900 dark:text-gray-100">{wo.workOrderNumber}</p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">{wo.title}</p>
                           </div>
                           <span className={`text-xs px-2 py-1 rounded-full ${
-                            wo.status === 'completed' ? 'bg-green-100 text-green-800' :
-                            wo.status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
-                            'bg-gray-100 text-gray-800'
+                            wo.status === 'completed' ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300' :
+                            wo.status === 'in_progress' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300' :
+                            'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200'
                           }`}>
                             {wo.status}
                           </span>
@@ -683,30 +683,30 @@ export default function ContractDetailPage() {
 
               {/* Invoices */}
               {contract.invoices && contract.invoices.length > 0 && (
-                <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                  <div className="px-6 py-4 border-b bg-gray-50">
-                    <h2 className="text-lg font-semibold text-gray-900">Invoices</h2>
+                <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+                  <div className="px-6 py-4 border-b bg-gray-50 dark:bg-gray-800">
+                    <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Invoices</h2>
                   </div>
-                  <div className="divide-y divide-gray-100">
+                  <div className="divide-y divide-gray-100 dark:divide-gray-800">
                     {contract.invoices.map((invoice: any) => (
                       <Link
                         key={invoice.id}
                         href={`/invoices/${invoice.id}`}
-                        className="block p-4 hover:bg-gray-50"
+                        className="block p-4 hover:bg-gray-50 dark:hover:bg-gray-800"
                       >
                         <div className="flex items-center justify-between">
                           <div>
-                            <p className="font-medium text-gray-900">{invoice.invoiceNumber}</p>
-                            <p className="text-sm text-gray-500">{new Date(invoice.issueDate).toLocaleDateString()}</p>
+                            <p className="font-medium text-gray-900 dark:text-gray-100">{invoice.invoiceNumber}</p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">{new Date(invoice.issueDate).toLocaleDateString()}</p>
                           </div>
                           <div className="text-right">
-                            <p className="font-semibold text-gray-900">
+                            <p className="font-semibold text-gray-900 dark:text-gray-100">
                               {invoice.currency} {Number(invoice.total).toLocaleString()}
                             </p>
                             <span className={`text-xs px-2 py-1 rounded-full ${
-                              invoice.status === 'paid' ? 'bg-green-100 text-green-800' :
-                              invoice.status === 'overdue' ? 'bg-red-100 text-red-800' :
-                              'bg-yellow-100 text-yellow-800'
+                              invoice.status === 'paid' ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300' :
+                              invoice.status === 'overdue' ? 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300' :
+                              'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300'
                             }`}>
                               {invoice.status}
                             </span>
@@ -724,38 +724,38 @@ export default function ContractDetailPage() {
         {/* Sidebar */}
         <div className="space-y-6">
           {/* Vendor Information */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="px-6 py-4 border-b bg-gray-50">
-              <h2 className="text-lg font-semibold text-gray-900">Vendor Information</h2>
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+            <div className="px-6 py-4 border-b bg-gray-50 dark:bg-gray-800">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Vendor Information</h2>
             </div>
             <div className="p-6">
               <div className="space-y-3">
                 <div className="flex items-start space-x-3">
-                  <Building2 size={16} className="text-gray-400 mt-0.5" />
+                  <Building2 size={16} className="text-gray-400 dark:text-gray-500 mt-0.5" />
                   <div>
-                    <p className="text-sm font-medium text-gray-900">{contract.vendor.name}</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{contract.vendor.name}</p>
                   </div>
                 </div>
                 {contract.vendor.email && (
                   <div className="flex items-start space-x-3">
-                    <Mail size={16} className="text-gray-400 mt-0.5" />
-                    <a href={`mailto:${contract.vendor.email}`} className="text-sm text-purple-600 hover:text-purple-800">
+                    <Mail size={16} className="text-gray-400 dark:text-gray-500 mt-0.5" />
+                    <a href={`mailto:${contract.vendor.email}`} className="text-sm text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300">
                       {contract.vendor.email}
                     </a>
                   </div>
                 )}
                 {contract.vendor.phone && (
                   <div className="flex items-start space-x-3">
-                    <Phone size={16} className="text-gray-400 mt-0.5" />
-                    <a href={`tel:${contract.vendor.phone}`} className="text-sm text-gray-900">
+                    <Phone size={16} className="text-gray-400 dark:text-gray-500 mt-0.5" />
+                    <a href={`tel:${contract.vendor.phone}`} className="text-sm text-gray-900 dark:text-gray-100">
                       {contract.vendor.phone}
                     </a>
                   </div>
                 )}
                 {(contract.vendor.address || contract.vendor.city) && (
                   <div className="flex items-start space-x-3">
-                    <MapPin size={16} className="text-gray-400 mt-0.5" />
-                    <div className="text-sm text-gray-900">
+                    <MapPin size={16} className="text-gray-400 dark:text-gray-500 mt-0.5" />
+                    <div className="text-sm text-gray-900 dark:text-gray-100">
                       {contract.vendor.address && <div>{contract.vendor.address}</div>}
                       {(contract.vendor.city || contract.vendor.state) && (
                         <div>
@@ -771,34 +771,34 @@ export default function ContractDetailPage() {
           </div>
 
           {/* Contract Details */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="px-6 py-4 border-b bg-gray-50">
-              <h2 className="text-lg font-semibold text-gray-900">Contract Details</h2>
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+            <div className="px-6 py-4 border-b bg-gray-50 dark:bg-gray-800">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Contract Details</h2>
             </div>
             <div className="p-6">
               <dl className="space-y-3">
                 <div className="flex justify-between">
-                  <dt className="text-xs text-gray-500">Type</dt>
-                  <dd className="text-sm font-medium text-gray-900 capitalize">{contract.type.replace('_', ' ')}</dd>
+                  <dt className="text-xs text-gray-500 dark:text-gray-400">Type</dt>
+                  <dd className="text-sm font-medium text-gray-900 dark:text-gray-100 capitalize">{contract.type.replace('_', ' ')}</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-xs text-gray-500">Created By</dt>
-                  <dd className="text-sm text-gray-900">{contract.createdBy.name || contract.createdBy.email}</dd>
+                  <dt className="text-xs text-gray-500 dark:text-gray-400">Created By</dt>
+                  <dd className="text-sm text-gray-900 dark:text-gray-100">{contract.createdBy.name || contract.createdBy.email}</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-xs text-gray-500">Created On</dt>
-                  <dd className="text-sm text-gray-900">{new Date(contract.createdAt).toLocaleDateString()}</dd>
+                  <dt className="text-xs text-gray-500 dark:text-gray-400">Created On</dt>
+                  <dd className="text-sm text-gray-900 dark:text-gray-100">{new Date(contract.createdAt).toLocaleDateString()}</dd>
                 </div>
                 {contract.approvedBy && (
                   <div className="flex justify-between">
-                    <dt className="text-xs text-gray-500">Approved By</dt>
-                    <dd className="text-sm text-gray-900">{contract.approvedBy.name || contract.approvedBy.email}</dd>
+                    <dt className="text-xs text-gray-500 dark:text-gray-400">Approved By</dt>
+                    <dd className="text-sm text-gray-900 dark:text-gray-100">{contract.approvedBy.name || contract.approvedBy.email}</dd>
                   </div>
                 )}
                 {contract.approvedAt && (
                   <div className="flex justify-between">
-                    <dt className="text-xs text-gray-500">Approved On</dt>
-                    <dd className="text-sm text-gray-900">{new Date(contract.approvedAt).toLocaleDateString()}</dd>
+                    <dt className="text-xs text-gray-500 dark:text-gray-400">Approved On</dt>
+                    <dd className="text-sm text-gray-900 dark:text-gray-100">{new Date(contract.approvedAt).toLocaleDateString()}</dd>
                   </div>
                 )}
               </dl>
@@ -807,16 +807,16 @@ export default function ContractDetailPage() {
 
           {/* Document */}
           {contract.documentUrl && (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-              <div className="px-6 py-4 border-b bg-gray-50">
-                <h2 className="text-lg font-semibold text-gray-900">Contract Document</h2>
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+              <div className="px-6 py-4 border-b bg-gray-50 dark:bg-gray-800">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Contract Document</h2>
               </div>
               <div className="p-6">
                 <a
                   href={contract.documentUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center space-x-2 p-3 text-sm text-purple-600 hover:bg-purple-50 rounded-lg border border-purple-200"
+                  className="flex items-center space-x-2 p-3 text-sm text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800"
                 >
                   <FileText size={16} />
                   <span>View Contract Document</span>

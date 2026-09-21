@@ -134,10 +134,10 @@ const fetchProfile = async () => {
 
   const getRoleBadgeColor = (role: string) => {
     const colors: Record<string, string> = {
-      super_admin: 'bg-purple-100 text-purple-800',
-      admin: 'bg-red-100 text-red-800',
-      manager: 'bg-blue-100 text-blue-800',
-      member: 'bg-gray-100 text-gray-800'
+      super_admin: 'bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300',
+      admin: 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300',
+      manager: 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300',
+      member: 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200'
     }
     return colors[role] || colors.member
   }
@@ -146,7 +146,7 @@ const fetchProfile = async () => {
     return (
       <MainLayout>
         <div className="flex items-center justify-center h-64">
-          <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+          <Loader2 className="w-8 h-8 text-blue-600 dark:text-blue-400 animate-spin" />
         </div>
       </MainLayout>
     )
@@ -156,19 +156,19 @@ const fetchProfile = async () => {
     <MainLayout>
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">My Profile</h1>
-        <p className="text-gray-600 mt-1">Manage your personal information and preferences</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">My Profile</h1>
+        <p className="text-gray-600 dark:text-gray-400 mt-1">Manage your personal information and preferences</p>
       </div>
 
       {error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-center space-x-2">
+        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 rounded-lg flex items-center space-x-2">
           <AlertCircle size={16} />
           <span>{error}</span>
         </div>
       )}
 
       {success && (
-        <div className="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg flex items-center space-x-2">
+        <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-300 rounded-lg flex items-center space-x-2">
           <CheckCircle size={16} />
           <span>{success}</span>
         </div>
@@ -177,9 +177,9 @@ const fetchProfile = async () => {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Sidebar */}
         <div className="lg:col-span-1">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
             {/* Profile Summary */}
-            <div className="p-6 text-center border-b border-gray-200">
+            <div className="p-6 text-center border-b border-gray-200 dark:border-gray-700">
               <div className="relative inline-block">
                 {profile?.avatarUrl ? (
                   <img
@@ -192,12 +192,12 @@ const fetchProfile = async () => {
                     {getInitials()}
                   </div>
                 )}
-                <button className="absolute bottom-0 right-0 p-1.5 bg-white rounded-full border border-gray-300 shadow-sm hover:bg-gray-50">
-                  <Camera size={14} className="text-gray-600" />
+                <button className="absolute bottom-0 right-0 p-1.5 bg-white dark:bg-gray-900 rounded-full border border-gray-300 dark:border-gray-600 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-800">
+                  <Camera size={14} className="text-gray-600 dark:text-gray-400" />
                 </button>
               </div>
-              <h2 className="text-xl font-semibold text-gray-900 mt-4">{profile?.name}</h2>
-              <p className="text-sm text-gray-500 mt-1">{profile?.title || 'No title'}</p>
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mt-4">{profile?.name}</h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{profile?.title || 'No title'}</p>
               <div className="mt-3">
                 <span className={`px-3 py-1 text-xs font-medium rounded-full ${getRoleBadgeColor(profile?.role || 'member')}`}>
                   {profile?.role?.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') || 'Member'}
@@ -210,7 +210,7 @@ const fetchProfile = async () => {
               <button
                 onClick={() => setActiveTab('profile')}
                 className={`w-full flex items-center space-x-3 px-3 py-2 text-sm rounded-lg transition-colors ${
-                  activeTab === 'profile' ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-100'
+                  activeTab === 'profile' ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                 }`}
               >
                 <User size={18} />
@@ -219,7 +219,7 @@ const fetchProfile = async () => {
               <button
                 onClick={() => setActiveTab('security')}
                 className={`w-full flex items-center space-x-3 px-3 py-2 text-sm rounded-lg transition-colors ${
-                  activeTab === 'security' ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-100'
+                  activeTab === 'security' ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                 }`}
               >
                 <Shield size={18} />
@@ -228,7 +228,7 @@ const fetchProfile = async () => {
               <button
                 onClick={() => setActiveTab('notifications')}
                 className={`w-full flex items-center space-x-3 px-3 py-2 text-sm rounded-lg transition-colors ${
-                  activeTab === 'notifications' ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-100'
+                  activeTab === 'notifications' ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                 }`}
               >
                 <Bell size={18} />
@@ -237,7 +237,7 @@ const fetchProfile = async () => {
               <button
                 onClick={() => setActiveTab('preferences')}
                 className={`w-full flex items-center space-x-3 px-3 py-2 text-sm rounded-lg transition-colors ${
-                  activeTab === 'preferences' ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-100'
+                  activeTab === 'preferences' ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                 }`}
               >
                 <Globe size={18} />
@@ -250,13 +250,13 @@ const fetchProfile = async () => {
         {/* Main Content */}
         <div className="lg:col-span-3">
           {activeTab === 'profile' && (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-              <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
-                <h2 className="text-lg font-semibold text-gray-900">Profile Information</h2>
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 flex items-center justify-between">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Profile Information</h2>
                 {!isEditing ? (
                   <button
                     onClick={() => setIsEditing(true)}
-                    className="px-3 py-1.5 text-sm text-blue-600 border border-blue-200 rounded-lg hover:bg-blue-50 flex items-center space-x-1"
+                    className="px-3 py-1.5 text-sm text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 flex items-center space-x-1"
                   >
                     <Edit size={14} />
                     <span>Edit Profile</span>
@@ -265,7 +265,7 @@ const fetchProfile = async () => {
                   <div className="flex items-center space-x-2">
                     <button
                       onClick={() => setIsEditing(false)}
-                      className="px-3 py-1.5 text-sm text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center space-x-1"
+                      className="px-3 py-1.5 text-sm text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-1"
                     >
                       <X size={14} />
                       <span>Cancel</span>
@@ -286,169 +286,169 @@ const fetchProfile = async () => {
                 <div className="space-y-6">
                   {/* Basic Info */}
                   <div>
-                    <h3 className="text-sm font-medium text-gray-700 mb-4">Basic Information</h3>
+                    <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">Basic Information</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-xs text-gray-500 mb-1">Full Name</label>
+                        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Full Name</label>
                         {isEditing ? (
                           <input
                             type="text"
                             name="name"
                             value={formData.name}
                             onChange={handleChange}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
                             placeholder="Enter your full name"
                           />
                         ) : (
-                          <p className="text-sm text-gray-900">{profile?.name || '—'}</p>
+                          <p className="text-sm text-gray-900 dark:text-gray-100">{profile?.name || '—'}</p>
                         )}
                       </div>
                      {/* Email Field - Add placeholder */}
 <div>
-  <label className="block text-xs text-gray-500 mb-1">Email Address</label>
+  <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Email Address</label>
   {isEditing ? (
     <div className="relative">
-      <Mail size={14} className="absolute left-3 top-3 text-gray-400" />
+      <Mail size={14} className="absolute left-3 top-3 text-gray-400 dark:text-gray-500" />
       <input
         type="email"
         name="email"
         value={formData.email}
         onChange={handleChange}
-        className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500"
+        className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
         placeholder="your.email@company.com"
       />
     </div>
   ) : (
     <div className="flex items-center space-x-2">
-      <Mail size={14} className="text-gray-400" />
-      <p className="text-sm text-gray-900">{profile?.email}</p>
+      <Mail size={14} className="text-gray-400 dark:text-gray-500" />
+      <p className="text-sm text-gray-900 dark:text-gray-100">{profile?.email}</p>
     </div>
   )}
 </div>
                       <div>
-                        <label className="block text-xs text-gray-500 mb-1">First Name</label>
+                        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">First Name</label>
                         {isEditing ? (
                           <input
                             type="text"
                             name="firstName"
                             value={formData.firstName}
                             onChange={handleChange}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
                             placeholder="Enter your first name"
                           />
                         ) : (
-                          <p className="text-sm text-gray-900">{profile?.firstName || '—'}</p>
+                          <p className="text-sm text-gray-900 dark:text-gray-100">{profile?.firstName || '—'}</p>
                         )}
                       </div>
                       <div>
-                        <label className="block text-xs text-gray-500 mb-1">Last Name</label>
+                        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Last Name</label>
                         {isEditing ? (
                           <input
                             type="text"
                             name="lastName"
                             value={formData.lastName}
                             onChange={handleChange}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
                             placeholder="Enter your last name"
                           />
                         ) : (
-                          <p className="text-sm text-gray-900">{profile?.lastName || '—'}</p>
+                          <p className="text-sm text-gray-900 dark:text-gray-100">{profile?.lastName || '—'}</p>
                         )}
                       </div>
                     </div>
                   </div>
 
                   {/* Work Info */}
-                  <div className="pt-4 border-t border-gray-200">
-                    <h3 className="text-sm font-medium text-gray-700 mb-4">Work Information</h3>
+                  <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">Work Information</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-xs text-gray-500 mb-1">Job Title</label>
+                        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Job Title</label>
                         {isEditing ? (
                           <input
                             type="text"
                             name="title"
                             value={formData.title}
                             onChange={handleChange}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
                             placeholder="e.g., Project Manager"
                           />
                         ) : (
-                          <p className="text-sm text-gray-900">{profile?.title || '—'}</p>
+                          <p className="text-sm text-gray-900 dark:text-gray-100">{profile?.title || '—'}</p>
                         )}
                       </div>
                       <div>
-                        <label className="block text-xs text-gray-500 mb-1">Department</label>
+                        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Department</label>
                         {isEditing ? (
                           <input
                             type="text"
                             name="department"
                             value={formData.department}
                             onChange={handleChange}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
                             placeholder="e.g., Engineering"
                           />
                         ) : (
-                          <p className="text-sm text-gray-900">{profile?.department || '—'}</p>
+                          <p className="text-sm text-gray-900 dark:text-gray-100">{profile?.department || '—'}</p>
                         )}
                       </div>
                       <div>
-                        <label className="block text-xs text-gray-500 mb-1">Phone Number</label>
+                        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Phone Number</label>
                         {isEditing ? (
                           <input
                             type="tel"
                             name="phone"
                             value={formData.phone}
                             onChange={handleChange}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
                             placeholder="+1 (555) 123-4567"
                           />
                         ) : (
                           <div className="flex items-center space-x-2">
-                            <Phone size={14} className="text-gray-400" />
-                            <p className="text-sm text-gray-900">{profile?.phone || '—'}</p>
+                            <Phone size={14} className="text-gray-400 dark:text-gray-500" />
+                            <p className="text-sm text-gray-900 dark:text-gray-100">{profile?.phone || '—'}</p>
                           </div>
                         )}
                       </div>
                       <div>
-                        <label className="block text-xs text-gray-500 mb-1">Company</label>
+                        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Company</label>
                         <div className="flex items-center space-x-2">
-                          <Building2 size={14} className="text-gray-400" />
-                          <p className="text-sm text-gray-900">{profile?.company?.name || '—'}</p>
+                          <Building2 size={14} className="text-gray-400 dark:text-gray-500" />
+                          <p className="text-sm text-gray-900 dark:text-gray-100">{profile?.company?.name || '—'}</p>
                         </div>
                       </div>
                     </div>
                   </div>
 
                   {/* Account Info */}
-                  <div className="pt-4 border-t border-gray-200">
-                    <h3 className="text-sm font-medium text-gray-700 mb-4">Account Information</h3>
+                  <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">Account Information</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-xs text-gray-500 mb-1">Member Since</label>
+                        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Member Since</label>
                         <div className="flex items-center space-x-2">
-                          <Calendar size={14} className="text-gray-400" />
-                          <p className="text-sm text-gray-900">
+                          <Calendar size={14} className="text-gray-400 dark:text-gray-500" />
+                          <p className="text-sm text-gray-900 dark:text-gray-100">
                             {profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString() : '—'}
                           </p>
                         </div>
                       </div>
                       <div>
-                        <label className="block text-xs text-gray-500 mb-1">Last Login</label>
+                        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Last Login</label>
                         <div className="flex items-center space-x-2">
-                          <Clock size={14} className="text-gray-400" />
-                          <p className="text-sm text-gray-900">
+                          <Clock size={14} className="text-gray-400 dark:text-gray-500" />
+                          <p className="text-sm text-gray-900 dark:text-gray-100">
                             {profile?.lastLoginAt ? new Date(profile.lastLoginAt).toLocaleString() : '—'}
                           </p>
                         </div>
                       </div>
                       <div>
-                        <label className="block text-xs text-gray-500 mb-1">User ID</label>
-                        <p className="text-sm font-mono text-gray-500">{profile?.id}</p>
+                        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">User ID</label>
+                        <p className="text-sm font-mono text-gray-500 dark:text-gray-400">{profile?.id}</p>
                       </div>
                       <div>
-                        <label className="block text-xs text-gray-500 mb-1">Role</label>
-                        <p className="text-sm text-gray-900 capitalize">{profile?.role}</p>
+                        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Role</label>
+                        <p className="text-sm text-gray-900 dark:text-gray-100 capitalize">{profile?.role}</p>
                       </div>
                     </div>
                   </div>
@@ -458,36 +458,36 @@ const fetchProfile = async () => {
           )}
 
           {activeTab === 'security' && (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-              <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                <h2 className="text-lg font-semibold text-gray-900">Security Settings</h2>
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Security Settings</h2>
               </div>
               <div className="p-6 space-y-6">
                 {/* Password Change */}
                 <div>
-                  <h3 className="text-sm font-medium text-gray-700 mb-4">Change Password</h3>
+                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">Change Password</h3>
                   <div className="space-y-4 max-w-md">
                     <div>
-                      <label className="block text-xs text-gray-500 mb-1">Current Password</label>
+                      <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Current Password</label>
                       <input
                         type="password"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
                         placeholder="Enter current password"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs text-gray-500 mb-1">New Password</label>
+                      <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">New Password</label>
                       <input
                         type="password"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
                         placeholder="Enter new password"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs text-gray-500 mb-1">Confirm New Password</label>
+                      <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Confirm New Password</label>
                       <input
                         type="password"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
                         placeholder="Confirm new password"
                       />
                     </div>
@@ -498,32 +498,32 @@ const fetchProfile = async () => {
                 </div>
 
                 {/* Two-Factor Authentication */}
-                <div className="pt-4 border-t border-gray-200">
-                  <h3 className="text-sm font-medium text-gray-700 mb-4">Two-Factor Authentication</h3>
-                  <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">Two-Factor Authentication</h3>
+                  <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
                     <div className="flex items-start space-x-3">
-                      <Lock size={20} className="text-gray-400 mt-0.5" />
+                      <Lock size={20} className="text-gray-400 dark:text-gray-500 mt-0.5" />
                       <div>
-                        <p className="font-medium text-gray-900">Two-factor authentication</p>
-                        <p className="text-sm text-gray-500">Add an extra layer of security to your account</p>
+                        <p className="font-medium text-gray-900 dark:text-gray-100">Two-factor authentication</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">Add an extra layer of security to your account</p>
                       </div>
                     </div>
-                    <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 text-sm">
+                    <button className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 text-sm">
                       Enable
                     </button>
                   </div>
                 </div>
 
                 {/* Sessions */}
-                <div className="pt-4 border-t border-gray-200">
-                  <h3 className="text-sm font-medium text-gray-700 mb-4">Active Sessions</h3>
+                <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">Active Sessions</h3>
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                       <div>
-                        <p className="font-medium text-gray-900">Current Session</p>
-                        <p className="text-sm text-gray-500">Chrome on macOS • Now</p>
+                        <p className="font-medium text-gray-900 dark:text-gray-100">Current Session</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">Chrome on macOS • Now</p>
                       </div>
-                      <span className="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">Active</span>
+                      <span className="px-2 py-1 text-xs bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 rounded-full">Active</span>
                     </div>
                   </div>
                 </div>
@@ -532,42 +532,42 @@ const fetchProfile = async () => {
           )}
 
           {activeTab === 'notifications' && (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-              <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                <h2 className="text-lg font-semibold text-gray-900">Notification Preferences</h2>
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Notification Preferences</h2>
               </div>
               <div className="p-6 space-y-4">
-                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
                   <div>
-                    <p className="font-medium text-gray-900">Email Notifications</p>
-                    <p className="text-sm text-gray-500">Receive updates via email</p>
+                    <p className="font-medium text-gray-900 dark:text-gray-100">Email Notifications</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Receive updates via email</p>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" className="sr-only peer" defaultChecked />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                    <div className="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white dark:bg-gray-900 after:border-gray-300 dark:border-gray-600 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                   </label>
                 </div>
 
-                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
                   <div>
-                    <p className="font-medium text-gray-900">Push Notifications</p>
-                    <p className="text-sm text-gray-500">Receive in-app notifications</p>
+                    <p className="font-medium text-gray-900 dark:text-gray-100">Push Notifications</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Receive in-app notifications</p>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" className="sr-only peer" defaultChecked />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                    <div className="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white dark:bg-gray-900 after:border-gray-300 dark:border-gray-600 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                   </label>
                 </div>
 
-                <div className="pt-4 border-t border-gray-200">
-                  <h3 className="text-sm font-medium text-gray-700 mb-4">Notification Types</h3>
+                <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">Notification Types</h3>
                   <div className="space-y-3">
                     {['Vendor Updates', 'Procurement Alerts', 'Project Notifications', 'Financial Reports', 'System Announcements'].map((item) => (
                       <div key={item} className="flex items-center justify-between">
-                        <span className="text-sm text-gray-600">{item}</span>
+                        <span className="text-sm text-gray-600 dark:text-gray-400">{item}</span>
                         <label className="relative inline-flex items-center cursor-pointer">
                           <input type="checkbox" className="sr-only peer" defaultChecked />
-                          <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+                          <div className="w-9 h-5 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white dark:bg-gray-900 after:border-gray-300 dark:border-gray-600 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
                         </label>
                       </div>
                     ))}
@@ -578,25 +578,25 @@ const fetchProfile = async () => {
           )}
 
           {activeTab === 'preferences' && (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-              <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                <h2 className="text-lg font-semibold text-gray-900">Preferences</h2>
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Preferences</h2>
               </div>
               <div className="p-6 space-y-6">
                 <div>
-                  <h3 className="text-sm font-medium text-gray-700 mb-4">Display Settings</h3>
+                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">Display Settings</h3>
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">Theme</span>
-                      <select className="px-3 py-1 border border-gray-300 rounded-lg text-sm text-gray-900">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">Theme</span>
+                      <select className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-gray-100">
                         <option>Light</option>
                         <option>Dark</option>
                         <option>System</option>
                       </select>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">Language</span>
-                      <select className="px-3 py-1 border border-gray-300 rounded-lg text-sm text-gray-900">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">Language</span>
+                      <select className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-gray-100">
                         <option>English (US)</option>
                         <option>Spanish</option>
                         <option>French</option>
@@ -604,8 +604,8 @@ const fetchProfile = async () => {
                       </select>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">Timezone</span>
-                      <select className="px-3 py-1 border border-gray-300 rounded-lg text-sm text-gray-900">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">Timezone</span>
+                      <select className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-gray-100">
                         <option>Eastern Time (ET)</option>
                         <option>Central Time (CT)</option>
                         <option>Mountain Time (MT)</option>
@@ -615,27 +615,27 @@ const fetchProfile = async () => {
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-gray-200">
-                  <h3 className="text-sm font-medium text-gray-700 mb-4">Date & Time Format</h3>
+                <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">Date & Time Format</h3>
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">Date Format</span>
-                      <select className="px-3 py-1 border border-gray-300 rounded-lg text-sm text-gray-900">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">Date Format</span>
+                      <select className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-gray-100">
                         <option>MM/DD/YYYY</option>
                         <option>DD/MM/YYYY</option>
                         <option>YYYY-MM-DD</option>
                       </select>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">Time Format</span>
-                      <select className="px-3 py-1 border border-gray-300 rounded-lg text-sm text-gray-900">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">Time Format</span>
+                      <select className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-gray-100">
                         <option>12-hour (AM/PM)</option>
                         <option>24-hour</option>
                       </select>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">First Day of Week</span>
-                      <select className="px-3 py-1 border border-gray-300 rounded-lg text-sm text-gray-900">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">First Day of Week</span>
+                      <select className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-gray-100">
                         <option>Sunday</option>
                         <option>Monday</option>
                       </select>
@@ -643,7 +643,7 @@ const fetchProfile = async () => {
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-gray-200">
+                <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
                   <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
                     Save Preferences
                   </button>

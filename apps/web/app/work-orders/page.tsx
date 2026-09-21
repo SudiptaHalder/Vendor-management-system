@@ -117,11 +117,11 @@ export default function WorkOrdersPage() {
 
   const getStatusBadge = (status: string) => {
     const statusConfig: Record<string, { color: string, icon: any, label: string }> = {
-      pending: { color: 'bg-gray-100 text-gray-800', icon: Clock, label: 'Pending' },
-      in_progress: { color: 'bg-blue-100 text-blue-800', icon: AlertCircle, label: 'In Progress' },
-      completed: { color: 'bg-green-100 text-green-800', icon: CheckCircle, label: 'Completed' },
-      cancelled: { color: 'bg-red-100 text-red-800', icon: XCircle, label: 'Cancelled' },
-      on_hold: { color: 'bg-yellow-100 text-yellow-800', icon: AlertTriangle, label: 'On Hold' }
+      pending: { color: 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200', icon: Clock, label: 'Pending' },
+      in_progress: { color: 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300', icon: AlertCircle, label: 'In Progress' },
+      completed: { color: 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300', icon: CheckCircle, label: 'Completed' },
+      cancelled: { color: 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300', icon: XCircle, label: 'Cancelled' },
+      on_hold: { color: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300', icon: AlertTriangle, label: 'On Hold' }
     }
     const config = statusConfig[status] || statusConfig.pending
     const Icon = config.icon
@@ -135,10 +135,10 @@ export default function WorkOrdersPage() {
 
   const getPriorityBadge = (priority: string) => {
     const priorityConfig: Record<string, { color: string, label: string }> = {
-      low: { color: 'bg-gray-100 text-gray-800', label: 'Low' },
-      medium: { color: 'bg-blue-100 text-blue-800', label: 'Medium' },
-      high: { color: 'bg-orange-100 text-orange-800', label: 'High' },
-      critical: { color: 'bg-red-100 text-red-800', label: 'Critical' }
+      low: { color: 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200', label: 'Low' },
+      medium: { color: 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300', label: 'Medium' },
+      high: { color: 'bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300', label: 'High' },
+      critical: { color: 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300', label: 'Critical' }
     }
     const config = priorityConfig[priority] || priorityConfig.medium
     return (
@@ -164,13 +164,13 @@ export default function WorkOrdersPage() {
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Work Orders</h1>
-          <p className="text-gray-600 mt-1">Manage and track work orders across projects</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Work Orders</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">Manage and track work orders across projects</p>
         </div>
         <div className="flex items-center space-x-3">
           <button
             onClick={fetchWorkOrders}
-            className="px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center space-x-2"
+            className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-2"
           >
             <RefreshCw size={16} />
             <span>Refresh</span>
@@ -187,81 +187,81 @@ export default function WorkOrdersPage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-6">
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Total</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">{stats.total}</p>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-1">{stats.total}</p>
             </div>
-            <div className="p-3 bg-blue-100 rounded-lg">
-              <ClipboardList className="w-5 h-5 text-blue-600" />
+            <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+              <ClipboardList className="w-5 h-5 text-blue-600 dark:text-blue-400" />
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Pending</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">{stats.pending}</p>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Pending</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-1">{stats.pending}</p>
             </div>
-            <div className="p-3 bg-gray-100 rounded-lg">
-              <Clock className="w-5 h-5 text-gray-600" />
+            <div className="p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
+              <Clock className="w-5 h-5 text-gray-600 dark:text-gray-400" />
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">In Progress</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">{stats.inProgress}</p>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">In Progress</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-1">{stats.inProgress}</p>
             </div>
-            <div className="p-3 bg-blue-100 rounded-lg">
-              <AlertCircle className="w-5 h-5 text-blue-600" />
+            <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+              <AlertCircle className="w-5 h-5 text-blue-600 dark:text-blue-400" />
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Completed</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">{stats.completed}</p>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Completed</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-1">{stats.completed}</p>
             </div>
-            <div className="p-3 bg-green-100 rounded-lg">
-              <CheckCircle className="w-5 h-5 text-green-600" />
+            <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
+              <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Overdue</p>
-              <p className="text-2xl font-bold text-red-600 mt-1">{stats.overdue}</p>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Overdue</p>
+              <p className="text-2xl font-bold text-red-600 dark:text-red-400 mt-1">{stats.overdue}</p>
             </div>
-            <div className="p-3 bg-red-100 rounded-lg">
-              <AlertTriangle className="w-5 h-5 text-red-600" />
+            <div className="p-3 bg-red-100 dark:bg-red-900/30 rounded-lg">
+              <AlertTriangle className="w-5 h-5 text-red-600 dark:text-red-400" />
             </div>
           </div>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-4 mb-6">
         <div className="flex flex-col lg:flex-row lg:items-center gap-4">
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
             <input
               type="text"
               placeholder="Search by work order #, title, or vendor..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900"
+              className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900 dark:text-gray-100"
             />
           </div>
           <div className="flex items-center space-x-4">
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900"
+              className="px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900 dark:text-gray-100"
             >
               <option value="all">All Status</option>
               <option value="pending">Pending</option>
@@ -270,7 +270,7 @@ export default function WorkOrdersPage() {
               <option value="on_hold">On Hold</option>
               <option value="cancelled">Cancelled</option>
             </select>
-            <button className="p-2 text-gray-500 border border-gray-200 rounded-lg hover:bg-gray-50">
+            <button className="p-2 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
               <Filter size={16} />
             </button>
           </div>
@@ -279,15 +279,15 @@ export default function WorkOrdersPage() {
 
       {/* Work Orders Table */}
       {loading ? (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-12 text-center">
           <div className="animate-spin w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p className="text-gray-500">Loading work orders...</p>
+          <p className="text-gray-500 dark:text-gray-400">Loading work orders...</p>
         </div>
       ) : workOrders.length === 0 ? (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
-          <ClipboardList className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">No work orders yet</h3>
-          <p className="text-gray-500 mb-6">Create your first work order to start tracking tasks.</p>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-12 text-center">
+          <ClipboardList className="w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">No work orders yet</h3>
+          <p className="text-gray-500 dark:text-gray-400 mb-6">Create your first work order to start tracking tasks.</p>
           <Link
             href="/work-orders/new"
             className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 inline-flex items-center space-x-2"
@@ -297,34 +297,34 @@ export default function WorkOrdersPage() {
           </Link>
         </div>
       ) : (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50">
+              <thead className="bg-gray-50 dark:bg-gray-800">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">WO #</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Project</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vendor</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Priority</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Due Date</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assigned To</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">WO #</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Title</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Project</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Vendor</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Priority</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Due Date</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Assigned To</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                 {filteredWorkOrders.map((wo) => (
-                  <tr key={wo.id} className="hover:bg-gray-50">
+                  <tr key={wo.id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="text-sm font-mono font-medium text-gray-900">
+                      <span className="text-sm font-mono font-medium text-gray-900 dark:text-gray-100">
                         {wo.workOrderNumber}
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-sm font-medium text-gray-900">{wo.title}</div>
+                      <div className="text-sm font-medium text-gray-900 dark:text-gray-100">{wo.title}</div>
                       {wo.description && (
-                        <div className="text-xs text-gray-500 truncate max-w-xs">
+                        <div className="text-xs text-gray-500 dark:text-gray-400 truncate max-w-xs">
                           {wo.description}
                         </div>
                       )}
@@ -333,16 +333,16 @@ export default function WorkOrdersPage() {
                       {wo.project ? (
                         <Link 
                           href={`/projects/${wo.project.id}`}
-                          className="text-sm text-blue-600 hover:text-blue-800"
+                          className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
                         >
                           {wo.project.projectNumber}
                         </Link>
                       ) : (
-                        <span className="text-sm text-gray-400">—</span>
+                        <span className="text-sm text-gray-400 dark:text-gray-500">—</span>
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="text-sm text-gray-900">{wo.vendor?.name || '—'}</span>
+                      <span className="text-sm text-gray-900 dark:text-gray-100">{wo.vendor?.name || '—'}</span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {getStatusBadge(wo.status)}
@@ -353,23 +353,23 @@ export default function WorkOrdersPage() {
                     <td className="px-6 py-4 whitespace-nowrap">
                       {wo.dueDate ? (
                         <div className="flex items-center">
-                          <Calendar size={14} className="text-gray-400 mr-1" />
+                          <Calendar size={14} className="text-gray-400 dark:text-gray-500 mr-1" />
                           <span className={`text-sm ${
                             wo.status !== 'completed' && new Date(wo.dueDate) < new Date() 
-                              ? 'text-red-600 font-medium' 
-                              : 'text-gray-900'
+                              ? 'text-red-600 dark:text-red-400 font-medium' 
+                              : 'text-gray-900 dark:text-gray-100'
                           }`}>
                             {new Date(wo.dueDate).toLocaleDateString()}
                           </span>
                         </div>
                       ) : (
-                        <span className="text-sm text-gray-400">—</span>
+                        <span className="text-sm text-gray-400 dark:text-gray-500">—</span>
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
-                        <User size={14} className="text-gray-400 mr-1" />
-                        <span className="text-sm text-gray-900">
+                        <User size={14} className="text-gray-400 dark:text-gray-500 mr-1" />
+                        <span className="text-sm text-gray-900 dark:text-gray-100">
                           {wo.assignedTo?.name || 'Unassigned'}
                         </span>
                       </div>
@@ -378,21 +378,21 @@ export default function WorkOrdersPage() {
                       <div className="flex items-center justify-end space-x-2">
                         <Link
                           href={`/work-orders/${wo.id}`}
-                          className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          className="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
                           title="View Work Order"
                         >
                           <Eye size={18} />
                         </Link>
                         <Link
                           href={`/work-orders/${wo.id}/edit`}
-                          className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                          className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
                           title="Edit Work Order"
                         >
                           <Edit size={18} />
                         </Link>
                         <button
                           onClick={(e) => handleDeleteWorkOrder(wo.id, e)}
-                          className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
                           title="Delete Work Order"
                         >
                           <Trash2 size={18} />

@@ -50,7 +50,7 @@ router.get('/vendors', authMiddleware, async (req, res) => {
           $format: 'json',
           $top: parseInt(limit as string),
           $filter: filter,
-          $expand: 'to_BusinessPartnerAddress,to_BusinessPartnerTax',
+          $expand: 'to_BusinessPartnerAddress,to_BusinessPartnerAddress/to_EmailAddress,to_BusinessPartnerTax',
           $orderby: 'BusinessPartnerName asc'
         }
       }
@@ -58,15 +58,21 @@ router.get('/vendors', authMiddleware, async (req, res) => {
 
     const vendors = response.data.d?.results || [];
     
-    const transformedVendors = vendors.map((vendor: any) => ({
-      BusinessPartner: vendor.BusinessPartner,
-      BusinessPartnerName: vendor.BusinessPartnerName || vendor.OrganizationBPName1,
-      CityName: vendor.to_BusinessPartnerAddress?.results?.[0]?.CityName || null,
-      Country: vendor.to_BusinessPartnerAddress?.results?.[0]?.Country || null,
-      TaxNumber: vendor.to_BusinessPartnerTax?.results?.[0]?.BPTaxNumber || vendor.TaxNumber || null,
-      CreatedByUser: vendor.CreatedByUser,
-      CreationDate: vendor.CreationDate
-    }));
+    const transformedVendors = vendors.map((vendor: any) => {
+      const address = vendor.to_BusinessPartnerAddress?.results?.[0];
+      const emails = address?.to_EmailAddress?.results || [];
+      const defaultEmail = emails.find((e: any) => e.IsDefaultEmailAddress === true) || emails[0];
+      return {
+        BusinessPartner: vendor.BusinessPartner,
+        BusinessPartnerName: vendor.BusinessPartnerName || vendor.OrganizationBPName1,
+        CityName: address?.CityName || null,
+        Country: address?.Country || null,
+        EmailAddress: defaultEmail?.EmailAddress || null,
+        TaxNumber: vendor.to_BusinessPartnerTax?.results?.[0]?.BPTaxNumber || vendor.TaxNumber || null,
+        CreatedByUser: vendor.CreatedByUser,
+        CreationDate: vendor.CreationDate
+      };
+    });
 
     res.json({
       success: true,

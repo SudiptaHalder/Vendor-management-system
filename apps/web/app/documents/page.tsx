@@ -173,7 +173,7 @@ export default function DocumentsPage() {
     return (
       <MainLayout>
         <div className="flex items-center justify-center h-64">
-          <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+          <Loader2 className="w-8 h-8 text-blue-600 dark:text-blue-400 animate-spin" />
         </div>
       </MainLayout>
     )
@@ -184,17 +184,17 @@ export default function DocumentsPage() {
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Documents</h1>
-          <p className="text-gray-600 mt-1">Manage and organize all your files</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Documents</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">Manage and organize all your files</p>
         </div>
         <div className="flex items-center space-x-3">
-          <div className="flex items-center bg-white border border-gray-200 rounded-lg p-1">
+          <div className="flex items-center bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-1">
             <button
               onClick={() => setView('grid')}
               className={`px-3 py-1.5 text-sm font-medium rounded-md ${
                 view === 'grid' 
-                  ? 'bg-blue-100 text-blue-700' 
-                  : 'text-gray-500 hover:text-gray-700'
+                  ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300' 
+                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
               }`}
             >
               Grid
@@ -203,8 +203,8 @@ export default function DocumentsPage() {
               onClick={() => setView('list')}
               className={`px-3 py-1.5 text-sm font-medium rounded-md ${
                 view === 'list' 
-                  ? 'bg-blue-100 text-blue-700' 
-                  : 'text-gray-500 hover:text-gray-700'
+                  ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300' 
+                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
               }`}
             >
               List
@@ -212,7 +212,7 @@ export default function DocumentsPage() {
           </div>
           <button
             onClick={fetchDocuments}
-            className="px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center space-x-2"
+            className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-2"
           >
             <RefreshCw size={16} />
             <span>Refresh</span>
@@ -229,83 +229,83 @@ export default function DocumentsPage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-6">
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Total Documents</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">{stats.total}</p>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Documents</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-1">{stats.total}</p>
             </div>
-            <div className="p-3 bg-blue-100 rounded-lg">
-              <FolderOpen className="w-5 h-5 text-blue-600" />
+            <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+              <FolderOpen className="w-5 h-5 text-blue-600 dark:text-blue-400" />
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Images</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">{stats.images}</p>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Images</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-1">{stats.images}</p>
             </div>
-            <div className="p-3 bg-green-100 rounded-lg">
-              <Image className="w-5 h-5 text-green-600" />
+            <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
+              <Image className="w-5 h-5 text-green-600 dark:text-green-400" />
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">PDFs</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">{stats.pdfs}</p>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">PDFs</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-1">{stats.pdfs}</p>
             </div>
-            <div className="p-3 bg-red-100 rounded-lg">
-              <FileText className="w-5 h-5 text-red-600" />
+            <div className="p-3 bg-red-100 dark:bg-red-900/30 rounded-lg">
+              <FileText className="w-5 h-5 text-red-600 dark:text-red-400" />
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Confidential</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">{stats.confidential}</p>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Confidential</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-1">{stats.confidential}</p>
             </div>
-            <div className="p-3 bg-purple-100 rounded-lg">
-              <Lock className="w-5 h-5 text-purple-600" />
+            <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+              <Lock className="w-5 h-5 text-purple-600 dark:text-purple-400" />
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Total Size</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Size</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-1">
                 {formatFileSize(stats.totalSize)}
               </p>
             </div>
-            <div className="p-3 bg-yellow-100 rounded-lg">
-              <File className="w-5 h-5 text-yellow-600" />
+            <div className="p-3 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
+              <File className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
             </div>
           </div>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-4 mb-6">
         <div className="flex flex-col lg:flex-row lg:items-center gap-4">
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
             <input
               type="text"
               placeholder="Search by name, description, vendor..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900"
+              className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900 dark:text-gray-100"
             />
           </div>
           <div className="flex items-center space-x-4">
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900"
+              className="px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900 dark:text-gray-100"
             >
               <option value="all">All Categories</option>
               {getUniqueCategories().map(cat => (
@@ -315,7 +315,7 @@ export default function DocumentsPage() {
             <select
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900"
+              className="px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900 dark:text-gray-100"
             >
               <option value="all">All Types</option>
               <option value="image">Images</option>
@@ -323,7 +323,7 @@ export default function DocumentsPage() {
               <option value="document">Documents</option>
               <option value="spreadsheet">Spreadsheets</option>
             </select>
-            <button className="p-2 text-gray-500 border border-gray-200 rounded-lg hover:bg-gray-50">
+            <button className="p-2 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
               <Filter size={16} />
             </button>
           </div>
@@ -332,10 +332,10 @@ export default function DocumentsPage() {
 
       {/* Documents Grid/List */}
       {documents.length === 0 ? (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
-          <FolderOpen className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">No documents yet</h3>
-          <p className="text-gray-500 mb-6">Upload your first document to get started.</p>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-12 text-center">
+          <FolderOpen className="w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">No documents yet</h3>
+          <p className="text-gray-500 dark:text-gray-400 mb-6">Upload your first document to get started.</p>
           <Link
             href="/documents/upload"
             className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 inline-flex items-center space-x-2"
@@ -351,80 +351,80 @@ export default function DocumentsPage() {
             return (
               <div
                 key={doc.id}
-                className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow"
+                className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6 hover:shadow-md transition-shadow"
               >
                 <div className="flex items-start justify-between mb-4">
-                  <div className="p-3 bg-blue-50 rounded-lg">
-                    <Icon className="w-8 h-8 text-blue-600" />
+                  <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                    <Icon className="w-8 h-8 text-blue-600 dark:text-blue-400" />
                   </div>
                   {doc.isConfidential && (
-                    <span className="p-1 bg-purple-100 rounded-full" title="Confidential">
-                      <Lock size={14} className="text-purple-600" />
+                    <span className="p-1 bg-purple-100 dark:bg-purple-900/30 rounded-full" title="Confidential">
+                      <Lock size={14} className="text-purple-600 dark:text-purple-400" />
                     </span>
                   )}
                 </div>
 
-                <h3 className="font-semibold text-gray-900 mb-1 truncate">{doc.name}</h3>
+                <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1 truncate">{doc.name}</h3>
                 {doc.description && (
-                  <p className="text-sm text-gray-500 mb-3 line-clamp-2">{doc.description}</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-3 line-clamp-2">{doc.description}</p>
                 )}
 
                 <div className="space-y-2 mb-4">
-                  <div className="flex items-center text-xs text-gray-500">
+                  <div className="flex items-center text-xs text-gray-500 dark:text-gray-400">
                     <File size={12} className="mr-1" />
                     {formatFileSize(doc.fileSize)}
                   </div>
-                  <div className="flex items-center text-xs text-gray-500">
+                  <div className="flex items-center text-xs text-gray-500 dark:text-gray-400">
                     <Calendar size={12} className="mr-1" />
                     {new Date(doc.uploadedAt).toLocaleDateString()}
                   </div>
                   {doc.vendor && (
-                    <div className="flex items-center text-xs text-gray-500">
+                    <div className="flex items-center text-xs text-gray-500 dark:text-gray-400">
                       <Building2 size={12} className="mr-1" />
                       {doc.vendor.name}
                     </div>
                   )}
-                  <div className="flex items-center text-xs text-gray-500">
+                  <div className="flex items-center text-xs text-gray-500 dark:text-gray-400">
                     <User size={12} className="mr-1" />
                     {doc.uploadedBy.name || doc.uploadedBy.email}
                   </div>
                   {doc.version > 1 && (
-                    <div className="text-xs text-blue-600">Version {doc.version}</div>
+                    <div className="text-xs text-blue-600 dark:text-blue-400">Version {doc.version}</div>
                   )}
                 </div>
 
-                <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-800">
                   <div className="flex items-center space-x-2">
                     <button
                       onClick={(e) => handleDownload(doc.id, doc.fileName, e)}
-                      className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg"
+                      className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
                       title="Download"
                     >
                       <Download size={16} />
                     </button>
                     <Link
                       href={`/documents/${doc.id}`}
-                      className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
+                      className="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg"
                       title="View Details"
                     >
                       <Eye size={16} />
                     </Link>
                     <Link
                       href={`/documents/${doc.id}/edit`}
-                      className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg"
+                      className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
                       title="Edit"
                     >
                       <Edit size={16} />
                     </Link>
                     <button
                       onClick={(e) => handleDeleteDocument(doc.id, e)}
-                      className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
+                      className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg"
                       title="Delete"
                     >
                       <Trash2 size={16} />
                     </button>
                   </div>
-                  <button className="p-2 text-gray-400 hover:text-gray-600">
+                  <button className="p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400">
                     <MoreVertical size={16} />
                   </button>
                 </div>
@@ -433,85 +433,85 @@ export default function DocumentsPage() {
           })}
         </div>
       ) : (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50">
+              <thead className="bg-gray-50 dark:bg-gray-800">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Size</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Uploaded By</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Uploaded On</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Vendor</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Name</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Type</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Size</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Category</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Uploaded By</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Uploaded On</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Vendor</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                 {filteredDocuments.map((doc) => {
                   const Icon = getFileIcon(doc.fileType)
                   return (
-                    <tr key={doc.id} className="hover:bg-gray-50">
+                    <tr key={doc.id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
-                          <Icon size={16} className="text-gray-400 mr-2" />
+                          <Icon size={16} className="text-gray-400 dark:text-gray-500 mr-2" />
                           <div>
-                            <div className="text-sm font-medium text-gray-900">{doc.name}</div>
+                            <div className="text-sm font-medium text-gray-900 dark:text-gray-100">{doc.name}</div>
                             {doc.version > 1 && (
-                              <div className="text-xs text-blue-600">v{doc.version}</div>
+                              <div className="text-xs text-blue-600 dark:text-blue-400">v{doc.version}</div>
                             )}
                           </div>
                           {doc.isConfidential && (
-                            <Lock size={12} className="ml-2 text-purple-600" />
+                            <Lock size={12} className="ml-2 text-purple-600 dark:text-purple-400" />
                           )}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="text-sm text-gray-900">
+                        <span className="text-sm text-gray-900 dark:text-gray-100">
                           {doc.fileType.split('/').pop()?.toUpperCase()}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="text-sm text-gray-900">{formatFileSize(doc.fileSize)}</span>
+                        <span className="text-sm text-gray-900 dark:text-gray-100">{formatFileSize(doc.fileSize)}</span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="text-sm text-gray-900">{doc.category || '—'}</span>
+                        <span className="text-sm text-gray-900 dark:text-gray-100">{doc.category || '—'}</span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="text-sm text-gray-900">{doc.uploadedBy.name || doc.uploadedBy.email}</span>
+                        <span className="text-sm text-gray-900 dark:text-gray-100">{doc.uploadedBy.name || doc.uploadedBy.email}</span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="text-sm text-gray-500">
+                        <span className="text-sm text-gray-500 dark:text-gray-400">
                           {new Date(doc.uploadedAt).toLocaleDateString()}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="text-sm text-gray-900">{doc.vendor?.name || '—'}</span>
+                        <span className="text-sm text-gray-900 dark:text-gray-100">{doc.vendor?.name || '—'}</span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right">
                         <div className="flex items-center justify-end space-x-2">
                           <button
                             onClick={(e) => handleDownload(doc.id, doc.fileName, e)}
-                            className="p-1 text-gray-400 hover:text-gray-600"
+                            className="p-1 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400"
                           >
                             <Download size={16} />
                           </button>
                           <Link
                             href={`/documents/${doc.id}`}
-                            className="p-1 text-blue-600 hover:text-blue-800"
+                            className="p-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
                           >
                             <Eye size={16} />
                           </Link>
                           <Link
                             href={`/documents/${doc.id}/edit`}
-                            className="p-1 text-gray-600 hover:text-gray-800"
+                            className="p-1 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
                           >
                             <Edit size={16} />
                           </Link>
                           <button
                             onClick={(e) => handleDeleteDocument(doc.id, e)}
-                            className="p-1 text-red-600 hover:text-red-800"
+                            className="p-1 text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300"
                           >
                             <Trash2 size={16} />
                           </button>

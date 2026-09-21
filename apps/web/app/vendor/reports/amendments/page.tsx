@@ -75,11 +75,11 @@ export default function VendorAmendmentsReportPage() {
       <div className="w-full">
         <div className="flex justify-between items-center mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 flex items-center">
-              <History className="mr-2 h-6 w-6 text-green-600" />
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 flex items-center">
+              <History className="mr-2 h-6 w-6 text-green-600 dark:text-green-400" />
               Amendments
             </h1>
-            <p className="text-gray-600 mt-1">
+            <p className="text-gray-600 dark:text-gray-400 mt-1">
               Price changes on your Open POs (scheduling agreements) — one-time POs don't support this
             </p>
           </div>
@@ -94,56 +94,56 @@ export default function VendorAmendmentsReportPage() {
         </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-600 mb-4">
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 text-red-600 dark:text-red-400 mb-4">
             Error: {error}
           </div>
         )}
 
         {loading ? (
-          <div className="text-center py-12 text-gray-500">Loading amendments...</div>
+          <div className="text-center py-12 text-gray-500 dark:text-gray-400">Loading amendments...</div>
         ) : amendments.length === 0 ? (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-12 text-center">
             <AlertCircle className="mx-auto mb-3 h-10 w-10 text-gray-300" />
-            <h3 className="text-base font-medium text-gray-900 mb-1">No amendments yet</h3>
-            <p className="text-sm text-gray-500">
+            <h3 className="text-base font-medium text-gray-900 dark:text-gray-100 mb-1">No amendments yet</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
               None of your scheduling agreements have had a price change yet.
             </p>
           </div>
         ) : (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="bg-gray-50">
+                <thead className="bg-gray-50 dark:bg-gray-800">
                   <tr>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Scheduling Agreement</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Item</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Material</th>
-                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Old Price</th>
-                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">New Price</th>
-                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Change</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amended On</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Scheduling Agreement</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Item</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Material</th>
+                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Old Price</th>
+                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">New Price</th>
+                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Change</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Amended On</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
                   {amendments.map((a, idx) => (
-                    <tr key={idx} className="hover:bg-gray-50">
-                      <td className="px-4 py-3 font-medium text-gray-900">{a.schedulingAgreement}</td>
-                      <td className="px-4 py-3 text-gray-600">{a.schedulingAgreementItem}</td>
+                    <tr key={idx} className="hover:bg-gray-50 dark:hover:bg-gray-800">
+                      <td className="px-4 py-3 font-medium text-gray-900 dark:text-gray-100">{a.schedulingAgreement}</td>
+                      <td className="px-4 py-3 text-gray-600 dark:text-gray-400">{a.schedulingAgreementItem}</td>
                       <td className="px-4 py-3">
-                        <div className="font-mono text-xs text-gray-900">{a.material || '-'}</div>
-                        <div className="text-xs text-gray-500">{a.materialDesc}</div>
+                        <div className="font-mono text-xs text-gray-900 dark:text-gray-100">{a.material || '-'}</div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">{a.materialDesc}</div>
                       </td>
-                      <td className="px-4 py-3 text-right text-gray-600">₹{a.oldPrice.toFixed(2)}</td>
-                      <td className="px-4 py-3 text-right font-semibold text-gray-900">₹{a.newPrice.toFixed(2)}</td>
+                      <td className="px-4 py-3 text-right text-gray-600 dark:text-gray-400">₹{a.oldPrice.toFixed(2)}</td>
+                      <td className="px-4 py-3 text-right font-semibold text-gray-900 dark:text-gray-100">₹{a.newPrice.toFixed(2)}</td>
                       <td className="px-4 py-3 text-right">
                         {a.percentChange !== null ? (
-                          <span className={`inline-flex items-center text-xs font-medium ${a.percentChange >= 0 ? 'text-red-600' : 'text-green-600'}`}>
+                          <span className={`inline-flex items-center text-xs font-medium ${a.percentChange >= 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}>
                             {a.percentChange >= 0 ? <TrendingUp size={14} className="mr-1" /> : <TrendingDown size={14} className="mr-1" />}
                             {a.percentChange >= 0 ? '+' : ''}{a.percentChange.toFixed(1)}%
                           </span>
                         ) : '-'}
                       </td>
-                      <td className="px-4 py-3 text-gray-600">{parseSAPDate(a.amendmentDate)}</td>
+                      <td className="px-4 py-3 text-gray-600 dark:text-gray-400">{parseSAPDate(a.amendmentDate)}</td>
                     </tr>
                   ))}
                 </tbody>

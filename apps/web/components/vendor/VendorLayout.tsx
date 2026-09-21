@@ -152,7 +152,7 @@
 //   }
 
 //   return (
-//     <div className="min-h-screen bg-gray-50">
+//     <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
 //       {/* Sidebar */}
 //       <aside
 //         className={`fixed top-0 left-0 z-40 h-screen transition-all duration-300 ${
@@ -163,8 +163,8 @@
 //           {/* Logo */}
 //           <div className="flex items-center justify-between h-16 px-4 border-b border-green-500">
 //             <div className="flex items-center space-x-2 overflow-hidden">
-//               <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center flex-shrink-0">
-//                 <span className="text-green-600 font-bold text-xl">VF</span>
+//               <div className="w-8 h-8 bg-white dark:bg-gray-900 rounded-lg flex items-center justify-center flex-shrink-0">
+//                 <span className="text-green-600 dark:text-green-400 font-bold text-xl">VF</span>
 //               </div>
 //               {isSidebarOpen && (
 //                 <span className="text-xl font-bold truncate">
@@ -270,11 +270,11 @@
 //       {/* Main Content */}
 //       <div className={`transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-20'}`}>
 //         {/* Top Header */}
-//         <header className="bg-white shadow-sm sticky top-0 z-30">
+//         <header className="bg-white dark:bg-gray-900 shadow-sm sticky top-0 z-30">
 //           <div className="flex items-center justify-between px-6 py-3">
 //             <button
 //               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-//               className="p-2 rounded-lg hover:bg-gray-100 lg:hidden"
+//               className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 lg:hidden"
 //             >
 //               <Menu size={20} />
 //             </button>
@@ -282,12 +282,12 @@
 //             <div className="flex items-center space-x-4">
 //               <div className="flex items-center space-x-3">
 //                 <div className="text-right">
-//                   <p className="text-sm font-medium text-gray-900">{vendor?.name}</p>
-//                   <p className="text-xs text-gray-500">Vendor</p>
+//                   <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{vendor?.name}</p>
+//                   <p className="text-xs text-gray-500 dark:text-gray-400">Vendor</p>
 //                 </div>
 //                 <button
 //                   onClick={() => router.push('/vendor/profile')}
-//                   className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center hover:bg-green-200 transition cursor-pointer"
+//                   className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center hover:bg-green-200 transition cursor-pointer"
 //                   title="View Profile"
 //                 >
 //                   {renderIcon(User, 20)}
@@ -335,8 +335,11 @@ import {
   Database,
   Zap,
   HardDrive,
-  History
+  History,
+  Moon,
+  Sun
 } from 'lucide-react'
+import FontSizeToggle from '@/components/layout/FontSizeToggle'
 
 interface VendorLayoutProps {
   children: React.ReactNode
@@ -347,12 +350,13 @@ export default function VendorLayout({ children }: VendorLayoutProps) {
   const router = useRouter()
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
   const [vendor, setVendor] = useState<any>(null)
+  const [isDarkMode, setIsDarkMode] = useState(false)
 
   useEffect(() => {
     // Get vendor data from localStorage
     const token = localStorage.getItem('vendorToken')
     const vendorStr = localStorage.getItem('vendor')
-    
+
     if (!token || !vendorStr) {
       router.push('/vendor-login')
       return
@@ -364,7 +368,16 @@ export default function VendorLayout({ children }: VendorLayoutProps) {
     } catch (err) {
       router.push('/vendor-login')
     }
+
+    setIsDarkMode(document.documentElement.classList.contains('dark'))
   }, [router])
+
+  const toggleDarkMode = () => {
+    const next = !isDarkMode
+    setIsDarkMode(next)
+    document.documentElement.classList.toggle('dark', next)
+    localStorage.setItem('vms-dark-mode', String(next))
+  }
 
   const handleLogout = () => {
     localStorage.removeItem('vendorToken')
@@ -460,19 +473,19 @@ export default function VendorLayout({ children }: VendorLayoutProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
       {/* Sidebar - Reduced width */}
       <aside
         className={`fixed top-0 left-0 z-40 h-screen transition-all duration-300 ${
           isSidebarOpen ? 'w-52' : 'w-16'
         }`}
       >
-        <div className="h-full bg-gradient-to-b from-green-600 to-green-700 text-white flex flex-col overflow-y-auto scrollbar-hide">
+        <div className="h-full bg-gradient-to-b from-green-600 to-green-700 dark:from-green-900 dark:to-green-950 text-white flex flex-col overflow-y-auto scrollbar-hide">
           {/* Logo */}
-          <div className="flex items-center justify-between h-14 px-3 border-b border-green-500">
+          <div className="flex items-center justify-between h-14 px-3 border-b border-green-500 dark:border-green-800">
             <div className="flex items-center space-x-2 overflow-hidden">
-              <div className="w-7 h-7 bg-white rounded-lg flex items-center justify-center flex-shrink-0">
-                <span className="text-green-600 font-bold text-lg">VF</span>
+              <div className="w-7 h-7 bg-white dark:bg-gray-900 rounded-lg flex items-center justify-center flex-shrink-0">
+                <span className="text-green-600 dark:text-green-400 font-bold text-lg">VF</span>
               </div>
               {isSidebarOpen && (
                 <span className="text-lg font-bold text-white truncate">
@@ -482,7 +495,7 @@ export default function VendorLayout({ children }: VendorLayoutProps) {
             </div>
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="p-1 rounded-lg hover:bg-green-500 lg:block hidden text-white"
+              className="p-1 rounded-lg hover:bg-green-500 dark:hover:bg-green-800 lg:block hidden text-white"
             >
               <Menu size={16} />
             </button>
@@ -490,9 +503,9 @@ export default function VendorLayout({ children }: VendorLayoutProps) {
 
           {/* Vendor Info */}
           {isSidebarOpen && vendor && (
-            <div className="px-3 py-2 bg-green-600">
+            <div className="px-3 py-2 bg-green-600 dark:bg-green-900">
               <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
+                <div className="w-8 h-8 bg-green-500 dark:bg-green-800 rounded-lg flex items-center justify-center">
                   {renderIcon(User, 16)}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -520,8 +533,8 @@ export default function VendorLayout({ children }: VendorLayoutProps) {
                             href={subItem.href}
                             className={`flex items-center space-x-2 px-2 py-1.5 text-xs rounded-md transition-colors ${
                               isActive(subItem.href)
-                                ? 'bg-green-500 text-white'
-                                : 'text-white hover:bg-green-500'
+                                ? 'bg-green-500 dark:bg-green-800 text-white'
+                                : 'text-white hover:bg-green-500 dark:hover:bg-green-800'
                             }`}
                           >
                             {renderIcon(subItem.icon, 12)}
@@ -536,8 +549,8 @@ export default function VendorLayout({ children }: VendorLayoutProps) {
                     href={item.href}
                     className={`flex items-center space-x-2 px-2 py-1.5 text-xs rounded-md transition-colors ${
                       isActive(item.href)
-                        ? 'bg-green-500 text-white'
-                        : 'text-white hover:bg-green-500'
+                        ? 'bg-green-500 dark:bg-green-800 text-white'
+                        : 'text-white hover:bg-green-500 dark:hover:bg-green-800'
                     }`}
                   >
                     {renderIcon(item.icon, 16)}
@@ -549,24 +562,24 @@ export default function VendorLayout({ children }: VendorLayoutProps) {
           </nav>
 
           {/* Bottom Section */}
-          <div className="border-t border-green-500 p-2 space-y-0.5">
+          <div className="border-t border-green-500 dark:border-green-800 p-2 space-y-0.5">
             <button
               onClick={() => router.push('/vendor/notifications')}
-              className="w-full flex items-center space-x-2 px-2 py-1.5 text-xs text-white rounded-md hover:bg-green-500"
+              className="w-full flex items-center space-x-2 px-2 py-1.5 text-xs text-white rounded-md hover:bg-green-500 dark:hover:bg-green-800"
             >
               {renderIcon(Bell, 14)}
               {isSidebarOpen && <span>Notifications</span>}
             </button>
             <button
               onClick={() => router.push('/vendor/support')}
-              className="w-full flex items-center space-x-2 px-2 py-1.5 text-xs text-white rounded-md hover:bg-green-500"
+              className="w-full flex items-center space-x-2 px-2 py-1.5 text-xs text-white rounded-md hover:bg-green-500 dark:hover:bg-green-800"
             >
               {renderIcon(HelpCircle, 14)}
               {isSidebarOpen && <span>Help & Support</span>}
             </button>
             <button
               onClick={handleLogout}
-              className="w-full flex items-center space-x-2 px-2 py-1.5 text-xs text-red-300 rounded-md hover:bg-green-500"
+              className="w-full flex items-center space-x-2 px-2 py-1.5 text-xs text-red-300 rounded-md hover:bg-green-500 dark:hover:bg-green-800"
             >
               {renderIcon(LogOut, 14)}
               {isSidebarOpen && <span>Logout</span>}
@@ -578,24 +591,34 @@ export default function VendorLayout({ children }: VendorLayoutProps) {
       {/* Main Content */}
       <div className={`transition-all duration-300 ${isSidebarOpen ? 'ml-52' : 'ml-16'}`}>
         {/* Top Header */}
-        <header className="bg-white shadow-sm sticky top-0 z-30">
+        <header className="bg-white dark:bg-gray-900 shadow-sm sticky top-0 z-30">
           <div className="flex items-center justify-between px-4 py-2">
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="p-1.5 rounded-lg hover:bg-gray-100 lg:hidden"
+              className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 lg:hidden"
             >
               <Menu size={18} />
             </button>
             <div className="flex-1" />
             <div className="flex items-center space-x-3">
+              <FontSizeToggle />
+
+              <button
+                onClick={toggleDarkMode}
+                className="p-2 text-gray-500 dark:text-gray-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+                aria-label="Toggle dark mode"
+              >
+                {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
+              </button>
+
               <div className="flex items-center space-x-2">
                 <div className="text-right">
-                  <p className="text-sm font-medium text-gray-900">{vendor?.name}</p>
-                  <p className="text-xs text-gray-500">Vendor</p>
+                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{vendor?.name}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Vendor</p>
                 </div>
                 <button
                   onClick={() => router.push('/vendor/profile')}
-                  className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center hover:bg-green-200 transition cursor-pointer"
+                  className="w-8 h-8 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center hover:bg-green-200 dark:hover:bg-green-900/50 transition cursor-pointer"
                   title="View Profile"
                 >
                   {renderIcon(User, 16)}

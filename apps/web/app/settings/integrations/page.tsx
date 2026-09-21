@@ -152,10 +152,10 @@ export default function IntegrationsPage() {
 
   const getStatusBadge = (status: string) => {
     const colors: Record<string, string> = {
-      success: 'bg-green-100 text-green-800',
-      syncing: 'bg-yellow-100 text-yellow-800',
-      error: 'bg-red-100 text-red-800',
-      idle: 'bg-gray-100 text-gray-800'
+      success: 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300',
+      syncing: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300',
+      error: 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300',
+      idle: 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200'
     }
     return (
       <span className={`px-2 py-1 text-xs font-medium rounded-full ${colors[status] || colors.idle}`}>
@@ -177,7 +177,7 @@ export default function IntegrationsPage() {
     return (
       <MainLayout>
         <div className="flex items-center justify-center h-64">
-          <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+          <Loader2 className="w-8 h-8 text-blue-600 dark:text-blue-400 animate-spin" />
         </div>
       </MainLayout>
     )
@@ -187,22 +187,22 @@ export default function IntegrationsPage() {
     <MainLayout>
       {/* Header */}
       <div className="mb-6">
-        <div className="flex items-center space-x-3 text-sm text-gray-500 mb-4">
-          <Link href="/settings" className="hover:text-blue-600">
+        <div className="flex items-center space-x-3 text-sm text-gray-500 dark:text-gray-400 mb-4">
+          <Link href="/settings" className="hover:text-blue-600 dark:hover:text-blue-400">
             Settings
           </Link>
           <span>/</span>
-          <span className="text-gray-900 font-medium">Integrations</span>
+          <span className="text-gray-900 dark:text-gray-100 font-medium">Integrations</span>
         </div>
 
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Integrations</h1>
-            <p className="text-gray-600 mt-1">Connect your favorite tools and services</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Integrations</h1>
+            <p className="text-gray-600 dark:text-gray-400 mt-1">Connect your favorite tools and services</p>
           </div>
           <button
             onClick={fetchIntegrations}
-            className="px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center space-x-2"
+            className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-2"
           >
             <RefreshCw size={16} />
             <span>Refresh</span>
@@ -222,7 +222,7 @@ export default function IntegrationsPage() {
                 className={`px-4 py-2 rounded-lg flex items-center space-x-2 whitespace-nowrap ${
                   activeTab === cat.id
                     ? 'bg-blue-600 text-white'
-                    : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
+                    : 'bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'
                 }`}
               >
                 <Icon size={16} />
@@ -234,15 +234,15 @@ export default function IntegrationsPage() {
       </div>
 
       {/* Search */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-4 mb-6">
         <div className="relative">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
           <input
             type="text"
             placeholder="Search integrations..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900"
+            className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900 dark:text-gray-100"
           />
         </div>
       </div>
@@ -254,30 +254,30 @@ export default function IntegrationsPage() {
           return (
             <div
               key={integration.id}
-              className={`bg-white rounded-xl shadow-sm border p-6 transition-all ${
-                integration.isActive ? 'border-green-200 ring-1 ring-green-200' : 'border-gray-200'
+              className={`bg-white dark:bg-gray-900 rounded-xl shadow-sm border p-6 transition-all ${
+                integration.isActive ? 'border-green-200 dark:border-green-800 ring-1 ring-green-200' : 'border-gray-200 dark:border-gray-700'
               }`}
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center space-x-3">
                   <div className={`p-3 rounded-lg ${
-                    integration.isActive ? 'bg-green-100' : 'bg-gray-100'
+                    integration.isActive ? 'bg-green-100 dark:bg-green-900/30' : 'bg-gray-100 dark:bg-gray-800'
                   }`}>
                     <Icon className={`w-6 h-6 ${
-                      integration.isActive ? 'text-green-600' : 'text-gray-600'
+                      integration.isActive ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'
                     }`} />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900">{integration.name}</h3>
-                    <p className="text-sm text-gray-500 mt-1">{integration.provider}</p>
+                    <h3 className="font-semibold text-gray-900 dark:text-gray-100">{integration.name}</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{integration.provider}</p>
                   </div>
                 </div>
                 <button
                   onClick={() => handleToggleIntegration(integration.id, integration.isActive)}
                   className={`px-3 py-1.5 rounded-lg text-sm font-medium flex items-center space-x-1 ${
                     integration.isActive
-                      ? 'bg-green-100 text-green-700 hover:bg-green-200'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 hover:bg-green-200'
+                      : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
                   }`}
                 >
                   {integration.isActive ? (
@@ -294,18 +294,18 @@ export default function IntegrationsPage() {
                 </button>
               </div>
 
-              <p className="text-sm text-gray-600 mb-4">{integration.description}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">{integration.description}</p>
 
-              <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+              <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-800">
                 <div className="flex items-center space-x-2">
                   {getStatusBadge(integration.syncStatus)}
                   {integration.lastSyncAt && (
-                    <span className="text-xs text-gray-400">
+                    <span className="text-xs text-gray-400 dark:text-gray-500">
                       Last sync: {new Date(integration.lastSyncAt).toLocaleString()}
                     </span>
                   )}
                 </div>
-                <button className="p-1 text-gray-400 hover:text-gray-600">
+                <button className="p-1 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400">
                   <Settings size={16} />
                 </button>
               </div>
@@ -315,9 +315,9 @@ export default function IntegrationsPage() {
       </div>
 
       {/* Help Section */}
-      <div className="mt-8 bg-blue-50 rounded-xl p-6 border border-blue-200">
+      <div className="mt-8 bg-blue-50 dark:bg-blue-900/20 rounded-xl p-6 border border-blue-200 dark:border-blue-800">
         <h3 className="text-lg font-semibold text-blue-900 mb-2">Need a custom integration?</h3>
-        <p className="text-blue-800 mb-4">
+        <p className="text-blue-800 dark:text-blue-300 mb-4">
           Our team can help you build custom integrations for your specific business needs.
         </p>
         <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">

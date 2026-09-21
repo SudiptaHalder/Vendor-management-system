@@ -51,7 +51,7 @@
 //   }
 
 //   return (
-//     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+//     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-800 py-12 px-4 sm:px-6 lg:px-8">
 //       <div className="max-w-md w-full space-y-8">
 //         <div>
 //           <div className="flex justify-center">
@@ -59,10 +59,10 @@
 //               <span className="text-white font-bold text-2xl">VF</span>
 //             </div>
 //           </div>
-//           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+//           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-gray-100">
 //             Vendor Portal
 //           </h2>
-//           <p className="mt-2 text-center text-sm text-gray-600">
+//           <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
 //             Sign in to your account to manage invoices and orders
 //           </p>
 //         </div>
@@ -70,7 +70,7 @@
 //         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
 //           <div className="rounded-md shadow-sm -space-y-px">
 //             <div className="mb-4">
-//               <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
+//               <label htmlFor="username" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
 //                 Username (Supplier Code)
 //               </label>
 //               <input
@@ -80,13 +80,13 @@
 //                 required
 //                 value={username}
 //                 onChange={(e) => setUsername(e.target.value)}
-//                 className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
+//                 className="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-gray-100 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
 //                 placeholder="Enter your supplier code (e.g., 100103)"
 //               />
 //             </div>
             
 //             <div className="mb-4">
-//               <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+//               <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
 //                 Password
 //               </label>
 //               <input
@@ -96,14 +96,14 @@
 //                 required
 //                 value={password}
 //                 onChange={(e) => setPassword(e.target.value)}
-//                 className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
+//                 className="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-gray-100 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
 //                 placeholder="Enter your password"
 //               />
 //             </div>
 //           </div>
 
 //           {error && (
-//             <div className="text-red-500 text-sm text-center bg-red-50 p-3 rounded">
+//             <div className="text-red-500 text-sm text-center bg-red-50 dark:bg-red-900/20 p-3 rounded">
 //               {error}
 //             </div>
 //           )}
@@ -119,14 +119,14 @@
 //           </div>
 
 //           <div className="text-center">
-//             <Link href="/vendor-login/forgot-password" className="text-sm text-green-600 hover:text-green-500">
+//             <Link href="/vendor-login/forgot-password" className="text-sm text-green-600 dark:text-green-400 hover:text-green-500">
 //               Forgot your password?
 //             </Link>
 //           </div>
 //         </form>
 
 //         <div className="mt-4 text-center">
-//           <p className="text-xs text-gray-500">
+//           <p className="text-xs text-gray-500 dark:text-gray-400">
 //             First time here? Check your email for an invitation link to set up your account.
 //           </p>
 //         </div>
@@ -212,10 +212,10 @@
 
 //   if (step === 'loading') {
 //     return (
-//       <div className="min-h-screen flex items-center justify-center bg-gray-50">
+//       <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-800">
 //         <div className="text-center">
 //           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-//           <p className="mt-4 text-gray-600">Verifying your invitation...</p>
+//           <p className="mt-4 text-gray-600 dark:text-gray-400">Verifying your invitation...</p>
 //         </div>
 //       </div>
 //     )
@@ -223,15 +223,15 @@
 
 //   if (step === 'error') {
 //     return (
-//       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-//         <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
-//           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+//       <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-800">
+//         <div className="max-w-md w-full bg-white dark:bg-gray-900 rounded-lg shadow-lg p-8 text-center">
+//           <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
 //             <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 //               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
 //             </svg>
 //           </div>
-//           <h2 className="text-2xl font-bold text-gray-900 mb-2">Invalid Invitation</h2>
-//           <p className="text-gray-600 mb-6">{error}</p>
+//           <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Invalid Invitation</h2>
+//           <p className="text-gray-600 dark:text-gray-400 mb-6">{error}</p>
 //           <button
 //             onClick={onComplete}
 //             className="inline-block px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
@@ -245,25 +245,25 @@
 
 //   if (step === 'success') {
 //     return (
-//       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-//         <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
-//           <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+//       <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-800">
+//         <div className="max-w-md w-full bg-white dark:bg-gray-900 rounded-lg shadow-lg p-8 text-center">
+//           <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
 //             <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 //               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
 //             </svg>
 //           </div>
-//           <h2 className="text-2xl font-bold text-gray-900 mb-2">Account Created!</h2>
-//           <p className="text-gray-600 mb-4">
+//           <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Account Created!</h2>
+//           <p className="text-gray-600 dark:text-gray-400 mb-4">
 //             Your account has been set up successfully. Redirecting to dashboard...
 //           </p>
-//           <div className="animate-pulse text-green-600">Redirecting...</div>
+//           <div className="animate-pulse text-green-600 dark:text-green-400">Redirecting...</div>
 //         </div>
 //       </div>
 //     )
 //   }
 
 //   return (
-//     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+//     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-800 py-12 px-4 sm:px-6 lg:px-8">
 //       <div className="max-w-md w-full space-y-8">
 //         <div>
 //           <div className="flex justify-center">
@@ -271,10 +271,10 @@
 //               <span className="text-white font-bold text-2xl">VF</span>
 //             </div>
 //           </div>
-//           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+//           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-gray-100">
 //             Set Up Your Account
 //           </h2>
-//           <p className="mt-2 text-center text-sm text-gray-600">
+//           <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
 //             Welcome {vendor?.supplierName}! Please set your password.
 //           </p>
 //         </div>
@@ -282,19 +282,19 @@
 //         <form className="mt-8 space-y-6" onSubmit={handleSetupPassword}>
 //           <div className="space-y-4">
 //             <div>
-//               <label className="block text-sm font-medium text-gray-700 mb-1">
+//               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
 //                 Username (Supplier Code)
 //               </label>
 //               <input
 //                 type="text"
 //                 value={vendor?.supplierCode || ''}
 //                 disabled
-//                 className="w-full px-3 py-2 border border-gray-300 bg-gray-50 text-gray-500 rounded-md"
+//                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400 rounded-md"
 //               />
 //             </div>
             
 //             <div>
-//               <label className="block text-sm font-medium text-gray-700 mb-1">
+//               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
 //                 New Password
 //               </label>
 //               <input
@@ -302,14 +302,14 @@
 //                 value={password}
 //                 onChange={(e) => setPassword(e.target.value)}
 //                 required
-//                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
+//                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-green-500 focus:border-green-500"
 //                 placeholder="Enter your new password"
 //                 minLength={8}
 //               />
 //             </div>
             
 //             <div>
-//               <label className="block text-sm font-medium text-gray-700 mb-1">
+//               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
 //                 Confirm Password
 //               </label>
 //               <input
@@ -317,14 +317,14 @@
 //                 value={confirmPassword}
 //                 onChange={(e) => setConfirmPassword(e.target.value)}
 //                 required
-//                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
+//                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-green-500 focus:border-green-500"
 //                 placeholder="Confirm your password"
 //               />
 //             </div>
 //           </div>
 
 //           {error && (
-//             <div className="text-red-500 text-sm text-center bg-red-50 p-3 rounded">
+//             <div className="text-red-500 text-sm text-center bg-red-50 dark:bg-red-900/20 p-3 rounded">
 //               {error}
 //             </div>
 //           )}
@@ -414,7 +414,7 @@ export default function VendorLoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-800 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
           <div className="flex justify-center">
@@ -422,10 +422,10 @@ export default function VendorLoginPage() {
               <span className="text-white font-bold text-2xl">VF</span>
             </div>
           </div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-gray-100">
             Vendor Portal
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
+          <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
             Sign in to your account
           </p>
         </div>
@@ -433,7 +433,7 @@ export default function VendorLoginPage() {
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="username" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Username (Supplier Code)
               </label>
               <input
@@ -443,14 +443,14 @@ export default function VendorLoginPage() {
                 required
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-gray-100 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
                 placeholder="Enter your supplier code (e.g., 100103)"
                 disabled={loading}
               />
             </div>
             
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Password
               </label>
               <input
@@ -460,7 +460,7 @@ export default function VendorLoginPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-gray-100 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
                 placeholder="Enter your password"
                 disabled={loading}
               />
@@ -468,7 +468,7 @@ export default function VendorLoginPage() {
           </div>
 
           {error && (
-            <div className="text-red-500 text-sm text-center bg-red-50 p-3 rounded">
+            <div className="text-red-500 text-sm text-center bg-red-50 dark:bg-red-900/20 p-3 rounded">
               {error}
             </div>
           )}
@@ -572,10 +572,10 @@ function TokenSetup({ token, onComplete }: { token: string; onComplete: () => vo
 
   if (step === 'loading') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-800">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Verifying your invitation...</p>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">Verifying your invitation...</p>
         </div>
       </div>
     )
@@ -583,15 +583,15 @@ function TokenSetup({ token, onComplete }: { token: string; onComplete: () => vo
 
   if (step === 'error') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
-          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-800">
+        <div className="max-w-md w-full bg-white dark:bg-gray-900 rounded-lg shadow-lg p-8 text-center">
+          <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Invalid Invitation</h2>
-          <p className="text-gray-600 mb-6">{error}</p>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Invalid Invitation</h2>
+          <p className="text-gray-600 dark:text-gray-400 mb-6">{error}</p>
           <button
             onClick={onComplete}
             className="inline-block px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
@@ -605,41 +605,41 @@ function TokenSetup({ token, onComplete }: { token: string; onComplete: () => vo
 
   if (step === 'success') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-800">
+        <div className="max-w-md w-full bg-white dark:bg-gray-900 rounded-lg shadow-lg p-8 text-center">
+          <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Account Created!</h2>
-          <p className="text-gray-600 mb-4">Redirecting to dashboard...</p>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Account Created!</h2>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">Redirecting to dashboard...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4">
-      <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Set Up Your Account</h2>
-        <p className="text-gray-600 mb-6">Welcome {vendor?.supplierName}!</p>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-800 py-12 px-4">
+      <div className="max-w-md w-full bg-white dark:bg-gray-900 rounded-lg shadow-lg p-8">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Set Up Your Account</h2>
+        <p className="text-gray-600 dark:text-gray-400 mb-6">Welcome {vendor?.supplierName}!</p>
         
         <form onSubmit={handleSetupPassword} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Username
             </label>
             <input
               type="text"
               value={vendor?.supplierCode || ''}
               disabled
-              className="w-full px-3 py-2 border border-gray-300 bg-gray-50 text-gray-500 rounded-md"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400 rounded-md"
             />
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               New Password
             </label>
             <input
@@ -648,14 +648,14 @@ function TokenSetup({ token, onComplete }: { token: string; onComplete: () => vo
               onChange={(e) => setPassword(e.target.value)}
               required
               disabled={loading}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-green-500 focus:border-green-500"
               placeholder="Enter your new password"
               minLength={8}
             />
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Confirm Password
             </label>
             <input
@@ -664,13 +664,13 @@ function TokenSetup({ token, onComplete }: { token: string; onComplete: () => vo
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
               disabled={loading}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-green-500 focus:border-green-500"
               placeholder="Confirm your password"
             />
           </div>
 
           {error && (
-            <div className="text-red-500 text-sm text-center bg-red-50 p-3 rounded">
+            <div className="text-red-500 text-sm text-center bg-red-50 dark:bg-red-900/20 p-3 rounded">
               {error}
             </div>
           )}

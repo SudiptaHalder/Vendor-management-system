@@ -31,7 +31,7 @@ router.get('/', authMiddleware, async (req, res) => {
       PurchaseOrderDate: order.PurchaseOrderDate,
       TotalAmount: order.TotalAmount || 0,
       DocumentCurrency: order.DocumentCurrency || 'INR',
-      PurchaseOrderStatus: order.PurchaseOrderStatus || 'open',
+      PurchasingProcessingStatus: order.PurchasingProcessingStatus,
       to_PurchaseOrderItem: order.to_PurchaseOrderItem || { results: [] }
     }));
 

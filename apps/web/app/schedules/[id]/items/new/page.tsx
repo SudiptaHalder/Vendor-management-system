@@ -179,7 +179,7 @@ export default function NewScheduleItemPage() {
     return (
       <MainLayout>
         <div className="flex items-center justify-center h-64">
-          <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+          <Loader2 className="w-8 h-8 text-blue-600 dark:text-blue-400 animate-spin" />
         </div>
       </MainLayout>
     )
@@ -189,36 +189,36 @@ export default function NewScheduleItemPage() {
     <MainLayout>
       {/* Header */}
       <div className="mb-6">
-        <div className="flex items-center space-x-3 text-sm text-gray-500 mb-4">
-          <Link href="/schedules" className="hover:text-blue-600">
+        <div className="flex items-center space-x-3 text-sm text-gray-500 dark:text-gray-400 mb-4">
+          <Link href="/schedules" className="hover:text-blue-600 dark:hover:text-blue-400">
             Schedules
           </Link>
           <span>/</span>
-          <Link href={`/schedules/${params.id}`} className="hover:text-blue-600">
+          <Link href={`/schedules/${params.id}`} className="hover:text-blue-600 dark:hover:text-blue-400">
             {schedule ? getDisplayId(schedule) : params.id}
           </Link>
           <span>/</span>
-          <span className="text-gray-900 font-medium">Add Event</span>
+          <span className="text-gray-900 dark:text-gray-100 font-medium">Add Event</span>
         </div>
 
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <Link
               href={`/schedules/${params.id}`}
-              className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg"
+              className="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
             >
               <ArrowLeft size={20} />
             </Link>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Add Schedule Event</h1>
-              <p className="text-sm text-gray-500 mt-1">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Add Schedule Event</h1>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                 {schedule?.name} - {schedule ? getDisplayId(schedule) : ''}
               </p>
             </div>
           </div>
           <Link
             href={`/schedules/${params.id}`}
-            className="px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center space-x-2"
+            className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-2"
           >
             <X size={16} />
             <span>Cancel</span>
@@ -227,7 +227,7 @@ export default function NewScheduleItemPage() {
       </div>
 
       {error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-center space-x-2">
+        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 rounded-lg flex items-center space-x-2">
           <AlertCircle size={16} />
           <span>{error}</span>
         </div>
@@ -235,12 +235,12 @@ export default function NewScheduleItemPage() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Basic Information */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Event Details</h2>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Event Details</h2>
           <div className="space-y-4">
             {/* Title */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Event Title <span className="text-red-500">*</span>
               </label>
               <input
@@ -248,7 +248,7 @@ export default function NewScheduleItemPage() {
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 placeholder="e.g., Site Inspection, Meeting, Task"
                 required
               />
@@ -256,7 +256,7 @@ export default function NewScheduleItemPage() {
 
             {/* Description */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Description
               </label>
               <textarea
@@ -264,7 +264,7 @@ export default function NewScheduleItemPage() {
                 rows={3}
                 value={formData.description}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 resize-none"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 resize-none"
                 placeholder="Detailed description of the event..."
               />
             </div>
@@ -277,9 +277,9 @@ export default function NewScheduleItemPage() {
                 id="isAllDay"
                 checked={formData.isAllDay}
                 onChange={handleChange}
-                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                className="w-4 h-4 text-blue-600 dark:text-blue-400 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500"
               />
-              <label htmlFor="isAllDay" className="text-sm text-gray-700">
+              <label htmlFor="isAllDay" className="text-sm text-gray-700 dark:text-gray-300">
                 All day event
               </label>
             </div>
@@ -287,38 +287,38 @@ export default function NewScheduleItemPage() {
         </div>
 
         {/* Date & Time */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Date & Time</h2>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Date & Time</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Start Time <span className="text-red-500">*</span>
               </label>
               <div className="relative">
-                <Clock className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                <Clock className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                 <input
                   type="datetime-local"
                   name="startTime"
                   value={formData.startTime}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                   required
                   disabled={formData.isAllDay}
                 />
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 End Time <span className="text-red-500">*</span>
               </label>
               <div className="relative">
-                <Clock className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                <Clock className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                 <input
                   type="datetime-local"
                   name="endTime"
                   value={formData.endTime}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                   required
                   disabled={formData.isAllDay}
                 />
@@ -326,7 +326,7 @@ export default function NewScheduleItemPage() {
             </div>
           </div>
           {formData.isAllDay && (
-            <div className="mt-4 p-3 bg-blue-50 text-blue-700 rounded-lg text-sm">
+            <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-lg text-sm">
               <Calendar size={16} className="inline mr-1" />
               All day event - time will be shown as "All Day"
             </div>
@@ -334,22 +334,22 @@ export default function NewScheduleItemPage() {
         </div>
 
         {/* Location & Assignment */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Location & Assignment</h2>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Location & Assignment</h2>
           <div className="space-y-4">
             {/* Location */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Location
               </label>
               <div className="relative">
-                <MapPin className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                <MapPin className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                 <input
                   type="text"
                   name="location"
                   value={formData.location}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                   placeholder="e.g., Meeting Room A, Site Location"
                 />
               </div>
@@ -357,16 +357,16 @@ export default function NewScheduleItemPage() {
 
             {/* Assign To */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Assign To
               </label>
               <div className="relative">
-                <User className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                <User className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                 <select
                   name="assignedToId"
                   value={formData.assignedToId}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 >
                   <option value="">Unassigned</option>
                   {users.map(user => (
@@ -380,16 +380,16 @@ export default function NewScheduleItemPage() {
 
             {/* Link to Work Order */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Link to Work Order
               </label>
               <div className="relative">
-                <FileText className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                <FileText className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                 <select
                   name="workOrderId"
                   value={formData.workOrderId}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 >
                   <option value="">No Work Order</option>
                   {workOrders.map(wo => (
@@ -403,14 +403,14 @@ export default function NewScheduleItemPage() {
 
             {/* Status */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Status
               </label>
               <select
                 name="status"
                 value={formData.status}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
               >
                 <option value="scheduled">Scheduled</option>
                 <option value="in_progress">In Progress</option>
@@ -425,7 +425,7 @@ export default function NewScheduleItemPage() {
         <div className="flex justify-end space-x-3">
           <Link
             href={`/schedules/${params.id}`}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+            className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800"
           >
             Cancel
           </Link>

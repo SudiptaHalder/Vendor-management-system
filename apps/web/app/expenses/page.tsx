@@ -175,11 +175,11 @@ export default function ExpensesPage() {
 
   const getStatusBadge = (status: string) => {
     const statusConfig: Record<string, { color: string, icon: any, label: string }> = {
-      draft: { color: 'bg-gray-100 text-gray-800', icon: Clock, label: 'Draft' },
-      pending: { color: 'bg-yellow-100 text-yellow-800', icon: Clock, label: 'Pending' },
-      approved: { color: 'bg-green-100 text-green-800', icon: CheckCircle, label: 'Approved' },
-      rejected: { color: 'bg-red-100 text-red-800', icon: XCircle, label: 'Rejected' },
-      paid: { color: 'bg-blue-100 text-blue-800', icon: CheckCircle, label: 'Paid' }
+      draft: { color: 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200', icon: Clock, label: 'Draft' },
+      pending: { color: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300', icon: Clock, label: 'Pending' },
+      approved: { color: 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300', icon: CheckCircle, label: 'Approved' },
+      rejected: { color: 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300', icon: XCircle, label: 'Rejected' },
+      paid: { color: 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300', icon: CheckCircle, label: 'Paid' }
     }
     const config = statusConfig[status] || statusConfig.draft
     const Icon = config.icon
@@ -193,18 +193,18 @@ export default function ExpensesPage() {
 
   const getCategoryColor = (category: string) => {
     const colors: Record<string, string> = {
-      'travel': 'bg-blue-100 text-blue-800',
-      'meals': 'bg-green-100 text-green-800',
-      'office': 'bg-purple-100 text-purple-800',
-      'equipment': 'bg-orange-100 text-orange-800',
-      'supplies': 'bg-yellow-100 text-yellow-800',
-      'utilities': 'bg-red-100 text-red-800',
-      'rent': 'bg-indigo-100 text-indigo-800',
-      'maintenance': 'bg-pink-100 text-pink-800',
-      'training': 'bg-cyan-100 text-cyan-800',
-      'other': 'bg-gray-100 text-gray-800'
+      'travel': 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300',
+      'meals': 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300',
+      'office': 'bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300',
+      'equipment': 'bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300',
+      'supplies': 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300',
+      'utilities': 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300',
+      'rent': 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-300',
+      'maintenance': 'bg-pink-100 dark:bg-pink-900/30 text-pink-800 dark:text-pink-300',
+      'training': 'bg-cyan-100 dark:bg-cyan-900/30 text-cyan-800 dark:text-cyan-300',
+      'other': 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200'
     }
-    return colors[category.toLowerCase()] || 'bg-gray-100 text-gray-800'
+    return colors[category.toLowerCase()] || 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200'
   }
 
   const stats = {
@@ -225,7 +225,7 @@ export default function ExpensesPage() {
     return (
       <MainLayout>
         <div className="flex items-center justify-center h-64">
-          <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+          <Loader2 className="w-8 h-8 text-blue-600 dark:text-blue-400 animate-spin" />
         </div>
       </MainLayout>
     )
@@ -236,13 +236,13 @@ export default function ExpensesPage() {
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Expenses</h1>
-          <p className="text-gray-600 mt-1">Track and manage company expenses</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Expenses</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">Track and manage company expenses</p>
         </div>
         <div className="flex items-center space-x-3">
           <button
             onClick={fetchExpenses}
-            className="px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center space-x-2"
+            className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-2"
           >
             <RefreshCw size={16} />
             <span>Refresh</span>
@@ -259,49 +259,49 @@ export default function ExpensesPage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Total Expenses</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">{stats.total}</p>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Expenses</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-1">{stats.total}</p>
             </div>
-            <div className="p-3 bg-blue-100 rounded-lg">
-              <FileText className="w-5 h-5 text-blue-600" />
+            <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+              <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400" />
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Pending</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">{stats.pending}</p>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Pending</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-1">{stats.pending}</p>
             </div>
-            <div className="p-3 bg-yellow-100 rounded-lg">
-              <Clock className="w-5 h-5 text-yellow-600" />
+            <div className="p-3 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
+              <Clock className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Approved</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">{stats.approved}</p>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Approved</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-1">{stats.approved}</p>
             </div>
-            <div className="p-3 bg-green-100 rounded-lg">
-              <CheckCircle className="w-5 h-5 text-green-600" />
+            <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
+              <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Total Amount</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Amount</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-1">
                 ${stats.totalAmount.toLocaleString()}
               </p>
             </div>
-            <div className="p-3 bg-purple-100 rounded-lg">
-              <DollarSign className="w-5 h-5 text-purple-600" />
+            <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+              <DollarSign className="w-5 h-5 text-purple-600 dark:text-purple-400" />
             </div>
           </div>
         </div>
@@ -309,63 +309,63 @@ export default function ExpensesPage() {
 
       {/* Secondary Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Pending Amount</p>
-              <p className="text-2xl font-bold text-yellow-600 mt-1">
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Pending Amount</p>
+              <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400 mt-1">
                 ${stats.pendingAmount.toLocaleString()}
               </p>
             </div>
-            <div className="p-3 bg-yellow-50 rounded-lg">
-              <AlertCircle className="w-5 h-5 text-yellow-600" />
+            <div className="p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+              <AlertCircle className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Approved Amount</p>
-              <p className="text-2xl font-bold text-green-600 mt-1">
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Approved Amount</p>
+              <p className="text-2xl font-bold text-green-600 dark:text-green-400 mt-1">
                 ${stats.approvedAmount.toLocaleString()}
               </p>
             </div>
-            <div className="p-3 bg-green-50 rounded-lg">
-              <CheckCircle className="w-5 h-5 text-green-600" />
+            <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+              <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Rejected</p>
-              <p className="text-2xl font-bold text-red-600 mt-1">{stats.rejected}</p>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Rejected</p>
+              <p className="text-2xl font-bold text-red-600 dark:text-red-400 mt-1">{stats.rejected}</p>
             </div>
-            <div className="p-3 bg-red-50 rounded-lg">
-              <XCircle className="w-5 h-5 text-red-600" />
+            <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
+              <XCircle className="w-5 h-5 text-red-600 dark:text-red-400" />
             </div>
           </div>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-4 mb-6">
         <div className="flex flex-col lg:flex-row lg:items-center gap-4">
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
             <input
               type="text"
               placeholder="Search by expense #, description, vendor, receipt..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900 placeholder:text-gray-500"
+              className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:text-gray-400"
             />
           </div>
           <div className="flex items-center space-x-4">
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900"
+              className="px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900 dark:text-gray-100"
             >
               <option value="all">All Status</option>
               <option value="draft">Draft</option>
@@ -377,7 +377,7 @@ export default function ExpensesPage() {
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900"
+              className="px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900 dark:text-gray-100"
             >
               {getUniqueCategories().map(category => (
                 <option key={category} value={category}>
@@ -388,13 +388,13 @@ export default function ExpensesPage() {
             <select
               value={billableFilter}
               onChange={(e) => setBillableFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900"
+              className="px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900 dark:text-gray-100"
             >
               <option value="all">All Expenses</option>
               <option value="billable">Billable</option>
               <option value="non_billable">Non-Billable</option>
             </select>
-            <button className="p-2 text-gray-500 border border-gray-200 rounded-lg hover:bg-gray-50">
+            <button className="p-2 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
               <Filter size={16} />
             </button>
           </div>
@@ -403,10 +403,10 @@ export default function ExpensesPage() {
 
       {/* Expenses Table */}
       {expenses.length === 0 ? (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
-          <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">No expenses yet</h3>
-          <p className="text-gray-500 mb-6">Create your first expense to start tracking.</p>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-12 text-center">
+          <FileText className="w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">No expenses yet</h3>
+          <p className="text-gray-500 dark:text-gray-400 mb-6">Create your first expense to start tracking.</p>
           <Link
             href="/expenses/new"
             className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 inline-flex items-center space-x-2"
@@ -416,32 +416,32 @@ export default function ExpensesPage() {
           </Link>
         </div>
       ) : (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50">
+              <thead className="bg-gray-50 dark:bg-gray-800">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Expense #</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Vendor/Project</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Billable</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Expense #</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Date</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Category</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Description</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Vendor/Project</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Amount</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Status</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Billable</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                 {filteredExpenses.map((expense) => (
-                  <tr key={expense.id} className="hover:bg-gray-50">
+                  <tr key={expense.id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="text-sm font-mono font-medium text-gray-900">
+                      <span className="text-sm font-mono font-medium text-gray-900 dark:text-gray-100">
                         {expense.expenseNumber}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center text-sm text-gray-500">
+                      <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                         <Calendar size={14} className="mr-1" />
                         {new Date(expense.expenseDate).toLocaleDateString()}
                       </div>
@@ -452,29 +452,29 @@ export default function ExpensesPage() {
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-sm font-medium text-gray-900">{expense.description}</div>
+                      <div className="text-sm font-medium text-gray-900 dark:text-gray-100">{expense.description}</div>
                       {expense.receiptNumber && (
-                        <div className="text-xs text-gray-500 mt-1">
+                        <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                           Receipt: {expense.receiptNumber}
                         </div>
                       )}
                     </td>
                     <td className="px-6 py-4">
                       {expense.vendor && (
-                        <div className="flex items-center text-sm text-gray-600 mb-1">
+                        <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-1">
                           <Building2 size={12} className="mr-1" />
                           {expense.vendor.name}
                         </div>
                       )}
                       {expense.project && (
-                        <div className="flex items-center text-xs text-gray-500">
+                        <div className="flex items-center text-xs text-gray-500 dark:text-gray-400">
                           <FolderOpen size={12} className="mr-1" />
                           {expense.project.projectNumber}
                         </div>
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="text-sm font-semibold text-gray-900">
+                      <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                         {expense.currency} {Number(expense.amount).toLocaleString()}
                       </span>
                     </td>
@@ -483,11 +483,11 @@ export default function ExpensesPage() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {expense.isBillable ? (
-                        <span className="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">
+                        <span className="px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded-full">
                           Billable
                         </span>
                       ) : (
-                        <span className="px-2 py-1 text-xs bg-gray-100 text-gray-800 rounded-full">
+                        <span className="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-full">
                           Non-Billable
                         </span>
                       )}
@@ -499,7 +499,7 @@ export default function ExpensesPage() {
                             href={expense.receiptUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg"
+                            className="p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
                             onClick={(e) => e.stopPropagation()}
                           >
                             <Download size={16} />
@@ -507,7 +507,7 @@ export default function ExpensesPage() {
                         )}
                         <Link
                           href={`/expenses/${expense.id}`}
-                          className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
+                          className="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg"
                         >
                           <Eye size={16} />
                         </Link>
@@ -515,14 +515,14 @@ export default function ExpensesPage() {
                           <>
                             <button
                               onClick={(e) => handleApproveExpense(expense.id, e)}
-                              className="p-2 text-green-600 hover:bg-green-50 rounded-lg"
+                              className="p-2 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg"
                               title="Approve"
                             >
                               <CheckCircle size={16} />
                             </button>
                             <button
                               onClick={(e) => handleRejectExpense(expense.id, e)}
-                              className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
+                              className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg"
                               title="Reject"
                             >
                               <XCircle size={16} />
@@ -532,18 +532,18 @@ export default function ExpensesPage() {
                         {expense.status === 'draft' && (
                           <Link
                             href={`/expenses/${expense.id}/edit`}
-                            className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg"
+                            className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
                           >
                             <Edit size={16} />
                           </Link>
                         )}
                         <button
                           onClick={(e) => handleDeleteExpense(expense.id, e)}
-                          className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
+                          className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg"
                         >
                           <Trash2 size={16} />
                         </button>
-                        <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg">
+                        <button className="p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg">
                           <MoreVertical size={16} />
                         </button>
                       </div>

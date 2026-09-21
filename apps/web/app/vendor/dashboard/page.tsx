@@ -149,12 +149,12 @@
 //   const getStatusBadge = (status: string) => {
 //     switch(status) {
 //       case 'completed':
-//         return <span className="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full flex items-center w-fit"><CheckCircle size={12} className="mr-1" /> Completed</span>
+//         return <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-xs font-medium rounded-full flex items-center w-fit"><CheckCircle size={12} className="mr-1" /> Completed</span>
 //       case 'pending':
 //       case 'draft':
-//         return <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full flex items-center w-fit"><Clock size={12} className="mr-1" /> Pending</span>
+//         return <span className="px-2 py-1 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 text-xs font-medium rounded-full flex items-center w-fit"><Clock size={12} className="mr-1" /> Pending</span>
 //       default:
-//         return <span className="px-2 py-1 bg-gray-100 text-gray-800 text-xs font-medium rounded-full">{status}</span>
+//         return <span className="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-xs font-medium rounded-full">{status}</span>
 //     }
 //   }
 
@@ -174,17 +174,17 @@
 //       <div className="mb-8">
 //         <div className="flex justify-between items-center">
 //           <div>
-//             <h1 className="text-2xl font-bold text-gray-900">
+//             <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
 //               Welcome back, {vendor?.name}! 👋
 //             </h1>
-//             <p className="text-gray-600 mt-1">Supplier Code: {vendor?.code}</p>
+//             <p className="text-gray-600 dark:text-gray-400 mt-1">Supplier Code: {vendor?.code}</p>
 //           </div>
 //           <button
 //             onClick={() => {
 //               const token = localStorage.getItem('vendorToken')
 //               if (token) fetchPurchaseOrders(token)
 //             }}
-//             className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg"
+//             className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
 //             title="Refresh Data"
 //           >
 //             <RefreshCw size={20} />
@@ -194,58 +194,58 @@
 
 //       {/* Stats Cards */}
 //       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-//         <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+//         <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
 //           <div className="flex items-center justify-between mb-2">
-//             <div className="p-2 bg-blue-100 rounded-lg">
-//               <Package className="w-5 h-5 text-blue-600" />
+//             <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+//               <Package className="w-5 h-5 text-blue-600 dark:text-blue-400" />
 //             </div>
 //             <TrendingUp className="w-4 h-4 text-green-500" />
 //           </div>
-//           <p className="text-2xl font-bold text-gray-900">{stats.totalPOs}</p>
-//           <p className="text-sm text-gray-500">Total Purchase Orders</p>
+//           <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stats.totalPOs}</p>
+//           <p className="text-sm text-gray-500 dark:text-gray-400">Total Purchase Orders</p>
 //         </div>
 
-//         <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+//         <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
 //           <div className="flex items-center justify-between mb-2">
-//             <div className="p-2 bg-yellow-100 rounded-lg">
-//               <Clock className="w-5 h-5 text-yellow-600" />
+//             <div className="p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
+//               <Clock className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
 //             </div>
 //           </div>
-//           <p className="text-2xl font-bold text-gray-900">{stats.pendingPOs}</p>
-//           <p className="text-sm text-gray-500">Pending Orders</p>
+//           <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stats.pendingPOs}</p>
+//           <p className="text-sm text-gray-500 dark:text-gray-400">Pending Orders</p>
 //         </div>
 
-//         <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+//         <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
 //           <div className="flex items-center justify-between mb-2">
-//             <div className="p-2 bg-green-100 rounded-lg">
-//               <CheckCircle className="w-5 h-5 text-green-600" />
+//             <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
+//               <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
 //             </div>
 //           </div>
-//           <p className="text-2xl font-bold text-gray-900">{stats.completedPOs}</p>
-//           <p className="text-sm text-gray-500">Completed Orders</p>
+//           <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stats.completedPOs}</p>
+//           <p className="text-sm text-gray-500 dark:text-gray-400">Completed Orders</p>
 //         </div>
 
-//         <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+//         <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
 //           <div className="flex items-center justify-between mb-2">
-//             <div className="p-2 bg-purple-100 rounded-lg">
-//               <FileText className="w-5 h-5 text-purple-600" />
+//             <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+//               <FileText className="w-5 h-5 text-purple-600 dark:text-purple-400" />
 //             </div>
 //           </div>
-//           <p className="text-2xl font-bold text-gray-900">{stats.totalItems}</p>
-//           <p className="text-sm text-gray-500">Total Line Items</p>
+//           <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stats.totalItems}</p>
+//           <p className="text-sm text-gray-500 dark:text-gray-400">Total Line Items</p>
 //         </div>
 //       </div>
 
 //       {/* Recent Purchase Orders */}
-//       <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-//         <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+//       <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+//         <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
 //           <div>
-//             <h3 className="text-lg font-semibold text-gray-900">Recent Purchase Orders</h3>
-//             <p className="text-sm text-gray-500 mt-1">Your latest 5 purchase orders</p>
+//             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Recent Purchase Orders</h3>
+//             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Your latest 5 purchase orders</p>
 //           </div>
 //           <Link 
 //             href="/vendor/purchase-orders" 
-//             className="text-green-600 hover:text-green-800 flex items-center text-sm font-medium"
+//             className="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 flex items-center text-sm font-medium"
 //           >
 //             View All <ArrowRight size={16} className="ml-1" />
 //           </Link>
@@ -253,39 +253,39 @@
         
 //         <div className="overflow-x-auto">
 //           <table className="w-full">
-//             <thead className="bg-gray-50">
+//             <thead className="bg-gray-50 dark:bg-gray-800">
 //               <tr>
-//                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PO Number</th>
-//                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created Date</th>
-//                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amended Date</th>
-//                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-//                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Items</th>
+//                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">PO Number</th>
+//                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Created Date</th>
+//                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Amended Date</th>
+//                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+//                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Items</th>
 //               </tr>
 //             </thead>
-//             <tbody className="divide-y divide-gray-200">
+//             <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
 //               {stats.recentPOs.map((po) => (
-//                 <tr key={po.id} className="hover:bg-gray-50">
+//                 <tr key={po.id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
 //                   <td className="px-6 py-4 whitespace-nowrap">
-//                     <span className="font-medium text-gray-900">{po.poNumber}</span>
+//                     <span className="font-medium text-gray-900 dark:text-gray-100">{po.poNumber}</span>
 //                   </td>
 //                   <td className="px-6 py-4 whitespace-nowrap">
-//                     <span className="text-gray-600">{formatDate(po.poCreateDate)}</span>
+//                     <span className="text-gray-600 dark:text-gray-400">{formatDate(po.poCreateDate)}</span>
 //                   </td>
 //                   <td className="px-6 py-4 whitespace-nowrap">
-//                     <span className="text-gray-600">{formatDate(po.poAmendDate)}</span>
+//                     <span className="text-gray-600 dark:text-gray-400">{formatDate(po.poAmendDate)}</span>
 //                   </td>
 //                   <td className="px-6 py-4 whitespace-nowrap">
 //                     {getStatusBadge(po.status)}
 //                   </td>
 //                   <td className="px-6 py-4 whitespace-nowrap">
-//                     <span className="text-gray-600">{po.lineItems.length}</span>
+//                     <span className="text-gray-600 dark:text-gray-400">{po.lineItems.length}</span>
 //                   </td>
 //                 </tr>
 //               ))}
               
 //               {stats.recentPOs.length === 0 && (
 //                 <tr>
-//                   <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
+//                   <td colSpan={5} className="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
 //                     <Package size={48} className="mx-auto mb-3 text-gray-300" />
 //                     <p>No purchase orders found</p>
 //                   </td>
@@ -477,12 +477,12 @@ export default function VendorDashboard() {
   const getStatusBadge = (status: string) => {
     switch(status) {
       case 'completed':
-        return <span className="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full flex items-center w-fit"><CheckCircle size={12} className="mr-1" /> Completed</span>
+        return <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-xs font-medium rounded-full flex items-center w-fit"><CheckCircle size={12} className="mr-1" /> Completed</span>
       case 'pending':
       case 'draft':
-        return <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full flex items-center w-fit"><Clock size={12} className="mr-1" /> Pending</span>
+        return <span className="px-2 py-1 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 text-xs font-medium rounded-full flex items-center w-fit"><Clock size={12} className="mr-1" /> Pending</span>
       default:
-        return <span className="px-2 py-1 bg-gray-100 text-gray-800 text-xs font-medium rounded-full">{status}</span>
+        return <span className="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-xs font-medium rounded-full">{status}</span>
     }
   }
 
@@ -503,12 +503,12 @@ export default function VendorDashboard() {
       <div className="mb-8">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
               Welcome back, {vendor?.name || vendor?.supplierName || 'Vendor'}! 👋
             </h1>
-            <p className="text-gray-600 mt-1">Supplier Code: {vendor?.code || vendor?.supplierCode || 'N/A'}</p>
+            <p className="text-gray-600 dark:text-gray-400 mt-1">Supplier Code: {vendor?.code || vendor?.supplierCode || 'N/A'}</p>
             {error && (
-              <div className="mt-2 flex items-center text-yellow-600 text-sm bg-yellow-50 p-2 rounded">
+              <div className="mt-2 flex items-center text-yellow-600 dark:text-yellow-400 text-sm bg-yellow-50 dark:bg-yellow-900/20 p-2 rounded">
                 <AlertCircle size={16} className="mr-1" />
                 <span>{error}</span>
               </div>
@@ -519,7 +519,7 @@ export default function VendorDashboard() {
               const token = localStorage.getItem('vendorToken')
               if (token) fetchPurchaseOrders(token)
             }}
-            className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg"
+            className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
             title="Refresh Data"
           >
             <RefreshCw size={20} />
@@ -529,58 +529,58 @@ export default function VendorDashboard() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between mb-2">
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <Package className="w-5 h-5 text-blue-600" />
+            <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+              <Package className="w-5 h-5 text-blue-600 dark:text-blue-400" />
             </div>
             <TrendingUp className="w-4 h-4 text-green-500" />
           </div>
-          <p className="text-2xl font-bold text-gray-900">{stats.totalPOs}</p>
-          <p className="text-sm text-gray-500">Total Purchase Orders</p>
+          <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stats.totalPOs}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Total Purchase Orders</p>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between mb-2">
-            <div className="p-2 bg-yellow-100 rounded-lg">
-              <Clock className="w-5 h-5 text-yellow-600" />
+            <div className="p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
+              <Clock className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-gray-900">{stats.pendingPOs}</p>
-          <p className="text-sm text-gray-500">Pending Orders</p>
+          <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stats.pendingPOs}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Pending Orders</p>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between mb-2">
-            <div className="p-2 bg-green-100 rounded-lg">
-              <CheckCircle className="w-5 h-5 text-green-600" />
+            <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
+              <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-gray-900">{stats.completedPOs}</p>
-          <p className="text-sm text-gray-500">Completed Orders</p>
+          <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stats.completedPOs}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Completed Orders</p>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between mb-2">
-            <div className="p-2 bg-purple-100 rounded-lg">
-              <FileText className="w-5 h-5 text-purple-600" />
+            <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+              <FileText className="w-5 h-5 text-purple-600 dark:text-purple-400" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-gray-900">{stats.totalItems}</p>
-          <p className="text-sm text-gray-500">Total Line Items</p>
+          <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stats.totalItems}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Total Line Items</p>
         </div>
       </div>
 
       {/* Recent Purchase Orders */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-        <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
           <div>
-            <h3 className="text-lg font-semibold text-gray-900">Recent Purchase Orders</h3>
-            <p className="text-sm text-gray-500 mt-1">Your latest 5 purchase orders</p>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Recent Purchase Orders</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Your latest 5 purchase orders</p>
           </div>
           <Link 
             href="/vendor/purchase-orders" 
-            className="text-green-600 hover:text-green-800 flex items-center text-sm font-medium"
+            className="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 flex items-center text-sm font-medium"
           >
             View All <ArrowRight size={16} className="ml-1" />
           </Link>
@@ -588,42 +588,42 @@ export default function VendorDashboard() {
         
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50">
+            <thead className="bg-gray-50 dark:bg-gray-800">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PO Number</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created Date</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amended Date</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Items</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">PO Number</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Created Date</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Amended Date</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Items</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
               {stats.recentPOs.map((po) => (
-                <tr key={po.id} className="hover:bg-gray-50">
+                <tr key={po.id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="font-medium text-gray-900">{po.poNumber}</span>
+                    <span className="font-medium text-gray-900 dark:text-gray-100">{po.poNumber}</span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="text-gray-600">{formatDate(po.poCreateDate)}</span>
+                    <span className="text-gray-600 dark:text-gray-400">{formatDate(po.poCreateDate)}</span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="text-gray-600">{formatDate(po.poAmendDate)}</span>
+                    <span className="text-gray-600 dark:text-gray-400">{formatDate(po.poAmendDate)}</span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {getStatusBadge(po.status)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="text-gray-600">{po.lineItems?.length || 0}</span>
+                    <span className="text-gray-600 dark:text-gray-400">{po.lineItems?.length || 0}</span>
                   </td>
                 </tr>
               ))}
               
               {stats.recentPOs.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
+                  <td colSpan={5} className="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
                     <Package size={48} className="mx-auto mb-3 text-gray-300" />
                     <p>No purchase orders found</p>
-                    <p className="text-xs text-gray-400 mt-1">Orders will appear here once available</p>
+                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Orders will appear here once available</p>
                   </td>
                 </tr>
               )}

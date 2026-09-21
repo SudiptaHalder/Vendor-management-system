@@ -26,31 +26,31 @@ export default function ReconciliationWidget() {
     }
   };
 
-  if (loading) return <div className="animate-pulse h-32 bg-gray-100 rounded"></div>;
+  if (loading) return <div className="animate-pulse h-32 bg-gray-100 dark:bg-gray-800 rounded"></div>;
 
   return (
-    <div className="bg-white rounded-xl shadow-sm p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">ERP Reconciliation</h3>
+    <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6">
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">ERP Reconciliation</h3>
       <div className="grid grid-cols-2 gap-4">
-        <div className="text-center p-3 bg-green-50 rounded-lg">
-          <CheckCircle className="w-6 h-6 text-green-600 mx-auto mb-2" />
-          <p className="text-2xl font-bold text-green-600">{summary?.fullyDelivered || 0}</p>
-          <p className="text-xs text-gray-600">Fully Delivered</p>
+        <div className="text-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+          <CheckCircle className="w-6 h-6 text-green-600 dark:text-green-400 mx-auto mb-2" />
+          <p className="text-2xl font-bold text-green-600 dark:text-green-400">{summary?.fullyDelivered || 0}</p>
+          <p className="text-xs text-gray-600 dark:text-gray-400">Fully Delivered</p>
         </div>
-        <div className="text-center p-3 bg-yellow-50 rounded-lg">
-          <Clock className="w-6 h-6 text-yellow-600 mx-auto mb-2" />
-          <p className="text-2xl font-bold text-yellow-600">{summary?.partiallyDelivered || 0}</p>
-          <p className="text-xs text-gray-600">Partially Delivered</p>
+        <div className="text-center p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+          <Clock className="w-6 h-6 text-yellow-600 dark:text-yellow-400 mx-auto mb-2" />
+          <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">{summary?.partiallyDelivered || 0}</p>
+          <p className="text-xs text-gray-600 dark:text-gray-400">Partially Delivered</p>
         </div>
-        <div className="text-center p-3 bg-red-50 rounded-lg">
-          <AlertCircle className="w-6 h-6 text-red-600 mx-auto mb-2" />
-          <p className="text-2xl font-bold text-red-600">{summary?.noDelivery || 0}</p>
-          <p className="text-xs text-gray-600">No Delivery</p>
+        <div className="text-center p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
+          <AlertCircle className="w-6 h-6 text-red-600 dark:text-red-400 mx-auto mb-2" />
+          <p className="text-2xl font-bold text-red-600 dark:text-red-400">{summary?.noDelivery || 0}</p>
+          <p className="text-xs text-gray-600 dark:text-gray-400">No Delivery</p>
         </div>
-        <div className="text-center p-3 bg-blue-50 rounded-lg">
-          <Package className="w-6 h-6 text-blue-600 mx-auto mb-2" />
-          <p className="text-2xl font-bold text-blue-600">{summary?.totalPOs || 0}</p>
-          <p className="text-xs text-gray-600">Total POs</p>
+        <div className="text-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+          <Package className="w-6 h-6 text-blue-600 dark:text-blue-400 mx-auto mb-2" />
+          <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{summary?.totalPOs || 0}</p>
+          <p className="text-xs text-gray-600 dark:text-gray-400">Total POs</p>
         </div>
       </div>
     </div>

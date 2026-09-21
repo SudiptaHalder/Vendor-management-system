@@ -189,7 +189,7 @@ export default function NewExpensePage() {
     return (
       <MainLayout>
         <div className="flex items-center justify-center h-64">
-          <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+          <Loader2 className="w-8 h-8 text-blue-600 dark:text-blue-400 animate-spin" />
         </div>
       </MainLayout>
     )
@@ -199,30 +199,30 @@ export default function NewExpensePage() {
     <MainLayout>
       {/* Header */}
       <div className="mb-6">
-        <div className="flex items-center space-x-3 text-sm text-gray-500 mb-4">
-          <Link href="/expenses" className="hover:text-blue-600">
+        <div className="flex items-center space-x-3 text-sm text-gray-500 dark:text-gray-400 mb-4">
+          <Link href="/expenses" className="hover:text-blue-600 dark:hover:text-blue-400">
             Expenses
           </Link>
           <span>/</span>
-          <span className="text-gray-900 font-medium">New Expense</span>
+          <span className="text-gray-900 dark:text-gray-100 font-medium">New Expense</span>
         </div>
 
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <Link
               href="/expenses"
-              className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg"
+              className="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
             >
               <ArrowLeft size={20} />
             </Link>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Create New Expense</h1>
-              <p className="text-sm text-gray-500 mt-1">Record a company expense</p>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Create New Expense</h1>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Record a company expense</p>
             </div>
           </div>
           <Link
             href="/expenses"
-            className="px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center space-x-2"
+            className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-2"
           >
             <X size={16} />
             <span>Cancel</span>
@@ -231,7 +231,7 @@ export default function NewExpensePage() {
       </div>
 
       {error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-center space-x-2">
+        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 rounded-lg flex items-center space-x-2">
           <AlertCircle size={16} />
           <span>{error}</span>
         </div>
@@ -239,21 +239,21 @@ export default function NewExpensePage() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Basic Information */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Expense Details</h2>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Expense Details</h2>
           <div className="space-y-4">
             {/* Category */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Category <span className="text-red-500">*</span>
               </label>
               <div className="relative">
-                <Tag className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                <Tag className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                 <select
                   name="category"
                   value={formData.category}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                   required
                 >
                   {categories.map(cat => (
@@ -267,7 +267,7 @@ export default function NewExpensePage() {
 
             {/* Description */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Description <span className="text-red-500">*</span>
               </label>
               <textarea
@@ -275,7 +275,7 @@ export default function NewExpensePage() {
                 rows={3}
                 value={formData.description}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 resize-none placeholder:text-gray-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 resize-none placeholder:text-gray-500 dark:text-gray-400"
                 placeholder="Describe the expense..."
                 required
               />
@@ -284,19 +284,19 @@ export default function NewExpensePage() {
             {/* Amount and Currency */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Amount <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <span className="text-gray-500">$</span>
+                    <span className="text-gray-500 dark:text-gray-400">$</span>
                   </div>
                   <input
                     type="number"
                     name="amount"
                     value={formData.amount}
                     onChange={handleChange}
-                    className="w-full pl-7 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder:text-gray-500"
+                    className="w-full pl-7 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:text-gray-400"
                     placeholder="0.00"
                     step="0.01"
                     min="0.01"
@@ -305,14 +305,14 @@ export default function NewExpensePage() {
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Currency
                 </label>
                 <select
                   name="currency"
                   value={formData.currency}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 >
                   <option value="USD">USD - US Dollar</option>
                   <option value="EUR">EUR - Euro</option>
@@ -327,30 +327,30 @@ export default function NewExpensePage() {
             {/* Date */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Expense Date <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
-                  <Calendar className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                  <Calendar className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                   <input
                     type="date"
                     name="expenseDate"
                     value={formData.expenseDate}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                    className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                     required
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Status
                 </label>
                 <select
                   name="status"
                   value={formData.status}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 >
                   <option value="pending">Pending</option>
                   <option value="draft">Draft</option>
@@ -361,21 +361,21 @@ export default function NewExpensePage() {
         </div>
 
         {/* Vendor & Project */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Vendor & Project</h2>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Vendor & Project</h2>
           <div className="space-y-4">
             {/* Vendor */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Vendor
               </label>
               <div className="relative">
-                <Building2 className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                <Building2 className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                 <select
                   name="vendorId"
                   value={formData.vendorId}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 >
                   <option value="">Select Vendor (Optional)</option>
                   {vendors.map(vendor => (
@@ -389,16 +389,16 @@ export default function NewExpensePage() {
 
             {/* Project */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Project
               </label>
               <div className="relative">
-                <FolderOpen className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                <FolderOpen className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                 <select
                   name="projectId"
                   value={formData.projectId}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 >
                   <option value="">Select Project (Optional)</option>
                   {projects.map(project => (
@@ -412,16 +412,16 @@ export default function NewExpensePage() {
 
             {/* Work Order */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Work Order
               </label>
               <div className="relative">
-                <FileText className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                <FileText className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                 <select
                   name="workOrderId"
                   value={formData.workOrderId}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 >
                   <option value="">Select Work Order (Optional)</option>
                   {workOrders.map(wo => (
@@ -436,8 +436,8 @@ export default function NewExpensePage() {
         </div>
 
         {/* Billable Information */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Billable Information</h2>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Billable Information</h2>
           <div className="space-y-4">
             <div className="flex items-center space-x-3">
               <input
@@ -446,16 +446,16 @@ export default function NewExpensePage() {
                 id="isBillable"
                 checked={formData.isBillable}
                 onChange={handleChange}
-                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                className="w-4 h-4 text-blue-600 dark:text-blue-400 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500"
               />
-              <label htmlFor="isBillable" className="text-sm text-gray-700">
+              <label htmlFor="isBillable" className="text-sm text-gray-700 dark:text-gray-300">
                 This expense is billable to client
               </label>
             </div>
 
             {formData.isBillable && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Billable Client
                 </label>
                 <input
@@ -463,7 +463,7 @@ export default function NewExpensePage() {
                   name="billableClient"
                   value={formData.billableClient}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder:text-gray-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:text-gray-400"
                   placeholder="Client name"
                 />
               </div>
@@ -472,56 +472,56 @@ export default function NewExpensePage() {
         </div>
 
         {/* Receipt Information */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Receipt Information</h2>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Receipt Information</h2>
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Receipt Number
                 </label>
                 <div className="relative">
-                  <Receipt className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                  <Receipt className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                   <input
                     type="text"
                     name="receiptNumber"
                     value={formData.receiptNumber}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder:text-gray-500"
+                    className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:text-gray-400"
                     placeholder="Receipt #"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Receipt URL
                 </label>
                 <div className="relative">
-                  <Link2 className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                  <Link2 className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                   <input
                     type="url"
                     name="receiptUrl"
                     value={formData.receiptUrl}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder:text-gray-500"
+                    className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:text-gray-400"
                     placeholder="https://..."
                   />
                 </div>
               </div>
             </div>
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <div className="flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6">
+            <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+              <div className="flex items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6">
                 <div className="text-center">
-                  <Upload className="mx-auto h-8 w-8 text-gray-400" />
-                  <p className="mt-1 text-sm text-gray-600">
+                  <Upload className="mx-auto h-8 w-8 text-gray-400 dark:text-gray-500" />
+                  <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
                     Drag and drop or click to upload receipt image
                   </p>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     PNG, JPG, PDF up to 10MB
                   </p>
                   <button
                     type="button"
-                    className="mt-4 px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50"
+                    className="mt-4 px-4 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
                   >
                     Upload Receipt
                   </button>
@@ -532,15 +532,15 @@ export default function NewExpensePage() {
         </div>
 
         {/* Notes */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Additional Notes</h2>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Additional Notes</h2>
           <div>
             <textarea
               name="notes"
               rows={4}
               value={formData.notes}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 resize-none placeholder:text-gray-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 resize-none placeholder:text-gray-500 dark:text-gray-400"
               placeholder="Any additional notes or comments..."
             />
           </div>
@@ -550,7 +550,7 @@ export default function NewExpensePage() {
         <div className="flex justify-end space-x-3">
           <Link
             href="/expenses"
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+            className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800"
           >
             Cancel
           </Link>

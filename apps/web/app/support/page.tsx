@@ -211,12 +211,12 @@ export default function SupportPage() {
 
   const getColorClasses = (color: string) => {
     const colors = {
-      blue: 'bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100',
-      green: 'bg-green-50 text-green-600 border-green-200 hover:bg-green-100',
-      purple: 'bg-purple-50 text-purple-600 border-purple-200 hover:bg-purple-100',
-      orange: 'bg-orange-50 text-orange-600 border-orange-200 hover:bg-orange-100',
-      pink: 'bg-pink-50 text-pink-600 border-pink-200 hover:bg-pink-100',
-      indigo: 'bg-indigo-50 text-indigo-600 border-indigo-200 hover:bg-indigo-100'
+      blue: 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/30',
+      green: 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border-green-200 dark:border-green-800 hover:bg-green-100 dark:hover:bg-green-900/30',
+      purple: 'bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-800 hover:bg-purple-100 dark:hover:bg-purple-900/30',
+      orange: 'bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 border-orange-200 dark:border-orange-800 hover:bg-orange-100 dark:hover:bg-orange-900/30',
+      pink: 'bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 border-pink-200 dark:border-pink-800 hover:bg-pink-100 dark:hover:bg-pink-900/30',
+      indigo: 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 border-indigo-200 dark:border-indigo-800 hover:bg-indigo-100 dark:hover:bg-indigo-900/30'
     }
     return colors[color as keyof typeof colors] || colors.blue
   }
@@ -225,20 +225,20 @@ export default function SupportPage() {
     <MainLayout>
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Help & Support</h1>
-        <p className="text-gray-600 mt-2">Find answers, get help, and contact our support team</p>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Help & Support</h1>
+        <p className="text-gray-600 dark:text-gray-400 mt-2">Find answers, get help, and contact our support team</p>
       </div>
 
       {/* Search Bar */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-8">
         <div className="relative">
-          <Search className="absolute left-4 top-3.5 h-5 w-5 text-gray-400" />
+          <Search className="absolute left-4 top-3.5 h-5 w-5 text-gray-400 dark:text-gray-500" />
           <input
             type="text"
             placeholder="Search for help articles, FAQs, guides..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+            className="w-full pl-12 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
           />
         </div>
         <div className="flex flex-wrap gap-2 mt-4">
@@ -247,11 +247,11 @@ export default function SupportPage() {
             return (
               <button
                 key={cat.name}
-                className="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-gray-200 flex items-center space-x-1"
+                className="px-3 py-1.5 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg text-sm hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center space-x-1"
               >
                 <Icon size={14} />
                 <span>{cat.name}</span>
-                <span className="text-xs text-gray-500 ml-1">({cat.count})</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">({cat.count})</span>
               </button>
             )
           })}
@@ -259,13 +259,13 @@ export default function SupportPage() {
       </div>
 
       {/* Quick Action Tabs */}
-      <div className="flex space-x-4 mb-8 border-b border-gray-200">
+      <div className="flex space-x-4 mb-8 border-b border-gray-200 dark:border-gray-700">
         <button
           onClick={() => setActiveTab('help')}
           className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
             activeTab === 'help'
-              ? 'border-blue-600 text-blue-600'
-              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              ? 'border-blue-600 text-blue-600 dark:text-blue-400'
+              : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
           }`}
         >
           Help Center
@@ -274,8 +274,8 @@ export default function SupportPage() {
           onClick={() => setActiveTab('faq')}
           className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
             activeTab === 'faq'
-              ? 'border-blue-600 text-blue-600'
-              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              ? 'border-blue-600 text-blue-600 dark:text-blue-400'
+              : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
           }`}
         >
           FAQs
@@ -284,8 +284,8 @@ export default function SupportPage() {
           onClick={() => setActiveTab('guides')}
           className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
             activeTab === 'guides'
-              ? 'border-blue-600 text-blue-600'
-              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              ? 'border-blue-600 text-blue-600 dark:text-blue-400'
+              : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
           }`}
         >
           Guides
@@ -294,8 +294,8 @@ export default function SupportPage() {
           onClick={() => setActiveTab('videos')}
           className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
             activeTab === 'videos'
-              ? 'border-blue-600 text-blue-600'
-              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              ? 'border-blue-600 text-blue-600 dark:text-blue-400'
+              : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
           }`}
         >
           Video Tutorials
@@ -304,8 +304,8 @@ export default function SupportPage() {
           onClick={() => setActiveTab('contact')}
           className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
             activeTab === 'contact'
-              ? 'border-blue-600 text-blue-600'
-              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              ? 'border-blue-600 text-blue-600 dark:text-blue-400'
+              : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
           }`}
         >
           Contact Us
@@ -323,23 +323,23 @@ export default function SupportPage() {
                 <Link
                   key={index}
                   href={`/support/guide/${index}`}
-                  className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-all group"
+                  className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 hover:shadow-md transition-all group"
                 >
                   <div className={`p-3 rounded-lg w-fit ${getColorClasses(guide.color)} mb-4`}>
                     <Icon size={24} />
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                     {guide.title}
                   </h3>
-                  <p className="text-sm text-gray-600 mt-1">{guide.description}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{guide.description}</p>
                   <div className="flex items-center justify-between mt-4">
                     <div className="flex items-center space-x-2">
-                      <Clock size={14} className="text-gray-400" />
-                      <span className="text-xs text-gray-500">{guide.readTime}</span>
+                      <Clock size={14} className="text-gray-400 dark:text-gray-500" />
+                      <span className="text-xs text-gray-500 dark:text-gray-400">{guide.readTime}</span>
                       <span className="text-xs text-gray-300">•</span>
-                      <span className="text-xs text-gray-500">{guide.level}</span>
+                      <span className="text-xs text-gray-500 dark:text-gray-400">{guide.level}</span>
                     </div>
-                    <ChevronRight size={16} className="text-gray-400 group-hover:text-blue-600 transition-colors" />
+                    <ChevronRight size={16} className="text-gray-400 dark:text-gray-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" />
                   </div>
                 </Link>
               )
@@ -349,22 +349,22 @@ export default function SupportPage() {
 
         {/* FAQ Tab */}
         {activeTab === 'faq' && (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <div className="divide-y divide-gray-200">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div className="divide-y divide-gray-200 dark:divide-gray-700">
               {filteredFaqs.map((faq, index) => (
                 <details key={index} className="group">
-                  <summary className="flex items-center justify-between p-6 cursor-pointer hover:bg-gray-50">
-                    <h3 className="text-base font-medium text-gray-900">{faq.question}</h3>
-                    <ChevronRight className="w-5 h-5 text-gray-500 group-open:rotate-90 transition-transform" />
+                  <summary className="flex items-center justify-between p-6 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800">
+                    <h3 className="text-base font-medium text-gray-900 dark:text-gray-100">{faq.question}</h3>
+                    <ChevronRight className="w-5 h-5 text-gray-500 dark:text-gray-400 group-open:rotate-90 transition-transform" />
                   </summary>
                   <div className="px-6 pb-6">
-                    <p className="text-gray-600">{faq.answer}</p>
+                    <p className="text-gray-600 dark:text-gray-400">{faq.answer}</p>
                     <div className="mt-4 flex items-center space-x-4">
-                      <button className="flex items-center space-x-1 text-sm text-gray-500 hover:text-green-600">
+                      <button className="flex items-center space-x-1 text-sm text-gray-500 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400">
                         <ThumbsUp size={14} />
                         <span>Helpful</span>
                       </button>
-                      <button className="flex items-center space-x-1 text-sm text-gray-500 hover:text-red-600">
+                      <button className="flex items-center space-x-1 text-sm text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400">
                         <ThumbsDown size={14} />
                         <span>Not helpful</span>
                       </button>
@@ -386,25 +386,25 @@ export default function SupportPage() {
                   <Link
                     key={index}
                     href={`/support/guide/${index}`}
-                    className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-all group"
+                    className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 hover:shadow-md transition-all group"
                   >
                     <div className="flex items-start space-x-4">
                       <div className={`p-3 rounded-lg ${getColorClasses(guide.color)}`}>
                         <Icon size={24} />
                       </div>
                       <div className="flex-1">
-                        <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                           {guide.title}
                         </h3>
-                        <p className="text-sm text-gray-600 mt-1">{guide.description}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{guide.description}</p>
                         <div className="flex items-center justify-between mt-4">
                           <div className="flex items-center space-x-2">
-                            <Clock size={14} className="text-gray-400" />
-                            <span className="text-xs text-gray-500">{guide.readTime}</span>
+                            <Clock size={14} className="text-gray-400 dark:text-gray-500" />
+                            <span className="text-xs text-gray-500 dark:text-gray-400">{guide.readTime}</span>
                             <span className="text-xs text-gray-300">•</span>
-                            <span className="text-xs text-gray-500">{guide.level}</span>
+                            <span className="text-xs text-gray-500 dark:text-gray-400">{guide.level}</span>
                           </div>
-                          <ChevronRight size={16} className="text-gray-400 group-hover:text-blue-600 transition-colors" />
+                          <ChevronRight size={16} className="text-gray-400 dark:text-gray-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" />
                         </div>
                       </div>
                     </div>
@@ -419,8 +419,8 @@ export default function SupportPage() {
         {activeTab === 'videos' && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {videos.map((video, index) => (
-              <div key={index} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-all group cursor-pointer">
-                <div className="aspect-video bg-gray-100 relative">
+              <div key={index} className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-md transition-all group cursor-pointer">
+                <div className="aspect-video bg-gray-100 dark:bg-gray-800 relative">
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center group-hover:bg-blue-700 transition-colors">
                       <Video size={20} className="text-white" />
@@ -428,10 +428,10 @@ export default function SupportPage() {
                   </div>
                 </div>
                 <div className="p-4">
-                  <h3 className="font-medium text-gray-900 group-hover:text-blue-600 transition-colors">
+                  <h3 className="font-medium text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                     {video.title}
                   </h3>
-                  <div className="flex items-center justify-between mt-2 text-xs text-gray-500">
+                  <div className="flex items-center justify-between mt-2 text-xs text-gray-500 dark:text-gray-400">
                     <span>{video.duration}</span>
                     <span>{video.views} views</span>
                   </div>
@@ -446,53 +446,53 @@ export default function SupportPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Contact Options */}
             <div className="lg:col-span-1 space-y-4">
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Get in Touch</h3>
+              <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Get in Touch</h3>
                 <div className="space-y-4">
                   <div className="flex items-start space-x-3">
-                    <div className="p-2 bg-blue-100 rounded-lg">
-                      <Mail size={20} className="text-blue-600" />
+                    <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                      <Mail size={20} className="text-blue-600 dark:text-blue-400" />
                     </div>
                     <div>
-                      <p className="font-medium text-gray-900">Email Support</p>
-                      <a href="mailto:support@vendorflow.com" className="text-sm text-blue-600 hover:text-blue-800">
+                      <p className="font-medium text-gray-900 dark:text-gray-100">Email Support</p>
+                      <a href="mailto:support@vendorflow.com" className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">
                         support@vendorflow.com
                       </a>
-                      <p className="text-xs text-gray-500 mt-1">Response within 24 hours</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Response within 24 hours</p>
                     </div>
                   </div>
 
                   <div className="flex items-start space-x-3">
-                    <div className="p-2 bg-green-100 rounded-lg">
-                      <Phone size={20} className="text-green-600" />
+                    <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                      <Phone size={20} className="text-green-600 dark:text-green-400" />
                     </div>
                     <div>
-                      <p className="font-medium text-gray-900">Phone Support</p>
-                      <a href="tel:+18005551234" className="text-sm text-green-600 hover:text-green-800">
+                      <p className="font-medium text-gray-900 dark:text-gray-100">Phone Support</p>
+                      <a href="tel:+18005551234" className="text-sm text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300">
                         1-800-555-1234
                       </a>
-                      <p className="text-xs text-gray-500 mt-1">Mon-Fri, 9am-6pm EST</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Mon-Fri, 9am-6pm EST</p>
                     </div>
                   </div>
 
                   <div className="flex items-start space-x-3">
-                    <div className="p-2 bg-purple-100 rounded-lg">
-                      <MessageCircle size={20} className="text-purple-600" />
+                    <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+                      <MessageCircle size={20} className="text-purple-600 dark:text-purple-400" />
                     </div>
                     <div>
-                      <p className="font-medium text-gray-900">Live Chat</p>
-                      <button className="text-sm text-purple-600 hover:text-purple-800">
+                      <p className="font-medium text-gray-900 dark:text-gray-100">Live Chat</p>
+                      <button className="text-sm text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300">
                         Start chat
                       </button>
-                      <p className="text-xs text-gray-500 mt-1">Available 24/7</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Available 24/7</p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-blue-50 rounded-xl border border-blue-200 p-6">
+              <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800 p-6">
                 <h3 className="text-lg font-semibold text-blue-900 mb-2">Status Page</h3>
-                <p className="text-sm text-blue-800 mb-4">
+                <p className="text-sm text-blue-800 dark:text-blue-300 mb-4">
                   Check our system status and service availability.
                 </p>
                 <Link
@@ -507,16 +507,16 @@ export default function SupportPage() {
 
             {/* Contact Form */}
             <div className="lg:col-span-2">
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Send us a Message</h3>
+              <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Send us a Message</h3>
                 
                 {formSubmitted ? (
                   <div className="text-center py-12">
-                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <CheckCircle size={32} className="text-green-600" />
+                    <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <CheckCircle size={32} className="text-green-600 dark:text-green-400" />
                     </div>
-                    <h4 className="text-xl font-semibold text-gray-900 mb-2">Ticket Submitted!</h4>
-                    <p className="text-gray-600">
+                    <h4 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">Ticket Submitted!</h4>
+                    <p className="text-gray-600 dark:text-gray-400">
                       We'll get back to you within 24 hours. Check your email for updates.
                     </p>
                   </div>
@@ -524,7 +524,7 @@ export default function SupportPage() {
                   <form onSubmit={handleSubmitTicket} className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                           Your Name *
                         </label>
                         <input
@@ -533,12 +533,12 @@ export default function SupportPage() {
                           value={formData.name}
                           onChange={handleInputChange}
                           required
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                           placeholder="John Doe"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                           Email Address *
                         </label>
                         <input
@@ -547,14 +547,14 @@ export default function SupportPage() {
                           value={formData.email}
                           onChange={handleInputChange}
                           required
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                           placeholder="john@company.com"
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         Subject *
                       </label>
                       <input
@@ -563,14 +563,14 @@ export default function SupportPage() {
                         value={formData.subject}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         placeholder="Brief description of your issue"
                       />
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                           Category *
                         </label>
                         <select
@@ -578,7 +578,7 @@ export default function SupportPage() {
                           value={formData.category}
                           onChange={handleInputChange}
                           required
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         >
                           <option value="technical">Technical Issue</option>
                           <option value="billing">Billing Question</option>
@@ -588,7 +588,7 @@ export default function SupportPage() {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                           Priority *
                         </label>
                         <select
@@ -596,7 +596,7 @@ export default function SupportPage() {
                           value={formData.priority}
                           onChange={handleInputChange}
                           required
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         >
                           <option value="low">Low</option>
                           <option value="medium">Medium</option>
@@ -607,7 +607,7 @@ export default function SupportPage() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         Message *
                       </label>
                       <textarea
@@ -616,13 +616,13 @@ export default function SupportPage() {
                         onChange={handleInputChange}
                         required
                         rows={6}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         placeholder="Please describe your issue in detail..."
                       />
                     </div>
 
                     <div className="flex items-center justify-between pt-4">
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
                         * Required fields. We'll respond within 24 hours.
                       </p>
                       <button
@@ -652,7 +652,7 @@ export default function SupportPage() {
           </div>
           <button
             onClick={() => setActiveTab('contact')}
-            className="px-6 py-3 bg-white text-blue-600 rounded-lg hover:bg-blue-50 font-medium"
+            className="px-6 py-3 bg-white dark:bg-gray-900 text-blue-600 dark:text-blue-400 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 font-medium"
           >
             Contact Support
           </button>

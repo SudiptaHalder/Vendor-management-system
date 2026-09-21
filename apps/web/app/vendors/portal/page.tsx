@@ -273,7 +273,7 @@
 //       return {
 //         label: 'Deleted',
 //         badge: (
-//           <span className="px-2 py-1 bg-red-100 text-red-800 text-xs font-medium rounded-full flex items-center w-fit">
+//           <span className="px-2 py-1 bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 text-xs font-medium rounded-full flex items-center w-fit">
 //             <XCircle size={12} className="mr-1" /> Deleted
 //           </span>
 //         )
@@ -283,7 +283,7 @@
 //       return {
 //         label: 'Active',
 //         badge: (
-//           <span className="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full flex items-center w-fit">
+//           <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-xs font-medium rounded-full flex items-center w-fit">
 //             <UserCheck size={12} className="mr-1" /> Active
 //           </span>
 //         )
@@ -293,7 +293,7 @@
 //       return {
 //         label: 'Accepted',
 //         badge: (
-//           <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full flex items-center w-fit">
+//           <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs font-medium rounded-full flex items-center w-fit">
 //             <CheckCircle size={12} className="mr-1" /> Accepted
 //           </span>
 //         )
@@ -303,7 +303,7 @@
 //       return {
 //         label: 'Invited',
 //         badge: (
-//           <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full flex items-center w-fit">
+//           <span className="px-2 py-1 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 text-xs font-medium rounded-full flex items-center w-fit">
 //             <Clock size={12} className="mr-1" /> Invited
 //           </span>
 //         )
@@ -312,7 +312,7 @@
 //     return {
 //       label: 'Not Invited',
 //       badge: (
-//         <span className="px-2 py-1 bg-gray-100 text-gray-800 text-xs font-medium rounded-full flex items-center w-fit">
+//         <span className="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-xs font-medium rounded-full flex items-center w-fit">
 //           <UserX size={12} className="mr-1" /> Not Invited
 //         </span>
 //       )
@@ -376,16 +376,16 @@
 //         {/* Header */}
 //         <div className="flex justify-between items-center mb-6">
 //           <div>
-//             <div className="flex items-center space-x-2 text-sm text-gray-500 mb-2">
+//             <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 mb-2">
 //               <span>Vendors</span>
 //               <ChevronRight size={14} />
-//               <span className="text-gray-900">Vendor Portal</span>
+//               <span className="text-gray-900 dark:text-gray-100">Vendor Portal</span>
 //             </div>
-//             <h1 className="text-2xl font-bold text-gray-900">Vendor Portal Management</h1>
-//             <p className="text-gray-600 mt-1">Manage vendor access, invitations, and portal settings</p>
+//             <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Vendor Portal Management</h1>
+//             <p className="text-gray-600 dark:text-gray-400 mt-1">Manage vendor access, invitations, and portal settings</p>
 //           </div>
 //           <div className="flex space-x-2">
-//             <button className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center space-x-2">
+//             <button className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-2">
 //               <Download size={16} />
 //               <span>Export</span>
 //             </button>
@@ -397,15 +397,15 @@
 //         </div>
 
 //         {/* Portal Status Card */}
-//         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+//         <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
 //           <div className="flex items-center justify-between">
 //             <div className="flex items-center space-x-4">
-//               <div className={`p-3 rounded-lg ${portalEnabled ? 'bg-green-100' : 'bg-gray-100'}`}>
-//                 <Globe className={`w-6 h-6 ${portalEnabled ? 'text-green-600' : 'text-gray-600'}`} />
+//               <div className={`p-3 rounded-lg ${portalEnabled ? 'bg-green-100 dark:bg-green-900/30' : 'bg-gray-100 dark:bg-gray-800'}`}>
+//                 <Globe className={`w-6 h-6 ${portalEnabled ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'}`} />
 //               </div>
 //               <div>
-//                 <h2 className="text-lg font-semibold text-gray-900">Portal Status</h2>
-//                 <p className="text-sm text-gray-600">
+//                 <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Portal Status</h2>
+//                 <p className="text-sm text-gray-600 dark:text-gray-400">
 //                   {portalEnabled 
 //                     ? 'Your vendor portal is active and accessible' 
 //                     : 'Your vendor portal is currently disabled'}
@@ -416,8 +416,8 @@
 //               onClick={() => setPortalEnabled(!portalEnabled)}
 //               className={`px-4 py-2 rounded-lg font-medium ${
 //                 portalEnabled 
-//                   ? 'bg-red-100 text-red-700 hover:bg-red-200' 
-//                   : 'bg-green-100 text-green-700 hover:bg-green-200'
+//                   ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 hover:bg-red-200' 
+//                   : 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 hover:bg-green-200'
 //               }`}
 //             >
 //               {portalEnabled ? 'Disable Portal' : 'Enable Portal'}
@@ -427,49 +427,49 @@
 
 //         {/* Stats Cards */}
 //         <div className="grid grid-cols-1 md:grid-cols-6 gap-4 mb-6">
-//           <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
-//             <p className="text-xs text-gray-500">Total Vendors</p>
-//             <p className="text-2xl font-bold text-gray-900">{stats.totalVendors}</p>
+//           <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-4 border border-gray-100 dark:border-gray-800">
+//             <p className="text-xs text-gray-500 dark:text-gray-400">Total Vendors</p>
+//             <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stats.totalVendors}</p>
 //           </div>
-//           <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
-//             <p className="text-xs text-gray-500">Active Portal Users</p>
-//             <p className="text-2xl font-bold text-green-600">{stats.activeUsers}</p>
+//           <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-4 border border-gray-100 dark:border-gray-800">
+//             <p className="text-xs text-gray-500 dark:text-gray-400">Active Portal Users</p>
+//             <p className="text-2xl font-bold text-green-600 dark:text-green-400">{stats.activeUsers}</p>
 //           </div>
-//           <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
-//             <p className="text-xs text-gray-500">Pending Invitations</p>
-//             <p className="text-2xl font-bold text-yellow-600">{stats.pendingInvitations}</p>
+//           <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-4 border border-gray-100 dark:border-gray-800">
+//             <p className="text-xs text-gray-500 dark:text-gray-400">Pending Invitations</p>
+//             <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">{stats.pendingInvitations}</p>
 //           </div>
-//           <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
-//             <p className="text-xs text-gray-500">Not Invited</p>
-//             <p className="text-2xl font-bold text-gray-600">{stats.notInvited}</p>
+//           <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-4 border border-gray-100 dark:border-gray-800">
+//             <p className="text-xs text-gray-500 dark:text-gray-400">Not Invited</p>
+//             <p className="text-2xl font-bold text-gray-600 dark:text-gray-400">{stats.notInvited}</p>
 //           </div>
-//           <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
-//             <p className="text-xs text-gray-500">Frozen</p>
-//             <p className="text-2xl font-bold text-gray-600">{stats.frozenVendors || 0}</p>
+//           <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-4 border border-gray-100 dark:border-gray-800">
+//             <p className="text-xs text-gray-500 dark:text-gray-400">Frozen</p>
+//             <p className="text-2xl font-bold text-gray-600 dark:text-gray-400">{stats.frozenVendors || 0}</p>
 //           </div>
-//           <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
-//             <p className="text-xs text-gray-500">Deleted</p>
-//             <p className="text-2xl font-bold text-red-600">{stats.deletedVendors || 0}</p>
+//           <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-4 border border-gray-100 dark:border-gray-800">
+//             <p className="text-xs text-gray-500 dark:text-gray-400">Deleted</p>
+//             <p className="text-2xl font-bold text-red-600 dark:text-red-400">{stats.deletedVendors || 0}</p>
 //           </div>
 //         </div>
 
 //         {/* Filters */}
-//         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6">
+//         <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 mb-6">
 //           <div className="flex flex-col md:flex-row gap-4">
 //             <div className="flex-1 relative">
-//               <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+//               <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
 //               <input
 //                 type="text"
 //                 placeholder="Search vendors by name, code, or email..."
 //                 value={searchTerm}
 //                 onChange={(e) => setSearchTerm(e.target.value)}
-//                 className="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+//                 className="w-full pl-9 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
 //               />
 //             </div>
 //             <select
 //               value={filterStatus}
 //               onChange={(e) => setFilterStatus(e.target.value)}
-//               className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500"
+//               className="px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:border-blue-500"
 //             >
 //               <option value="all">All Status</option>
 //               <option value="active">Active</option>
@@ -479,16 +479,16 @@
 //               <option value="frozen">Frozen</option>
 //               <option value="deleted">Deleted</option>
 //             </select>
-//             <button className="px-3 py-2 border border-gray-200 rounded-lg hover:bg-gray-50">
-//               <Filter size={18} className="text-gray-600" />
+//             <button className="px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
+//               <Filter size={18} className="text-gray-600 dark:text-gray-400" />
 //             </button>
 //           </div>
 //         </div>
 
 //         {/* Bulk Actions */}
 //         {selectedVendors.length > 0 && (
-//           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 flex items-center justify-between">
-//             <span className="text-sm text-blue-800">{selectedVendors.length} vendor(s) selected</span>
+//           <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6 flex items-center justify-between">
+//             <span className="text-sm text-blue-800 dark:text-blue-300">{selectedVendors.length} vendor(s) selected</span>
 //             <div className="flex space-x-2">
 //               <button
 //                 onClick={handleSendInvitations}
@@ -514,7 +514,7 @@
 //               </button>
 //               <button
 //                 onClick={() => setSelectedVendors([])}
-//                 className="px-3 py-1.5 bg-gray-200 text-gray-700 text-sm rounded-lg hover:bg-gray-300"
+//                 className="px-3 py-1.5 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm rounded-lg hover:bg-gray-300"
 //               >
 //                 Clear
 //               </button>
@@ -523,62 +523,62 @@
 //         )}
 
 //         {/* Vendors Table */}
-//         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+//         <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
 //           <div className="overflow-x-auto">
 //             <table className="w-full">
-//               <thead className="bg-gray-50">
+//               <thead className="bg-gray-50 dark:bg-gray-800">
 //                 <tr>
 //                   <th className="px-4 py-3 text-left w-10">
 //                     <input
 //                       type="checkbox"
 //                       checked={selectAll}
 //                       onChange={toggleSelectAll}
-//                       className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+//                       className="rounded border-gray-300 dark:border-gray-600 text-blue-600 dark:text-blue-400 focus:ring-blue-500"
 //                     />
 //                   </th>
-//                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Vendor</th>
-//                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Code</th>
-//                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
-//                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Portal Status</th>
-//                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Last Login</th>
-//                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Invited On</th>
-//                   <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Actions</th>
+//                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Vendor</th>
+//                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Code</th>
+//                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Email</th>
+//                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Portal Status</th>
+//                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Last Login</th>
+//                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Invited On</th>
+//                   <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Actions</th>
 //                 </tr>
 //               </thead>
-//               <tbody className="divide-y divide-gray-200">
+//               <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
 //                 {filteredVendors.map((vendor) => {
 //                   const status = getPortalStatus(vendor)
 //                   const isActive = vendor.status !== 'frozen' && vendor.status !== 'deleted'
 //                   return (
-//                     <tr key={vendor.id} className="hover:bg-gray-50">
+//                     <tr key={vendor.id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
 //                       <td className="px-4 py-3">
 //                         <input
 //                           type="checkbox"
 //                           checked={selectedVendors.includes(vendor.id)}
 //                           onChange={() => toggleSelectVendor(vendor.id)}
 //                           disabled={!isActive}
-//                           className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:opacity-50"
+//                           className="rounded border-gray-300 dark:border-gray-600 text-blue-600 dark:text-blue-400 focus:ring-blue-500 disabled:opacity-50"
 //                         />
 //                       </td>
 //                       <td className="px-4 py-3">
-//                         <div className="font-medium text-gray-900">{vendor.supplierName}</div>
+//                         <div className="font-medium text-gray-900 dark:text-gray-100">{vendor.supplierName}</div>
 //                         {!isActive && (
-//                           <span className="text-xs text-gray-400">Account {vendor.status}</span>
+//                           <span className="text-xs text-gray-400 dark:text-gray-500">Account {vendor.status}</span>
 //                         )}
 //                       </td>
 //                       <td className="px-4 py-3">
-//                         <span className="text-sm text-gray-600">{vendor.supplierCode}</span>
+//                         <span className="text-sm text-gray-600 dark:text-gray-400">{vendor.supplierCode}</span>
 //                       </td>
 //                       <td className="px-4 py-3">
-//                         <span className="text-sm text-gray-600">{vendor.email || '-'}</span>
+//                         <span className="text-sm text-gray-600 dark:text-gray-400">{vendor.email || '-'}</span>
 //                       </td>
 //                       <td className="px-4 py-3">
 //                         {status.badge}
 //                       </td>
-//                       <td className="px-4 py-3 text-sm text-gray-600">
+//                       <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">
 //                         {vendor.lastLoginAt ? new Date(vendor.lastLoginAt).toLocaleDateString() : '-'}
 //                       </td>
-//                       <td className="px-4 py-3 text-sm text-gray-600">
+//                       <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">
 //                         {vendor.invitationSentAt ? new Date(vendor.invitationSentAt).toLocaleDateString() : '-'}
 //                       </td>
 //                       <td className="px-4 py-3 text-center">
@@ -586,7 +586,7 @@
 //                           {!vendor.invitationStatus && isActive && (
 //                             <button
 //                               onClick={() => handleSingleInvite(vendor.id)}
-//                               className="p-1.5 text-green-600 hover:bg-green-50 rounded-lg transition"
+//                               className="p-1.5 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg transition"
 //                               title="Send Invitation"
 //                             >
 //                               <Send size={16} />
@@ -595,7 +595,7 @@
 //                           {vendor.invitationStatus === 'sent' && isActive && (
 //                             <button
 //                               onClick={() => handleResendInvitation(vendor.id)}
-//                               className="p-1.5 text-yellow-600 hover:bg-yellow-50 rounded-lg transition"
+//                               className="p-1.5 text-yellow-600 dark:text-yellow-400 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 rounded-lg transition"
 //                               title="Resend Invitation"
 //                             >
 //                               <RefreshCw size={16} />
@@ -605,14 +605,14 @@
 //                             <>
 //                               <button
 //                                 onClick={() => setShowFreezeConfirm(vendor.id)}
-//                                 className="p-1.5 text-gray-400 hover:text-yellow-600 hover:bg-yellow-50 rounded-lg transition"
+//                                 className="p-1.5 text-gray-400 dark:text-gray-500 hover:text-yellow-600 dark:hover:text-yellow-400 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 rounded-lg transition"
 //                                 title="Freeze Vendor"
 //                               >
 //                                 <Ban size={16} />
 //                               </button>
 //                               <button
 //                                 onClick={() => setShowDeleteConfirm(vendor.id)}
-//                                 className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition"
+//                                 className="p-1.5 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition"
 //                                 title="Delete Vendor"
 //                               >
 //                                 <Trash2 size={16} />
@@ -622,7 +622,7 @@
 //                           {vendor.status === 'frozen' && (
 //                             <button
 //                               onClick={() => handleActivateVendor(vendor.id)}
-//                               className="p-1.5 text-green-600 hover:bg-green-50 rounded-lg transition"
+//                               className="p-1.5 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg transition"
 //                               title="Activate Vendor"
 //                             >
 //                               <CheckCircle size={16} />
@@ -630,7 +630,7 @@
 //                           )}
 //                           <Link
 //                             href={`/vendors/${vendor.id}`}
-//                             className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition"
+//                             className="p-1.5 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
 //                             title="View Details"
 //                           >
 //                             <Eye size={16} />
@@ -649,20 +649,20 @@
 //       {/* Delete Confirmation Modal */}
 //       {showDeleteConfirm && (
 //         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-//           <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
+//           <div className="bg-white dark:bg-gray-900 rounded-xl shadow-xl max-w-md w-full p-6">
 //             <div className="flex items-center justify-center mb-4">
-//               <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-//                 <AlertCircle className="w-6 h-6 text-red-600" />
+//               <div className="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
+//                 <AlertCircle className="w-6 h-6 text-red-600 dark:text-red-400" />
 //               </div>
 //             </div>
-//             <h3 className="text-lg font-semibold text-gray-900 text-center mb-2">Delete Vendor</h3>
-//             <p className="text-gray-600 text-center mb-6">
+//             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 text-center mb-2">Delete Vendor</h3>
+//             <p className="text-gray-600 dark:text-gray-400 text-center mb-6">
 //               Are you sure you want to delete this vendor? This action cannot be undone.
 //             </p>
 //             <div className="flex space-x-3">
 //               <button
 //                 onClick={() => setShowDeleteConfirm(null)}
-//                 className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+//                 className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
 //               >
 //                 Cancel
 //               </button>
@@ -680,20 +680,20 @@
 //       {/* Freeze Confirmation Modal */}
 //       {showFreezeConfirm && (
 //         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-//           <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
+//           <div className="bg-white dark:bg-gray-900 rounded-xl shadow-xl max-w-md w-full p-6">
 //             <div className="flex items-center justify-center mb-4">
-//               <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
-//                 <Ban className="w-6 h-6 text-yellow-600" />
+//               <div className="w-12 h-12 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center">
+//                 <Ban className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
 //               </div>
 //             </div>
-//             <h3 className="text-lg font-semibold text-gray-900 text-center mb-2">Freeze Vendor</h3>
-//             <p className="text-gray-600 text-center mb-6">
+//             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 text-center mb-2">Freeze Vendor</h3>
+//             <p className="text-gray-600 dark:text-gray-400 text-center mb-6">
 //               Freezing this vendor will prevent them from accessing the portal. You can unfreeze them later.
 //             </p>
 //             <div className="flex space-x-3">
 //               <button
 //                 onClick={() => setShowFreezeConfirm(null)}
-//                 className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+//                 className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
 //               >
 //                 Cancel
 //               </button>
@@ -711,27 +711,27 @@
 //       {/* Bulk Action Confirmation Modal */}
 //       {showBulkActionConfirm && (
 //         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-//           <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
+//           <div className="bg-white dark:bg-gray-900 rounded-xl shadow-xl max-w-md w-full p-6">
 //             <div className="flex items-center justify-center mb-4">
-//               <div className={`w-12 h-12 rounded-full flex items-center justify-center ${showBulkActionConfirm === 'delete' ? 'bg-red-100' : 'bg-yellow-100'}`}>
+//               <div className={`w-12 h-12 rounded-full flex items-center justify-center ${showBulkActionConfirm === 'delete' ? 'bg-red-100 dark:bg-red-900/30' : 'bg-yellow-100 dark:bg-yellow-900/30'}`}>
 //                 {showBulkActionConfirm === 'delete' ? (
-//                   <AlertCircle className="w-6 h-6 text-red-600" />
+//                   <AlertCircle className="w-6 h-6 text-red-600 dark:text-red-400" />
 //                 ) : (
-//                   <Ban className="w-6 h-6 text-yellow-600" />
+//                   <Ban className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
 //                 )}
 //               </div>
 //             </div>
-//             <h3 className="text-lg font-semibold text-gray-900 text-center mb-2">
+//             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 text-center mb-2">
 //               {showBulkActionConfirm === 'delete' ? 'Delete Vendors' : 'Freeze Vendors'}
 //             </h3>
-//             <p className="text-gray-600 text-center mb-6">
+//             <p className="text-gray-600 dark:text-gray-400 text-center mb-6">
 //               Are you sure you want to {showBulkActionConfirm} {selectedVendors.length} vendor(s)?
 //               {showBulkActionConfirm === 'delete' && ' This action cannot be undone.'}
 //             </p>
 //             <div className="flex space-x-3">
 //               <button
 //                 onClick={() => setShowBulkActionConfirm(null)}
-//                 className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+//                 className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
 //               >
 //                 Cancel
 //               </button>
@@ -797,12 +797,6 @@ interface PortalStats {
   vendorsWithGSTN: number
 }
 
-// Known vendors with emails (from SAP detail page)
-const KNOWN_VENDORS_WITH_EMAIL: Record<string, string> = {
-  '101359': 'prashantph3111999@gmail.com',
-  // Add more as you find them
-}
-
 export default function VendorPortalManagementPage() {
   const [vendors, setVendors] = useState<VendorWithStatus[]>([])
   const [loading, setLoading] = useState(true)
@@ -848,12 +842,8 @@ export default function VendorPortalManagementPage() {
       
       if (data.success && data.data) {
         const transformedVendors = data.data.map((vendor: any) => {
-          // Check if we have a known email for this vendor
-          let email = vendor.EmailAddress || null
-          if (!email && KNOWN_VENDORS_WITH_EMAIL[vendor.BusinessPartner]) {
-            email = KNOWN_VENDORS_WITH_EMAIL[vendor.BusinessPartner]
-          }
-          
+          const email = vendor.EmailAddress || null
+
           return {
             id: vendor.BusinessPartner,
             supplierCode: vendor.BusinessPartner,
@@ -891,7 +881,7 @@ export default function VendorPortalManagementPage() {
     return {
       label: 'Active',
       badge: (
-        <span className="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full flex items-center w-fit">
+        <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-xs font-medium rounded-full flex items-center w-fit">
           <UserCheck size={12} className="mr-1" /> Active
         </span>
       )
@@ -990,20 +980,8 @@ export default function VendorPortalManagementPage() {
     }
   }
 
-  // Function to check if vendor has email (from our known list or API)
   const vendorHasEmail = (vendor: VendorWithStatus): boolean => {
-    // Check if vendor has email directly
-    if (vendor.email && vendor.email !== 'null') {
-      return true
-    }
-    // Check if vendor is in our known list
-    if (KNOWN_VENDORS_WITH_EMAIL[vendor.id]) {
-      return true
-    }
-    // For vendors we don't know about, we'll try to check
-    // If the vendor has an email, the API will handle it
-    // We'll default to enabled so the API can return a proper error
-    return true // Default to true so API can handle
+    return !!(vendor.email && vendor.email !== 'null')
   }
 
   const filteredVendors = vendors.filter(vendor => {
@@ -1065,15 +1043,15 @@ export default function VendorPortalManagementPage() {
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
           <div>
-            <div className="flex items-center space-x-2 text-sm text-gray-500 mb-2">
+            <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 mb-2">
               <span>Vendors</span>
               <ChevronRight size={14} />
-              <span className="text-gray-900">Vendor Portal</span>
+              <span className="text-gray-900 dark:text-gray-100">Vendor Portal</span>
             </div>
-            <h1 className="text-2xl font-bold text-gray-900">Vendor Portal Management</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Vendor Portal Management</h1>
             <div className="flex items-center space-x-3 mt-1">
-              <p className="text-gray-600">Live Vendor Master Data from SAP S/4HANA</p>
-              <span className="flex items-center text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
+              <p className="text-gray-600 dark:text-gray-400">Live Vendor Master Data from SAP S/4HANA</p>
+              <span className="flex items-center text-xs bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 px-2 py-1 rounded-full">
                 <Zap size={12} className="mr-1" />
                 SAP Live
               </span>
@@ -1082,7 +1060,7 @@ export default function VendorPortalManagementPage() {
           <div className="flex space-x-2">
             <button
               onClick={fetchVendorsFromSAP}
-              className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center space-x-2"
+              className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-2"
             >
               <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
               <span>Refresh from SAP</span>
@@ -1095,14 +1073,14 @@ export default function VendorPortalManagementPage() {
         </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 flex items-start space-x-3">
-            <AlertCircle className="w-5 h-5 text-red-600 mt-0.5" />
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6 flex items-start space-x-3">
+            <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 mt-0.5" />
             <div>
-              <p className="text-sm font-medium text-red-800">SAP Connection Error</p>
-              <p className="text-sm text-red-700">{error}</p>
+              <p className="text-sm font-medium text-red-800 dark:text-red-300">SAP Connection Error</p>
+              <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
               <button 
                 onClick={fetchVendorsFromSAP}
-                className="mt-2 text-sm text-red-600 hover:text-red-800 underline"
+                className="mt-2 text-sm text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 underline"
               >
                 Try Again
               </button>
@@ -1111,28 +1089,28 @@ export default function VendorPortalManagementPage() {
         )}
 
         {/* Portal Status Card */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <div className={`p-3 rounded-lg ${portalEnabled ? 'bg-green-100' : 'bg-gray-100'}`}>
-                <Globe className={`w-6 h-6 ${portalEnabled ? 'text-green-600' : 'text-gray-600'}`} />
+              <div className={`p-3 rounded-lg ${portalEnabled ? 'bg-green-100 dark:bg-green-900/30' : 'bg-gray-100 dark:bg-gray-800'}`}>
+                <Globe className={`w-6 h-6 ${portalEnabled ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'}`} />
               </div>
               <div>
-                <h2 className="text-lg font-semibold text-gray-900">Portal Status</h2>
-                <p className="text-sm text-gray-600">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Portal Status</h2>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
                   {portalEnabled 
                     ? 'Your vendor portal is active and accessible' 
                     : 'Your vendor portal is currently disabled'}
                 </p>
-                <p className="text-xs text-green-600 mt-1">✓ Data from SAP S/4HANA</p>
+                <p className="text-xs text-green-600 dark:text-green-400 mt-1">✓ Data from SAP S/4HANA</p>
               </div>
             </div>
             <button
               onClick={() => setPortalEnabled(!portalEnabled)}
               className={`px-4 py-2 rounded-lg font-medium ${
                 portalEnabled 
-                  ? 'bg-red-100 text-red-700 hover:bg-red-200' 
-                  : 'bg-green-100 text-green-700 hover:bg-green-200'
+                  ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 hover:bg-red-200' 
+                  : 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 hover:bg-green-200'
               }`}
             >
               {portalEnabled ? 'Disable Portal' : 'Enable Portal'}
@@ -1142,54 +1120,54 @@ export default function VendorPortalManagementPage() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
-            <p className="text-xs text-gray-500">Total Vendors (SAP)</p>
-            <p className="text-2xl font-bold text-gray-900">{stats.totalVendors.toLocaleString()}</p>
-            <p className="text-xs text-green-600 mt-1">✓ Live from SAP</p>
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-4 border border-gray-100 dark:border-gray-800">
+            <p className="text-xs text-gray-500 dark:text-gray-400">Total Vendors (SAP)</p>
+            <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stats.totalVendors.toLocaleString()}</p>
+            <p className="text-xs text-green-600 dark:text-green-400 mt-1">✓ Live from SAP</p>
           </div>
-          <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
-            <p className="text-xs text-gray-500">Active Vendors</p>
-            <p className="text-2xl font-bold text-green-600">{stats.activeVendors.toLocaleString()}</p>
-            <p className="text-xs text-green-600 mt-1">✓ Live from SAP</p>
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-4 border border-gray-100 dark:border-gray-800">
+            <p className="text-xs text-gray-500 dark:text-gray-400">Active Vendors</p>
+            <p className="text-2xl font-bold text-green-600 dark:text-green-400">{stats.activeVendors.toLocaleString()}</p>
+            <p className="text-xs text-green-600 dark:text-green-400 mt-1">✓ Live from SAP</p>
           </div>
-          <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
-            <p className="text-xs text-gray-500">Vendors with GSTN</p>
-            <p className="text-2xl font-bold text-purple-600">{stats.vendorsWithGSTN}</p>
-            <p className="text-xs text-gray-500 mt-1">From SAP data</p>
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-4 border border-gray-100 dark:border-gray-800">
+            <p className="text-xs text-gray-500 dark:text-gray-400">Vendors with GSTN</p>
+            <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">{stats.vendorsWithGSTN}</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">From SAP data</p>
           </div>
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 mb-6">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
               <input
                 type="text"
                 placeholder="Search vendors by name, code, email, city, or country..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="w-full pl-9 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               />
             </div>
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500"
+              className="px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:border-blue-500"
             >
               <option value="all">All Status</option>
               <option value="active">Active</option>
             </select>
-            <button className="px-3 py-2 border border-gray-200 rounded-lg hover:bg-gray-50">
-              <Filter size={18} className="text-gray-600" />
+            <button className="px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
+              <Filter size={18} className="text-gray-600 dark:text-gray-400" />
             </button>
           </div>
         </div>
 
         {/* Bulk Actions */}
         {selectedVendors.length > 0 && (
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 flex items-center justify-between">
-            <span className="text-sm text-blue-800">{selectedVendors.length} vendor(s) selected</span>
+          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6 flex items-center justify-between">
+            <span className="text-sm text-blue-800 dark:text-blue-300">{selectedVendors.length} vendor(s) selected</span>
             <div className="flex space-x-2">
               <button
                 onClick={handleSendInvitations}
@@ -1201,7 +1179,7 @@ export default function VendorPortalManagementPage() {
               </button>
               <button
                 onClick={() => setSelectedVendors([])}
-                className="px-3 py-1.5 bg-gray-200 text-gray-700 text-sm rounded-lg hover:bg-gray-300"
+                className="px-3 py-1.5 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm rounded-lg hover:bg-gray-300"
               >
                 Clear
               </button>
@@ -1210,65 +1188,65 @@ export default function VendorPortalManagementPage() {
         )}
 
         {/* Vendors Table */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50">
+              <thead className="bg-gray-50 dark:bg-gray-800">
                 <tr>
                   <th className="px-4 py-3 text-left w-10">
                     <input
                       type="checkbox"
                       checked={selectAll}
                       onChange={toggleSelectAll}
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      className="rounded border-gray-300 dark:border-gray-600 text-blue-600 dark:text-blue-400 focus:ring-blue-500"
                     />
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Vendor</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Code</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Location</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">GSTN</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Actions</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Vendor</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Code</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Email</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Location</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">GSTN</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Status</th>
+                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                 {filteredVendors.map((vendor) => {
                   const status = getPortalStatus(vendor)
                   const hasEmail = vendorHasEmail(vendor)
                   return (
-                    <tr key={vendor.id} className="hover:bg-gray-50">
+                    <tr key={vendor.id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
                       <td className="px-4 py-3">
                         <input
                           type="checkbox"
                           checked={selectedVendors.includes(vendor.id)}
                           onChange={() => toggleSelectVendor(vendor.id)}
-                          className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                          className="rounded border-gray-300 dark:border-gray-600 text-blue-600 dark:text-blue-400 focus:ring-blue-500"
                           disabled={!hasEmail}
                         />
                       </td>
                       <td className="px-4 py-3">
-                        <div className="font-medium text-gray-900">{vendor.supplierName}</div>
-                        <div className="text-xs text-gray-400">Source: SAP</div>
+                        <div className="font-medium text-gray-900 dark:text-gray-100">{vendor.supplierName}</div>
+                        <div className="text-xs text-gray-400 dark:text-gray-500">Source: SAP</div>
                       </td>
                       <td className="px-4 py-3">
-                        <span className="font-mono text-sm text-gray-600">{vendor.supplierCode}</span>
+                        <span className="font-mono text-sm text-gray-600 dark:text-gray-400">{vendor.supplierCode}</span>
                       </td>
                       <td className="px-4 py-3">
                         {hasEmail ? (
-                          <span className="text-sm text-gray-600">{vendor.email}</span>
+                          <span className="text-sm text-gray-600 dark:text-gray-400">{vendor.email}</span>
                         ) : (
-                          <span className="text-sm text-gray-400 italic">No email</span>
+                          <span className="text-sm text-gray-400 dark:text-gray-500 italic">No email</span>
                         )}
                       </td>
                       <td className="px-4 py-3">
-                        <div className="text-sm text-gray-600">
+                        <div className="text-sm text-gray-600 dark:text-gray-400">
                           {vendor.city || '-'}
-                          {vendor.country && <span className="text-xs text-gray-400 ml-1">({vendor.country})</span>}
+                          {vendor.country && <span className="text-xs text-gray-400 dark:text-gray-500 ml-1">({vendor.country})</span>}
                         </div>
                       </td>
                       <td className="px-4 py-3">
-                        <span className="font-mono text-xs text-gray-600">{vendor.taxNumber || '-'}</span>
+                        <span className="font-mono text-xs text-gray-600 dark:text-gray-400">{vendor.taxNumber || '-'}</span>
                       </td>
                       <td className="px-4 py-3">
                         {status.badge}
@@ -1280,7 +1258,7 @@ export default function VendorPortalManagementPage() {
                             disabled={sendingInvites || !hasEmail}
                             className={`p-1.5 rounded-lg transition ${
                               hasEmail 
-                                ? 'text-green-600 hover:bg-green-50' 
+                                ? 'text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20' 
                                 : 'text-gray-300 cursor-not-allowed'
                             }`}
                             title={hasEmail ? 'Send Invitation' : 'No email address found in SAP'}
@@ -1289,7 +1267,7 @@ export default function VendorPortalManagementPage() {
                           </button>
                           <Link
                             href={`/vendors/${vendor.id}`}
-                            className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition"
+                            className="p-1.5 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
                             title="View Details"
                           >
                             <Eye size={16} />
@@ -1305,17 +1283,17 @@ export default function VendorPortalManagementPage() {
         </div>
 
         {/* SAP Connection Status */}
-        <div className="mt-6 rounded-lg p-4 bg-green-50 border border-green-200 flex items-center justify-between">
+        <div className="mt-6 rounded-lg p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
             <div>
-              <p className="text-sm font-medium text-green-800">Connected to SAP S/4HANA Cloud</p>
-              <p className="text-xs text-green-700">
+              <p className="text-sm font-medium text-green-800 dark:text-green-300">Connected to SAP S/4HANA Cloud</p>
+              <p className="text-xs text-green-700 dark:text-green-300">
                 Showing {vendors.length} vendors from SAP Business Partner API
               </p>
             </div>
           </div>
-          <div className="text-xs text-gray-500">
+          <div className="text-xs text-gray-500 dark:text-gray-400">
             {vendors.length > 0 ? `${vendors.length.toLocaleString()} vendors loaded` : 'No vendors loaded'}
           </div>
         </div>

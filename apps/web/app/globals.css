@@ -26,11 +26,39 @@
     --ring: 222.2 84% 4.9%;
     --radius: 0.5rem;
   }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
 }
 
 @layer base {
   html {
-    font-size: 14px;
+    font-size: 10px; /* small (default) */
+  }
+  html[data-font-size="medium"] {
+    font-size: 13px;
+  }
+  html[data-font-size="large"] {
+    font-size: 16px;
   }
   * {
     @apply border-border;
@@ -70,8 +98,8 @@ table td, table th {
 }
 
 /* Ensure text in forms is visible */
-input[type="text"], 
-input[type="number"], 
+input[type="text"],
+input[type="number"],
 input[type="date"],
 select,
 textarea {
@@ -93,6 +121,61 @@ label {
 /* Heading colors */
 h1, h2, h3, h4, h5, h6 {
   color: #111827 !important;
+}
+
+/* Dark mode counterparts for the hardcoded overrides above - these need
+   equal !important + higher specificity (.dark prefix) to actually win */
+.dark input,
+.dark select,
+.dark textarea {
+  color: #f3f4f6 !important;
+  background-color: #1f2937 !important;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #6b7280 !important;
+}
+
+.dark table td,
+.dark table th {
+  color: #f3f4f6 !important;
+}
+
+.dark .bg-white,
+.dark .bg-gray-50,
+.dark .bg-gray-100 {
+  color: #f3f4f6 !important;
+}
+
+.dark input[type="text"],
+.dark input[type="number"],
+.dark input[type="date"],
+.dark select,
+.dark textarea {
+  color: #f9fafb !important;
+  background-color: #1f2937 !important;
+  border-color: #4b5563 !important;
+}
+
+.dark input:disabled,
+.dark textarea:disabled,
+.dark select:disabled {
+  background-color: #111827 !important;
+  color: #6b7280 !important;
+}
+
+.dark label {
+  color: #d1d5db !important;
+}
+
+.dark h1,
+.dark h2,
+.dark h3,
+.dark h4,
+.dark h5,
+.dark h6 {
+  color: #f9fafb !important;
 }
 
 /* Sidebar fixes removed */

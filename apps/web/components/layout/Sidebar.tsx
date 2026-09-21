@@ -214,7 +214,7 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsO
 
   if (!mounted) {
     return (
-      <aside className={`fixed top-0 left-0 z-30 h-screen bg-white border-r border-gray-200 transition-all duration-300 ${
+      <aside className={`fixed top-0 left-0 z-30 h-screen bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 transition-all duration-300 ${
         isOpen ? 'w-64' : 'w-20'
       }`} />
     )
@@ -230,40 +230,40 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsO
       )}
 
       <aside
-        className={`fixed top-0 left-0 z-30 h-screen bg-white border-r border-gray-200 transition-all duration-300 flex flex-col ${
+        className={`fixed top-0 left-0 z-30 h-screen bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 transition-all duration-300 flex flex-col ${
           isOpen ? 'w-64' : 'w-20'
         }`}
       >
-        <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200 flex-shrink-0">
+        <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
           <div className="flex items-center space-x-2 overflow-hidden">
             <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
               <span className="text-white font-bold text-xl">VF</span>
             </div>
             {isOpen && (
-              <span className="text-xl font-bold text-gray-900 truncate">
-                Vendor<span className="text-blue-600">Flow</span>
+              <span className="text-xl font-bold text-gray-900 dark:text-gray-100 truncate">
+                Vendor<span className="text-blue-600 dark:text-blue-400">Flow</span>
               </span>
             )}
           </div>
           
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="p-1.5 rounded-lg hover:bg-gray-100 lg:block hidden flex-shrink-0 text-gray-700 hover:text-gray-900"
+            className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 lg:block hidden flex-shrink-0 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100"
             aria-label={isOpen ? 'Collapse sidebar' : 'Expand sidebar'}
           >
-            {isOpen ? <ChevronLeft size={18} className="text-gray-700" /> : <ChevronRightIcon size={18} className="text-gray-700" />}
+            {isOpen ? <ChevronLeft size={18} className="text-gray-700 dark:text-gray-300" /> : <ChevronRightIcon size={18} className="text-gray-700 dark:text-gray-300" />}
           </button>
         </div>
 
         {isOpen && (
-          <div className="px-4 py-3 border-b border-gray-200 bg-gray-50 flex-shrink-0">
+          <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 flex-shrink-0">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                <Building2 className="w-5 h-5 text-blue-600" />
+              <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Building2 className="w-5 h-5 text-blue-600 dark:text-blue-400" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-900 truncate">ABC Construction</p>
-                <p className="text-xs text-gray-500 truncate">Enterprise Plan</p>
+                <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">ABC Construction</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 truncate">Enterprise Plan</p>
               </div>
             </div>
           </div>
@@ -279,15 +279,15 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsO
                       onClick={() => !item.disabled && toggleMenu(item.name)}
                       className={`w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
                         item.disabled 
-                          ? 'text-gray-400 cursor-not-allowed' 
+                          ? 'text-gray-400 dark:text-gray-500 cursor-not-allowed' 
                           : expandedMenus.includes(item.name)
-                            ? 'bg-blue-50 text-blue-600'
-                            : 'text-gray-700 hover:bg-gray-100'
+                            ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
+                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                       }`}
                       disabled={item.disabled}
                     >
                       <div className="flex items-center space-x-3 min-w-0">
-                        <item.icon size={20} className={`flex-shrink-0 ${item.disabled ? 'text-gray-400' : ''}`} />
+                        <item.icon size={20} className={`flex-shrink-0 ${item.disabled ? 'text-gray-400 dark:text-gray-500' : ''}`} />
                         {isOpen && <span className="truncate">{item.name}</span>}
                       </div>
                       {isOpen && !item.disabled && (
@@ -305,7 +305,7 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsO
                         </div>
                       )}
                       {isOpen && item.disabled && (
-                        <Lock size={14} className="text-gray-400 flex-shrink-0" />
+                        <Lock size={14} className="text-gray-400 dark:text-gray-500 flex-shrink-0" />
                       )}
                     </button>
                     
@@ -315,13 +315,13 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsO
                           subItem.disabled ? (
                             <div
                               key={subItem.href}
-                              className="flex items-center justify-between px-3 py-2 text-sm rounded-lg text-gray-400 cursor-not-allowed"
+                              className="flex items-center justify-between px-3 py-2 text-sm rounded-lg text-gray-400 dark:text-gray-500 cursor-not-allowed"
                             >
                               <div className="flex items-center space-x-3 min-w-0">
-                                {subItem.icon && <subItem.icon size={16} className="flex-shrink-0 text-gray-400" />}
+                                {subItem.icon && <subItem.icon size={16} className="flex-shrink-0 text-gray-400 dark:text-gray-500" />}
                                 <span className="truncate">{subItem.name}</span>
                               </div>
-                              <Lock size={12} className="text-gray-400 flex-shrink-0" />
+                              <Lock size={12} className="text-gray-400 dark:text-gray-500 flex-shrink-0" />
                             </div>
                           ) : (
                             <Link
@@ -329,8 +329,8 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsO
                               href={subItem.href}
                               className={`flex items-center justify-between px-3 py-2 text-sm rounded-lg transition-colors ${
                                 isActive(subItem.href)
-                                  ? 'bg-blue-100 text-blue-600'
-                                  : 'text-gray-600 hover:bg-gray-100'
+                                  ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
+                                  : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
                               }`}
                             >
                               <div className="flex items-center space-x-3 min-w-0">
@@ -351,21 +351,21 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsO
                 ) : (
                   item.disabled ? (
                     <div
-                      className="flex items-center justify-between px-3 py-2 text-sm font-medium rounded-lg text-gray-400 cursor-not-allowed"
+                      className="flex items-center justify-between px-3 py-2 text-sm font-medium rounded-lg text-gray-400 dark:text-gray-500 cursor-not-allowed"
                     >
                       <div className="flex items-center space-x-3 min-w-0">
-                        <item.icon size={20} className="flex-shrink-0 text-gray-400" />
+                        <item.icon size={20} className="flex-shrink-0 text-gray-400 dark:text-gray-500" />
                         {isOpen && <span className="truncate">{item.name}</span>}
                       </div>
-                      {isOpen && <Lock size={14} className="text-gray-400 flex-shrink-0" />}
+                      {isOpen && <Lock size={14} className="text-gray-400 dark:text-gray-500 flex-shrink-0" />}
                     </div>
                   ) : (
                     <Link
                       href={item.href!}
                       className={`flex items-center justify-between px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
                         isActive(item.href!)
-                          ? 'bg-blue-50 text-blue-600'
-                          : 'text-gray-700 hover:bg-gray-100'
+                          ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
+                          : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                       }`}
                     >
                       <div className="flex items-center space-x-3 min-w-0">
@@ -385,11 +385,11 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsO
           </div>
         </nav>
 
-        <div className="border-t border-gray-200 bg-white p-3 flex-shrink-0">
+        <div className="border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-3 flex-shrink-0">
           <div className="space-y-1">
             <Link
               href="/notifications"
-              className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 relative"
+              className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 relative"
             >
               <Bell size={20} className="flex-shrink-0" />
               {isOpen && <span className="truncate">Notifications</span>}
@@ -401,7 +401,7 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsO
             </Link>
             <Link
               href="/support"
-              className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100"
+              className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
             >
               <HelpCircle size={20} className="flex-shrink-0" />
               {isOpen && <span className="truncate">Help & Support</span>}
@@ -414,7 +414,7 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsO
                 document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
                 window.location.href = '/admin-login'
               }}
-              className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-red-600 rounded-lg hover:bg-red-50"
+              className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-red-600 dark:text-red-400 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20"
             >
               <LogOut size={20} className="flex-shrink-0" />
               {isOpen && <span className="truncate">Logout</span>}

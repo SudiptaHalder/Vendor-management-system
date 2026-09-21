@@ -72,24 +72,24 @@ export default function VerifyDeliveryPage() {
     <MainLayout>
       <div className="max-w-2xl mx-auto">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">Verify Delivery</h1>
-          <p className="text-gray-600 mt-1">Scan the barcode on the vendor's invoice to check it against SAP</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Verify Delivery</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">Scan the barcode on the vendor's invoice to check it against SAP</p>
         </div>
 
-        <form onSubmit={handleVerify} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+        <form onSubmit={handleVerify} className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Scan or enter delivery document number
           </label>
           <div className="flex space-x-2">
             <div className="relative flex-1">
-              <ScanLine className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <ScanLine className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
               <input
                 ref={inputRef}
                 type="text"
                 value={code}
                 onChange={(e) => setCode(e.target.value)}
                 placeholder="Scan barcode here..."
-                className="w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-lg font-mono"
+                className="w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-lg font-mono"
                 autoComplete="off"
               />
             </div>
@@ -101,58 +101,58 @@ export default function VerifyDeliveryPage() {
               {loading ? <Loader2 className="animate-spin h-5 w-5" /> : 'Verify'}
             </button>
           </div>
-          <p className="text-xs text-gray-400 mt-2">A barcode scanner types the value and presses Enter automatically - just scan and it submits.</p>
+          <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">A barcode scanner types the value and presses Enter automatically - just scan and it submits.</p>
         </form>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-6 flex items-center">
-            <XCircle className="h-8 w-8 text-red-600 mr-3 flex-shrink-0" />
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-6 flex items-center">
+            <XCircle className="h-8 w-8 text-red-600 dark:text-red-400 mr-3 flex-shrink-0" />
             <div>
-              <p className="font-semibold text-red-800">Not Verified</p>
-              <p className="text-sm text-red-600">{error}</p>
+              <p className="font-semibold text-red-800 dark:text-red-300">Not Verified</p>
+              <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
             </div>
           </div>
         )}
 
         {result && (
-          <div className="bg-green-50 border border-green-200 rounded-xl p-6">
+          <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-6">
             <div className="flex items-center mb-4">
-              <CheckCircle className="h-8 w-8 text-green-600 mr-3 flex-shrink-0" />
+              <CheckCircle className="h-8 w-8 text-green-600 dark:text-green-400 mr-3 flex-shrink-0" />
               <div>
-                <p className="font-semibold text-green-800">Verified - Match Found in SAP</p>
-                <p className="text-sm text-green-600">Compare these details against the physical invoice</p>
+                <p className="font-semibold text-green-800 dark:text-green-300">Verified - Match Found in SAP</p>
+                <p className="text-sm text-green-600 dark:text-green-400">Compare these details against the physical invoice</p>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg p-4 grid grid-cols-2 gap-4 text-sm mb-4">
+            <div className="bg-white dark:bg-gray-900 rounded-lg p-4 grid grid-cols-2 gap-4 text-sm mb-4">
               <div>
-                <span className="text-gray-500 block">Delivery Document</span>
-                <span className="font-mono font-semibold text-gray-900">{result.deliveryDocument}</span>
+                <span className="text-gray-500 dark:text-gray-400 block">Delivery Document</span>
+                <span className="font-mono font-semibold text-gray-900 dark:text-gray-100">{result.deliveryDocument}</span>
               </div>
               <div>
-                <span className="text-gray-500 block">Supplier (Vendor Code)</span>
-                <span className="font-semibold text-gray-900">{result.supplier}</span>
+                <span className="text-gray-500 dark:text-gray-400 block">Supplier (Vendor Code)</span>
+                <span className="font-semibold text-gray-900 dark:text-gray-100">{result.supplier}</span>
               </div>
               <div>
-                <span className="text-gray-500 block">PO Number</span>
-                <span className="font-semibold text-gray-900">{result.poNumber || '-'}</span>
+                <span className="text-gray-500 dark:text-gray-400 block">PO Number</span>
+                <span className="font-semibold text-gray-900 dark:text-gray-100">{result.poNumber || '-'}</span>
               </div>
               <div>
-                <span className="text-gray-500 block">Vehicle Number</span>
-                <span className="font-semibold text-gray-900">{result.vehicleNo || '-'}</span>
+                <span className="text-gray-500 dark:text-gray-400 block">Vehicle Number</span>
+                <span className="font-semibold text-gray-900 dark:text-gray-100">{result.vehicleNo || '-'}</span>
               </div>
               <div>
-                <span className="text-gray-500 block">Vendor's Reference (Invoice No.)</span>
-                <span className="font-semibold text-gray-900">{result.supplierReference || '-'}</span>
+                <span className="text-gray-500 dark:text-gray-400 block">Vendor's Reference (Invoice No.)</span>
+                <span className="font-semibold text-gray-900 dark:text-gray-100">{result.supplierReference || '-'}</span>
               </div>
               <div>
-                <span className="text-gray-500 block">Delivery Date</span>
-                <span className="font-semibold text-gray-900">{result.deliveryDate || '-'}</span>
+                <span className="text-gray-500 dark:text-gray-400 block">Delivery Date</span>
+                <span className="font-semibold text-gray-900 dark:text-gray-100">{result.deliveryDate || '-'}</span>
               </div>
             </div>
 
-            <table className="w-full text-sm bg-white rounded-lg overflow-hidden">
-              <thead className="bg-gray-50">
+            <table className="w-full text-sm bg-white dark:bg-gray-900 rounded-lg overflow-hidden">
+              <thead className="bg-gray-50 dark:bg-gray-800">
                 <tr>
                   <th className="px-3 py-2 text-left">PO Item</th>
                   <th className="px-3 py-2 text-left">Material</th>
@@ -160,7 +160,7 @@ export default function VerifyDeliveryPage() {
                   <th className="px-3 py-2 text-left">UOM</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
                 {result.lineItems.map((item, idx) => (
                   <tr key={idx}>
                     <td className="px-3 py-2">{item.poItemNumber}</td>

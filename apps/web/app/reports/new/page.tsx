@@ -135,30 +135,30 @@ export default function NewReportPage() {
     <MainLayout>
       {/* Header */}
       <div className="mb-6">
-        <div className="flex items-center space-x-3 text-sm text-gray-500 mb-4">
-          <Link href="/reports" className="hover:text-blue-600">
+        <div className="flex items-center space-x-3 text-sm text-gray-500 dark:text-gray-400 mb-4">
+          <Link href="/reports" className="hover:text-blue-600 dark:hover:text-blue-400">
             Reports
           </Link>
           <span>/</span>
-          <span className="text-gray-900 font-medium">New Report</span>
+          <span className="text-gray-900 dark:text-gray-100 font-medium">New Report</span>
         </div>
 
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <Link
               href="/reports"
-              className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg"
+              className="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
             >
               <ArrowLeft size={20} />
             </Link>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Create New Report</h1>
-              <p className="text-sm text-gray-500 mt-1">Design a custom report with your preferred parameters</p>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Create New Report</h1>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Design a custom report with your preferred parameters</p>
             </div>
           </div>
           <Link
             href="/reports"
-            className="px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center space-x-2"
+            className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-2"
           >
             <X size={16} />
             <span>Cancel</span>
@@ -167,7 +167,7 @@ export default function NewReportPage() {
       </div>
 
       {error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-center space-x-2">
+        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 rounded-lg flex items-center space-x-2">
           <AlertCircle size={16} />
           <span>{error}</span>
         </div>
@@ -175,12 +175,12 @@ export default function NewReportPage() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Basic Information */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h2>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Basic Information</h2>
           <div className="space-y-4">
             {/* Report Name */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Report Name <span className="text-red-500">*</span>
               </label>
               <input
@@ -188,7 +188,7 @@ export default function NewReportPage() {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 placeholder="e.g., Monthly Vendor Performance Report"
                 required
               />
@@ -196,7 +196,7 @@ export default function NewReportPage() {
 
             {/* Description */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Description
               </label>
               <textarea
@@ -204,14 +204,14 @@ export default function NewReportPage() {
                 rows={3}
                 value={formData.description}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 resize-none"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 resize-none"
                 placeholder="What does this report show?"
               />
             </div>
 
             {/* Report Type */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                 Report Type <span className="text-red-500">*</span>
               </label>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -222,8 +222,8 @@ export default function NewReportPage() {
                       key={type.value}
                       className={`relative p-4 border rounded-lg cursor-pointer transition-all ${
                         formData.type === type.value
-                          ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-200'
-                          : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50'
+                          ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 ring-2 ring-blue-200'
+                          : 'border-gray-200 dark:border-gray-700 hover:border-blue-300 hover:bg-gray-50 dark:hover:bg-gray-800'
                       }`}
                     >
                       <input
@@ -236,19 +236,19 @@ export default function NewReportPage() {
                       />
                       <div className="flex items-start space-x-3">
                         <div className={`p-2 rounded-lg ${
-                          formData.type === type.value ? 'bg-blue-100' : 'bg-gray-100'
+                          formData.type === type.value ? 'bg-blue-100 dark:bg-blue-900/30' : 'bg-gray-100 dark:bg-gray-800'
                         }`}>
                           <Icon className={`w-5 h-5 ${
-                            formData.type === type.value ? 'text-blue-600' : 'text-gray-600'
+                            formData.type === type.value ? 'text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400'
                           }`} />
                         </div>
                         <div className="flex-1">
                           <p className={`text-sm font-medium ${
-                            formData.type === type.value ? 'text-blue-700' : 'text-gray-900'
+                            formData.type === type.value ? 'text-blue-700 dark:text-blue-300' : 'text-gray-900 dark:text-gray-100'
                           }`}>
                             {type.label}
                           </p>
-                          <p className="text-xs text-gray-500 mt-1">{type.description}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{type.description}</p>
                         </div>
                       </div>
                     </label>
@@ -259,14 +259,14 @@ export default function NewReportPage() {
 
             {/* Category */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Category <span className="text-red-500">*</span>
               </label>
               <select
                 name="category"
                 value={formData.category}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 required
               >
                 {categories.map(cat => (
@@ -278,28 +278,28 @@ export default function NewReportPage() {
             {/* Status and Format */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Status
                 </label>
                 <select
                   name="status"
                   value={formData.status}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 >
                   <option value="draft">Draft</option>
                   <option value="published">Published</option>
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Default Export Format
                 </label>
                 <select
                   name="format"
                   value={formData.format}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 >
                   {formatOptions.map(format => (
                     <option key={format} value={format}>
@@ -313,14 +313,14 @@ export default function NewReportPage() {
         </div>
 
         {/* Advanced Options */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
           <button
             type="button"
             onClick={() => setShowAdvanced(!showAdvanced)}
             className="flex items-center justify-between w-full text-left"
           >
-            <h2 className="text-lg font-semibold text-gray-900">Advanced Options</h2>
-            <span className="text-blue-600 text-sm">{showAdvanced ? 'Hide' : 'Show'}</span>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Advanced Options</h2>
+            <span className="text-blue-600 dark:text-blue-400 text-sm">{showAdvanced ? 'Hide' : 'Show'}</span>
           </button>
 
           {showAdvanced && (
@@ -334,34 +334,34 @@ export default function NewReportPage() {
                     id="isScheduled"
                     checked={formData.isScheduled}
                     onChange={handleChange}
-                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    className="w-4 h-4 text-blue-600 dark:text-blue-400 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500"
                   />
-                  <label htmlFor="isScheduled" className="text-sm text-gray-700">
+                  <label htmlFor="isScheduled" className="text-sm text-gray-700 dark:text-gray-300">
                     Schedule this report to run automatically
                   </label>
                 </div>
 
                 {formData.isScheduled && (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       Schedule Expression (Cron)
                     </label>
                     <div className="flex items-center space-x-2">
                       <div className="relative flex-1">
-                        <Clock className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                        <Clock className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                         <input
                           type="text"
                           name="schedule"
                           value={formData.schedule}
                           onChange={handleChange}
-                          className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                          className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                           placeholder="0 0 * * *"
                         />
                       </div>
                       <select
                         value={formData.schedule}
                         onChange={(e) => setFormData(prev => ({ ...prev, schedule: e.target.value }))}
-                        className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                        className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                       >
                         <option value="">Presets</option>
                         <option value="0 0 * * *">Daily at midnight</option>
@@ -372,7 +372,7 @@ export default function NewReportPage() {
                         <option value="0 */6 * * *">Every 6 hours</option>
                       </select>
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                       Cron expression format: minute hour day month weekday
                     </p>
                   </div>
@@ -381,7 +381,7 @@ export default function NewReportPage() {
 
               {/* Parameters JSON */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Default Parameters (JSON)
                 </label>
                 <textarea
@@ -396,10 +396,10 @@ export default function NewReportPage() {
                       // Invalid JSON, ignore
                     }
                   }}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 font-mono text-sm"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 font-mono text-sm"
                   placeholder='{ "status": "active", "dateRange": "last30days" }'
                 />
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                   Default filter parameters for this report
                 </p>
               </div>
@@ -411,7 +411,7 @@ export default function NewReportPage() {
         <div className="flex justify-end space-x-3">
           <Link
             href="/reports"
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+            className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800"
           >
             Cancel
           </Link>

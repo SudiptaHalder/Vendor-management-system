@@ -148,12 +148,12 @@ export default function RFQDetailPage() {
 
   const getStatusBadge = (status: string) => {
     const statusConfig: Record<string, { color: string, icon: any, label: string }> = {
-      draft: { color: 'bg-gray-100 text-gray-800', icon: FileText, label: 'Draft' },
-      sent: { color: 'bg-blue-100 text-blue-800', icon: Clock, label: 'Sent' },
-      receiving_quotes: { color: 'bg-purple-100 text-purple-800', icon: MessageSquare, label: 'Receiving Quotes' },
-      evaluating: { color: 'bg-yellow-100 text-yellow-800', icon: Clock, label: 'Evaluating' },
-      awarded: { color: 'bg-green-100 text-green-800', icon: CheckCircle, label: 'Awarded' },
-      cancelled: { color: 'bg-red-100 text-red-800', icon: XCircle, label: 'Cancelled' }
+      draft: { color: 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200', icon: FileText, label: 'Draft' },
+      sent: { color: 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300', icon: Clock, label: 'Sent' },
+      receiving_quotes: { color: 'bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300', icon: MessageSquare, label: 'Receiving Quotes' },
+      evaluating: { color: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300', icon: Clock, label: 'Evaluating' },
+      awarded: { color: 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300', icon: CheckCircle, label: 'Awarded' },
+      cancelled: { color: 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300', icon: XCircle, label: 'Cancelled' }
     }
     const config = statusConfig[status] || statusConfig.draft
     const Icon = config.icon
@@ -167,11 +167,11 @@ export default function RFQDetailPage() {
 
   const getRecipientStatusBadge = (status: string) => {
     const statusConfig: Record<string, { color: string, icon: any, label: string }> = {
-      pending: { color: 'bg-gray-100 text-gray-800', icon: Clock, label: 'Pending' },
-      sent: { color: 'bg-blue-100 text-blue-800', icon: Send, label: 'Sent' },
-      viewed: { color: 'bg-purple-100 text-purple-800', icon: Eye, label: 'Viewed' },
-      responded: { color: 'bg-green-100 text-green-800', icon: CheckCircle, label: 'Responded' },
-      declined: { color: 'bg-red-100 text-red-800', icon: XCircle, label: 'Declined' }
+      pending: { color: 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200', icon: Clock, label: 'Pending' },
+      sent: { color: 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300', icon: Send, label: 'Sent' },
+      viewed: { color: 'bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300', icon: Eye, label: 'Viewed' },
+      responded: { color: 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300', icon: CheckCircle, label: 'Responded' },
+      declined: { color: 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300', icon: XCircle, label: 'Declined' }
     }
     const config = statusConfig[status] || statusConfig.pending
     const Icon = config.icon
@@ -196,13 +196,13 @@ export default function RFQDetailPage() {
   if (error || !rfq) {
     return (
       <MainLayout>
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-12 text-center">
           <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Error Loading RFQ</h3>
-          <p className="text-gray-500 mb-6">{error || 'RFQ not found'}</p>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Error Loading RFQ</h3>
+          <p className="text-gray-500 dark:text-gray-400 mb-6">{error || 'RFQ not found'}</p>
           <Link
             href="/procurement/rfqs"
-            className="text-purple-600 hover:text-purple-800 font-medium flex items-center justify-center space-x-2"
+            className="text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 font-medium flex items-center justify-center space-x-2"
           >
             <ArrowLeft size={16} />
             <span>Back to RFQs</span>
@@ -216,21 +216,21 @@ export default function RFQDetailPage() {
     <MainLayout>
       {/* Header */}
       <div className="mb-6">
-        <div className="flex items-center space-x-3 text-sm text-gray-500 mb-4">
-          <Link href="/procurement/rfqs" className="hover:text-purple-600">
+        <div className="flex items-center space-x-3 text-sm text-gray-500 dark:text-gray-400 mb-4">
+          <Link href="/procurement/rfqs" className="hover:text-purple-600 dark:hover:text-purple-400">
             RFQs
           </Link>
           <span>/</span>
-          <span className="text-gray-900 font-medium">{rfq.rfqNumber}</span>
+          <span className="text-gray-900 dark:text-gray-100 font-medium">{rfq.rfqNumber}</span>
         </div>
 
         <div className="flex justify-between items-start">
           <div>
             <div className="flex items-center space-x-3 mb-2">
-              <h1 className="text-2xl font-bold text-gray-900">{rfq.title}</h1>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{rfq.title}</h1>
               {getStatusBadge(rfq.status)}
             </div>
-            <p className="text-gray-600">{rfq.rfqNumber}</p>
+            <p className="text-gray-600 dark:text-gray-400">{rfq.rfqNumber}</p>
           </div>
           
           <div className="flex items-center space-x-3">
@@ -247,14 +247,14 @@ export default function RFQDetailPage() {
            // In the header section, replace the Edit button with a Link
 <Link
   href={`/procurement/rfqs/${rfq.id}/edit`}
-  className="px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center space-x-2"
+  className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-2"
 >
   <Edit size={16} />
   <span>Edit</span>
 </Link>
             <button
               onClick={handleDeleteRFQ}
-              className="px-4 py-2 text-red-700 bg-white border border-red-200 rounded-lg hover:bg-red-50 flex items-center space-x-2"
+              className="px-4 py-2 text-red-700 dark:text-red-300 bg-white dark:bg-gray-900 border border-red-200 dark:border-red-800 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center space-x-2"
             >
               <Trash2 size={16} />
               <span>Delete</span>
@@ -265,45 +265,45 @@ export default function RFQDetailPage() {
 
       {/* Overview Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium text-gray-500">Deadline</p>
-            <Calendar className="w-4 h-4 text-gray-400" />
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Deadline</p>
+            <Calendar className="w-4 h-4 text-gray-400 dark:text-gray-500" />
           </div>
-          <p className="text-lg font-semibold text-gray-900">
+          <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">
             {rfq.deadline ? new Date(rfq.deadline).toLocaleDateString() : 'No deadline'}
           </p>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium text-gray-500">Vendors</p>
-            <Users className="w-4 h-4 text-gray-400" />
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Vendors</p>
+            <Users className="w-4 h-4 text-gray-400 dark:text-gray-500" />
           </div>
-          <p className="text-lg font-semibold text-gray-900">{rfq.recipients.length}</p>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">{rfq.recipients.length}</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
             {rfq.recipients.filter(r => r.status === 'responded').length} responded
           </p>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium text-gray-500">Quotes</p>
-            <DollarSign className="w-4 h-4 text-gray-400" />
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Quotes</p>
+            <DollarSign className="w-4 h-4 text-gray-400 dark:text-gray-500" />
           </div>
-          <p className="text-lg font-semibold text-gray-900">{rfq.quotes.length}</p>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">{rfq.quotes.length}</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
             {rfq.quotes.filter(q => q.status === 'submitted').length} submitted
           </p>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium text-gray-500">Created By</p>
-            <User className="w-4 h-4 text-gray-400" />
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Created By</p>
+            <User className="w-4 h-4 text-gray-400 dark:text-gray-500" />
           </div>
-          <p className="text-lg font-semibold text-gray-900">{rfq.createdBy.name || 'Unknown'}</p>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">{rfq.createdBy.name || 'Unknown'}</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
             {new Date(rfq.createdAt).toLocaleDateString()}
           </p>
         </div>
@@ -314,44 +314,44 @@ export default function RFQDetailPage() {
         <div className="lg:col-span-2 space-y-6">
           {/* Description */}
           {rfq.description && (
-            <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Description</h2>
-              <p className="text-gray-700 whitespace-pre-wrap">{rfq.description}</p>
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Description</h2>
+              <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{rfq.description}</p>
             </div>
           )}
 
           {/* Line Items */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="px-6 py-4 border-b bg-gray-50">
-              <h2 className="text-lg font-semibold text-gray-900">Items / Services</h2>
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+            <div className="px-6 py-4 border-b bg-gray-50 dark:bg-gray-800">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Items / Services</h2>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-gray-50">
+                <thead className="bg-gray-50 dark:bg-gray-800">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">#</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Quantity</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Unit</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Notes</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">#</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Description</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Quantity</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Unit</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Notes</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
                   {rfq.lineItems.map((item) => (
-                    <tr key={item.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                         {item.lineNumber}
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-900">
+                      <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">
                         {item.description}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                         {item.quantity}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                         {item.unit || '—'}
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-500">
+                      <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
                         {item.notes || '—'}
                       </td>
                     </tr>
@@ -363,17 +363,17 @@ export default function RFQDetailPage() {
 
           {/* Notes */}
           {rfq.notes && (
-            <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Notes to Vendors</h2>
-              <p className="text-gray-700 whitespace-pre-wrap">{rfq.notes}</p>
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Notes to Vendors</h2>
+              <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{rfq.notes}</p>
             </div>
           )}
 
           {/* Delivery Terms */}
           {rfq.deliveryTerms && (
-            <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Delivery Terms</h2>
-              <p className="text-gray-700 whitespace-pre-wrap">{rfq.deliveryTerms}</p>
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Delivery Terms</h2>
+              <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{rfq.deliveryTerms}</p>
             </div>
           )}
         </div>
@@ -381,23 +381,23 @@ export default function RFQDetailPage() {
         {/* Sidebar */}
         <div className="space-y-6">
           {/* Vendors */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="px-6 py-4 border-b bg-gray-50">
-              <h2 className="text-lg font-semibold text-gray-900">Vendors</h2>
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+            <div className="px-6 py-4 border-b bg-gray-50 dark:bg-gray-800">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Vendors</h2>
             </div>
-            <div className="divide-y divide-gray-100">
+            <div className="divide-y divide-gray-100 dark:divide-gray-800">
               {rfq.recipients.length === 0 ? (
-                <div className="p-6 text-center text-gray-500">
+                <div className="p-6 text-center text-gray-500 dark:text-gray-400">
                   No vendors added
                 </div>
               ) : (
                 rfq.recipients.map((recipient) => (
-                  <div key={recipient.id} className="p-4 hover:bg-gray-50">
+                  <div key={recipient.id} className="p-4 hover:bg-gray-50 dark:hover:bg-gray-800">
                     <div className="flex items-start justify-between mb-2">
                       <div>
-                        <p className="font-medium text-gray-900">{recipient.vendor.name}</p>
+                        <p className="font-medium text-gray-900 dark:text-gray-100">{recipient.vendor.name}</p>
                         {recipient.vendor.email && (
-                          <p className="text-xs text-gray-500 flex items-center mt-1">
+                          <p className="text-xs text-gray-500 dark:text-gray-400 flex items-center mt-1">
                             <Mail size={12} className="mr-1" />
                             {recipient.vendor.email}
                           </p>
@@ -406,7 +406,7 @@ export default function RFQDetailPage() {
                       {getRecipientStatusBadge(recipient.status)}
                     </div>
                     {recipient.sentAt && (
-                      <p className="text-xs text-gray-400 mt-2">
+                      <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
                         Sent: {new Date(recipient.sentAt).toLocaleDateString()}
                       </p>
                     )}
@@ -418,28 +418,28 @@ export default function RFQDetailPage() {
 
           {/* Quotes */}
           {rfq.quotes.length > 0 && (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-              <div className="px-6 py-4 border-b bg-gray-50 flex items-center justify-between">
-                <h2 className="text-lg font-semibold text-gray-900">Quotes Received</h2>
-                <span className="px-2 py-1 bg-purple-100 text-purple-800 text-xs font-medium rounded-full">
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+              <div className="px-6 py-4 border-b bg-gray-50 dark:bg-gray-800 flex items-center justify-between">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Quotes Received</h2>
+                <span className="px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 text-xs font-medium rounded-full">
                   {rfq.quotes.length}
                 </span>
               </div>
-              <div className="divide-y divide-gray-100">
+              <div className="divide-y divide-gray-100 dark:divide-gray-800">
                 {rfq.quotes.map((quote) => (
                   <Link
                     key={quote.id}
                     href={`/procurement/quotes/${quote.id}`}
-                    className="block p-4 hover:bg-gray-50"
+                    className="block p-4 hover:bg-gray-50 dark:hover:bg-gray-800"
                   >
                     <div className="flex items-center justify-between mb-1">
-                      <p className="font-medium text-gray-900">{quote.vendor.name}</p>
-                      <span className="text-sm font-semibold text-gray-900">
+                      <p className="font-medium text-gray-900 dark:text-gray-100">{quote.vendor.name}</p>
+                      <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                         {quote.currency} {quote.total.toFixed(2)}
                       </span>
                     </div>
-                    <p className="text-xs text-gray-500">{quote.quoteNumber}</p>
-                    <p className="text-xs text-gray-400 mt-2">
+                    <p className="text-xs text-gray-500 dark:text-gray-400">{quote.quoteNumber}</p>
+                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
                       Submitted: {new Date(quote.submittedAt).toLocaleDateString()}
                     </p>
                   </Link>

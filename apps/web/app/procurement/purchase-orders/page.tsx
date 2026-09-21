@@ -31,6 +31,7 @@ interface LineItem {
   NetPriceAmount: number
   DeliveryDate: string
   Status: string
+  IsCompletelyDelivered?: boolean
 }
 
 interface PurchaseOrder {
@@ -40,12 +41,22 @@ interface PurchaseOrder {
   PurchaseOrderDate: string
   TotalAmount: number
   DocumentCurrency: string
-  PurchaseOrderStatus: string
+  PurchasingProcessingStatus: string
   CreatedByUser: string
   CreationDate: string
   to_PurchaseOrderItem?: {
     results: LineItem[]
   }
+}
+
+// SAP OData V2 dates come as "/Date(1712448000000)/" - plain new Date() on
+// that string returns Invalid Date, which silently breaks formatting and
+// >= comparisons in the date-range filter.
+const parseSAPDateValue = (value: string | null | undefined): Date | null => {
+  if (!value) return null
+  const match = /\/Date\((\d+)\)\//.exec(value)
+  const ms = match ? parseInt(match[1], 10) : Date.parse(value)
+  return isNaN(ms) ? null : new Date(ms)
 }
 
 export default function AdminPurchaseOrdersPage() {
@@ -119,28 +130,32 @@ export default function AdminPurchaseOrdersPage() {
       const data = await response.json()
       
       if (data.success) {
-        const mappedOrders = data.data.map((po: any) => ({
-          ...po,
-          id: po.PurchaseOrder,
-          poNumber: po.PurchaseOrder,
-          plantCode: po.Plant || '',
-          poType: po.PurchaseOrderType || 'Standard',
-          poCreateDate: po.PurchaseOrderDate,
-          status: mapSAPStatus(po.PurchaseOrderStatus),
-          totalAmount: po.TotalAmount,
-          currency: po.DocumentCurrency,
-          lineItems: po.to_PurchaseOrderItem?.results?.map((item: any) => ({
-            id: item.PurchaseOrderItem,
-            lineNumber: parseInt(item.PurchaseOrderItem) || 0,
-            materialCode: item.Material,
-            materialDesc: item.MaterialName || item.Material,
-            uom: item.OrderUnit,
-            quantity: item.OrderQuantity,
-            unitPrice: item.NetPriceAmount,
-            totalAmount: item.NetPriceAmount * item.OrderQuantity,
-            status: item.Status
-          })) || []
-        }))
+        const mappedOrders = data.data.map((po: any) => {
+          const items = po.to_PurchaseOrderItem?.results || []
+          const allItemsDelivered = items.length > 0 && items.every((item: any) => item.IsCompletelyDelivered === true)
+          return {
+            ...po,
+            id: po.PurchaseOrder,
+            poNumber: po.PurchaseOrder,
+            plantCode: po.Plant || '',
+            poType: po.PurchaseOrderType || 'Standard',
+            poCreateDate: po.PurchaseOrderDate,
+            status: allItemsDelivered ? 'completed' : mapSAPStatus(po.PurchasingProcessingStatus),
+            totalAmount: po.TotalAmount,
+            currency: po.DocumentCurrency,
+            lineItems: items.map((item: any) => ({
+              id: item.PurchaseOrderItem,
+              lineNumber: parseInt(item.PurchaseOrderItem) || 0,
+              materialCode: item.Material,
+              materialDesc: item.MaterialName || item.Material,
+              uom: item.OrderUnit,
+              quantity: item.OrderQuantity,
+              unitPrice: item.NetPriceAmount,
+              totalAmount: item.NetPriceAmount * item.OrderQuantity,
+              status: item.IsCompletelyDelivered === true ? 'completed' : 'pending'
+            }))
+          }
+        })
         setPurchaseOrders(mappedOrders)
       } else {
         setError('Failed to fetch purchase orders')
@@ -155,15 +170,11 @@ export default function AdminPurchaseOrdersPage() {
 
   const mapSAPStatus = (status: string): string => {
     const statusMap: Record<string, string> = {
-      '1': 'pending',
-      '2': 'approved',
-      '3': 'approved',
-      '4': 'completed',
-      '5': 'cancelled',
-      '6': 'completed',
-      'open': 'pending',
-      'closed': 'completed',
-      'cancelled': 'cancelled'
+      '01': 'pending',   // Open
+      '02': 'pending',   // In Release
+      '03': 'approved',  // Released
+      '04': 'approved',  // Being processed / partially processed
+      '05': 'completed'  // Completed
     }
     return statusMap[status] || 'pending'
   }
@@ -190,28 +201,30 @@ export default function AdminPurchaseOrdersPage() {
       )
     }
     
-    const now = new Date()
     if (dateFilter === 'today') {
-      const today = new Date(now.setHours(0, 0, 0, 0))
-      filtered = filtered.filter(po => 
-        po.poCreateDate && new Date(po.poCreateDate) >= today
-      )
+      const today = new Date(new Date().setHours(0, 0, 0, 0))
+      filtered = filtered.filter(po => {
+        const d = parseSAPDateValue(po.poCreateDate)
+        return d && d >= today
+      })
     } else if (dateFilter === 'week') {
-      const weekAgo = new Date(now.setDate(now.getDate() - 7))
-      filtered = filtered.filter(po => 
-        po.poCreateDate && new Date(po.poCreateDate) >= weekAgo
-      )
+      const weekAgo = new Date(new Date().setDate(new Date().getDate() - 7))
+      filtered = filtered.filter(po => {
+        const d = parseSAPDateValue(po.poCreateDate)
+        return d && d >= weekAgo
+      })
     } else if (dateFilter === 'month') {
-      const monthAgo = new Date(now.setMonth(now.getMonth() - 1))
-      filtered = filtered.filter(po => 
-        po.poCreateDate && new Date(po.poCreateDate) >= monthAgo
-      )
+      const monthAgo = new Date(new Date().setMonth(new Date().getMonth() - 1))
+      filtered = filtered.filter(po => {
+        const d = parseSAPDateValue(po.poCreateDate)
+        return d && d >= monthAgo
+      })
     }
-    
+
     filtered.sort((a, b) => {
       if (sortBy === 'date') {
-        const dateA = a.poCreateDate ? new Date(a.poCreateDate).getTime() : 0
-        const dateB = b.poCreateDate ? new Date(b.poCreateDate).getTime() : 0
+        const dateA = parseSAPDateValue(a.poCreateDate)?.getTime() || 0
+        const dateB = parseSAPDateValue(b.poCreateDate)?.getTime() || 0
         return sortOrder === 'asc' ? dateA - dateB : dateB - dateA
       } else {
         const numA = parseInt(a.poNumber.replace(/\D/g, '')) || 0
@@ -225,8 +238,8 @@ export default function AdminPurchaseOrdersPage() {
   }
 
   const formatDate = (dateStr: string | null) => {
-    if (!dateStr) return '-'
-    return new Date(dateStr).toLocaleDateString()
+    const d = parseSAPDateValue(dateStr)
+    return d ? d.toLocaleDateString() : '-'
   }
 
   const formatCurrency = (amount: number | null) => {
@@ -246,17 +259,17 @@ export default function AdminPurchaseOrdersPage() {
   const getStatusBadge = (status: string) => {
     switch(status) {
       case 'completed':
-        return <span className="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full flex items-center w-fit"><CheckCircle size={12} className="mr-1" /> Completed</span>
+        return <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-xs font-medium rounded-full flex items-center w-fit"><CheckCircle size={12} className="mr-1" /> Completed</span>
       case 'approved':
-        return <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full flex items-center w-fit"><CheckCircle size={12} className="mr-1" /> Approved</span>
+        return <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs font-medium rounded-full flex items-center w-fit"><CheckCircle size={12} className="mr-1" /> Approved</span>
       case 'pending':
-        return <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full flex items-center w-fit"><Clock size={12} className="mr-1" /> Pending</span>
+        return <span className="px-2 py-1 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 text-xs font-medium rounded-full flex items-center w-fit"><Clock size={12} className="mr-1" /> Pending</span>
       case 'draft':
-        return <span className="px-2 py-1 bg-gray-100 text-gray-800 text-xs font-medium rounded-full flex items-center w-fit"><FileText size={12} className="mr-1" /> Draft</span>
+        return <span className="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-xs font-medium rounded-full flex items-center w-fit"><FileText size={12} className="mr-1" /> Draft</span>
       case 'cancelled':
-        return <span className="px-2 py-1 bg-red-100 text-red-800 text-xs font-medium rounded-full flex items-center w-fit"><XCircle size={12} className="mr-1" /> Cancelled</span>
+        return <span className="px-2 py-1 bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 text-xs font-medium rounded-full flex items-center w-fit"><XCircle size={12} className="mr-1" /> Cancelled</span>
       default:
-        return <span className="px-2 py-1 bg-gray-100 text-gray-800 text-xs font-medium rounded-full">{status}</span>
+        return <span className="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-xs font-medium rounded-full">{status}</span>
     }
   }
 
@@ -295,10 +308,10 @@ export default function AdminPurchaseOrdersPage() {
       <div className="mb-6">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Purchase Orders</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Purchase Orders</h1>
             <div className="flex items-center space-x-3 mt-1">
-              <p className="text-gray-600">Live purchase orders from SAP S/4HANA</p>
-              <span className="flex items-center text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
+              <p className="text-gray-600 dark:text-gray-400">Live purchase orders from SAP S/4HANA</p>
+              <span className="flex items-center text-xs bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 px-2 py-1 rounded-full">
                 <Zap size={12} className="mr-1" />
                 SAP Live
               </span>
@@ -309,7 +322,7 @@ export default function AdminPurchaseOrdersPage() {
               const token = localStorage.getItem('token')
               if (token) fetchPurchaseOrders(token)
             }}
-            className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg flex items-center"
+            className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg flex items-center"
           >
             <RefreshCw size={18} className="mr-2" />
             Refresh
@@ -318,17 +331,17 @@ export default function AdminPurchaseOrdersPage() {
       </div>
 
       {/* Main Status Toggle */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6">
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 mb-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <span className="text-sm font-medium text-gray-700">Filter by status:</span>
-            <div className="flex p-1 bg-gray-100 rounded-lg">
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Filter by status:</span>
+            <div className="flex p-1 bg-gray-100 dark:bg-gray-800 rounded-lg">
               <button
                 onClick={() => setMainStatus('open')}
                 className={`px-4 py-2 text-sm font-medium rounded-md transition ${
                   mainStatus === 'open'
-                    ? 'bg-white text-blue-600 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
+                    ? 'bg-white dark:bg-gray-900 text-blue-600 dark:text-blue-400 shadow-sm'
+                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100'
                 }`}
               >
                 Open Orders
@@ -337,37 +350,37 @@ export default function AdminPurchaseOrdersPage() {
                 onClick={() => setMainStatus('completed')}
                 className={`px-4 py-2 text-sm font-medium rounded-md transition ${
                   mainStatus === 'completed'
-                    ? 'bg-white text-green-600 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
+                    ? 'bg-white dark:bg-gray-900 text-green-600 dark:text-green-400 shadow-sm'
+                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100'
                 }`}
               >
                 Completed Orders
               </button>
             </div>
           </div>
-          <div className="text-sm text-green-600">
+          <div className="text-sm text-green-600 dark:text-green-400">
             {filteredPOs.length} orders found
           </div>
         </div>
       </div>
 
       {/* Search and Sort */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6">
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 mb-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <div className="lg:col-span-2 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
             <input
               type="text"
               placeholder="Search by PO number or vendor..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full h-10 pl-9 pr-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 text-gray-900 placeholder-gray-500 bg-white shadow-sm"
+              className="w-full h-10 pl-9 pr-3 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 bg-white dark:bg-gray-900 shadow-sm"
             />
           </div>
           <select
             value={statusFilterLocal}
             onChange={(e) => setStatusFilterLocal(e.target.value)}
-            className="w-full h-10 px-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 text-gray-900 bg-white shadow-sm cursor-pointer"
+            className="w-full h-10 px-3 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 shadow-sm cursor-pointer"
           >
             <option value="all">All Status</option>
             <option value="draft">Draft</option>
@@ -379,7 +392,7 @@ export default function AdminPurchaseOrdersPage() {
           <select
             value={dateFilter}
             onChange={(e) => setDateFilter(e.target.value)}
-            className="w-full h-10 px-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 text-gray-900 bg-white shadow-sm cursor-pointer"
+            className="w-full h-10 px-3 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 shadow-sm cursor-pointer"
           >
             <option value="all">All Time</option>
             <option value="today">Today</option>
@@ -390,41 +403,41 @@ export default function AdminPurchaseOrdersPage() {
       </div>
 
       {/* Purchase Orders Table */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50">
+            <thead className="bg-gray-50 dark:bg-gray-800">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PO Number</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vendor</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Items</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">PO Number</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Vendor</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Amount</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Items</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
               {currentItems.map((po) => (
                 <tr 
                   key={po.id} 
-                  className="hover:bg-gray-50 cursor-pointer"
+                  className="hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer"
                   onClick={() => viewPODetails(po)}
                 >
                   <td className="px-4 py-3 whitespace-nowrap">
-                    <span className="font-medium text-gray-900">{po.poNumber}</span>
+                    <span className="font-medium text-gray-900 dark:text-gray-100">{po.poNumber}</span>
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap">
-                    <span className="text-gray-600">{po.SupplierName || po.Supplier || 'Unknown'}</span>
+                    <span className="text-gray-600 dark:text-gray-400">{po.SupplierName || po.Supplier || 'Unknown'}</span>
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap">
-                    <span className="text-gray-600">{formatDate(po.poCreateDate)}</span>
+                    <span className="text-gray-600 dark:text-gray-400">{formatDate(po.poCreateDate)}</span>
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap">
-                    <span className="text-gray-600">{formatCurrency(po.totalAmount)}</span>
+                    <span className="text-gray-600 dark:text-gray-400">{formatCurrency(po.totalAmount)}</span>
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap">
-                    <span className="text-gray-600">{po.lineItems?.length || 0}</span>
+                    <span className="text-gray-600 dark:text-gray-400">{po.lineItems?.length || 0}</span>
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap">
                     {getStatusBadge(po.status)}
@@ -435,7 +448,7 @@ export default function AdminPurchaseOrdersPage() {
                         e.stopPropagation()
                         viewPODetails(po)
                       }}
-                      className="text-blue-600 hover:text-blue-800"
+                      className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
                       title="View Details"
                     >
                       <Eye size={18} />
@@ -446,7 +459,7 @@ export default function AdminPurchaseOrdersPage() {
               
               {currentItems.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="px-6 py-12 text-center text-gray-500">
+                  <td colSpan={7} className="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
                     <Package size={48} className="mx-auto mb-3 text-gray-300" />
                     <p>No purchase orders found</p>
                   </td>
@@ -458,25 +471,25 @@ export default function AdminPurchaseOrdersPage() {
 
         {/* Pagination */}
         {filteredPOs.length > 0 && (
-          <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
-            <div className="text-sm text-gray-500">
+          <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
+            <div className="text-sm text-gray-500 dark:text-gray-400">
               Showing {indexOfFirstItem + 1} to {Math.min(indexOfLastItem, filteredPOs.length)} of {filteredPOs.length} orders
             </div>
             <div className="flex space-x-2">
               <button
                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}
-                className="p-2 border border-gray-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                className="p-2 border border-gray-200 dark:border-gray-700 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-800"
               >
                 <ChevronLeft size={16} />
               </button>
-              <span className="px-4 py-2 text-sm text-gray-700">
+              <span className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300">
                 Page {currentPage} of {totalPages}
               </span>
               <button
                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                 disabled={currentPage === totalPages}
-                className="p-2 border border-gray-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                className="p-2 border border-gray-200 dark:border-gray-700 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-800"
               >
                 <ChevronRight size={16} />
               </button>

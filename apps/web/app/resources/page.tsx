@@ -114,11 +114,11 @@ export default function ResourcesPage() {
 
   const getStatusBadge = (status: string) => {
     const colors: Record<string, string> = {
-      available: 'bg-green-100 text-green-800',
-      in_use: 'bg-blue-100 text-blue-800',
-      maintenance: 'bg-yellow-100 text-yellow-800',
-      damaged: 'bg-red-100 text-red-800',
-      retired: 'bg-gray-100 text-gray-800'
+      available: 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300',
+      in_use: 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300',
+      maintenance: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300',
+      damaged: 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300',
+      retired: 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200'
     }
     return (
       <span className={`px-2 py-1 text-xs font-medium rounded-full ${colors[status] || colors.available}`}>
@@ -157,7 +157,7 @@ export default function ResourcesPage() {
     return (
       <MainLayout>
         <div className="flex items-center justify-center h-64">
-          <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+          <Loader2 className="w-8 h-8 text-blue-600 dark:text-blue-400 animate-spin" />
         </div>
       </MainLayout>
     )
@@ -168,13 +168,13 @@ export default function ResourcesPage() {
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Resources</h1>
-          <p className="text-gray-600 mt-1">Manage equipment, tools, vehicles and personnel</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Resources</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">Manage equipment, tools, vehicles and personnel</p>
         </div>
         <div className="flex items-center space-x-3">
           <button
             onClick={fetchResources}
-            className="px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center space-x-2"
+            className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-2"
           >
             <RefreshCw size={16} />
             <span>Refresh</span>
@@ -191,83 +191,83 @@ export default function ResourcesPage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-6">
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Total Resources</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">{stats.total}</p>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Resources</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-1">{stats.total}</p>
             </div>
-            <div className="p-3 bg-blue-100 rounded-lg">
-              <Database className="w-5 h-5 text-blue-600" />
+            <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+              <Database className="w-5 h-5 text-blue-600 dark:text-blue-400" />
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Available</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">{stats.available}</p>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Available</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-1">{stats.available}</p>
             </div>
-            <div className="p-3 bg-green-100 rounded-lg">
-              <CheckCircle className="w-5 h-5 text-green-600" />
+            <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
+              <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">In Use</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">{stats.inUse}</p>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">In Use</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-1">{stats.inUse}</p>
             </div>
-            <div className="p-3 bg-blue-100 rounded-lg">
-              <Clock className="w-5 h-5 text-blue-600" />
+            <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+              <Clock className="w-5 h-5 text-blue-600 dark:text-blue-400" />
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Maintenance</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">{stats.maintenance}</p>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Maintenance</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-1">{stats.maintenance}</p>
             </div>
-            <div className="p-3 bg-yellow-100 rounded-lg">
-              <Wrench className="w-5 h-5 text-yellow-600" />
+            <div className="p-3 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
+              <Wrench className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Total Value</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Value</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-1">
                 ${stats.totalValue.toLocaleString()}
               </p>
             </div>
-            <div className="p-3 bg-purple-100 rounded-lg">
-              <DollarSign className="w-5 h-5 text-purple-600" />
+            <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+              <DollarSign className="w-5 h-5 text-purple-600 dark:text-purple-400" />
             </div>
           </div>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-4 mb-6">
         <div className="flex flex-col lg:flex-row lg:items-center gap-4">
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
             <input
               type="text"
               placeholder="Search by name, serial #, model, location..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900"
+              className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900 dark:text-gray-100"
             />
           </div>
           <div className="flex items-center space-x-4">
             <select
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900"
+              className="px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900 dark:text-gray-100"
             >
               <option value="all">All Types</option>
               <option value="equipment">Equipment</option>
@@ -280,7 +280,7 @@ export default function ResourcesPage() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900"
+              className="px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900 dark:text-gray-100"
             >
               <option value="all">All Status</option>
               <option value="available">Available</option>
@@ -289,7 +289,7 @@ export default function ResourcesPage() {
               <option value="damaged">Damaged</option>
               <option value="retired">Retired</option>
             </select>
-            <button className="p-2 text-gray-500 border border-gray-200 rounded-lg hover:bg-gray-50">
+            <button className="p-2 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
               <Filter size={16} />
             </button>
           </div>
@@ -298,10 +298,10 @@ export default function ResourcesPage() {
 
       {/* Resources Grid */}
       {resources.length === 0 ? (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
-          <Database className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">No resources yet</h3>
-          <p className="text-gray-500 mb-6">Add your first resource to start tracking.</p>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-12 text-center">
+          <Database className="w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">No resources yet</h3>
+          <p className="text-gray-500 dark:text-gray-400 mb-6">Add your first resource to start tracking.</p>
           <Link
             href="/resources/new"
             className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 inline-flex items-center space-x-2"
@@ -318,16 +318,16 @@ export default function ResourcesPage() {
               <Link
                 key={resource.id}
                 href={`/resources/${resource.id}`}
-                className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow"
+                className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6 hover:shadow-md transition-shadow"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center space-x-3">
-                    <div className="p-2 bg-blue-50 rounded-lg">
-                      <Icon className="w-6 h-6 text-blue-600" />
+                    <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                      <Icon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900">{resource.name}</h3>
-                      <p className="text-xs text-gray-500 mt-1">
+                      <h3 className="font-semibold text-gray-900 dark:text-gray-100">{resource.name}</h3>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                         {resource.serialNumber || resource.model || resource.id.slice(-6).toUpperCase()}
                       </p>
                     </div>
@@ -337,7 +337,7 @@ export default function ResourcesPage() {
 
                 <div className="space-y-2 mb-4">
                   {resource.type && (
-                    <div className="flex items-center text-sm text-gray-600">
+                    <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
                       <span className="capitalize">{resource.type}</span>
                       {resource.category && <span className="mx-1">•</span>}
                       {resource.category && <span className="capitalize">{resource.category}</span>}
@@ -345,54 +345,54 @@ export default function ResourcesPage() {
                   )}
                   
                   {resource.location && (
-                    <div className="flex items-center text-sm text-gray-500">
+                    <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                       <MapPin size={14} className="mr-1" />
                       {resource.location}
                     </div>
                   )}
 
                   {resource.nextMaintenance && (
-                    <div className="flex items-center text-sm text-gray-500">
+                    <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                       <Calendar size={14} className="mr-1" />
                       Next: {new Date(resource.nextMaintenance).toLocaleDateString()}
                     </div>
                   )}
                 </div>
 
-                <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-800">
                   <div className="flex items-center space-x-2">
-                    <span className="text-xs text-gray-500">Assignments:</span>
-                    <span className="text-sm font-medium text-gray-900">
+                    <span className="text-xs text-gray-500 dark:text-gray-400">Assignments:</span>
+                    <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
                       {resource._count?.assignments || 0}
                     </span>
                   </div>
                   <div className="flex items-center space-x-2">
                     {resource.hourlyRate && (
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-gray-500 dark:text-gray-400">
                         ${resource.hourlyRate}/hr
                       </span>
                     )}
                   </div>
                 </div>
 
-                <div className="flex items-center justify-end space-x-2 mt-4 pt-2 border-t border-gray-100">
+                <div className="flex items-center justify-end space-x-2 mt-4 pt-2 border-t border-gray-100 dark:border-gray-800">
                   <Link
                     href={`/resources/${resource.id}`}
-                    className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
+                    className="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <Eye size={16} />
                   </Link>
                   <Link
                     href={`/resources/${resource.id}/edit`}
-                    className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg"
+                    className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <Edit size={16} />
                   </Link>
                   <button
                     onClick={(e) => handleDeleteResource(resource.id, e)}
-                    className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
+                    className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg"
                   >
                     <Trash2 size={16} />
                   </button>

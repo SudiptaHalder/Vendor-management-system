@@ -97,7 +97,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={inter.variable}>
-      <body className="min-h-screen bg-white antialiased">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var s=localStorage.getItem('vms-font-size');if(s)document.documentElement.setAttribute('data-font-size',s);var d=localStorage.getItem('vms-dark-mode');if(d==='true')document.documentElement.classList.add('dark');}catch(e){}`,
+          }}
+        />
+      </head>
+      <body className="min-h-screen bg-white dark:bg-gray-900 antialiased">
         {children}
       </body>
     </html>

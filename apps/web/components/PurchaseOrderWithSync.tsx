@@ -34,17 +34,17 @@ export const PurchaseOrderWithSync: React.FC<PurchaseOrderWithSyncProps> = ({ or
           onMouseLeave={() => setShowSyncStatus(false)}
         >
           {order.syncInfo?.status === 'synced' ? (
-            <div className="flex items-center text-green-600">
+            <div className="flex items-center text-green-600 dark:text-green-400">
               <RefreshCw className="w-4 h-4 mr-1" />
               <span className="text-sm">Synced</span>
             </div>
           ) : order.syncInfo?.status === 'failed' ? (
-            <div className="flex items-center text-red-600">
+            <div className="flex items-center text-red-600 dark:text-red-400">
               <AlertTriangle className="w-4 h-4 mr-1" />
               <span className="text-sm">Sync Failed</span>
             </div>
           ) : (
-            <div className="flex items-center text-yellow-600">
+            <div className="flex items-center text-yellow-600 dark:text-yellow-400">
               <RefreshCw className="w-4 h-4 mr-1 animate-spin" />
               <span className="text-sm">Syncing...</span>
             </div>
@@ -71,11 +71,11 @@ export const PurchaseOrderWithSync: React.FC<PurchaseOrderWithSyncProps> = ({ or
         <h3 className="font-bold text-lg">PO #{order.poNumber}</h3>
         <div className="grid grid-cols-2 gap-4 mt-2">
           <div>
-            <div className="text-sm text-gray-600">Total Amount</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Total Amount</div>
             <div>{order.totalAmount} {order.currency}</div>
           </div>
           <div>
-            <div className="text-sm text-gray-600">Document Date</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Document Date</div>
             <div>{new Date(order.documentDate).toLocaleDateString()}</div>
           </div>
         </div>

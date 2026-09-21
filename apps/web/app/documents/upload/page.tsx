@@ -180,30 +180,30 @@ export default function UploadDocumentPage() {
     <MainLayout>
       {/* Header */}
       <div className="mb-6">
-        <div className="flex items-center space-x-3 text-sm text-gray-500 mb-4">
-          <Link href="/documents" className="hover:text-blue-600">
+        <div className="flex items-center space-x-3 text-sm text-gray-500 dark:text-gray-400 mb-4">
+          <Link href="/documents" className="hover:text-blue-600 dark:hover:text-blue-400">
             Documents
           </Link>
           <span>/</span>
-          <span className="text-gray-900 font-medium">Upload Document</span>
+          <span className="text-gray-900 dark:text-gray-100 font-medium">Upload Document</span>
         </div>
 
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <Link
               href="/documents"
-              className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg"
+              className="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
             >
               <ArrowLeft size={20} />
             </Link>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Upload Document</h1>
-              <p className="text-sm text-gray-500 mt-1">Add a new file to the document repository</p>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Upload Document</h1>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Add a new file to the document repository</p>
             </div>
           </div>
           <Link
             href="/documents"
-            className="px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center space-x-2"
+            className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-2"
           >
             <X size={16} />
             <span>Cancel</span>
@@ -212,14 +212,14 @@ export default function UploadDocumentPage() {
       </div>
 
       {error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-center space-x-2">
+        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 rounded-lg flex items-center space-x-2">
           <AlertCircle size={16} />
           <span>{error}</span>
         </div>
       )}
 
       {success && (
-        <div className="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg flex items-center space-x-2">
+        <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-300 rounded-lg flex items-center space-x-2">
           <CheckCircle size={16} />
           <span>{success} Redirecting...</span>
         </div>
@@ -227,22 +227,22 @@ export default function UploadDocumentPage() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* File Upload Area */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Select File</h2>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Select File</h2>
           <div
             {...getRootProps()}
             className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
               isDragActive 
-                ? 'border-blue-500 bg-blue-50' 
-                : 'border-gray-300 hover:border-blue-400 hover:bg-gray-50'
+                ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' 
+                : 'border-gray-300 dark:border-gray-600 hover:border-blue-400 hover:bg-gray-50 dark:hover:bg-gray-800'
             }`}
           >
             <input {...getInputProps()} />
-            <Upload className="mx-auto h-12 w-12 text-gray-400 mb-3" />
+            <Upload className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500 mb-3" />
             {selectedFile ? (
               <div>
-                <p className="text-sm font-medium text-gray-900">{selectedFile.name}</p>
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{selectedFile.name}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                   {(selectedFile.size / 1024).toFixed(2)} KB
                 </p>
                 {filePreview && (
@@ -257,17 +257,17 @@ export default function UploadDocumentPage() {
                     setSelectedFile(null)
                     setFilePreview(null)
                   }}
-                  className="mt-4 text-sm text-red-600 hover:text-red-800"
+                  className="mt-4 text-sm text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300"
                 >
                   Remove file
                 </button>
               </div>
             ) : (
               <div>
-                <p className="text-sm text-gray-600">
-                  <span className="font-medium text-blue-600">Click to upload</span> or drag and drop
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <span className="font-medium text-blue-600 dark:text-blue-400">Click to upload</span> or drag and drop
                 </p>
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                   PDF, Word, Excel, Images, Text (Max 10MB)
                 </p>
               </div>
@@ -276,12 +276,12 @@ export default function UploadDocumentPage() {
         </div>
 
         {/* Document Information */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Document Information</h2>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Document Information</h2>
           <div className="space-y-4">
             {/* Document Name */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Document Name <span className="text-red-500">*</span>
               </label>
               <input
@@ -289,7 +289,7 @@ export default function UploadDocumentPage() {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 placeholder="Enter document name"
                 required
               />
@@ -297,7 +297,7 @@ export default function UploadDocumentPage() {
 
             {/* Description */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Description
               </label>
               <textarea
@@ -305,14 +305,14 @@ export default function UploadDocumentPage() {
                 rows={3}
                 value={formData.description}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 resize-none"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 resize-none"
                 placeholder="Brief description of the document"
               />
             </div>
 
             {/* Category */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Category
               </label>
               <input
@@ -320,14 +320,14 @@ export default function UploadDocumentPage() {
                 name="category"
                 value={formData.category}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 placeholder="e.g., Contract, Invoice, Report, Manual"
               />
             </div>
 
             {/* Version */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Version
               </label>
               <input
@@ -337,29 +337,29 @@ export default function UploadDocumentPage() {
                 onChange={handleChange}
                 min="1"
                 step="1"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                 Increment version if this is an update to an existing document
               </p>
             </div>
 
             {/* Expiry Date */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Expiry Date
               </label>
               <div className="relative">
-                <Calendar className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                <Calendar className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                 <input
                   type="date"
                   name="expiryDate"
                   value={formData.expiryDate}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 />
               </div>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                 For documents that expire (licenses, certifications, etc.)
               </p>
             </div>
@@ -372,13 +372,13 @@ export default function UploadDocumentPage() {
                 id="isConfidential"
                 checked={formData.isConfidential}
                 onChange={handleChange}
-                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                className="w-4 h-4 text-blue-600 dark:text-blue-400 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500"
               />
-              <label htmlFor="isConfidential" className="text-sm text-gray-700 flex items-center">
+              <label htmlFor="isConfidential" className="text-sm text-gray-700 dark:text-gray-300 flex items-center">
                 {formData.isConfidential ? (
-                  <Lock size={16} className="mr-1 text-purple-600" />
+                  <Lock size={16} className="mr-1 text-purple-600 dark:text-purple-400" />
                 ) : (
-                  <Unlock size={16} className="mr-1 text-gray-400" />
+                  <Unlock size={16} className="mr-1 text-gray-400 dark:text-gray-500" />
                 )}
                 Mark as confidential document
               </label>
@@ -387,19 +387,19 @@ export default function UploadDocumentPage() {
         </div>
 
         {/* Association */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Link to Record (Optional)</h2>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Link to Record (Optional)</h2>
           <div className="space-y-4">
             {/* Entity Type */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Record Type
               </label>
               <select
                 name="entityType"
                 value={formData.entityType}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
               >
                 <option value="">General</option>
                 {entityTypes.map(type => (
@@ -412,7 +412,7 @@ export default function UploadDocumentPage() {
 
             {/* Entity ID */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Record ID
               </label>
               <input
@@ -420,26 +420,26 @@ export default function UploadDocumentPage() {
                 name="entityId"
                 value={formData.entityId}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 placeholder="Enter the record ID"
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                 The ID of the record this document belongs to
               </p>
             </div>
 
             {/* Vendor */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Vendor
               </label>
               <div className="relative">
-                <Building2 className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                <Building2 className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                 <select
                   name="vendorId"
                   value={formData.vendorId}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 >
                   <option value="">No Vendor</option>
                   {vendors.map(vendor => (
@@ -457,7 +457,7 @@ export default function UploadDocumentPage() {
         <div className="flex justify-end space-x-3">
           <Link
             href="/documents"
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+            className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800"
           >
             Cancel
           </Link>

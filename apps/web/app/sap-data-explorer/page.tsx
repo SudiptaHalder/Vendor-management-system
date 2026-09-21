@@ -238,16 +238,16 @@ export default function SAPDataExplorer() {
 
   const getStatusBadge = (status: string) => {
     const colors: Record<string, string> = {
-      'active': 'bg-green-100 text-green-800',
-      'pending': 'bg-yellow-100 text-yellow-800',
-      'inactive': 'bg-red-100 text-red-800',
-      'open': 'bg-green-100 text-green-800',
-      'closed': 'bg-gray-100 text-gray-800',
-      'cancelled': 'bg-red-100 text-red-800',
-      'draft': 'bg-yellow-100 text-yellow-800',
-      'completed': 'bg-teal-100 text-teal-800'
+      'active': 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300',
+      'pending': 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300',
+      'inactive': 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300',
+      'open': 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300',
+      'closed': 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200',
+      'cancelled': 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300',
+      'draft': 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300',
+      'completed': 'bg-teal-100 dark:bg-teal-900/30 text-teal-800 dark:text-teal-300'
     };
-    return colors[status] || 'bg-gray-100 text-gray-800';
+    return colors[status] || 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200';
   };
 
   const filteredVendors = vendors.filter(v => 
@@ -272,7 +272,7 @@ export default function SAPDataExplorer() {
         <div className="flex items-center justify-center h-96">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <div className="text-gray-600">Loading SAP data...</div>
+            <div className="text-gray-600 dark:text-gray-400">Loading SAP data...</div>
           </div>
         </div>
       </MainLayout>
@@ -285,14 +285,14 @@ export default function SAPDataExplorer() {
         {/* Header */}
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 flex items-center">
-              <Database className="w-6 h-6 mr-2 text-blue-600" />
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 flex items-center">
+              <Database className="w-6 h-6 mr-2 text-blue-600 dark:text-blue-400" />
               SAP Data Explorer
             </h1>
-            <p className="text-gray-600 mt-1">Complete view of all data synced from SAP S/4HANA</p>
+            <p className="text-gray-600 dark:text-gray-400 mt-1">Complete view of all data synced from SAP S/4HANA</p>
           </div>
           <div className="flex items-center space-x-3">
-            <span className="text-sm text-gray-500">
+            <span className="text-sm text-gray-500 dark:text-gray-400">
               Last updated: {new Date().toLocaleTimeString()}
             </span>
             <button
@@ -307,7 +307,7 @@ export default function SAPDataExplorer() {
         </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-600">
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 text-red-600 dark:text-red-400">
             Error: {error}
           </div>
         )}
@@ -317,28 +317,28 @@ export default function SAPDataExplorer() {
           <div className="bg-gradient-to-br from-blue-50 to-white rounded-xl p-4 border border-blue-100">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500">Total Vendors</p>
-                <p className="text-2xl font-bold text-blue-600">{stats.totalVendors.toLocaleString()}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Total Vendors</p>
+                <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{stats.totalVendors.toLocaleString()}</p>
               </div>
               <Building2 className="w-8 h-8 text-blue-500" />
             </div>
-            <p className="text-xs text-gray-500 mt-1">{stats.activeVendors} active in local cache</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{stats.activeVendors} active in local cache</p>
           </div>
           <div className="bg-gradient-to-br from-green-50 to-white rounded-xl p-4 border border-green-100">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500">Purchase Orders</p>
-                <p className="text-2xl font-bold text-green-600">{stats.totalPOs.toLocaleString()}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Purchase Orders</p>
+                <p className="text-2xl font-bold text-green-600 dark:text-green-400">{stats.totalPOs.toLocaleString()}</p>
               </div>
               <Package className="w-8 h-8 text-green-500" />
             </div>
-            <p className="text-xs text-gray-500 mt-1">{stats.openPOs} open (of last {purchaseOrders.length} fetched)</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{stats.openPOs} open (of last {purchaseOrders.length} fetched)</p>
           </div>
           <div className="bg-gradient-to-br from-purple-50 to-white rounded-xl p-4 border border-purple-100">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500">Material Documents</p>
-                <p className="text-2xl font-bold text-purple-600">{stats.totalMaterialDocs.toLocaleString()}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Material Documents</p>
+                <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">{stats.totalMaterialDocs.toLocaleString()}</p>
               </div>
               <FileText className="w-8 h-8 text-purple-500" />
             </div>
@@ -346,41 +346,41 @@ export default function SAPDataExplorer() {
           <div className="bg-gradient-to-br from-orange-50 to-white rounded-xl p-4 border border-orange-100">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500">Local DB Sync Status</p>
-                <p className="text-2xl font-bold text-orange-600">{stats.syncedVendors.toLocaleString()}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Local DB Sync Status</p>
+                <p className="text-2xl font-bold text-orange-600 dark:text-orange-400">{stats.syncedVendors.toLocaleString()}</p>
               </div>
               <CheckCircle className="w-8 h-8 text-orange-500" />
             </div>
-            <p className="text-xs text-gray-500 mt-1">vendors synced to local cache</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">vendors synced to local cache</p>
           </div>
         </div>
 
         {/* Search Bar */}
         <div className="relative">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
           <input
             type="text"
             placeholder="Search across all SAP data (vendors, POs, material documents)..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
         {/* Vendors Section */}
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden">
           <div 
-            className="px-6 py-4 bg-gray-50 border-b border-gray-200 flex items-center justify-between cursor-pointer hover:bg-gray-100 transition"
+            className="px-6 py-4 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition"
             onClick={() => toggleSection('vendors')}
           >
             <div className="flex items-center space-x-3">
-              <Building2 className="w-5 h-5 text-blue-600" />
-              <h2 className="text-lg font-semibold text-gray-900">
+              <Building2 className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                 Vendors ({filteredVendors.length})
               </h2>
             </div>
             <div className="flex items-center space-x-3">
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-gray-500 dark:text-gray-400">
                 {vendors.length} loaded of {stats.totalVendors.toLocaleString()} in SAP
               </span>
               {expandedSections.vendors ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
@@ -389,30 +389,30 @@ export default function SAPDataExplorer() {
           {expandedSections.vendors && (
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-gray-50">
+                <thead className="bg-gray-50 dark:bg-gray-800">
                   <tr>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Code</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">GSTN</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">City</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Sync</th>
-                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Action</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Code</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Name</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">GSTN</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">City</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Status</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Sync</th>
+                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Action</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
                   {filteredVendors.slice(0, 20).map((vendor) => (
-                    <tr key={vendor.id} className="hover:bg-gray-50">
-                      <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
+                    <tr key={vendor.id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
+                      <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
                         {vendor.supplierCode}
                       </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                         {vendor.supplierName}
                       </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                         {vendor.gstn || '-'}
                       </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                         {vendor.city || '-'}
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap">
@@ -428,7 +428,7 @@ export default function SAPDataExplorer() {
                       <td className="px-4 py-3 text-right">
                         <Link
                           href={`/vendors/${vendor.id}`}
-                          className="text-blue-600 hover:text-blue-800"
+                          className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
                         >
                           <Eye size={16} />
                         </Link>
@@ -438,7 +438,7 @@ export default function SAPDataExplorer() {
                 </tbody>
               </table>
               {filteredVendors.length > 20 && (
-                <div className="px-4 py-2 bg-gray-50 text-center text-sm text-gray-500">
+                <div className="px-4 py-2 bg-gray-50 dark:bg-gray-800 text-center text-sm text-gray-500 dark:text-gray-400">
                   Showing 20 of {filteredVendors.length} vendors
                 </div>
               )}
@@ -447,19 +447,19 @@ export default function SAPDataExplorer() {
         </div>
 
         {/* Purchase Orders Section */}
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden">
           <div 
-            className="px-6 py-4 bg-gray-50 border-b border-gray-200 flex items-center justify-between cursor-pointer hover:bg-gray-100 transition"
+            className="px-6 py-4 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition"
             onClick={() => toggleSection('purchaseOrders')}
           >
             <div className="flex items-center space-x-3">
-              <Package className="w-5 h-5 text-green-600" />
-              <h2 className="text-lg font-semibold text-gray-900">
+              <Package className="w-5 h-5 text-green-600 dark:text-green-400" />
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                 Purchase Orders ({filteredPOs.length})
               </h2>
             </div>
             <div className="flex items-center space-x-3">
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-gray-500 dark:text-gray-400">
                 {purchaseOrders.length} loaded of {stats.totalPOs.toLocaleString()} in SAP
               </span>
               {expandedSections.purchaseOrders ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
@@ -468,33 +468,33 @@ export default function SAPDataExplorer() {
           {expandedSections.purchaseOrders && (
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-gray-50">
+                <thead className="bg-gray-50 dark:bg-gray-800">
                   <tr>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">PO Number</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Vendor</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Items</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Action</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">PO Number</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Vendor</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Date</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Amount</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Items</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Status</th>
+                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Action</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
                   {filteredPOs.slice(0, 20).map((po) => (
-                    <tr key={po.poNumber} className="hover:bg-gray-50">
-                      <td className="px-4 py-3 whitespace-nowrap font-medium text-gray-900">
+                    <tr key={po.poNumber} className="hover:bg-gray-50 dark:hover:bg-gray-800">
+                      <td className="px-4 py-3 whitespace-nowrap font-medium text-gray-900 dark:text-gray-100">
                         {po.poNumber}
                       </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                         {po.supplierName || 'Unknown'}
                       </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                         {parseSAPDate(po.poCreateDate)?.toLocaleDateString() || '-'}
                       </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                         {po.totalAmount} {po.currency || 'INR'}
                       </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                         {po.lineItems?.length || 0}
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap">
@@ -505,7 +505,7 @@ export default function SAPDataExplorer() {
                       <td className="px-4 py-3 text-right">
                         <Link
                           href={`/procurement/purchase-orders/${po.poNumber}`}
-                          className="text-blue-600 hover:text-blue-800"
+                          className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
                         >
                           <Eye size={16} />
                         </Link>
@@ -515,7 +515,7 @@ export default function SAPDataExplorer() {
                 </tbody>
               </table>
               {filteredPOs.length > 20 && (
-                <div className="px-4 py-2 bg-gray-50 text-center text-sm text-gray-500">
+                <div className="px-4 py-2 bg-gray-50 dark:bg-gray-800 text-center text-sm text-gray-500 dark:text-gray-400">
                   Showing 20 of {filteredPOs.length} purchase orders
                 </div>
               )}
@@ -524,19 +524,19 @@ export default function SAPDataExplorer() {
         </div>
 
         {/* Material Documents Section */}
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden">
           <div 
-            className="px-6 py-4 bg-gray-50 border-b border-gray-200 flex items-center justify-between cursor-pointer hover:bg-gray-100 transition"
+            className="px-6 py-4 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition"
             onClick={() => toggleSection('materialDocs')}
           >
             <div className="flex items-center space-x-3">
-              <FileText className="w-5 h-5 text-purple-600" />
-              <h2 className="text-lg font-semibold text-gray-900">
+              <FileText className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                 Material Documents ({filteredDocs.length})
               </h2>
             </div>
             <div className="flex items-center space-x-3">
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-gray-500 dark:text-gray-400">
                 {materialDocs.length} loaded of {stats.totalMaterialDocs.toLocaleString()} in SAP
               </span>
               {expandedSections.materialDocs ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
@@ -545,39 +545,39 @@ export default function SAPDataExplorer() {
           {expandedSections.materialDocs && (
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-gray-50">
+                <thead className="bg-gray-50 dark:bg-gray-800">
                   <tr>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Document</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Material</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Qty</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Plant</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">SAP ID</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Document</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Date</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Material</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Qty</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Plant</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Amount</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">SAP ID</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
                   {filteredDocs.slice(0, 20).map((doc) => (
-                    <tr key={doc.id} className="hover:bg-gray-50">
-                      <td className="px-4 py-3 whitespace-nowrap font-medium text-gray-900">
+                    <tr key={doc.id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
+                      <td className="px-4 py-3 whitespace-nowrap font-medium text-gray-900 dark:text-gray-100">
                         {doc.documentNumber}
                       </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                         {doc.documentDate ? new Date(doc.documentDate).toLocaleDateString() : '-'}
                       </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                         {doc.materialCode || '-'}
                       </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                         {doc.quantity} {doc.unit}
                       </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                         {doc.plant || '-'}
                       </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                         {doc.amount} {doc.currency || 'INR'}
                       </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-400 font-mono">
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-400 dark:text-gray-500 font-mono">
                         {doc.sapId?.substring(0, 12)}...
                       </td>
                     </tr>
@@ -585,7 +585,7 @@ export default function SAPDataExplorer() {
                 </tbody>
               </table>
               {filteredDocs.length > 20 && (
-                <div className="px-4 py-2 bg-gray-50 text-center text-sm text-gray-500">
+                <div className="px-4 py-2 bg-gray-50 dark:bg-gray-800 text-center text-sm text-gray-500 dark:text-gray-400">
                   Showing 20 of {filteredDocs.length} material documents
                 </div>
               )}
@@ -594,7 +594,7 @@ export default function SAPDataExplorer() {
         </div>
 
         {/* Footer */}
-        <div className="text-center text-sm text-gray-500 py-4">
+        <div className="text-center text-sm text-gray-500 dark:text-gray-400 py-4">
           Showing all SAP data synced from S/4HANA Cloud • 
           {vendors.length} vendors • {purchaseOrders.length} purchase orders • {materialDocs.length} material documents
         </div>

@@ -72,9 +72,9 @@ export default function TicketDetailPage() {
 
   const getStatusBadge = (status: string) => {
     const colors = {
-      open: 'bg-green-100 text-green-800',
-      pending: 'bg-yellow-100 text-yellow-800',
-      closed: 'bg-gray-100 text-gray-800'
+      open: 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300',
+      pending: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300',
+      closed: 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200'
     }
     return (
       <span className={`px-2 py-1 text-xs font-medium rounded-full ${colors[status as keyof typeof colors]}`}>
@@ -85,10 +85,10 @@ export default function TicketDetailPage() {
 
   const getPriorityBadge = (priority: string) => {
     const colors = {
-      low: 'bg-gray-100 text-gray-800',
-      medium: 'bg-blue-100 text-blue-800',
-      high: 'bg-orange-100 text-orange-800',
-      urgent: 'bg-red-100 text-red-800'
+      low: 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200',
+      medium: 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300',
+      high: 'bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300',
+      urgent: 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300'
     }
     return (
       <span className={`px-2 py-1 text-xs font-medium rounded-full ${colors[priority as keyof typeof colors]}`}>
@@ -101,39 +101,39 @@ export default function TicketDetailPage() {
     <MainLayout>
       {/* Header */}
       <div className="mb-6">
-        <div className="flex items-center space-x-3 text-sm text-gray-500 mb-4">
-          <Link href="/support" className="hover:text-blue-600">
+        <div className="flex items-center space-x-3 text-sm text-gray-500 dark:text-gray-400 mb-4">
+          <Link href="/support" className="hover:text-blue-600 dark:hover:text-blue-400">
             Support
           </Link>
           <span>/</span>
-          <Link href="/support/tickets" className="hover:text-blue-600">
+          <Link href="/support/tickets" className="hover:text-blue-600 dark:hover:text-blue-400">
             Tickets
           </Link>
           <span>/</span>
-          <span className="text-gray-900 font-medium">Ticket #{ticket.id}</span>
+          <span className="text-gray-900 dark:text-gray-100 font-medium">Ticket #{ticket.id}</span>
         </div>
 
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <Link
               href="/support/tickets"
-              className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg"
+              className="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
             >
               <ArrowLeft size={20} />
             </Link>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">{ticket.subject}</h1>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{ticket.subject}</h1>
               <div className="flex items-center space-x-3 mt-2">
                 {getStatusBadge(ticket.status)}
                 {getPriorityBadge(ticket.priority)}
-                <span className="text-sm text-gray-500 flex items-center">
+                <span className="text-sm text-gray-500 dark:text-gray-400 flex items-center">
                   <Calendar size={14} className="mr-1" />
                   Created {new Date(ticket.createdAt).toLocaleDateString()}
                 </span>
               </div>
             </div>
           </div>
-          <button className="p-2 text-gray-400 hover:text-gray-600">
+          <button className="p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400">
             <MoreVertical size={20} />
           </button>
         </div>
@@ -142,9 +142,9 @@ export default function TicketDetailPage() {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Main Content - Messages */}
         <div className="lg:col-span-3 space-y-6">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-              <h2 className="text-lg font-semibold text-gray-900">Conversation</h2>
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Conversation</h2>
             </div>
             <div className="p-6 space-y-6">
               {ticket.messages.map((message) => (
@@ -156,17 +156,17 @@ export default function TicketDetailPage() {
                     <div className="flex items-start space-x-3">
                       {message.from === 'support' && (
                         <div className="flex-shrink-0">
-                          <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                            <span className="text-sm font-medium text-purple-600">S</span>
+                          <div className="w-8 h-8 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center">
+                            <span className="text-sm font-medium text-purple-600 dark:text-purple-400">S</span>
                           </div>
                         </div>
                       )}
                       <div>
                         <div className="flex items-center space-x-2 mb-1">
-                          <span className="text-sm font-medium text-gray-900">
+                          <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
                             {message.user}
                           </span>
-                          <span className="text-xs text-gray-500">
+                          <span className="text-xs text-gray-500 dark:text-gray-400">
                             {new Date(message.timestamp).toLocaleString()}
                           </span>
                         </div>
@@ -174,7 +174,7 @@ export default function TicketDetailPage() {
                           className={`p-4 rounded-lg ${
                             message.from === 'user'
                               ? 'bg-blue-600 text-white'
-                              : 'bg-gray-100 text-gray-900'
+                              : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100'
                           }`}
                         >
                           <p className="text-sm whitespace-pre-wrap">{message.message}</p>
@@ -186,7 +186,7 @@ export default function TicketDetailPage() {
                                   className={`flex items-center space-x-2 p-2 rounded ${
                                     message.from === 'user'
                                       ? 'bg-blue-700 text-blue-100'
-                                      : 'bg-gray-200 text-gray-700'
+                                      : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
                                   }`}
                                 >
                                   <Paperclip size={14} />
@@ -200,8 +200,8 @@ export default function TicketDetailPage() {
                       </div>
                       {message.from === 'user' && (
                         <div className="flex-shrink-0">
-                          <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                            <span className="text-sm font-medium text-blue-600">J</span>
+                          <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
+                            <span className="text-sm font-medium text-blue-600 dark:text-blue-400">J</span>
                           </div>
                         </div>
                       )}
@@ -212,7 +212,7 @@ export default function TicketDetailPage() {
             </div>
 
             {/* Reply Box */}
-            <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
+            <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
               <div className="flex items-start space-x-4">
                 <div className="flex-1">
                   <textarea
@@ -220,10 +220,10 @@ export default function TicketDetailPage() {
                     value={reply}
                     onChange={(e) => setReply(e.target.value)}
                     placeholder="Type your reply..."
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
                   />
                   <div className="flex items-center justify-between mt-2">
-                    <button className="text-sm text-gray-500 hover:text-gray-700 flex items-center space-x-1">
+                    <button className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 flex items-center space-x-1">
                       <Paperclip size={14} />
                       <span>Attach files</span>
                     </button>
@@ -244,39 +244,39 @@ export default function TicketDetailPage() {
         {/* Sidebar */}
         <div className="lg:col-span-1 space-y-6">
           {/* Ticket Details */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
-              <h3 className="font-medium text-gray-900">Ticket Details</h3>
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+              <h3 className="font-medium text-gray-900 dark:text-gray-100">Ticket Details</h3>
             </div>
             <div className="p-4 space-y-3">
               <div>
-                <p className="text-xs text-gray-500">Category</p>
-                <p className="text-sm text-gray-900 capitalize">{ticket.category}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Category</p>
+                <p className="text-sm text-gray-900 dark:text-gray-100 capitalize">{ticket.category}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-500">Created</p>
-                <p className="text-sm text-gray-900">{new Date(ticket.createdAt).toLocaleString()}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Created</p>
+                <p className="text-sm text-gray-900 dark:text-gray-100">{new Date(ticket.createdAt).toLocaleString()}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-500">Last Updated</p>
-                <p className="text-sm text-gray-900">{new Date(ticket.updatedAt).toLocaleString()}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Last Updated</p>
+                <p className="text-sm text-gray-900 dark:text-gray-100">{new Date(ticket.updatedAt).toLocaleString()}</p>
               </div>
             </div>
           </div>
 
           {/* Actions */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
-              <h3 className="font-medium text-gray-900">Actions</h3>
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+              <h3 className="font-medium text-gray-900 dark:text-gray-100">Actions</h3>
             </div>
             <div className="p-4 space-y-2">
-              <button className="w-full px-3 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 rounded-lg">
+              <button className="w-full px-3 py-2 text-sm text-left text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg">
                 Change Status
               </button>
-              <button className="w-full px-3 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 rounded-lg">
+              <button className="w-full px-3 py-2 text-sm text-left text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg">
                 Change Priority
               </button>
-              <button className="w-full px-3 py-2 text-sm text-left text-red-600 hover:bg-red-50 rounded-lg">
+              <button className="w-full px-3 py-2 text-sm text-left text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg">
                 Close Ticket
               </button>
             </div>

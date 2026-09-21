@@ -219,7 +219,7 @@ export default function PermissionsPage() {
     return (
       <MainLayout>
         <div className="flex items-center justify-center h-64">
-          <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+          <Loader2 className="w-8 h-8 text-blue-600 dark:text-blue-400 animate-spin" />
         </div>
       </MainLayout>
     )
@@ -229,23 +229,23 @@ export default function PermissionsPage() {
     <MainLayout>
       {/* Header */}
       <div className="mb-6">
-        <div className="flex items-center space-x-3 text-sm text-gray-500 mb-4">
-          <Link href="/settings" className="hover:text-blue-600">
+        <div className="flex items-center space-x-3 text-sm text-gray-500 dark:text-gray-400 mb-4">
+          <Link href="/settings" className="hover:text-blue-600 dark:hover:text-blue-400">
             Settings
           </Link>
           <span>/</span>
-          <span className="text-gray-900 font-medium">Permissions</span>
+          <span className="text-gray-900 dark:text-gray-100 font-medium">Permissions</span>
         </div>
 
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Role-Based Permissions</h1>
-            <p className="text-gray-600 mt-1">Configure what each role can access and do</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Role-Based Permissions</h1>
+            <p className="text-gray-600 dark:text-gray-400 mt-1">Configure what each role can access and do</p>
           </div>
           <div className="flex items-center space-x-3">
             <button
               onClick={fetchData}
-              className="px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center space-x-2"
+              className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-2"
             >
               <RefreshCw size={16} />
               <span>Refresh</span>
@@ -262,14 +262,14 @@ export default function PermissionsPage() {
       </div>
 
       {error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-center space-x-2">
+        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 rounded-lg flex items-center space-x-2">
           <AlertCircle size={16} />
           <span>{error}</span>
         </div>
       )}
 
       {success && (
-        <div className="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg flex items-center space-x-2">
+        <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-300 rounded-lg flex items-center space-x-2">
           <CheckCircle size={16} />
           <span>{success}</span>
         </div>
@@ -278,34 +278,34 @@ export default function PermissionsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Roles List */}
         <div className="lg:col-span-1">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
-              <h2 className="font-medium text-gray-700">Roles</h2>
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div className="px-4 py-3 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+              <h2 className="font-medium text-gray-700 dark:text-gray-300">Roles</h2>
             </div>
-            <div className="divide-y divide-gray-200">
+            <div className="divide-y divide-gray-200 dark:divide-gray-700">
               {roles.map((role) => (
                 <button
                   key={role.id}
                   onClick={() => setSelectedRole(role)}
-                  className={`w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors ${
-                    selectedRole?.id === role.id ? 'bg-blue-50' : ''
+                  className={`w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors ${
+                    selectedRole?.id === role.id ? 'bg-blue-50 dark:bg-blue-900/20' : ''
                   }`}
                 >
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="flex items-center space-x-2">
-                        <span className="font-medium text-gray-900">{role.name}</span>
+                        <span className="font-medium text-gray-900 dark:text-gray-100">{role.name}</span>
                         {role.isSystem && (
-                          <span className="px-1.5 py-0.5 text-xs bg-purple-100 text-purple-800 rounded">
+                          <span className="px-1.5 py-0.5 text-xs bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 rounded">
                             System
                           </span>
                         )}
                       </div>
                       {role.description && (
-                        <p className="text-sm text-gray-500 mt-1 line-clamp-1">{role.description}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-1">{role.description}</p>
                       )}
                     </div>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
                       {role.userCount || 0} users
                     </div>
                   </div>
@@ -318,13 +318,13 @@ export default function PermissionsPage() {
         {/* Permissions Matrix */}
         <div className="lg:col-span-3">
           {selectedRole ? (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-              <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h2 className="text-lg font-semibold text-gray-900">{selectedRole.name}</h2>
+                    <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{selectedRole.name}</h2>
                     {selectedRole.description && (
-                      <p className="text-sm text-gray-600 mt-1">{selectedRole.description}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{selectedRole.description}</p>
                     )}
                   </div>
                   {!selectedRole.isSystem && (
@@ -343,36 +343,36 @@ export default function PermissionsPage() {
               <div className="p-6">
                 {/* Search */}
                 <div className="relative mb-6">
-                  <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                  <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                   <input
                     type="text"
                     placeholder="Search permissions..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
 
                 {/* Select All / Deselect All */}
-                <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-200">
+                <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
                   <div className="flex items-center space-x-4">
                     <button
                       onClick={() => {
                         const allPermissionIds = permissions.map(p => p.id)
                         setSelectedPermissions(new Set(allPermissionIds))
                       }}
-                      className="text-sm text-blue-600 hover:text-blue-800"
+                      className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
                     >
                       Select All
                     </button>
                     <button
                       onClick={() => setSelectedPermissions(new Set())}
-                      className="text-sm text-gray-600 hover:text-gray-800"
+                      className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
                     >
                       Deselect All
                     </button>
                   </div>
-                  <div className="text-sm text-gray-500">
+                  <div className="text-sm text-gray-500 dark:text-gray-400">
                     {selectedPermissions.size} of {permissions.length} permissions selected
                   </div>
                 </div>
@@ -394,8 +394,8 @@ export default function PermissionsPage() {
                     const isPartiallySelected = isModulePartiallySelected(module.name)
 
                     return (
-                      <div key={module.name} className="border border-gray-200 rounded-lg overflow-hidden">
-                        <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
+                      <div key={module.name} className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                        <div className="px-4 py-3 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center space-x-3">
                               <button
@@ -403,21 +403,21 @@ export default function PermissionsPage() {
                                 className="flex items-center space-x-2"
                               >
                                 {isFullySelected ? (
-                                  <CheckCircle size={20} className="text-blue-600" />
+                                  <CheckCircle size={20} className="text-blue-600 dark:text-blue-400" />
                                 ) : isPartiallySelected ? (
                                   <div className="w-5 h-5 bg-blue-600 rounded flex items-center justify-center">
-                                    <div className="w-2 h-2 bg-white rounded-sm" />
+                                    <div className="w-2 h-2 bg-white dark:bg-gray-900 rounded-sm" />
                                   </div>
                                 ) : (
-                                  <Square size={20} className="text-gray-400" />
+                                  <Square size={20} className="text-gray-400 dark:text-gray-500" />
                                 )}
                                 <div className={`p-1.5 rounded bg-${module.color}-100`}>
                                   <Icon size={16} className={`text-${module.color}-600`} />
                                 </div>
-                                <span className="font-medium text-gray-900">{module.name}</span>
+                                <span className="font-medium text-gray-900 dark:text-gray-100">{module.name}</span>
                               </button>
                             </div>
-                            <span className="text-xs text-gray-500">
+                            <span className="text-xs text-gray-500 dark:text-gray-400">
                               {modulePermissions.filter(p => selectedPermissions.has(p.id)).length}/{modulePermissions.length}
                             </span>
                           </div>
@@ -436,21 +436,21 @@ export default function PermissionsPage() {
                                   onClick={() => toggleModulePermissions(module.name, action.name)}
                                   className={`p-3 rounded-lg border text-left transition-colors ${
                                     isSelected
-                                      ? 'border-blue-300 bg-blue-50'
-                                      : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                                      ? 'border-blue-300 bg-blue-50 dark:bg-blue-900/20'
+                                      : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800'
                                   }`}
                                 >
                                   <div className="flex items-center space-x-2 mb-1">
                                     {isSelected ? (
-                                      <CheckCircle size={14} className="text-blue-600" />
+                                      <CheckCircle size={14} className="text-blue-600 dark:text-blue-400" />
                                     ) : (
-                                      <Square size={14} className="text-gray-400" />
+                                      <Square size={14} className="text-gray-400 dark:text-gray-500" />
                                     )}
-                                    <span className="text-sm font-medium text-gray-900 capitalize">
+                                    <span className="text-sm font-medium text-gray-900 dark:text-gray-100 capitalize">
                                       {action.label}
                                     </span>
                                   </div>
-                                  <p className="text-xs text-gray-500">{action.description}</p>
+                                  <p className="text-xs text-gray-500 dark:text-gray-400">{action.description}</p>
                                 </button>
                               )
                             })}
@@ -458,7 +458,7 @@ export default function PermissionsPage() {
 
                           {/* Individual permissions (if needed) */}
                           {modulePermissions.length > actions.length && (
-                            <div className="mt-4 pt-4 border-t border-gray-200">
+                            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                               <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                                 {modulePermissions
                                   .filter(p => !actions.some(a => a.name === p.action))
@@ -466,14 +466,14 @@ export default function PermissionsPage() {
                                     <button
                                       key={permission.id}
                                       onClick={() => togglePermission(permission.id)}
-                                      className="flex items-center space-x-2 p-2 hover:bg-gray-50 rounded"
+                                      className="flex items-center space-x-2 p-2 hover:bg-gray-50 dark:hover:bg-gray-800 rounded"
                                     >
                                       {selectedPermissions.has(permission.id) ? (
-                                        <CheckCircle size={14} className="text-blue-600" />
+                                        <CheckCircle size={14} className="text-blue-600 dark:text-blue-400" />
                                       ) : (
-                                        <Square size={14} className="text-gray-400" />
+                                        <Square size={14} className="text-gray-400 dark:text-gray-500" />
                                       )}
-                                      <span className="text-xs text-gray-700">{permission.name}</span>
+                                      <span className="text-xs text-gray-700 dark:text-gray-300">{permission.name}</span>
                                     </button>
                                   ))}
                               </div>
@@ -487,9 +487,9 @@ export default function PermissionsPage() {
               </div>
             </div>
           ) : (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
-              <Shield className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-              <p className="text-gray-500">Select a role to configure permissions</p>
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-12 text-center">
+              <Shield className="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-3" />
+              <p className="text-gray-500 dark:text-gray-400">Select a role to configure permissions</p>
             </div>
           )}
         </div>
@@ -498,38 +498,38 @@ export default function PermissionsPage() {
       {/* Create Role Modal */}
       {showCreateRole && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-xl max-w-md w-full p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-gray-900">Create New Role</h2>
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Create New Role</h2>
               <button
                 onClick={() => setShowCreateRole(false)}
-                className="p-1 text-gray-400 hover:text-gray-600"
+                className="p-1 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400"
               >
                 <X size={20} />
               </button>
             </div>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Role Name
                 </label>
                 <input
                   type="text"
                   value={newRoleName}
                   onChange={(e) => setNewRoleName(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="e.g., Project Manager"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Description
                 </label>
                 <textarea
                   rows={3}
                   value={newRoleDescription}
                   onChange={(e) => setNewRoleDescription(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Describe the role's purpose..."
                 />
               </div>
@@ -537,7 +537,7 @@ export default function PermissionsPage() {
             <div className="flex justify-end space-x-3 mt-6">
               <button
                 onClick={() => setShowCreateRole(false)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800"
               >
                 Cancel
               </button>

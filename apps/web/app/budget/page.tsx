@@ -147,10 +147,10 @@ export default function BudgetPage() {
 
   const getStatusBadge = (status: string) => {
     const colors: Record<string, string> = {
-      active: 'bg-green-100 text-green-800',
-      completed: 'bg-blue-100 text-blue-800',
-      cancelled: 'bg-red-100 text-red-800',
-      draft: 'bg-gray-100 text-gray-800'
+      active: 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300',
+      completed: 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300',
+      cancelled: 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300',
+      draft: 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200'
     }
     return (
       <span className={`px-2 py-1 text-xs font-medium rounded-full ${colors[status] || colors.draft}`}>
@@ -172,7 +172,7 @@ export default function BudgetPage() {
     return (
       <MainLayout>
         <div className="flex items-center justify-center h-64">
-          <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+          <Loader2 className="w-8 h-8 text-blue-600 dark:text-blue-400 animate-spin" />
         </div>
       </MainLayout>
     )
@@ -183,17 +183,17 @@ export default function BudgetPage() {
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Budget</h1>
-          <p className="text-gray-600 mt-1">Plan and track your financial budget</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Budget</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">Plan and track your financial budget</p>
         </div>
         <div className="flex items-center space-x-3">
-          <div className="flex items-center bg-white border border-gray-200 rounded-lg p-1">
+          <div className="flex items-center bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-1">
             <button
               onClick={() => setView('overview')}
               className={`px-3 py-1.5 text-sm font-medium rounded-md ${
                 view === 'overview' 
-                  ? 'bg-blue-100 text-blue-700' 
-                  : 'text-gray-500 hover:text-gray-700'
+                  ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300' 
+                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
               }`}
             >
               Overview
@@ -202,8 +202,8 @@ export default function BudgetPage() {
               onClick={() => setView('details')}
               className={`px-3 py-1.5 text-sm font-medium rounded-md ${
                 view === 'details' 
-                  ? 'bg-blue-100 text-blue-700' 
-                  : 'text-gray-500 hover:text-gray-700'
+                  ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300' 
+                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
               }`}
             >
               Details
@@ -212,7 +212,7 @@ export default function BudgetPage() {
           <select
             value={selectedYear}
             onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-            className="px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900"
+            className="px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900 dark:text-gray-100"
           >
             {getAvailableYears().map(year => (
               <option key={year} value={year}>Fiscal Year {year}</option>
@@ -220,7 +220,7 @@ export default function BudgetPage() {
           </select>
           <button
             onClick={fetchBudgetData}
-            className="px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center space-x-2"
+            className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-2"
           >
             <RefreshCw size={16} />
             <span>Refresh</span>
@@ -236,7 +236,7 @@ export default function BudgetPage() {
       </div>
 
       {error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-center space-x-2">
+        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 rounded-lg flex items-center space-x-2">
           <AlertCircle size={16} />
           <span>{error}</span>
         </div>
@@ -245,10 +245,10 @@ export default function BudgetPage() {
       {view === 'overview' ? (
         <>
           {!summary || summary.totalPlanned === 0 ? (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
-              <BarChart3 className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">No budget data for {selectedYear}</h3>
-              <p className="text-gray-500 mb-6">Add your first budget item to start planning.</p>
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-12 text-center">
+              <BarChart3 className="w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">No budget data for {selectedYear}</h3>
+              <p className="text-gray-500 dark:text-gray-400 mb-6">Add your first budget item to start planning.</p>
               <Link
                 href="/budget/new"
                 className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 inline-flex items-center space-x-2"
@@ -261,72 +261,72 @@ export default function BudgetPage() {
             <>
               {/* Summary Cards */}
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-                <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-500">Total Budget</p>
-                      <p className="text-2xl font-bold text-gray-900 mt-1">
+                      <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Budget</p>
+                      <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-1">
                         {formatCurrency(summary.totalPlanned)}
                       </p>
                     </div>
-                    <div className="p-3 bg-blue-100 rounded-lg">
-                      <DollarSign className="w-5 h-5 text-blue-600" />
+                    <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                      <DollarSign className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                     </div>
                   </div>
-                  <p className="text-xs text-gray-500 mt-2">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                     Fiscal Year {selectedYear}
                   </p>
                 </div>
 
-                <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-500">Actual Spent</p>
-                      <p className="text-2xl font-bold text-gray-900 mt-1">
+                      <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Actual Spent</p>
+                      <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-1">
                         {formatCurrency(summary.totalActual)}
                       </p>
                     </div>
-                    <div className="p-3 bg-purple-100 rounded-lg">
-                      <TrendingDown className="w-5 h-5 text-purple-600" />
+                    <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+                      <TrendingDown className="w-5 h-5 text-purple-600 dark:text-purple-400" />
                     </div>
                   </div>
-                  <p className="text-xs text-gray-500 mt-2">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                     {summary.totalPlanned > 0 
                       ? ((summary.totalActual / summary.totalPlanned) * 100).toFixed(1) 
                       : '0'}% of budget
                   </p>
                 </div>
 
-                <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-500">Committed</p>
-                      <p className="text-2xl font-bold text-gray-900 mt-1">
+                      <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Committed</p>
+                      <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-1">
                         {formatCurrency(summary.totalCommitted)}
                       </p>
                     </div>
-                    <div className="p-3 bg-yellow-100 rounded-lg">
-                      <AlertCircle className="w-5 h-5 text-yellow-600" />
+                    <div className="p-3 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
+                      <AlertCircle className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
                     </div>
                   </div>
-                  <p className="text-xs text-gray-500 mt-2">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                     Pending / Approved not yet paid
                   </p>
                 </div>
 
-                <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-500">Remaining</p>
-                      <p className="text-2xl font-bold text-gray-900 mt-1">
+                      <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Remaining</p>
+                      <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-1">
                         {formatCurrency(summary.totalPlanned - summary.totalActual)}
                       </p>
                     </div>
-                    <div className="p-3 bg-green-100 rounded-lg">
-                      <TrendingUp className="w-5 h-5 text-green-600" />
+                    <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                      <TrendingUp className="w-5 h-5 text-green-600 dark:text-green-400" />
                     </div>
                   </div>
-                  <p className="text-xs text-gray-500 mt-2">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                     {summary.totalPlanned > 0 
                       ? ((summary.totalPlanned - summary.totalActual) / summary.totalPlanned * 100).toFixed(1) 
                       : '0'}% remaining
@@ -336,23 +336,23 @@ export default function BudgetPage() {
 
               {/* Budget Health */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-                <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 lg:col-span-2">
-                  <h2 className="text-lg font-semibold text-gray-900 mb-4">Budget Overview</h2>
+                <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800 lg:col-span-2">
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Budget Overview</h2>
                   <div className="space-y-4">
                     <div>
                       <div className="flex justify-between text-sm mb-1">
-                        <span className="text-gray-600">Budget Utilization</span>
-                        <span className="font-medium text-gray-900">
+                        <span className="text-gray-600 dark:text-gray-400">Budget Utilization</span>
+                        <span className="font-medium text-gray-900 dark:text-gray-100">
                           {formatCurrency(summary.totalActual)} / {formatCurrency(summary.totalPlanned)}
                         </span>
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2.5">
+                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
                         <div 
                           className="bg-blue-600 h-2.5 rounded-full" 
                           style={{ width: `${Math.min((summary.totalActual / summary.totalPlanned) * 100, 100)}%` }}
                         />
                       </div>
-                      <div className="flex justify-between text-xs text-gray-500 mt-1">
+                      <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
                         <span>0%</span>
                         <span>50%</span>
                         <span>100%</span>
@@ -361,56 +361,56 @@ export default function BudgetPage() {
 
                     {/* On Track / Over Budget Cards - FIXED with null checks */}
                     <div className="grid grid-cols-2 gap-4 pt-4">
-                      <div className="bg-green-50 p-4 rounded-lg">
-                        <p className="text-xs text-green-600 font-medium">On Track</p>
-                        <p className="text-lg font-bold text-green-700 mt-1">
+                      <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
+                        <p className="text-xs text-green-600 dark:text-green-400 font-medium">On Track</p>
+                        <p className="text-lg font-bold text-green-700 dark:text-green-300 mt-1">
                           {summary?.byCategory 
                             ? Object.values(summary.byCategory).filter(c => (c.variance || 0) >= 0).length 
                             : 0}
                         </p>
-                        <p className="text-xs text-green-600">categories</p>
+                        <p className="text-xs text-green-600 dark:text-green-400">categories</p>
                       </div>
-                      <div className="bg-red-50 p-4 rounded-lg">
-                        <p className="text-xs text-red-600 font-medium">Over Budget</p>
-                        <p className="text-lg font-bold text-red-700 mt-1">
+                      <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg">
+                        <p className="text-xs text-red-600 dark:text-red-400 font-medium">Over Budget</p>
+                        <p className="text-lg font-bold text-red-700 dark:text-red-300 mt-1">
                           {summary?.byCategory 
                             ? Object.values(summary.byCategory).filter(c => (c.variance || 0) < 0).length 
                             : 0}
                         </p>
-                        <p className="text-xs text-red-600">categories</p>
+                        <p className="text-xs text-red-600 dark:text-red-400">categories</p>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                  <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Stats</h2>
+                <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Quick Stats</h2>
                   <dl className="space-y-3">
                     <div className="flex justify-between">
-                      <dt className="text-sm text-gray-500">Total Categories</dt>
-                      <dd className="text-sm font-medium text-gray-900">
+                      <dt className="text-sm text-gray-500 dark:text-gray-400">Total Categories</dt>
+                      <dd className="text-sm font-medium text-gray-900 dark:text-gray-100">
                         {summary?.byCategory ? Object.keys(summary.byCategory).length : 0}
                       </dd>
                     </div>
                     <div className="flex justify-between">
-                      <dt className="text-sm text-gray-500">Budget Variance</dt>
+                      <dt className="text-sm text-gray-500 dark:text-gray-400">Budget Variance</dt>
                       <dd className={`text-sm font-medium ${
-                        (summary.totalVariance || 0) >= 0 ? 'text-green-600' : 'text-red-600'
+                        (summary.totalVariance || 0) >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
                       }`}>
                         {formatCurrency(summary.totalVariance || 0)}
                       </dd>
                     </div>
                     <div className="flex justify-between">
-                      <dt className="text-sm text-gray-500">Variance %</dt>
+                      <dt className="text-sm text-gray-500 dark:text-gray-400">Variance %</dt>
                       <dd className={`text-sm font-medium ${
-                        (summary.variancePercentage || 0) >= 0 ? 'text-green-600' : 'text-red-600'
+                        (summary.variancePercentage || 0) >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
                       }`}>
                         {(summary.variancePercentage || 0).toFixed(1)}%
                       </dd>
                     </div>
-                    <div className="flex justify-between pt-2 border-t border-gray-200">
-                      <dt className="text-sm font-medium text-gray-700">Budget Items</dt>
-                      <dd className="text-sm font-medium text-gray-900">{budgetItems.length}</dd>
+                    <div className="flex justify-between pt-2 border-t border-gray-200 dark:border-gray-700">
+                      <dt className="text-sm font-medium text-gray-700 dark:text-gray-300">Budget Items</dt>
+                      <dd className="text-sm font-medium text-gray-900 dark:text-gray-100">{budgetItems.length}</dd>
                     </div>
                   </dl>
                 </div>
@@ -418,58 +418,58 @@ export default function BudgetPage() {
 
               {/* Category Breakdown - FIXED with null checks */}
               {summary?.byCategory && Object.keys(summary.byCategory).length > 0 ? (
-                <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-6">
-                  <div className="px-6 py-4 border-b bg-gray-50">
-                    <h2 className="text-lg font-semibold text-gray-900">Budget by Category</h2>
+                <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden mb-6">
+                  <div className="px-6 py-4 border-b bg-gray-50 dark:bg-gray-800">
+                    <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Budget by Category</h2>
                   </div>
                   <div className="overflow-x-auto">
                     <table className="w-full">
-                      <thead className="bg-gray-50">
+                      <thead className="bg-gray-50 dark:bg-gray-800">
                         <tr>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
-                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Budget</th>
-                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actual</th>
-                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Committed</th>
-                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Variance</th>
-                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Utilization</th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Category</th>
+                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Budget</th>
+                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Actual</th>
+                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Committed</th>
+                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Variance</th>
+                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Utilization</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-gray-200">
+                      <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                         {Object.entries(summary.byCategory).map(([category, data]) => (
-                          <tr key={category} className="hover:bg-gray-50">
+                          <tr key={category} className="hover:bg-gray-50 dark:hover:bg-gray-800">
                             <td className="px-6 py-4 whitespace-nowrap">
-                              <span className="text-sm font-medium text-gray-900 capitalize">
+                              <span className="text-sm font-medium text-gray-900 dark:text-gray-100 capitalize">
                                 {category}
                               </span>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-right">
-                              <span className="text-sm text-gray-900">
+                              <span className="text-sm text-gray-900 dark:text-gray-100">
                                 {formatCurrency(data.planned || 0)}
                               </span>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-right">
-                              <span className="text-sm text-gray-900">
+                              <span className="text-sm text-gray-900 dark:text-gray-100">
                                 {formatCurrency(data.actual || 0)}
                               </span>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-right">
-                              <span className="text-sm text-gray-900">
+                              <span className="text-sm text-gray-900 dark:text-gray-100">
                                 {formatCurrency(data.committed || 0)}
                               </span>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-right">
                               <span className={`text-sm font-medium ${
-                                (data.variance || 0) >= 0 ? 'text-green-600' : 'text-red-600'
+                                (data.variance || 0) >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
                               }`}>
                                 {formatCurrency(data.variance || 0)}
                               </span>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-right">
                               <div className="flex items-center justify-end space-x-2">
-                                <span className="text-sm text-gray-600">
+                                <span className="text-sm text-gray-600 dark:text-gray-400">
                                   {data.planned > 0 ? ((data.actual / data.planned) * 100).toFixed(1) : '0'}%
                                 </span>
-                                <div className="w-16 bg-gray-200 rounded-full h-2">
+                                <div className="w-16 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                                   <div 
                                     className={`h-2 rounded-full ${
                                       data.planned > 0 && (data.actual / data.planned) > 1 ? 'bg-red-500' : 'bg-green-500'
@@ -486,12 +486,12 @@ export default function BudgetPage() {
                   </div>
                 </div>
               ) : (
-                <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center mb-6">
-                  <BarChart3 className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-                  <p className="text-gray-500">No budget categories found for {selectedYear}</p>
+                <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-8 text-center mb-6">
+                  <BarChart3 className="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-3" />
+                  <p className="text-gray-500 dark:text-gray-400">No budget categories found for {selectedYear}</p>
                   <Link
                     href="/budget/new"
-                    className="text-blue-600 hover:text-blue-800 text-sm font-medium inline-flex items-center space-x-1 mt-2"
+                    className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm font-medium inline-flex items-center space-x-1 mt-2"
                   >
                     <Plus size={14} />
                     <span>Add your first budget item</span>
@@ -505,23 +505,23 @@ export default function BudgetPage() {
         /* ============ DETAILS VIEW ============ */
         <>
           {/* Filters for Details View */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-4 mb-6">
             <div className="flex flex-col lg:flex-row lg:items-center gap-4">
               <div className="flex-1 relative">
-                <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                 <input
                   type="text"
                   placeholder="Search by category, description, project..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900 placeholder:text-gray-500"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:text-gray-400"
                 />
               </div>
               <div className="flex items-center space-x-4">
                 <select
                   value={categoryFilter}
                   onChange={(e) => setCategoryFilter(e.target.value)}
-                  className="px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900"
+                  className="px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900 dark:text-gray-100"
                 >
                   {getUniqueCategories().map(cat => (
                     <option key={cat} value={cat}>
@@ -529,7 +529,7 @@ export default function BudgetPage() {
                     </option>
                   ))}
                 </select>
-                <button className="p-2 text-gray-500 border border-gray-200 rounded-lg hover:bg-gray-50">
+                <button className="p-2 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
                   <Filter size={16} />
                 </button>
               </div>
@@ -538,10 +538,10 @@ export default function BudgetPage() {
 
           {/* Budget Items Table */}
           {budgetItems.length === 0 ? (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
-              <BarChart3 className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">No budget items yet</h3>
-              <p className="text-gray-500 mb-6">Add your first budget item to start planning.</p>
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-12 text-center">
+              <BarChart3 className="w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">No budget items yet</h3>
+              <p className="text-gray-500 dark:text-gray-400 mb-6">Add your first budget item to start planning.</p>
               <Link
                 href="/budget/new"
                 className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 inline-flex items-center space-x-2"
@@ -551,59 +551,59 @@ export default function BudgetPage() {
               </Link>
             </div>
           ) : (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-gray-50">
+                  <thead className="bg-gray-50 dark:bg-gray-800">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Project</th>
-                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Budget</th>
-                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actual</th>
-                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Variance</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Period</th>
-                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Category</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Description</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Project</th>
+                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Budget</th>
+                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Actual</th>
+                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Variance</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Status</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Period</th>
+                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-200">
+                  <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                     {filteredBudgetItems.map((item) => (
-                      <tr key={item.id} className="hover:bg-gray-50">
+                      <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="text-sm font-medium text-gray-900 capitalize">
+                          <span className="text-sm font-medium text-gray-900 dark:text-gray-100 capitalize">
                             {item.category}
                           </span>
                         </td>
                         <td className="px-6 py-4">
-                          <div className="text-sm text-gray-900">{item.description}</div>
+                          <div className="text-sm text-gray-900 dark:text-gray-100">{item.description}</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           {item.project ? (
                             <Link
                               href={`/projects/${item.project.id}`}
-                              className="text-sm text-blue-600 hover:text-blue-800 flex items-center"
+                              className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 flex items-center"
                             >
                               <FolderOpen size={14} className="mr-1" />
                               {item.project.projectNumber}
                             </Link>
                           ) : (
-                            <span className="text-sm text-gray-400">—</span>
+                            <span className="text-sm text-gray-400 dark:text-gray-500">—</span>
                           )}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right">
-                          <span className="text-sm font-medium text-gray-900">
+                          <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
                             {formatCurrency(item.plannedAmount)}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right">
-                          <span className="text-sm text-gray-900">
+                          <span className="text-sm text-gray-900 dark:text-gray-100">
                             {formatCurrency(item.actualAmount)}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right">
                           <span className={`text-sm font-medium ${
-                            (item.variance || 0) >= 0 ? 'text-green-600' : 'text-red-600'
+                            (item.variance || 0) >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
                           }`}>
                             {formatCurrency(item.variance || 0)}
                           </span>
@@ -612,7 +612,7 @@ export default function BudgetPage() {
                           {getStatusBadge(item.status)}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-xs text-gray-500">
+                          <div className="text-xs text-gray-500 dark:text-gray-400">
                             {new Date(item.periodStart).toLocaleDateString()} - 
                             {new Date(item.periodEnd).toLocaleDateString()}
                           </div>
@@ -621,19 +621,19 @@ export default function BudgetPage() {
                           <div className="flex items-center justify-end space-x-2">
                             <Link
                               href={`/budget/${item.id}`}
-                              className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
+                              className="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg"
                             >
                               <Eye size={16} />
                             </Link>
                             <Link
                               href={`/budget/${item.id}/edit`}
-                              className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg"
+                              className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
                             >
                               <Edit size={16} />
                             </Link>
                             <button
                               onClick={(e) => handleDeleteBudgetItem(item.id, e)}
-                              className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
+                              className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg"
                             >
                               <Trash2 size={16} />
                             </button>

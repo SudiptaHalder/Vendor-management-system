@@ -61,8 +61,8 @@ export default function EnterpriseDashboard() {
         {/* Header */}
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Enterprise Procurement Portal</h1>
-            <p className="text-gray-600 mt-1">Complete ERP Integration with SAP S/4HANA</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Enterprise Procurement Portal</h1>
+            <p className="text-gray-600 dark:text-gray-400 mt-1">Complete ERP Integration with SAP S/4HANA</p>
           </div>
           <button
             onClick={syncData}
@@ -76,38 +76,38 @@ export default function EnterpriseDashboard() {
 
         {/* Vendor Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-blue-500">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border-l-4 border-blue-500">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500">Total Vendors</p>
-                <p className="text-3xl font-bold text-gray-900">{metrics?.totalVendors || 0}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Total Vendors</p>
+                <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{metrics?.totalVendors || 0}</p>
               </div>
               <Building2 className="w-8 h-8 text-blue-500" />
             </div>
           </div>
-          <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-green-500">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border-l-4 border-green-500">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500">Active Vendors</p>
-                <p className="text-3xl font-bold text-gray-900">{metrics?.activeVendors || 0}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Active Vendors</p>
+                <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{metrics?.activeVendors || 0}</p>
               </div>
               <CheckCircle className="w-8 h-8 text-green-500" />
             </div>
           </div>
-          <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-yellow-500">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border-l-4 border-yellow-500">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500">Pending Approval</p>
-                <p className="text-3xl font-bold text-gray-900">{metrics?.pendingVendors || 0}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Pending Approval</p>
+                <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{metrics?.pendingVendors || 0}</p>
               </div>
               <Clock className="w-8 h-8 text-yellow-500" />
             </div>
           </div>
-          <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-purple-500">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border-l-4 border-purple-500">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500">Synced to SAP</p>
-                <p className="text-3xl font-bold text-gray-900">{metrics?.syncedVendors || 0}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Synced to SAP</p>
+                <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{metrics?.syncedVendors || 0}</p>
               </div>
               <TrendingUp className="w-8 h-8 text-purple-500" />
             </div>
@@ -120,26 +120,26 @@ export default function EnterpriseDashboard() {
         {/* Module Links */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-gradient-to-br from-blue-50 to-white rounded-xl p-6 border border-blue-100">
-            <Package className="w-10 h-10 text-blue-600 mb-3" />
-            <h3 className="text-lg font-semibold text-gray-900">Purchase Orders</h3>
-            <p className="text-sm text-gray-600 mt-1">Track all POs, line items, delivery status</p>
-            <button className="mt-4 text-blue-600 hover:text-blue-700 text-sm font-medium">
+            <Package className="w-10 h-10 text-blue-600 dark:text-blue-400 mb-3" />
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Purchase Orders</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Track all POs, line items, delivery status</p>
+            <button className="mt-4 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium">
               View Details →
             </button>
           </div>
           <div className="bg-gradient-to-br from-green-50 to-white rounded-xl p-6 border border-green-100">
-            <FileText className="w-10 h-10 text-green-600 mb-3" />
-            <h3 className="text-lg font-semibold text-gray-900">Goods Receipts</h3>
-            <p className="text-sm text-gray-600 mt-1">Material documents, delivery tracking</p>
-            <button className="mt-4 text-green-600 hover:text-green-700 text-sm font-medium">
+            <FileText className="w-10 h-10 text-green-600 dark:text-green-400 mb-3" />
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Goods Receipts</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Material documents, delivery tracking</p>
+            <button className="mt-4 text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 text-sm font-medium">
               View Details →
             </button>
           </div>
           <div className="bg-gradient-to-br from-purple-50 to-white rounded-xl p-6 border border-purple-100">
-            <TrendingUp className="w-10 h-10 text-purple-600 mb-3" />
-            <h3 className="text-lg font-semibold text-gray-900">ERP Reconciliation</h3>
-            <p className="text-sm text-gray-600 mt-1">PO vs Goods Receipt vs Invoice matching</p>
-            <button className="mt-4 text-purple-600 hover:text-purple-700 text-sm font-medium">
+            <TrendingUp className="w-10 h-10 text-purple-600 dark:text-purple-400 mb-3" />
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">ERP Reconciliation</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">PO vs Goods Receipt vs Invoice matching</p>
+            <button className="mt-4 text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 text-sm font-medium">
               View Details →
             </button>
           </div>

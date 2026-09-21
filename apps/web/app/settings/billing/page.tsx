@@ -149,7 +149,7 @@ export default function BillingPage() {
     return (
       <MainLayout>
         <div className="flex items-center justify-center h-64">
-          <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+          <Loader2 className="w-8 h-8 text-blue-600 dark:text-blue-400 animate-spin" />
         </div>
       </MainLayout>
     )
@@ -159,22 +159,22 @@ export default function BillingPage() {
     <MainLayout>
       {/* Header */}
       <div className="mb-6">
-        <div className="flex items-center space-x-3 text-sm text-gray-500 mb-4">
-          <Link href="/settings" className="hover:text-blue-600">
+        <div className="flex items-center space-x-3 text-sm text-gray-500 dark:text-gray-400 mb-4">
+          <Link href="/settings" className="hover:text-blue-600 dark:hover:text-blue-400">
             Settings
           </Link>
           <span>/</span>
-          <span className="text-gray-900 font-medium">Billing</span>
+          <span className="text-gray-900 dark:text-gray-100 font-medium">Billing</span>
         </div>
 
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Billing & Subscription</h1>
-            <p className="text-gray-600 mt-1">Manage your plan, payment methods, and invoices</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Billing & Subscription</h1>
+            <p className="text-gray-600 dark:text-gray-400 mt-1">Manage your plan, payment methods, and invoices</p>
           </div>
           <button
             onClick={fetchBillingData}
-            className="px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center space-x-2"
+            className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-2"
           >
             <RefreshCw size={16} />
             <span>Refresh</span>
@@ -200,7 +200,7 @@ export default function BillingPage() {
                 </span>
               </div>
             </div>
-            <button className="px-4 py-2 bg-white text-blue-600 rounded-lg hover:bg-blue-50 font-medium">
+            <button className="px-4 py-2 bg-white dark:bg-gray-900 text-blue-600 dark:text-blue-400 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 font-medium">
               Change Plan
             </button>
           </div>
@@ -216,13 +216,13 @@ export default function BillingPage() {
       )}
 
       {/* Plan Comparison */}
-      <h2 className="text-xl font-semibold text-gray-900 mb-4">Available Plans</h2>
+      <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Available Plans</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         {plans.map((plan) => (
           <div
             key={plan.name}
-            className={`bg-white rounded-xl shadow-sm border ${
-              plan.popular ? 'border-blue-300 ring-2 ring-blue-200' : 'border-gray-200'
+            className={`bg-white dark:bg-gray-900 rounded-xl shadow-sm border ${
+              plan.popular ? 'border-blue-300 ring-2 ring-blue-200' : 'border-gray-200 dark:border-gray-700'
             } p-6 relative`}
           >
             {plan.popular && (
@@ -230,23 +230,23 @@ export default function BillingPage() {
                 Most Popular
               </span>
             )}
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">{plan.name}</h3>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{plan.name}</h3>
             <div className="mb-4">
-              <span className="text-3xl font-bold text-gray-900">${plan.price}</span>
-              <span className="text-gray-500 text-sm">/{plan.interval}</span>
+              <span className="text-3xl font-bold text-gray-900 dark:text-gray-100">${plan.price}</span>
+              <span className="text-gray-500 dark:text-gray-400 text-sm">/{plan.interval}</span>
             </div>
 
             <div className="space-y-3 mb-6">
               {plan.features.map((feature, index) => (
                 <div key={index} className="flex items-start">
                   <CheckCircle size={16} className="text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                  <span className="text-sm text-gray-600">{feature}</span>
+                  <span className="text-sm text-gray-600 dark:text-gray-400">{feature}</span>
                 </div>
               ))}
               {plan.limitations?.map((limitation, index) => (
                 <div key={index} className="flex items-start opacity-50">
-                  <XCircle size={16} className="text-gray-400 mr-2 mt-0.5 flex-shrink-0" />
-                  <span className="text-sm text-gray-400">{limitation}</span>
+                  <XCircle size={16} className="text-gray-400 dark:text-gray-500 mr-2 mt-0.5 flex-shrink-0" />
+                  <span className="text-sm text-gray-400 dark:text-gray-500">{limitation}</span>
                 </div>
               ))}
             </div>
@@ -256,7 +256,7 @@ export default function BillingPage() {
               className={`w-full py-2 px-4 rounded-lg font-medium ${
                 selectedPlan === plan.name.toLowerCase()
                   ? 'bg-blue-600 text-white hover:bg-blue-700'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
               }`}
             >
               {selectedPlan === plan.name.toLowerCase() ? 'Current Plan' : 'Select Plan'}
@@ -266,66 +266,66 @@ export default function BillingPage() {
       </div>
 
       {/* Payment Method */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Payment Method</h2>
-        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6 mb-8">
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Payment Method</h2>
+        <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
           <div className="flex items-center space-x-3">
-            <div className="p-2 bg-white rounded-lg">
-              <CreditCard className="w-6 h-6 text-gray-600" />
+            <div className="p-2 bg-white dark:bg-gray-900 rounded-lg">
+              <CreditCard className="w-6 h-6 text-gray-600 dark:text-gray-400" />
             </div>
             <div>
-              <p className="font-medium text-gray-900">Visa ending in 4242</p>
-              <p className="text-sm text-gray-500">Expires 12/2026</p>
+              <p className="font-medium text-gray-900 dark:text-gray-100">Visa ending in 4242</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Expires 12/2026</p>
             </div>
           </div>
-          <button className="text-sm text-blue-600 hover:text-blue-800 font-medium">
+          <button className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium">
             Update
           </button>
         </div>
-        <p className="text-xs text-gray-500 mt-3">
+        <p className="text-xs text-gray-500 dark:text-gray-400 mt-3">
           Your payments are processed securely. We never store your full card details.
         </p>
       </div>
 
       {/* Billing History */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div className="px-6 py-4 border-b bg-gray-50">
-          <h2 className="text-lg font-semibold text-gray-900">Billing History</h2>
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+        <div className="px-6 py-4 border-b bg-gray-50 dark:bg-gray-800">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Billing History</h2>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50">
+            <thead className="bg-gray-50 dark:bg-gray-800">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Invoice</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Invoice</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Date</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Amount</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Status</th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
               {invoices.map((invoice) => (
-                <tr key={invoice.id} className="hover:bg-gray-50">
+                <tr key={invoice.id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
                   <td className="px-6 py-4">
-                    <span className="text-sm font-mono font-medium text-gray-900">{invoice.number}</span>
+                    <span className="text-sm font-mono font-medium text-gray-900 dark:text-gray-100">{invoice.number}</span>
                   </td>
                   <td className="px-6 py-4">
-                    <span className="text-sm text-gray-500">
+                    <span className="text-sm text-gray-500 dark:text-gray-400">
                       {new Date(invoice.date).toLocaleDateString()}
                     </span>
                   </td>
                   <td className="px-6 py-4">
-                    <span className="text-sm font-medium text-gray-900">
+                    <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
                       ${invoice.amount.toLocaleString()}
                     </span>
                   </td>
                   <td className="px-6 py-4">
-                    <span className="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
+                    <span className="px-2 py-1 text-xs font-medium rounded-full bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300">
                       {invoice.status}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <button className="p-1 text-gray-400 hover:text-gray-600">
+                    <button className="p-1 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400">
                       <Download size={16} />
                     </button>
                   </td>

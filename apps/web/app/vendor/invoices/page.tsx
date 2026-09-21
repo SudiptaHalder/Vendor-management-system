@@ -43,13 +43,13 @@ export default function VendorInvoicesPage() {
   const getStatusBadge = (status: string) => {
     switch(status) {
       case 'paid':
-        return <span className="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full flex items-center"><CheckCircle size={12} className="mr-1" /> Paid</span>
+        return <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-xs font-medium rounded-full flex items-center"><CheckCircle size={12} className="mr-1" /> Paid</span>
       case 'pending':
-        return <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full flex items-center"><Clock size={12} className="mr-1" /> Pending</span>
+        return <span className="px-2 py-1 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 text-xs font-medium rounded-full flex items-center"><Clock size={12} className="mr-1" /> Pending</span>
       case 'overdue':
-        return <span className="px-2 py-1 bg-red-100 text-red-800 text-xs font-medium rounded-full flex items-center"><XCircle size={12} className="mr-1" /> Overdue</span>
+        return <span className="px-2 py-1 bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 text-xs font-medium rounded-full flex items-center"><XCircle size={12} className="mr-1" /> Overdue</span>
       default:
-        return <span className="px-2 py-1 bg-gray-100 text-gray-800 text-xs font-medium rounded-full">{status}</span>
+        return <span className="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-xs font-medium rounded-full">{status}</span>
     }
   }
 
@@ -67,8 +67,8 @@ export default function VendorInvoicesPage() {
     <VendorLayout>
       <div className="mb-6 flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Invoices</h1>
-          <p className="text-gray-600 mt-1">Manage and track all your invoices</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Invoices</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">Manage and track all your invoices</p>
         </div>
         <Link
           href="/vendor/invoices/new"
@@ -80,7 +80,7 @@ export default function VendorInvoicesPage() {
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6">
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 mb-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center space-x-2">
             <button
@@ -88,7 +88,7 @@ export default function VendorInvoicesPage() {
               className={`px-3 py-1.5 text-sm font-medium rounded-lg ${
                 filter === 'all' 
                   ? 'bg-green-600 text-white' 
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
               }`}
             >
               All
@@ -98,7 +98,7 @@ export default function VendorInvoicesPage() {
               className={`px-3 py-1.5 text-sm font-medium rounded-lg flex items-center ${
                 filter === 'pending' 
                   ? 'bg-yellow-500 text-white' 
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
               }`}
             >
               <Clock size={14} className="mr-1" /> Pending
@@ -108,7 +108,7 @@ export default function VendorInvoicesPage() {
               className={`px-3 py-1.5 text-sm font-medium rounded-lg flex items-center ${
                 filter === 'paid' 
                   ? 'bg-green-600 text-white' 
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
               }`}
             >
               <CheckCircle size={14} className="mr-1" /> Paid
@@ -118,7 +118,7 @@ export default function VendorInvoicesPage() {
               className={`px-3 py-1.5 text-sm font-medium rounded-lg flex items-center ${
                 filter === 'overdue' 
                   ? 'bg-red-600 text-white' 
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
               }`}
             >
               <XCircle size={14} className="mr-1" /> Overdue
@@ -126,57 +126,57 @@ export default function VendorInvoicesPage() {
           </div>
           <div className="flex items-center space-x-2">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" size={16} />
               <input
                 type="text"
                 placeholder="Search invoices..."
-                className="pl-9 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="pl-9 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
             </div>
-            <button className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50">
-              <Filter size={18} className="text-gray-600" />
+            <button className="p-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
+              <Filter size={18} className="text-gray-600 dark:text-gray-400" />
             </button>
           </div>
         </div>
       </div>
 
       {/* Invoices Table */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
         <table className="w-full">
-          <thead className="bg-gray-50 border-b border-gray-200">
+          <thead className="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Invoice</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PO Number</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Due Date</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Invoice</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">PO Number</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Due Date</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Amount</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+          <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
             {filteredInvoices.map((invoice) => (
-              <tr key={invoice.id} className="hover:bg-gray-50">
+              <tr key={invoice.id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
-                    <FileText className="w-5 h-5 text-gray-400 mr-2" />
-                    <span className="text-sm font-medium text-gray-900">{invoice.number}</span>
+                    <FileText className="w-5 h-5 text-gray-400 dark:text-gray-500 mr-2" />
+                    <span className="text-sm font-medium text-gray-900 dark:text-gray-100">{invoice.number}</span>
                   </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{invoice.poNumber}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{invoice.date}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{invoice.dueDate}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{invoice.poNumber}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{invoice.date}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{invoice.dueDate}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
                   ${invoice.amount.toLocaleString()}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   {getStatusBadge(invoice.status)}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                  <button className="text-gray-400 hover:text-gray-600 mr-3">
+                  <button className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 mr-3">
                     <Eye size={16} />
                   </button>
-                  <button className="text-gray-400 hover:text-gray-600">
+                  <button className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400">
                     <Download size={16} />
                   </button>
                 </td>

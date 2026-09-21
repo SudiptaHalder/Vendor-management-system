@@ -76,10 +76,10 @@ export const SAPSyncStatus: React.FC = () => {
 
   const getStatusColor = () => {
     switch (status?.status) {
-      case 'completed': return 'bg-green-50 border-green-200';
-      case 'syncing': return 'bg-blue-50 border-blue-200';
-      case 'failed': return 'bg-red-50 border-red-200';
-      default: return 'bg-yellow-50 border-yellow-200';
+      case 'completed': return 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800';
+      case 'syncing': return 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800';
+      case 'failed': return 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800';
+      default: return 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800';
     }
   };
 
@@ -95,17 +95,17 @@ export const SAPSyncStatus: React.FC = () => {
             <span className="capitalize">{status.status}</span>
           </div>
           {status.lastSyncAt && (
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-gray-600 dark:text-gray-400">
               Last sync: {new Date(status.lastSyncAt).toLocaleString()}
             </div>
           )}
           {status.recordsProcessed !== undefined && (
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-gray-600 dark:text-gray-400">
               Records synced: {status.recordsProcessed}
             </div>
           )}
           {status.errors && status.errors.length > 0 && (
-            <div className="text-sm text-red-600 flex items-center mt-1">
+            <div className="text-sm text-red-600 dark:text-red-400 flex items-center mt-1">
               <AlertCircle className="w-4 h-4 mr-1" />
               {status.errors[0]}
             </div>

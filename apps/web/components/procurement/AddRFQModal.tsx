@@ -193,26 +193,26 @@ export default function AddRFQModal({ isOpen, onClose, onSuccess }: AddRFQModalP
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="fixed inset-0 bg-black bg-opacity-50" onClick={handleClose} />
       <div className="flex min-h-full items-center justify-center p-4">
-        <div className="relative w-full max-w-4xl bg-white rounded-xl shadow-2xl">
+        <div className="relative w-full max-w-4xl bg-white dark:bg-gray-900 rounded-xl shadow-2xl">
           
           {/* Header */}
           <div className="flex items-center justify-between px-6 py-4 border-b">
             <div className="flex items-center space-x-3">
-              <div className="p-2 bg-purple-100 rounded-lg">
-                <MessageSquare className="w-5 h-5 text-purple-600" />
+              <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+                <MessageSquare className="w-5 h-5 text-purple-600 dark:text-purple-400" />
               </div>
               <div>
-                <h2 className="text-xl font-semibold text-gray-900">Create New RFQ</h2>
-                <p className="text-sm text-gray-500">Request quotes from multiple vendors</p>
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Create New RFQ</h2>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Request quotes from multiple vendors</p>
               </div>
             </div>
-            <button onClick={handleClose} className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100">
+            <button onClick={handleClose} className="p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
               <X className="w-5 h-5" />
             </button>
           </div>
 
           {error && (
-            <div className="mx-6 mt-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-center space-x-2">
+            <div className="mx-6 mt-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 rounded-lg flex items-center space-x-2">
               <AlertCircle size={16} />
               <span>{error}</span>
             </div>
@@ -222,7 +222,7 @@ export default function AddRFQModal({ isOpen, onClose, onSuccess }: AddRFQModalP
             <div className="space-y-6">
               {/* Basic Information */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Title <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -230,14 +230,14 @@ export default function AddRFQModal({ isOpen, onClose, onSuccess }: AddRFQModalP
                   name="title"
                   value={formData.title}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                   placeholder="e.g., Office Supplies RFQ - Q1 2024"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Description
                 </label>
                 <textarea
@@ -245,7 +245,7 @@ export default function AddRFQModal({ isOpen, onClose, onSuccess }: AddRFQModalP
                   rows={2}
                   value={formData.description}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 resize-none"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 dark:text-gray-100 resize-none"
                   placeholder="Detailed description of requirements..."
                 />
               </div>
@@ -253,7 +253,7 @@ export default function AddRFQModal({ isOpen, onClose, onSuccess }: AddRFQModalP
               {/* Dates */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Deadline for Quotes
                   </label>
                   <input
@@ -261,11 +261,11 @@ export default function AddRFQModal({ isOpen, onClose, onSuccess }: AddRFQModalP
                     name="deadline"
                     value={formData.deadline}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Expected Delivery Date
                   </label>
                   <input
@@ -273,51 +273,51 @@ export default function AddRFQModal({ isOpen, onClose, onSuccess }: AddRFQModalP
                     name="expectedDeliveryDate"
                     value={formData.expectedDeliveryDate}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                   />
                 </div>
               </div>
 
               {/* Vendor Selection */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Select Vendors <span className="text-red-500">*</span>
                 </label>
                 {loadingVendors ? (
                   <div className="text-center py-4">
                     <div className="animate-spin w-6 h-6 border-2 border-purple-600 border-t-transparent rounded-full mx-auto"></div>
-                    <p className="text-sm text-gray-500 mt-2">Loading vendors...</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">Loading vendors...</p>
                   </div>
                 ) : vendors.length === 0 ? (
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-center">
+                  <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 text-center">
                     <Users className="w-8 h-8 text-yellow-500 mx-auto mb-2" />
-                    <p className="text-sm text-yellow-700">No active vendors found.</p>
-                    <p className="text-xs text-yellow-600 mt-1">Please add and approve vendors first.</p>
+                    <p className="text-sm text-yellow-700 dark:text-yellow-300">No active vendors found.</p>
+                    <p className="text-xs text-yellow-600 dark:text-yellow-400 mt-1">Please add and approve vendors first.</p>
                   </div>
                 ) : (
-                  <div className="border border-gray-200 rounded-lg divide-y max-h-48 overflow-y-auto">
+                  <div className="border border-gray-200 dark:border-gray-700 rounded-lg divide-y max-h-48 overflow-y-auto">
                     {vendors.map((vendor) => (
                       <label
                         key={vendor.id}
-                        className="flex items-center p-3 hover:bg-gray-50 cursor-pointer"
+                        className="flex items-center p-3 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer"
                       >
                         <input
                           type="checkbox"
                           checked={formData.vendorIds.includes(vendor.id)}
                           onChange={() => handleVendorSelection(vendor.id)}
-                          className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
+                          className="w-4 h-4 text-purple-600 dark:text-purple-400 border-gray-300 dark:border-gray-600 rounded focus:ring-purple-500"
                         />
                         <div className="ml-3">
-                          <p className="text-sm font-medium text-gray-900">{vendor.name}</p>
+                          <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{vendor.name}</p>
                           {vendor.email && (
-                            <p className="text-xs text-gray-500">{vendor.email}</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">{vendor.email}</p>
                           )}
                         </div>
                       </label>
                     ))}
                   </div>
                 )}
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                   Selected: {formData.vendorIds.length} vendor(s)
                 </p>
               </div>
@@ -325,13 +325,13 @@ export default function AddRFQModal({ isOpen, onClose, onSuccess }: AddRFQModalP
               {/* Line Items */}
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                     Items/Services Required <span className="text-red-500">*</span>
                   </label>
                   <button
                     type="button"
                     onClick={addLineItem}
-                    className="text-sm text-purple-600 hover:text-purple-800 flex items-center space-x-1"
+                    className="text-sm text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 flex items-center space-x-1"
                   >
                     <Plus size={16} />
                     <span>Add Item</span>
@@ -340,14 +340,14 @@ export default function AddRFQModal({ isOpen, onClose, onSuccess }: AddRFQModalP
                 
                 <div className="space-y-3">
                   {lineItems.map((item) => (
-                    <div key={item.id} className="flex items-start space-x-3 bg-gray-50 p-3 rounded-lg">
+                    <div key={item.id} className="flex items-start space-x-3 bg-gray-50 dark:bg-gray-800 p-3 rounded-lg">
                       <div className="flex-1">
                         <input
                           type="text"
                           placeholder="Item description"
                           value={item.description}
                           onChange={(e) => handleLineItemChange(item.id, 'description', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 text-sm"
+                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 dark:text-gray-100 text-sm"
                           required
                         />
                       </div>
@@ -357,7 +357,7 @@ export default function AddRFQModal({ isOpen, onClose, onSuccess }: AddRFQModalP
                           placeholder="Qty"
                           value={item.quantity}
                           onChange={(e) => handleLineItemChange(item.id, 'quantity', parseFloat(e.target.value) || 0)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 text-sm"
+                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 dark:text-gray-100 text-sm"
                           min="0.01"
                           step="0.01"
                           required
@@ -367,7 +367,7 @@ export default function AddRFQModal({ isOpen, onClose, onSuccess }: AddRFQModalP
                         <select
                           value={item.unit}
                           onChange={(e) => handleLineItemChange(item.id, 'unit', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 text-sm"
+                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 dark:text-gray-100 text-sm"
                         >
                           <option value="piece">piece</option>
                           <option value="hour">hour</option>
@@ -384,7 +384,7 @@ export default function AddRFQModal({ isOpen, onClose, onSuccess }: AddRFQModalP
                         <button
                           type="button"
                           onClick={() => removeLineItem(item.id)}
-                          className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg"
+                          className="p-2 text-red-500 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg"
                         >
                           <Trash2 size={16} />
                         </button>
@@ -397,7 +397,7 @@ export default function AddRFQModal({ isOpen, onClose, onSuccess }: AddRFQModalP
               {/* Notes & Terms */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Notes to Vendors
                   </label>
                   <textarea
@@ -405,12 +405,12 @@ export default function AddRFQModal({ isOpen, onClose, onSuccess }: AddRFQModalP
                     rows={3}
                     value={formData.notes}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 resize-none"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 dark:text-gray-100 resize-none"
                     placeholder="Special instructions, delivery requirements, etc..."
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Terms & Conditions
                   </label>
                   <textarea
@@ -418,7 +418,7 @@ export default function AddRFQModal({ isOpen, onClose, onSuccess }: AddRFQModalP
                     rows={3}
                     value={formData.terms}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 resize-none"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 dark:text-gray-100 resize-none"
                     placeholder="Payment terms, warranty, etc..."
                   />
                 </div>
@@ -430,7 +430,7 @@ export default function AddRFQModal({ isOpen, onClose, onSuccess }: AddRFQModalP
               <button
                 type="button"
                 onClick={handleClose}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800"
               >
                 Cancel
               </button>

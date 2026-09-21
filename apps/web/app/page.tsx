@@ -96,11 +96,11 @@ export default function VendorsPage() {
 
   const getStatusBadge = (status: string) => {
     const colors: Record<string, string> = {
-      active: 'bg-green-100 text-green-800',
-      pending: 'bg-yellow-100 text-yellow-800',
-      inactive: 'bg-red-100 text-red-800'
+      active: 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300',
+      pending: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300',
+      inactive: 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300'
     };
-    return colors[status] || 'bg-gray-100 text-gray-800';
+    return colors[status] || 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200';
   };
 
   const handleViewDetails = (vendorId: string) => {
@@ -123,8 +123,8 @@ export default function VendorsPage() {
         {/* Header */}
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Vendors</h1>
-            <p className="text-gray-600 mt-1">ERP Vendor Master Data from SAP S/4HANA</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Vendors</h1>
+            <p className="text-gray-600 dark:text-gray-400 mt-1">ERP Vendor Master Data from SAP S/4HANA</p>
           </div>
           <button
             onClick={syncVendors}
@@ -138,29 +138,29 @@ export default function VendorsPage() {
 
         {/* Metrics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white rounded-xl p-6 border-l-4 border-blue-500 shadow-sm">
+          <div className="bg-white dark:bg-gray-900 rounded-xl p-6 border-l-4 border-blue-500 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500">Total Vendors</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Total Vendors</p>
                 <p className="text-2xl font-bold">{metrics.totalVendors}</p>
               </div>
               <Building2 className="w-8 h-8 text-blue-500" />
             </div>
           </div>
-          <div className="bg-white rounded-xl p-6 border-l-4 border-green-500 shadow-sm">
+          <div className="bg-white dark:bg-gray-900 rounded-xl p-6 border-l-4 border-green-500 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500">Active Vendors</p>
-                <p className="text-2xl font-bold text-green-600">{metrics.activeVendors}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Active Vendors</p>
+                <p className="text-2xl font-bold text-green-600 dark:text-green-400">{metrics.activeVendors}</p>
               </div>
               <Users className="w-8 h-8 text-green-500" />
             </div>
           </div>
-          <div className="bg-white rounded-xl p-6 border-l-4 border-purple-500 shadow-sm">
+          <div className="bg-white dark:bg-gray-900 rounded-xl p-6 border-l-4 border-purple-500 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500">Vendors with GSTN</p>
-                <p className="text-2xl font-bold text-purple-600">{metrics.vendorsWithGSTN}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Vendors with GSTN</p>
+                <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">{metrics.vendorsWithGSTN}</p>
               </div>
               <CreditCard className="w-8 h-8 text-purple-500" />
             </div>
@@ -169,44 +169,44 @@ export default function VendorsPage() {
 
         {/* Search Bar */}
         <div className="relative">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
           <input
             type="text"
             placeholder="Search by name, code, GSTN, email, or contact person..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
+            className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:border-blue-500"
           />
         </div>
 
         {/* Vendors Table */}
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50 border-b border-gray-200">
+              <thead className="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Vendor</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">GSTN</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Contact</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Location</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Vendor</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">GSTN</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Contact</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Location</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Status</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
                 {vendors.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
+                    <td colSpan={6} className="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
                       No vendors found. Click "Sync with SAP" to import vendors.
                     </td>
                   </tr>
                 ) : (
                   vendors.map((vendor) => (
-                    <tr key={vendor.id} className="hover:bg-gray-50 cursor-pointer" onClick={() => handleViewDetails(vendor.id)}>
+                    <tr key={vendor.id} className="hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer" onClick={() => handleViewDetails(vendor.id)}>
                       <td className="px-6 py-4">
                         <div>
-                          <p className="font-medium text-gray-900">{vendor.supplierName}</p>
-                          <p className="text-sm text-gray-500">Code: {vendor.supplierCode}</p>
+                          <p className="font-medium text-gray-900 dark:text-gray-100">{vendor.supplierName}</p>
+                          <p className="text-sm text-gray-500 dark:text-gray-400">Code: {vendor.supplierCode}</p>
                         </div>
                       </td>
                       <td className="px-6 py-4">
@@ -215,10 +215,10 @@ export default function VendorsPage() {
                       <td className="px-6 py-4">
                         <div className="space-y-1">
                           {vendor.contactName && (
-                            <p className="text-sm text-gray-900">{vendor.contactName}</p>
+                            <p className="text-sm text-gray-900 dark:text-gray-100">{vendor.contactName}</p>
                           )}
                           {vendor.email && (
-                            <div className="flex items-center space-x-1 text-xs text-gray-500">
+                            <div className="flex items-center space-x-1 text-xs text-gray-500 dark:text-gray-400">
                               <Mail size={12} />
                               <span>{vendor.email}</span>
                             </div>
@@ -228,8 +228,8 @@ export default function VendorsPage() {
                       <td className="px-6 py-4">
                         {vendor.city && (
                           <div className="flex items-center space-x-1">
-                            <MapPin size={14} className="text-gray-400" />
-                            <span className="text-sm text-gray-600">{vendor.city}</span>
+                            <MapPin size={14} className="text-gray-400 dark:text-gray-500" />
+                            <span className="text-sm text-gray-600 dark:text-gray-400">{vendor.city}</span>
                           </div>
                         )}
                       </td>
@@ -244,7 +244,7 @@ export default function VendorsPage() {
                             e.stopPropagation();
                             handleViewDetails(vendor.id);
                           }}
-                          className="text-blue-600 hover:text-blue-800 inline-flex items-center space-x-1"
+                          className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 inline-flex items-center space-x-1"
                         >
                           <Eye size={16} />
                           <span>View Details</span>

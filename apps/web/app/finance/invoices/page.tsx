@@ -189,10 +189,10 @@ export default function AdminInvoicesPage() {
 
   const getStatusBadge = (status: string) => {
     const config = {
-      paid: { bg: 'bg-green-100', text: 'text-green-800', icon: CheckCircle },
-      approved: { bg: 'bg-blue-100', text: 'text-blue-800', icon: CheckCircle },
-      pending: { bg: 'bg-yellow-100', text: 'text-yellow-800', icon: Clock },
-      rejected: { bg: 'bg-red-100', text: 'text-red-800', icon: XCircle }
+      paid: { bg: 'bg-green-100 dark:bg-green-900/30', text: 'text-green-800 dark:text-green-300', icon: CheckCircle },
+      approved: { bg: 'bg-blue-100 dark:bg-blue-900/30', text: 'text-blue-800 dark:text-blue-300', icon: CheckCircle },
+      pending: { bg: 'bg-yellow-100 dark:bg-yellow-900/30', text: 'text-yellow-800 dark:text-yellow-300', icon: Clock },
+      rejected: { bg: 'bg-red-100 dark:bg-red-900/30', text: 'text-red-800 dark:text-red-300', icon: XCircle }
     }
     const { bg, text, icon: Icon } = config[status as keyof typeof config] || config.pending
     return (
@@ -234,13 +234,13 @@ export default function AdminInvoicesPage() {
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Invoice Management</h1>
-          <p className="text-gray-600 mt-1">Review and process vendor invoices</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Invoice Management</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">Review and process vendor invoices</p>
         </div>
         <div className="flex items-center space-x-3">
           <button
             onClick={fetchInvoices}
-            className="px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center space-x-2"
+            className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-2"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -252,81 +252,81 @@ export default function AdminInvoicesPage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-6">
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Total Invoices</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">{invoices.length}</p>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Invoices</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-1">{invoices.length}</p>
             </div>
-            <div className="p-3 bg-blue-100 rounded-lg">
-              <FileText className="w-5 h-5 text-blue-600" />
+            <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+              <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400" />
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Pending</p>
-              <p className="text-2xl font-bold text-yellow-600 mt-1">{stats.pending}</p>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Pending</p>
+              <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400 mt-1">{stats.pending}</p>
             </div>
-            <div className="p-3 bg-yellow-100 rounded-lg">
-              <Clock className="w-5 h-5 text-yellow-600" />
+            <div className="p-3 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
+              <Clock className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Pending Amount</p>
-              <p className="text-2xl font-bold text-yellow-600 mt-1">${stats.pendingAmount.toLocaleString()}</p>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Pending Amount</p>
+              <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400 mt-1">${stats.pendingAmount.toLocaleString()}</p>
             </div>
-            <div className="p-3 bg-yellow-100 rounded-lg">
-              <DollarSign className="w-5 h-5 text-yellow-600" />
+            <div className="p-3 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
+              <DollarSign className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Approved</p>
-              <p className="text-2xl font-bold text-blue-600 mt-1">{stats.approved}</p>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Approved</p>
+              <p className="text-2xl font-bold text-blue-600 dark:text-blue-400 mt-1">{stats.approved}</p>
             </div>
-            <div className="p-3 bg-blue-100 rounded-lg">
-              <CheckCircle className="w-5 h-5 text-blue-600" />
+            <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+              <CheckCircle className="w-5 h-5 text-blue-600 dark:text-blue-400" />
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Paid</p>
-              <p className="text-2xl font-bold text-green-600 mt-1">{stats.paid}</p>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Paid</p>
+              <p className="text-2xl font-bold text-green-600 dark:text-green-400 mt-1">{stats.paid}</p>
             </div>
-            <div className="p-3 bg-green-100 rounded-lg">
-              <CheckCircle className="w-5 h-5 text-green-600" />
+            <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
+              <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
             </div>
           </div>
         </div>
       </div>
 
       {/* Search and Filter */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-4 mb-6">
         <div className="flex flex-col lg:flex-row lg:items-center gap-4">
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
             <input
               type="text"
               placeholder="Search by invoice number, vendor, or PO number..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900"
+              className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900 dark:text-gray-100"
             />
           </div>
           <div className="flex items-center space-x-4">
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900"
+              className="px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900 dark:text-gray-100"
             >
               <option value="all">All Status</option>
               <option value="pending">Pending</option>
@@ -334,7 +334,7 @@ export default function AdminInvoicesPage() {
               <option value="paid">Paid</option>
               <option value="rejected">Rejected</option>
             </select>
-            <button className="p-2 text-gray-500 border border-gray-200 rounded-lg hover:bg-gray-50">
+            <button className="p-2 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
               <Filter size={16} />
             </button>
           </div>
@@ -342,50 +342,50 @@ export default function AdminInvoicesPage() {
       </div>
 
       {/* Invoices Table */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50">
+            <thead className="bg-gray-50 dark:bg-gray-800">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Invoice #</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Vendor</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">PO #</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Due Date</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Invoice #</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Vendor</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">PO #</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Date</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Due Date</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Amount</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Status</th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
               {filteredInvoices.map((invoice) => (
-                <tr key={invoice.id} className="hover:bg-gray-50">
+                <tr key={invoice.id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="text-sm font-medium text-gray-900">{invoice.invoiceNumber}</span>
+                    <span className="text-sm font-medium text-gray-900 dark:text-gray-100">{invoice.invoiceNumber}</span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
-                      <Building2 className="w-4 h-4 text-gray-400 mr-2" />
-                      <span className="text-sm text-gray-900">{invoice.vendorName}</span>
+                      <Building2 className="w-4 h-4 text-gray-400 dark:text-gray-500 mr-2" />
+                      <span className="text-sm text-gray-900 dark:text-gray-100">{invoice.vendorName}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="text-sm text-gray-600">{invoice.poNumber || '—'}</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{invoice.poNumber || '—'}</span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center text-sm text-gray-600">
+                    <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
                       <Calendar size={12} className="mr-1" />
                       {invoice.date}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center text-sm text-gray-600">
+                    <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
                       <Calendar size={12} className="mr-1" />
                       {invoice.dueDate}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="text-sm font-medium text-gray-900">${invoice.amount.toLocaleString()}</span>
+                    <span className="text-sm font-medium text-gray-900 dark:text-gray-100">${invoice.amount.toLocaleString()}</span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {getStatusBadge(invoice.status)}
@@ -393,7 +393,7 @@ export default function AdminInvoicesPage() {
                   <td className="px-6 py-4 whitespace-nowrap text-right">
                     <button
                       onClick={() => handleView(invoice)}
-                      className="text-gray-400 hover:text-gray-600 mr-2"
+                      className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 mr-2"
                       title="View Details"
                     >
                       <Eye size={16} />
@@ -403,7 +403,7 @@ export default function AdminInvoicesPage() {
                         <button
                           onClick={() => handleApprove(invoice.id)}
                           disabled={processingId === invoice.id}
-                          className="text-green-600 hover:text-green-800 mr-2 disabled:opacity-50"
+                          className="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 mr-2 disabled:opacity-50"
                           title="Approve"
                         >
                           {processingId === invoice.id ? (
@@ -418,7 +418,7 @@ export default function AdminInvoicesPage() {
                             setShowRejectModal(true)
                           }}
                           disabled={processingId === invoice.id}
-                          className="text-red-600 hover:text-red-800 disabled:opacity-50"
+                          className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 disabled:opacity-50"
                           title="Reject"
                         >
                           <X size={16} />
@@ -429,7 +429,7 @@ export default function AdminInvoicesPage() {
                       <button
                         onClick={() => handleMarkAsPaid(invoice.id)}
                         disabled={processingId === invoice.id}
-                        className="text-blue-600 hover:text-blue-800 disabled:opacity-50"
+                        className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 disabled:opacity-50"
                         title="Mark as Paid"
                       >
                         <DollarSign size={16} />
@@ -448,46 +448,46 @@ export default function AdminInvoicesPage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="fixed inset-0 bg-black bg-opacity-50" onClick={() => setShowViewModal(false)} />
           <div className="flex min-h-full items-center justify-center p-4">
-            <div className="relative w-full max-w-3xl bg-white rounded-xl shadow-2xl">
-              <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                <h3 className="text-lg font-semibold text-gray-900">Invoice Details</h3>
+            <div className="relative w-full max-w-3xl bg-white dark:bg-gray-900 rounded-xl shadow-2xl">
+              <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Invoice Details</h3>
                 <button
                   onClick={() => setShowViewModal(false)}
-                  className="text-gray-400 hover:text-gray-600"
+                  className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400"
                 >
                   ✕
                 </button>
               </div>
               
               <div className="p-6">
-                <div className="bg-gray-50 p-4 rounded-lg mb-6">
+                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-6">
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                     <div>
-                      <p className="text-xs text-gray-500">Invoice Number</p>
-                      <p className="text-sm font-medium text-gray-900">{selectedInvoice.invoiceNumber}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Invoice Number</p>
+                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{selectedInvoice.invoiceNumber}</p>
                     </div>
                     <div>
-                      <p className="text-xs text-gray-500">Vendor</p>
-                      <p className="text-sm text-gray-900">{selectedInvoice.vendorName}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Vendor</p>
+                      <p className="text-sm text-gray-900 dark:text-gray-100">{selectedInvoice.vendorName}</p>
                     </div>
                     <div>
-                      <p className="text-xs text-gray-500">PO Number</p>
-                      <p className="text-sm text-gray-900">{selectedInvoice.poNumber || '—'}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">PO Number</p>
+                      <p className="text-sm text-gray-900 dark:text-gray-100">{selectedInvoice.poNumber || '—'}</p>
                     </div>
                     <div>
-                      <p className="text-xs text-gray-500">Submitted Date</p>
-                      <p className="text-sm text-gray-900">{selectedInvoice.submittedAt}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Submitted Date</p>
+                      <p className="text-sm text-gray-900 dark:text-gray-100">{selectedInvoice.submittedAt}</p>
                     </div>
                     <div>
-                      <p className="text-xs text-gray-500">Due Date</p>
-                      <p className="text-sm text-gray-900">{selectedInvoice.dueDate}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Due Date</p>
+                      <p className="text-sm text-gray-900 dark:text-gray-100">{selectedInvoice.dueDate}</p>
                     </div>
                     <div>
-                      <p className="text-xs text-gray-500">Amount</p>
-                      <p className="text-sm font-bold text-gray-900">${selectedInvoice.amount.toLocaleString()}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Amount</p>
+                      <p className="text-sm font-bold text-gray-900 dark:text-gray-100">${selectedInvoice.amount.toLocaleString()}</p>
                     </div>
                     <div>
-                      <p className="text-xs text-gray-500">Status</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Status</p>
                       <div className="mt-1">{getStatusBadge(selectedInvoice.status)}</div>
                     </div>
                   </div>
@@ -495,15 +495,15 @@ export default function AdminInvoicesPage() {
 
                 {selectedInvoice.description && (
                   <div className="mb-6">
-                    <p className="text-xs text-gray-500 mb-1">Description</p>
-                    <p className="text-sm text-gray-700 bg-gray-50 p-3 rounded-lg">{selectedInvoice.description}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Description</p>
+                    <p className="text-sm text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-800 p-3 rounded-lg">{selectedInvoice.description}</p>
                   </div>
                 )}
 
                 {selectedInvoice.notes && (
                   <div className="mb-6">
-                    <p className="text-xs text-gray-500 mb-1">Notes</p>
-                    <p className="text-sm text-gray-700 bg-red-50 p-3 rounded-lg border border-red-200">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Notes</p>
+                    <p className="text-sm text-gray-700 dark:text-gray-300 bg-red-50 dark:bg-red-900/20 p-3 rounded-lg border border-red-200 dark:border-red-800">
                       {selectedInvoice.notes}
                     </p>
                   </div>
@@ -512,7 +512,7 @@ export default function AdminInvoicesPage() {
                 <div className="flex justify-end space-x-3">
                   <button
                     onClick={() => setShowViewModal(false)}
-                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+                    className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800"
                   >
                     Close
                   </button>
@@ -524,7 +524,7 @@ export default function AdminInvoicesPage() {
                           setSelectedInvoice(selectedInvoice)
                           setShowRejectModal(true)
                         }}
-                        className="px-4 py-2 text-sm font-medium text-red-600 bg-white border border-red-300 rounded-lg hover:bg-red-50"
+                        className="px-4 py-2 text-sm font-medium text-red-600 dark:text-red-400 bg-white dark:bg-gray-900 border border-red-300 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20"
                       >
                         Reject
                       </button>
@@ -559,21 +559,21 @@ export default function AdminInvoicesPage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="fixed inset-0 bg-black bg-opacity-50" onClick={() => setShowRejectModal(false)} />
           <div className="flex min-h-full items-center justify-center p-4">
-            <div className="relative w-full max-w-md bg-white rounded-xl shadow-2xl p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Reject Invoice</h3>
-              <p className="text-sm text-gray-600 mb-4">
+            <div className="relative w-full max-w-md bg-white dark:bg-gray-900 rounded-xl shadow-2xl p-6">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Reject Invoice</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                 Are you sure you want to reject invoice <span className="font-semibold">{selectedInvoice.invoiceNumber}</span> from {selectedInvoice.vendorName}?
               </p>
               
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Reason for rejection <span className="text-red-500">*</span>
                 </label>
                 <textarea
                   value={rejectReason}
                   onChange={(e) => setRejectReason(e.target.value)}
                   rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                   placeholder="Please provide a reason for rejection..."
                   autoFocus
                 />
@@ -585,7 +585,7 @@ export default function AdminInvoicesPage() {
                     setShowRejectModal(false)
                     setRejectReason('')
                   }}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+                  className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800"
                 >
                   Cancel
                 </button>

@@ -358,19 +358,19 @@ export default function EditPurchaseOrderPage() {
           <div className="flex items-center space-x-4">
             <Link
               href={`/procurement/purchase-orders/${id}`}
-              className="p-2 hover:bg-gray-100 rounded-lg transition"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
             >
-              <ArrowLeft size={20} className="text-gray-600" />
+              <ArrowLeft size={20} className="text-gray-600 dark:text-gray-400" />
             </Link>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Edit Purchase Order</h1>
-              <p className="text-gray-600 mt-1">{poNumber || 'Loading...'}</p>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Edit Purchase Order</h1>
+              <p className="text-gray-600 dark:text-gray-400 mt-1">{poNumber || 'Loading...'}</p>
             </div>
           </div>
           <div className="flex items-center space-x-3">
             <Link
               href={`/procurement/purchase-orders/${id}`}
-              className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center space-x-2"
+              className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-2"
             >
               <X size={16} />
               <span>Cancel</span>
@@ -396,7 +396,7 @@ export default function EditPurchaseOrderPage() {
         </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center space-x-2 text-red-700">
+          <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-center space-x-2 text-red-700 dark:text-red-300">
             <AlertCircle size={16} />
             <span>{error}</span>
           </div>
@@ -404,35 +404,35 @@ export default function EditPurchaseOrderPage() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Basic Information */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h2>
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Basic Information</h2>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Vendor <span className="text-red-500">*</span>
                 </label>
                 <select
                   name="vendorId"
                   value={formData.vendorId}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-gray-50"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-800"
                   disabled
                 >
                   <option value={formData.vendorId}>
                     {vendors.find(v => v.id === formData.vendorId)?.name || 'Loading...'}
                   </option>
                 </select>
-                <p className="text-xs text-gray-500 mt-1">Vendor cannot be changed after creation</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Vendor cannot be changed after creation</p>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Priority
                 </label>
                 <select
                   name="priority"
                   value={formData.priority}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 >
                   <option value="low">Low</option>
                   <option value="medium">Medium</option>
@@ -443,7 +443,7 @@ export default function EditPurchaseOrderPage() {
             </div>
 
             <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Title <span className="text-red-500">*</span>
               </label>
               <input
@@ -451,13 +451,13 @@ export default function EditPurchaseOrderPage() {
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 required
               />
             </div>
 
             <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Description
               </label>
               <textarea
@@ -465,12 +465,12 @@ export default function EditPurchaseOrderPage() {
                 rows={3}
                 value={formData.description}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 resize-none"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 resize-none"
               />
             </div>
 
             <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Expected Delivery Date
               </label>
               <input
@@ -478,19 +478,19 @@ export default function EditPurchaseOrderPage() {
                 name="expectedDate"
                 value={formData.expectedDate}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
               />
             </div>
           </div>
 
           {/* Line Items */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900">Line Items</h2>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Line Items</h2>
               <button
                 type="button"
                 onClick={addLineItem}
-                className="px-3 py-1.5 text-sm text-blue-600 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 flex items-center space-x-1"
+                className="px-3 py-1.5 text-sm text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 flex items-center space-x-1"
               >
                 <Plus size={16} />
                 <span>Add Item</span>
@@ -499,8 +499,8 @@ export default function EditPurchaseOrderPage() {
 
             <div className="space-y-3">
               {lineItems.map((item) => (
-                <div key={item.id} className="flex items-start space-x-3 bg-gray-50 p-4 rounded-lg">
-                  <div className="text-sm font-medium text-gray-500 w-8 pt-2">
+                <div key={item.id} className="flex items-start space-x-3 bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <div className="text-sm font-medium text-gray-500 dark:text-gray-400 w-8 pt-2">
                     #{item.lineNumber}
                   </div>
                   <div className="flex-1 space-y-2">
@@ -509,7 +509,7 @@ export default function EditPurchaseOrderPage() {
                       placeholder="Item description"
                       value={item.description}
                       onChange={(e) => handleLineItemChange(item.id, 'description', e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 text-sm"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 text-sm"
                       required
                     />
                     <div className="flex space-x-2">
@@ -518,7 +518,7 @@ export default function EditPurchaseOrderPage() {
                         placeholder="Qty"
                         value={item.quantity}
                         onChange={(e) => handleLineItemChange(item.id, 'quantity', parseFloat(e.target.value) || 0)}
-                        className="w-24 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 text-sm"
+                        className="w-24 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 text-sm"
                         min="0.01"
                         step="0.01"
                         required
@@ -528,12 +528,12 @@ export default function EditPurchaseOrderPage() {
                         placeholder="Unit Price"
                         value={item.unitPrice}
                         onChange={(e) => handleLineItemChange(item.id, 'unitPrice', parseFloat(e.target.value) || 0)}
-                        className="w-32 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 text-sm"
+                        className="w-32 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 text-sm"
                         min="0"
                         step="0.01"
                         required
                       />
-                      <div className="px-3 py-2 bg-gray-100 text-gray-900 rounded-lg text-sm font-medium w-32">
+                      <div className="px-3 py-2 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg text-sm font-medium w-32">
                         {formatCurrency(item.total, formData.currency)}
                       </div>
                       <input
@@ -541,13 +541,13 @@ export default function EditPurchaseOrderPage() {
                         placeholder="Notes"
                         value={item.notes || ''}
                         onChange={(e) => handleLineItemChange(item.id, 'notes', e.target.value)}
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 text-sm"
+                        className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 text-sm"
                       />
                       {lineItems.length > 1 && (
                         <button
                           type="button"
                           onClick={() => removeLineItem(item.id)}
-                          className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg"
+                          className="p-2 text-red-500 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg"
                         >
                           <Trash2 size={16} />
                         </button>
@@ -563,34 +563,34 @@ export default function EditPurchaseOrderPage() {
               <div className="flex justify-end">
                 <div className="w-64 space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Subtotal:</span>
-                    <span className="font-medium text-gray-900">
+                    <span className="text-gray-600 dark:text-gray-400">Subtotal:</span>
+                    <span className="font-medium text-gray-900 dark:text-gray-100">
                       {formatCurrency(formData.subtotal, formData.currency)}
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Tax (10%):</span>
-                    <span className="font-medium text-gray-900">
+                    <span className="text-gray-600 dark:text-gray-400">Tax (10%):</span>
+                    <span className="font-medium text-gray-900 dark:text-gray-100">
                       {formatCurrency(formData.taxAmount, formData.currency)}
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Discount:</span>
+                    <span className="text-gray-600 dark:text-gray-400">Discount:</span>
                     <div className="flex items-center">
                       <input
                         type="number"
                         name="discount"
                         value={formData.discount}
                         onChange={handleChange}
-                        className="w-20 px-2 py-1 text-right border border-gray-300 rounded text-sm"
+                        className="w-20 px-2 py-1 text-right border border-gray-300 dark:border-gray-600 rounded text-sm"
                         min="0"
                         step="0.01"
                       />
                     </div>
                   </div>
                   <div className="flex justify-between text-base font-semibold pt-2 border-t">
-                    <span className="text-gray-900">Total:</span>
-                    <span className="text-gray-900">
+                    <span className="text-gray-900 dark:text-gray-100">Total:</span>
+                    <span className="text-gray-900 dark:text-gray-100">
                       {formatCurrency(formData.total, formData.currency)}
                     </span>
                   </div>
@@ -600,11 +600,11 @@ export default function EditPurchaseOrderPage() {
           </div>
 
           {/* Notes & Terms */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Notes & Terms</h2>
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Notes & Terms</h2>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Notes
                 </label>
                 <textarea
@@ -612,12 +612,12 @@ export default function EditPurchaseOrderPage() {
                   rows={4}
                   value={formData.notes}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 resize-none"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 resize-none"
                   placeholder="Additional notes..."
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Terms & Conditions
                 </label>
                 <textarea
@@ -625,7 +625,7 @@ export default function EditPurchaseOrderPage() {
                   rows={4}
                   value={formData.terms}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 resize-none"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 resize-none"
                   placeholder="Payment terms, delivery terms, etc..."
                 />
               </div>

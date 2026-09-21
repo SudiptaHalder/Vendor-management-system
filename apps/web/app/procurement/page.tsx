@@ -135,59 +135,59 @@ export default function ProcurementPage() {
   return (
     <MainLayout>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Procurement</h1>
-        <p className="text-gray-600 mt-1">Manage your entire procurement lifecycle</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Procurement</h1>
+        <p className="text-gray-600 dark:text-gray-400 mt-1">Manage your entire procurement lifecycle</p>
       </div>
 
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium text-gray-500">Total POs</p>
-            <ShoppingCart className="w-4 h-4 text-blue-600" />
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total POs</p>
+            <ShoppingCart className="w-4 h-4 text-blue-600 dark:text-blue-400" />
           </div>
-          <p className="text-2xl font-bold text-gray-900">{stats.purchaseOrders.total}</p>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stats.purchaseOrders.total}</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
             {stats.purchaseOrders.delivered} delivered
           </p>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium text-gray-500">Active RFQs</p>
-            <MessageSquare className="w-4 h-4 text-purple-600" />
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Active RFQs</p>
+            <MessageSquare className="w-4 h-4 text-purple-600 dark:text-purple-400" />
           </div>
-          <p className="text-2xl font-bold text-gray-900">{stats.rfqs.sent}</p>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stats.rfqs.sent}</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
             {stats.rfqs.awarded} awarded
           </p>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium text-gray-500">Quotes</p>
-            <FileText className="w-4 h-4 text-green-600" />
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Quotes</p>
+            <FileText className="w-4 h-4 text-green-600 dark:text-green-400" />
           </div>
-          <p className="text-2xl font-bold text-gray-900">{stats.quotes.total}</p>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stats.quotes.total}</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
             {stats.quotes.accepted} accepted
           </p>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium text-gray-500">Active Contracts</p>
-            <FileCheck className="w-4 h-4 text-orange-600" />
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Active Contracts</p>
+            <FileCheck className="w-4 h-4 text-orange-600 dark:text-orange-400" />
           </div>
-          <p className="text-2xl font-bold text-gray-900">{stats.contracts.active}</p>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stats.contracts.active}</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
             {stats.contracts.total} total
           </p>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium text-gray-500">Open Bids</p>
-            <ClipboardList className="w-4 h-4 text-red-600" />
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Open Bids</p>
+            <ClipboardList className="w-4 h-4 text-red-600 dark:text-red-400" />
           </div>
-          <p className="text-2xl font-bold text-gray-900">{stats.bids.open}</p>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stats.bids.open}</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
             {stats.bids.awarded} awarded
           </p>
         </div>
@@ -198,37 +198,37 @@ export default function ProcurementPage() {
         {modules.map((module) => {
           const Icon = module.icon
           const colorClasses = {
-            blue: 'bg-blue-100 text-blue-600',
-            purple: 'bg-purple-100 text-purple-600',
-            green: 'bg-green-100 text-green-600',
-            orange: 'bg-orange-100 text-orange-600',
-            red: 'bg-red-100 text-red-600'
+            blue: 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400',
+            purple: 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400',
+            green: 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400',
+            orange: 'bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400',
+            red: 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400'
           }[module.color]
 
           return (
             <Link
               key={module.name}
               href={module.href}
-              className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition group"
+              className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6 hover:shadow-md transition group"
             >
               <div className="flex items-start justify-between mb-4">
                 <div className={`p-3 rounded-lg ${colorClasses}`}>
                   <Icon className="w-6 h-6" />
                 </div>
-                <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-gray-600 transition" />
+                <ArrowRight className="w-5 h-5 text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:group-hover:text-gray-400 dark:hover:text-gray-500 transition" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-1">{module.name}</h3>
-              <p className="text-sm text-gray-600 mb-4">{module.description}</p>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1">{module.name}</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">{module.description}</p>
               <div className="flex items-center space-x-4 text-sm">
                 <div className="flex items-center space-x-1">
-                  <Clock className="w-4 h-4 text-gray-400" />
-                  <span className="text-gray-600">
+                  <Clock className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+                  <span className="text-gray-600 dark:text-gray-400">
                     {module.stats.draft || 0} draft
                   </span>
                 </div>
                 <div className="flex items-center space-x-1">
                   <CheckCircle className="w-4 h-4 text-green-400" />
-                  <span className="text-gray-600">
+                  <span className="text-gray-600 dark:text-gray-400">
                     {module.stats.active || module.stats.sent || module.stats.submitted || 0} active
                   </span>
                 </div>
@@ -239,8 +239,8 @@ export default function ProcurementPage() {
       </div>
 
       {/* Quick Actions */}
-      <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
+      <div className="mt-8 bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Quick Actions</h2>
         <div className="flex flex-wrap gap-4">
           <Link
             href="/procurement/purchase-orders?action=new"

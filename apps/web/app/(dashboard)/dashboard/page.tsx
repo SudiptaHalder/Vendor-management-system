@@ -83,14 +83,14 @@
 //       {/* Header */}
 //       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 //         <div>
-//           <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+//           <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">
 //             Welcome back, {user?.name || 'Admin'}! 👋
 //           </h1>
-//           <p className="text-gray-500 mt-1">Here's what's happening with your business today.</p>
+//           <p className="text-gray-500 dark:text-gray-400 mt-1">Here's what's happening with your business today.</p>
 //         </div>
 //         <button
 //           onClick={handleLogout}
-//           className="flex items-center justify-center space-x-2 px-4 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm w-full sm:w-auto"
+//           className="flex items-center justify-center space-x-2 px-4 py-2.5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all shadow-sm w-full sm:w-auto"
 //         >
 //           <LogOut size={18} />
 //           <span>Logout</span>
@@ -100,60 +100,60 @@
 //       {/* Key Metrics - First Row */}
 //       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
 //         {/* Total Vendors */}
-//         <div className="bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-lg transition-shadow">
+//         <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 hover:shadow-lg transition-shadow">
 //           <div className="flex items-start justify-between mb-3">
-//             <div className="p-2.5 bg-blue-50 rounded-xl">
-//               <Building2 className="w-5 h-5 text-blue-600" />
+//             <div className="p-2.5 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
+//               <Building2 className="w-5 h-5 text-blue-600 dark:text-blue-400" />
 //             </div>
-//             <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full flex items-center">
+//             <span className="text-xs font-medium text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded-full flex items-center">
 //               <ArrowUpRight size={14} className="mr-0.5" />
 //               +12%
 //             </span>
 //           </div>
-//           <p className="text-sm font-medium text-gray-500 mb-1">Total Vendors</p>
-//           <p className="text-3xl font-bold text-gray-900">{stats.totalVendors}</p>
+//           <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Total Vendors</p>
+//           <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{stats.totalVendors}</p>
 //         </div>
 
 //         {/* Active Vendors */}
-//         <div className="bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-lg transition-shadow">
+//         <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 hover:shadow-lg transition-shadow">
 //           <div className="flex items-start justify-between mb-3">
-//             <div className="p-2.5 bg-green-50 rounded-xl">
-//               <Users className="w-5 h-5 text-green-600" />
+//             <div className="p-2.5 bg-green-50 dark:bg-green-900/20 rounded-xl">
+//               <Users className="w-5 h-5 text-green-600 dark:text-green-400" />
 //             </div>
-//             <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">
+//             <span className="text-xs font-medium text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded-full">
 //               {stats.activeVendors} active
 //             </span>
 //           </div>
-//           <p className="text-sm font-medium text-gray-500 mb-1">Active Vendors</p>
-//           <p className="text-3xl font-bold text-gray-900">{stats.activeVendors}</p>
+//           <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Active Vendors</p>
+//           <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{stats.activeVendors}</p>
 //         </div>
 
 //         {/* Pending Approvals */}
-//         <div className="bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-lg transition-shadow">
+//         <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 hover:shadow-lg transition-shadow">
 //           <div className="flex items-start justify-between mb-3">
-//             <div className="p-2.5 bg-yellow-50 rounded-xl">
-//               <AlertCircle className="w-5 h-5 text-yellow-600" />
+//             <div className="p-2.5 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl">
+//               <AlertCircle className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
 //             </div>
-//             <span className="text-xs font-medium text-yellow-600 bg-yellow-50 px-2 py-1 rounded-full">
+//             <span className="text-xs font-medium text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20 px-2 py-1 rounded-full">
 //               Review needed
 //             </span>
 //           </div>
-//           <p className="text-sm font-medium text-gray-500 mb-1">Pending Approvals</p>
-//           <p className="text-3xl font-bold text-yellow-600">{stats.pendingApprovals}</p>
+//           <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Pending Approvals</p>
+//           <p className="text-3xl font-bold text-yellow-600 dark:text-yellow-400">{stats.pendingApprovals}</p>
 //         </div>
 
 //         {/* Active Contracts */}
-//         <div className="bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-lg transition-shadow">
+//         <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 hover:shadow-lg transition-shadow">
 //           <div className="flex items-start justify-between mb-3">
-//             <div className="p-2.5 bg-purple-50 rounded-xl">
-//               <FileText className="w-5 h-5 text-purple-600" />
+//             <div className="p-2.5 bg-purple-50 dark:bg-purple-900/20 rounded-xl">
+//               <FileText className="w-5 h-5 text-purple-600 dark:text-purple-400" />
 //             </div>
-//             <span className="text-xs font-medium text-orange-600 bg-orange-50 px-2 py-1 rounded-full">
+//             <span className="text-xs font-medium text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/20 px-2 py-1 rounded-full">
 //               {stats.expiringContracts} expiring
 //             </span>
 //           </div>
-//           <p className="text-sm font-medium text-gray-500 mb-1">Active Contracts</p>
-//           <p className="text-3xl font-bold text-gray-900">{stats.activeContracts}</p>
+//           <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Active Contracts</p>
+//           <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{stats.activeContracts}</p>
 //         </div>
 //       </div>
 
@@ -162,16 +162,16 @@
 //         {/* Total POs */}
 //         <div className="bg-gradient-to-br from-blue-50 to-white rounded-2xl border border-blue-100 p-6">
 //           <div className="flex items-start justify-between mb-3">
-//             <div className="p-2.5 bg-blue-100 rounded-xl">
-//               <Package className="w-5 h-5 text-blue-600" />
+//             <div className="p-2.5 bg-blue-100 dark:bg-blue-900/30 rounded-xl">
+//               <Package className="w-5 h-5 text-blue-600 dark:text-blue-400" />
 //             </div>
-//             <span className="text-xs font-medium text-blue-600 bg-blue-100 px-2 py-1 rounded-full">
+//             <span className="text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/30 px-2 py-1 rounded-full">
 //               All time
 //             </span>
 //           </div>
-//           <p className="text-sm font-medium text-gray-600 mb-1">Total Purchase Orders</p>
-//           <p className="text-3xl font-bold text-gray-900">{stats.totalPOs}</p>
-//           <p className="text-xs text-gray-500 mt-2 flex items-center">
+//           <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Total Purchase Orders</p>
+//           <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{stats.totalPOs}</p>
+//           <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 flex items-center">
 //             <Package size={12} className="mr-1" />
 //             Across all vendors
 //           </p>
@@ -180,16 +180,16 @@
 //         {/* Pending POs */}
 //         <div className="bg-gradient-to-br from-yellow-50 to-white rounded-2xl border border-yellow-100 p-6">
 //           <div className="flex items-start justify-between mb-3">
-//             <div className="p-2.5 bg-yellow-100 rounded-xl">
-//               <Clock className="w-5 h-5 text-yellow-600" />
+//             <div className="p-2.5 bg-yellow-100 dark:bg-yellow-900/30 rounded-xl">
+//               <Clock className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
 //             </div>
-//             <span className="text-xs font-medium text-yellow-600 bg-yellow-100 px-2 py-1 rounded-full">
+//             <span className="text-xs font-medium text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900/30 px-2 py-1 rounded-full">
 //               In progress
 //             </span>
 //           </div>
-//           <p className="text-sm font-medium text-gray-600 mb-1">Pending POs</p>
-//           <p className="text-3xl font-bold text-yellow-600">{stats.pendingPOs}</p>
-//           <p className="text-xs text-gray-500 mt-2 flex items-center">
+//           <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Pending POs</p>
+//           <p className="text-3xl font-bold text-yellow-600 dark:text-yellow-400">{stats.pendingPOs}</p>
+//           <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 flex items-center">
 //             <Clock size={12} className="mr-1" />
 //             Awaiting processing
 //           </p>
@@ -198,16 +198,16 @@
 //         {/* Completed POs */}
 //         <div className="bg-gradient-to-br from-green-50 to-white rounded-2xl border border-green-100 p-6">
 //           <div className="flex items-start justify-between mb-3">
-//             <div className="p-2.5 bg-green-100 rounded-xl">
-//               <CheckCircle className="w-5 h-5 text-green-600" />
+//             <div className="p-2.5 bg-green-100 dark:bg-green-900/30 rounded-xl">
+//               <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
 //             </div>
-//             <span className="text-xs font-medium text-green-600 bg-green-100 px-2 py-1 rounded-full">
+//             <span className="text-xs font-medium text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30 px-2 py-1 rounded-full">
 //               Delivered
 //             </span>
 //           </div>
-//           <p className="text-sm font-medium text-gray-600 mb-1">Completed POs</p>
-//           <p className="text-3xl font-bold text-green-600">{stats.completedPOs}</p>
-//           <p className="text-xs text-gray-500 mt-2 flex items-center">
+//           <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Completed POs</p>
+//           <p className="text-3xl font-bold text-green-600 dark:text-green-400">{stats.completedPOs}</p>
+//           <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 flex items-center">
 //             <CheckCircle size={12} className="mr-1" />
 //             Successfully fulfilled
 //           </p>
@@ -216,16 +216,16 @@
 //         {/* Open Quotes */}
 //         <div className="bg-gradient-to-br from-purple-50 to-white rounded-2xl border border-purple-100 p-6">
 //           <div className="flex items-start justify-between mb-3">
-//             <div className="p-2.5 bg-purple-100 rounded-xl">
-//               <FileSignature className="w-5 h-5 text-purple-600" />
+//             <div className="p-2.5 bg-purple-100 dark:bg-purple-900/30 rounded-xl">
+//               <FileSignature className="w-5 h-5 text-purple-600 dark:text-purple-400" />
 //             </div>
-//             <span className="text-xs font-medium text-purple-600 bg-purple-100 px-2 py-1 rounded-full">
+//             <span className="text-xs font-medium text-purple-600 dark:text-purple-400 bg-purple-100 dark:bg-purple-900/30 px-2 py-1 rounded-full">
 //               Active
 //             </span>
 //           </div>
-//           <p className="text-sm font-medium text-gray-600 mb-1">Open Quotes</p>
-//           <p className="text-3xl font-bold text-purple-600">{stats.openQuotes}</p>
-//           <p className="text-xs text-gray-500 mt-2 flex items-center">
+//           <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Open Quotes</p>
+//           <p className="text-3xl font-bold text-purple-600 dark:text-purple-400">{stats.openQuotes}</p>
+//           <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 flex items-center">
 //             <FileSignature size={12} className="mr-1" />
 //             Awaiting response
 //           </p>
@@ -233,10 +233,10 @@
 //       </div>
 
 //       {/* Quick Actions */}
-//       <div className="bg-white rounded-2xl border border-gray-100 p-6">
+//       <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6">
 //         <div className="flex items-center justify-between mb-5">
-//           <h2 className="text-lg font-semibold text-gray-900">Quick Actions</h2>
-//           <span className="text-xs text-gray-400">Frequently used tasks</span>
+//           <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Quick Actions</h2>
+//           <span className="text-xs text-gray-400 dark:text-gray-500">Frequently used tasks</span>
 //         </div>
 //         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 //           <Link
@@ -290,20 +290,20 @@
 //       </div>
 
 //       {/* Recent Activity Placeholder */}
-//       <div className="bg-white rounded-2xl border border-gray-100 p-6">
+//       <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6">
 //         <div className="flex items-center justify-between mb-4">
-//           <h2 className="text-lg font-semibold text-gray-900">Recent Activity</h2>
-//           <Link href="/activity" className="text-sm text-blue-600 hover:text-blue-700 font-medium flex items-center">
+//           <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Recent Activity</h2>
+//           <Link href="/activity" className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium flex items-center">
 //             View all <ChevronRight size={16} className="ml-1" />
 //           </Link>
 //         </div>
 //         <div className="space-y-3">
 //           {[1, 2, 3].map((i) => (
-//             <div key={i} className="flex items-center p-3 bg-gray-50 rounded-xl">
+//             <div key={i} className="flex items-center p-3 bg-gray-50 dark:bg-gray-800 rounded-xl">
 //               <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
 //               <div>
-//                 <p className="text-sm font-medium text-gray-900">New vendor registered</p>
-//                 <p className="text-xs text-gray-500">2 minutes ago</p>
+//                 <p className="text-sm font-medium text-gray-900 dark:text-gray-100">New vendor registered</p>
+//                 <p className="text-xs text-gray-500 dark:text-gray-400">2 minutes ago</p>
 //               </div>
 //             </div>
 //           ))}
@@ -437,12 +437,12 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">
             Welcome back, {user?.name || 'Admin'}! 👋
           </h1>
           <div className="flex items-center space-x-3 mt-1">
-            <p className="text-gray-500">Live data from SAP S/4HANA Cloud</p>
-            <span className="flex items-center text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
+            <p className="text-gray-500 dark:text-gray-400">Live data from SAP S/4HANA Cloud</p>
+            <span className="flex items-center text-xs bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 px-2 py-1 rounded-full">
               <Zap size={12} className="mr-1" />
               {sapData.vendors.source === 'SAP Live' ? 'SAP Live' : 'Cached'}
             </span>
@@ -459,7 +459,7 @@ export default function DashboardPage() {
           </button>
           <button
             onClick={handleLogout}
-            className="flex items-center justify-center space-x-2 px-4 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm"
+            className="flex items-center justify-center space-x-2 px-4 py-2.5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all shadow-sm"
           >
             <LogOut size={18} />
             <span>Logout</span>
@@ -468,7 +468,7 @@ export default function DashboardPage() {
       </div>
 
       {error && (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-yellow-800 text-sm">
+        <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 text-yellow-800 dark:text-yellow-300 text-sm">
           ⚠️ {error}
         </div>
       )}
@@ -476,56 +476,56 @@ export default function DashboardPage() {
       {/* Key Metrics - First Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {/* Total Vendors - LIVE from SAP */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-lg transition-shadow">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 hover:shadow-lg transition-shadow">
           <div className="flex items-start justify-between mb-3">
-            <div className="p-2.5 bg-blue-50 rounded-xl">
-              <Building2 className="w-5 h-5 text-blue-600" />
+            <div className="p-2.5 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
+              <Building2 className="w-5 h-5 text-blue-600 dark:text-blue-400" />
             </div>
-            <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">
+            <span className="text-xs font-medium text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded-full">
               SAP
             </span>
           </div>
-          <p className="text-sm font-medium text-gray-500 mb-1">Total Vendors</p>
-          <p className="text-3xl font-bold text-gray-900">{sapData.vendors.count.toLocaleString()}</p>
-          <p className="text-xs text-gray-500 mt-1">From SAP Business Partner API</p>
+          <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Total Vendors</p>
+          <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{sapData.vendors.count.toLocaleString()}</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">From SAP Business Partner API</p>
         </div>
 
         {/* Purchase Orders - LIVE from SAP */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-lg transition-shadow">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 hover:shadow-lg transition-shadow">
           <div className="flex items-start justify-between mb-3">
-            <div className="p-2.5 bg-green-50 rounded-xl">
-              <Package className="w-5 h-5 text-green-600" />
+            <div className="p-2.5 bg-green-50 dark:bg-green-900/20 rounded-xl">
+              <Package className="w-5 h-5 text-green-600 dark:text-green-400" />
             </div>
-            <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">
+            <span className="text-xs font-medium text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded-full">
               SAP
             </span>
           </div>
-          <p className="text-sm font-medium text-gray-500 mb-1">Purchase Orders</p>
-          <p className="text-3xl font-bold text-gray-900">{sapData.purchaseOrders.count.toLocaleString()}</p>
-          <p className="text-xs text-gray-500 mt-1">From SAP Purchase Order API</p>
+          <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Purchase Orders</p>
+          <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{sapData.purchaseOrders.count.toLocaleString()}</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">From SAP Purchase Order API</p>
         </div>
 
         {/* Material Documents */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-lg transition-shadow">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 hover:shadow-lg transition-shadow">
           <div className="flex items-start justify-between mb-3">
-            <div className="p-2.5 bg-purple-50 rounded-xl">
-              <FileText className="w-5 h-5 text-purple-600" />
+            <div className="p-2.5 bg-purple-50 dark:bg-purple-900/20 rounded-xl">
+              <FileText className="w-5 h-5 text-purple-600 dark:text-purple-400" />
             </div>
-            <span className="text-xs font-medium text-purple-600 bg-purple-50 px-2 py-1 rounded-full">
+            <span className="text-xs font-medium text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20 px-2 py-1 rounded-full">
               SAP
             </span>
           </div>
-          <p className="text-sm font-medium text-gray-500 mb-1">Material Documents</p>
-          <p className="text-3xl font-bold text-gray-900">{sapData.materialDocuments.count.toLocaleString()}</p>
-          <p className="text-xs text-gray-500 mt-1">From SAP Material Document API</p>
+          <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Material Documents</p>
+          <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{sapData.materialDocuments.count.toLocaleString()}</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">From SAP Material Document API</p>
         </div>
       </div>
 
       {/* Quick Actions */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-6">
+      <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6">
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-lg font-semibold text-gray-900">Quick Actions</h2>
-          <span className="text-xs text-gray-400">SAP Integration</span>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Quick Actions</h2>
+          <span className="text-xs text-gray-400 dark:text-gray-500">SAP Integration</span>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Link
@@ -579,38 +579,38 @@ export default function DashboardPage() {
       </div>
 
       {/* SAP Integration Status */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-6">
+      <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">SAP Integration Status</h2>
-          <span className="text-xs text-green-600">✅ Connected</span>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">SAP Integration Status</h2>
+          <span className="text-xs text-green-600 dark:text-green-400">✅ Connected</span>
         </div>
         <div className="space-y-3">
-          <div className="flex items-center p-3 bg-green-50 rounded-xl">
-            <CheckCircle className="w-5 h-5 text-green-600 mr-3" />
+          <div className="flex items-center p-3 bg-green-50 dark:bg-green-900/20 rounded-xl">
+            <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400 mr-3" />
             <div>
-              <p className="text-sm font-medium text-gray-900">SAP S/4HANA Cloud</p>
-              <p className="text-xs text-gray-500">Connected and authenticated</p>
+              <p className="text-sm font-medium text-gray-900 dark:text-gray-100">SAP S/4HANA Cloud</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Connected and authenticated</p>
             </div>
           </div>
-          <div className="flex items-center p-3 bg-blue-50 rounded-xl">
-            <Building2 className="w-5 h-5 text-blue-600 mr-3" />
+          <div className="flex items-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
+            <Building2 className="w-5 h-5 text-blue-600 dark:text-blue-400 mr-3" />
             <div>
-              <p className="text-sm font-medium text-gray-900">{sapData.vendors.count.toLocaleString()} Vendors</p>
-              <p className="text-xs text-gray-500">From Business Partner API</p>
+              <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{sapData.vendors.count.toLocaleString()} Vendors</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">From Business Partner API</p>
             </div>
           </div>
-          <div className="flex items-center p-3 bg-green-50 rounded-xl">
-            <Package className="w-5 h-5 text-green-600 mr-3" />
+          <div className="flex items-center p-3 bg-green-50 dark:bg-green-900/20 rounded-xl">
+            <Package className="w-5 h-5 text-green-600 dark:text-green-400 mr-3" />
             <div>
-              <p className="text-sm font-medium text-gray-900">{sapData.purchaseOrders.count.toLocaleString()} Purchase Orders</p>
-              <p className="text-xs text-gray-500">From Purchase Order API</p>
+              <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{sapData.purchaseOrders.count.toLocaleString()} Purchase Orders</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">From Purchase Order API</p>
             </div>
           </div>
-          <div className="flex items-center p-3 bg-purple-50 rounded-xl">
-            <FileText className="w-5 h-5 text-purple-600 mr-3" />
+          <div className="flex items-center p-3 bg-purple-50 dark:bg-purple-900/20 rounded-xl">
+            <FileText className="w-5 h-5 text-purple-600 dark:text-purple-400 mr-3" />
             <div>
-              <p className="text-sm font-medium text-gray-900">{sapData.materialDocuments.count.toLocaleString()} Material Documents</p>
-              <p className="text-xs text-gray-500">From Material Document API</p>
+              <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{sapData.materialDocuments.count.toLocaleString()} Material Documents</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">From Material Document API</p>
             </div>
           </div>
         </div>

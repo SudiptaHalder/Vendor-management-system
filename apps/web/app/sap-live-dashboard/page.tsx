@@ -110,7 +110,7 @@ export default function SAPLiveDashboard() {
         <div className="flex items-center justify-center h-96">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <div className="text-gray-600">Loading SAP data...</div>
+            <div className="text-gray-600 dark:text-gray-400">Loading SAP data...</div>
           </div>
         </div>
       </MainLayout>
@@ -123,11 +123,11 @@ export default function SAPLiveDashboard() {
         {/* Header */}
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">SAP Live Dashboard</h1>
-            <p className="text-gray-600 mt-1">Real-time data from SAP S/4HANA Cloud</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">SAP Live Dashboard</h1>
+            <p className="text-gray-600 dark:text-gray-400 mt-1">Real-time data from SAP S/4HANA Cloud</p>
           </div>
           <div className="flex items-center space-x-3">
-            <span className="text-sm text-gray-500">
+            <span className="text-sm text-gray-500 dark:text-gray-400">
               Last sync: {data?.lastSync ? new Date(data.lastSync).toLocaleString() : 'Never'}
             </span>
             <button
@@ -142,52 +142,52 @@ export default function SAPLiveDashboard() {
         </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-600">
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 text-red-600 dark:text-red-400">
             Error: {error}
           </div>
         )}
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-500">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-6 border-l-4 border-blue-500">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500">Total Vendors</p>
-                <p className="text-3xl font-bold text-blue-600">{data?.totalVendors.toLocaleString()}</p>
-                <p className="text-xs text-gray-500 mt-1">From SAP Business Partner</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Total Vendors</p>
+                <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">{data?.totalVendors.toLocaleString()}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">From SAP Business Partner</p>
               </div>
               <Building2 className="w-8 h-8 text-blue-500" />
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-500">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-6 border-l-4 border-green-500">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500">Purchase Orders</p>
-                <p className="text-3xl font-bold text-green-600">{data?.totalPOs.toLocaleString()}</p>
-                <p className="text-xs text-gray-500 mt-1">{data?.openPOs} open • {data?.closedPOs} closed</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Purchase Orders</p>
+                <p className="text-3xl font-bold text-green-600 dark:text-green-400">{data?.totalPOs.toLocaleString()}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{data?.openPOs} open • {data?.closedPOs} closed</p>
               </div>
               <Package className="w-8 h-8 text-green-500" />
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-purple-500">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-6 border-l-4 border-purple-500">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500">Material Documents</p>
-                <p className="text-3xl font-bold text-purple-600">{data?.totalMaterialDocs.toLocaleString()}</p>
-                <p className="text-xs text-gray-500 mt-1">Goods receipts tracked</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Material Documents</p>
+                <p className="text-3xl font-bold text-purple-600 dark:text-purple-400">{data?.totalMaterialDocs.toLocaleString()}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Goods receipts tracked</p>
               </div>
               <FileText className="w-8 h-8 text-purple-500" />
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-orange-500">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-6 border-l-4 border-orange-500">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500">Sync Status</p>
-                <p className="text-3xl font-bold text-orange-600 capitalize">{data?.lastSyncStatus || 'Unknown'}</p>
-                <p className="text-xs text-gray-500 mt-1">{data?.syncedVendors} vendors synced</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Sync Status</p>
+                <p className="text-3xl font-bold text-orange-600 dark:text-orange-400 capitalize">{data?.lastSyncStatus || 'Unknown'}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{data?.syncedVendors} vendors synced</p>
               </div>
               <Database className="w-8 h-8 text-orange-500" />
             </div>
@@ -196,30 +196,30 @@ export default function SAPLiveDashboard() {
 
         {/* Quick Links */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Link href="/vendors" className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition border border-gray-100">
+          <Link href="/vendors" className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-6 hover:shadow-xl transition border border-gray-100 dark:border-gray-800">
             <div className="flex items-center space-x-3">
-              <Building2 className="w-6 h-6 text-blue-600" />
+              <Building2 className="w-6 h-6 text-blue-600 dark:text-blue-400" />
               <div>
-                <h3 className="font-semibold text-gray-900">Vendor Directory</h3>
-                <p className="text-sm text-gray-500">View all {data?.totalVendors} vendors</p>
+                <h3 className="font-semibold text-gray-900 dark:text-gray-100">Vendor Directory</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">View all {data?.totalVendors} vendors</p>
               </div>
             </div>
           </Link>
-          <Link href="/procurement/purchase-orders" className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition border border-gray-100">
+          <Link href="/procurement/purchase-orders" className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-6 hover:shadow-xl transition border border-gray-100 dark:border-gray-800">
             <div className="flex items-center space-x-3">
-              <Package className="w-6 h-6 text-green-600" />
+              <Package className="w-6 h-6 text-green-600 dark:text-green-400" />
               <div>
-                <h3 className="font-semibold text-gray-900">Purchase Orders</h3>
-                <p className="text-sm text-gray-500">{data?.openPOs} open POs</p>
+                <h3 className="font-semibold text-gray-900 dark:text-gray-100">Purchase Orders</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">{data?.openPOs} open POs</p>
               </div>
             </div>
           </Link>
-          <Link href="/sap/material-documents" className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition border border-gray-100">
+          <Link href="/sap/material-documents" className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-6 hover:shadow-xl transition border border-gray-100 dark:border-gray-800">
             <div className="flex items-center space-x-3">
-              <FileText className="w-6 h-6 text-purple-600" />
+              <FileText className="w-6 h-6 text-purple-600 dark:text-purple-400" />
               <div>
-                <h3 className="font-semibold text-gray-900">Material Documents</h3>
-                <p className="text-sm text-gray-500">{data?.totalMaterialDocs} documents</p>
+                <h3 className="font-semibold text-gray-900 dark:text-gray-100">Material Documents</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">{data?.totalMaterialDocs} documents</p>
               </div>
             </div>
           </Link>

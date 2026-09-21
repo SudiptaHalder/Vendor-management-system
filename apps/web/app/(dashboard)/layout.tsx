@@ -54,7 +54,7 @@
 //   }
 
 //   return (
-//     <div className="min-h-screen bg-gray-50">
+//     <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
 //       <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
       
 //       <div className={`transition-all duration-300 ${sidebarOpen ? 'lg:ml-64' : 'lg:ml-20'}`}>
@@ -128,7 +128,7 @@ export default function DashboardLayout({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
       <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
       
       <div className={`transition-all duration-300 ${

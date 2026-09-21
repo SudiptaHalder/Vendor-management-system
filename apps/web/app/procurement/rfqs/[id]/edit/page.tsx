@@ -242,31 +242,31 @@ export default function EditRFQPage() {
     <MainLayout>
       {/* Header */}
       <div className="mb-6">
-        <div className="flex items-center space-x-3 text-sm text-gray-500 mb-4">
-          <Link href="/procurement/rfqs" className="hover:text-purple-600">
+        <div className="flex items-center space-x-3 text-sm text-gray-500 dark:text-gray-400 mb-4">
+          <Link href="/procurement/rfqs" className="hover:text-purple-600 dark:hover:text-purple-400">
             RFQs
           </Link>
           <span>/</span>
-          <Link href={`/procurement/rfqs/${params.id}`} className="hover:text-purple-600">
+          <Link href={`/procurement/rfqs/${params.id}`} className="hover:text-purple-600 dark:hover:text-purple-400">
             {params.id}
           </Link>
           <span>/</span>
-          <span className="text-gray-900 font-medium">Edit</span>
+          <span className="text-gray-900 dark:text-gray-100 font-medium">Edit</span>
         </div>
 
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="p-2 bg-purple-100 rounded-lg">
-              <MessageSquare className="w-5 h-5 text-purple-600" />
+            <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+              <MessageSquare className="w-5 h-5 text-purple-600 dark:text-purple-400" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Edit RFQ</h1>
-              <p className="text-sm text-gray-500 mt-1">Update RFQ details and requirements</p>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Edit RFQ</h1>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Update RFQ details and requirements</p>
             </div>
           </div>
           <Link
             href={`/procurement/rfqs/${params.id}`}
-            className="px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center space-x-2"
+            className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-2"
           >
             <X size={16} />
             <span>Cancel</span>
@@ -275,7 +275,7 @@ export default function EditRFQPage() {
       </div>
 
       {error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-center space-x-2">
+        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 rounded-lg flex items-center space-x-2">
           <AlertCircle size={16} />
           <span>{error}</span>
         </div>
@@ -283,11 +283,11 @@ export default function EditRFQPage() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Basic Information */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h2>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Basic Information</h2>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Title <span className="text-red-500">*</span>
               </label>
               <input
@@ -295,14 +295,14 @@ export default function EditRFQPage() {
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 placeholder="e.g., Office Supplies RFQ - Q1 2024"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Description
               </label>
               <textarea
@@ -310,14 +310,14 @@ export default function EditRFQPage() {
                 rows={3}
                 value={formData.description}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 resize-none"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 dark:text-gray-100 resize-none"
                 placeholder="Detailed description of requirements..."
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Deadline for Quotes
                 </label>
                 <input
@@ -325,11 +325,11 @@ export default function EditRFQPage() {
                   name="deadline"
                   value={formData.deadline}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Expected Delivery Date
                 </label>
                 <input
@@ -337,7 +337,7 @@ export default function EditRFQPage() {
                   name="expectedDeliveryDate"
                   value={formData.expectedDeliveryDate}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 />
               </div>
             </div>
@@ -345,43 +345,43 @@ export default function EditRFQPage() {
         </div>
 
         {/* Vendor Selection */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Vendors</h2>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Vendors</h2>
           {loadingVendors ? (
             <div className="text-center py-4">
               <div className="animate-spin w-6 h-6 border-2 border-purple-600 border-t-transparent rounded-full mx-auto"></div>
-              <p className="text-sm text-gray-500 mt-2">Loading vendors...</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">Loading vendors...</p>
             </div>
           ) : vendors.length === 0 ? (
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-center">
+            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 text-center">
               <Users className="w-8 h-8 text-yellow-500 mx-auto mb-2" />
-              <p className="text-sm text-yellow-700">No active vendors found.</p>
-              <p className="text-xs text-yellow-600 mt-1">Please add and approve vendors first.</p>
+              <p className="text-sm text-yellow-700 dark:text-yellow-300">No active vendors found.</p>
+              <p className="text-xs text-yellow-600 dark:text-yellow-400 mt-1">Please add and approve vendors first.</p>
             </div>
           ) : (
             <>
-              <div className="border border-gray-200 rounded-lg divide-y max-h-48 overflow-y-auto">
+              <div className="border border-gray-200 dark:border-gray-700 rounded-lg divide-y max-h-48 overflow-y-auto">
                 {vendors.map((vendor) => (
                   <label
                     key={vendor.id}
-                    className="flex items-center p-3 hover:bg-gray-50 cursor-pointer"
+                    className="flex items-center p-3 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer"
                   >
                     <input
                       type="checkbox"
                       checked={formData.vendorIds.includes(vendor.id)}
                       onChange={() => handleVendorSelection(vendor.id)}
-                      className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
+                      className="w-4 h-4 text-purple-600 dark:text-purple-400 border-gray-300 dark:border-gray-600 rounded focus:ring-purple-500"
                     />
                     <div className="ml-3">
-                      <p className="text-sm font-medium text-gray-900">{vendor.name}</p>
+                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{vendor.name}</p>
                       {vendor.email && (
-                        <p className="text-xs text-gray-500">{vendor.email}</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">{vendor.email}</p>
                       )}
                     </div>
                   </label>
                 ))}
               </div>
-              <p className="text-xs text-gray-500 mt-2">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                 Selected: {formData.vendorIds.length} vendor(s)
               </p>
             </>
@@ -389,13 +389,13 @@ export default function EditRFQPage() {
         </div>
 
         {/* Line Items */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">Items/Services</h2>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Items/Services</h2>
             <button
               type="button"
               onClick={addLineItem}
-              className="text-sm text-purple-600 hover:text-purple-800 flex items-center space-x-1"
+              className="text-sm text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 flex items-center space-x-1"
             >
               <Plus size={16} />
               <span>Add Item</span>
@@ -404,14 +404,14 @@ export default function EditRFQPage() {
           
           <div className="space-y-3">
             {lineItems.map((item, index) => (
-              <div key={item.id} className="flex items-start space-x-3 bg-gray-50 p-3 rounded-lg">
+              <div key={item.id} className="flex items-start space-x-3 bg-gray-50 dark:bg-gray-800 p-3 rounded-lg">
                 <div className="flex-1">
                   <input
                     type="text"
                     placeholder="Item description"
                     value={item.description}
                     onChange={(e) => handleLineItemChange(item.id, 'description', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 text-sm"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 dark:text-gray-100 text-sm"
                     required
                   />
                 </div>
@@ -421,7 +421,7 @@ export default function EditRFQPage() {
                     placeholder="Qty"
                     value={item.quantity}
                     onChange={(e) => handleLineItemChange(item.id, 'quantity', parseFloat(e.target.value) || 0)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 text-sm"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 dark:text-gray-100 text-sm"
                     min="0.01"
                     step="0.01"
                     required
@@ -431,7 +431,7 @@ export default function EditRFQPage() {
                   <select
                     value={item.unit}
                     onChange={(e) => handleLineItemChange(item.id, 'unit', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 text-sm"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 dark:text-gray-100 text-sm"
                   >
                     <option value="piece">piece</option>
                     <option value="hour">hour</option>
@@ -448,7 +448,7 @@ export default function EditRFQPage() {
                   <button
                     type="button"
                     onClick={() => removeLineItem(item.id)}
-                    className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg"
+                    className="p-2 text-red-500 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg"
                   >
                     <Trash2 size={16} />
                   </button>
@@ -459,11 +459,11 @@ export default function EditRFQPage() {
         </div>
 
         {/* Additional Information */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Additional Information</h2>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Additional Information</h2>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Notes to Vendors
               </label>
               <textarea
@@ -471,12 +471,12 @@ export default function EditRFQPage() {
                 rows={4}
                 value={formData.notes}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 resize-none"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 dark:text-gray-100 resize-none"
                 placeholder="Special instructions, delivery requirements, etc..."
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Delivery Terms
               </label>
               <textarea
@@ -484,7 +484,7 @@ export default function EditRFQPage() {
                 rows={4}
                 value={formData.deliveryTerms}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 resize-none"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 dark:text-gray-100 resize-none"
                 placeholder="Payment terms, delivery terms, warranty, etc..."
               />
             </div>
@@ -495,7 +495,7 @@ export default function EditRFQPage() {
         <div className="flex justify-end space-x-3">
           <Link
             href={`/procurement/rfqs/${params.id}`}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+            className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800"
           >
             Cancel
           </Link>

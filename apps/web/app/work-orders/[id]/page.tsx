@@ -127,11 +127,11 @@ export default function WorkOrderDetailPage() {
 
   const getStatusBadge = (status: string) => {
     const statusConfig: Record<string, { color: string, icon: any, label: string }> = {
-      pending: { color: 'bg-gray-100 text-gray-800', icon: Clock, label: 'Pending' },
-      in_progress: { color: 'bg-blue-100 text-blue-800', icon: AlertCircle, label: 'In Progress' },
-      completed: { color: 'bg-green-100 text-green-800', icon: CheckCircle, label: 'Completed' },
-      cancelled: { color: 'bg-red-100 text-red-800', icon: XCircle, label: 'Cancelled' },
-      on_hold: { color: 'bg-yellow-100 text-yellow-800', icon: AlertTriangle, label: 'On Hold' }
+      pending: { color: 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200', icon: Clock, label: 'Pending' },
+      in_progress: { color: 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300', icon: AlertCircle, label: 'In Progress' },
+      completed: { color: 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300', icon: CheckCircle, label: 'Completed' },
+      cancelled: { color: 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300', icon: XCircle, label: 'Cancelled' },
+      on_hold: { color: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300', icon: AlertTriangle, label: 'On Hold' }
     }
     const config = statusConfig[status] || statusConfig.pending
     const Icon = config.icon
@@ -145,10 +145,10 @@ export default function WorkOrderDetailPage() {
 
   const getPriorityBadge = (priority: string) => {
     const priorityConfig: Record<string, { color: string, label: string }> = {
-      low: { color: 'bg-gray-100 text-gray-800', label: 'Low' },
-      medium: { color: 'bg-blue-100 text-blue-800', label: 'Medium' },
-      high: { color: 'bg-orange-100 text-orange-800', label: 'High' },
-      critical: { color: 'bg-red-100 text-red-800', label: 'Critical' }
+      low: { color: 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200', label: 'Low' },
+      medium: { color: 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300', label: 'Medium' },
+      high: { color: 'bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300', label: 'High' },
+      critical: { color: 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300', label: 'Critical' }
     }
     const config = priorityConfig[priority] || priorityConfig.medium
     return (
@@ -162,7 +162,7 @@ export default function WorkOrderDetailPage() {
     return (
       <MainLayout>
         <div className="flex items-center justify-center h-64">
-          <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+          <Loader2 className="w-8 h-8 text-blue-600 dark:text-blue-400 animate-spin" />
         </div>
       </MainLayout>
     )
@@ -171,13 +171,13 @@ export default function WorkOrderDetailPage() {
   if (error || !workOrder) {
     return (
       <MainLayout>
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-12 text-center">
           <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Error Loading Work Order</h3>
-          <p className="text-gray-500 mb-6">{error || 'Work order not found'}</p>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Error Loading Work Order</h3>
+          <p className="text-gray-500 dark:text-gray-400 mb-6">{error || 'Work order not found'}</p>
           <Link
             href="/work-orders"
-            className="text-blue-600 hover:text-blue-800 font-medium flex items-center justify-center space-x-2"
+            className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium flex items-center justify-center space-x-2"
           >
             <ArrowLeft size={16} />
             <span>Back to Work Orders</span>
@@ -191,43 +191,43 @@ export default function WorkOrderDetailPage() {
     <MainLayout>
       {/* Header */}
       <div className="mb-6">
-        <div className="flex items-center space-x-3 text-sm text-gray-500 mb-4">
-          <Link href="/work-orders" className="hover:text-blue-600">
+        <div className="flex items-center space-x-3 text-sm text-gray-500 dark:text-gray-400 mb-4">
+          <Link href="/work-orders" className="hover:text-blue-600 dark:hover:text-blue-400">
             Work Orders
           </Link>
           <span>/</span>
-          <span className="text-gray-900 font-medium">{workOrder.workOrderNumber}</span>
+          <span className="text-gray-900 dark:text-gray-100 font-medium">{workOrder.workOrderNumber}</span>
         </div>
 
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className="flex items-start space-x-4">
             <Link
               href="/work-orders"
-              className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg"
+              className="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
             >
               <ArrowLeft size={20} />
             </Link>
             <div>
               <div className="flex items-center flex-wrap gap-3 mb-2">
-                <h1 className="text-2xl font-bold text-gray-900">{workOrder.title}</h1>
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{workOrder.title}</h1>
                 {getStatusBadge(workOrder.status)}
                 {getPriorityBadge(workOrder.priority)}
               </div>
-              <p className="text-gray-600">{workOrder.workOrderNumber}</p>
+              <p className="text-gray-600 dark:text-gray-400">{workOrder.workOrderNumber}</p>
             </div>
           </div>
           
           <div className="flex items-center space-x-3">
             <Link
               href={`/work-orders/${workOrder.id}/edit`}
-              className="px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center space-x-2"
+              className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-2"
             >
               <Edit size={16} />
               <span>Edit</span>
             </Link>
             <button
               onClick={handleDeleteWorkOrder}
-              className="px-4 py-2 text-red-700 bg-white border border-red-200 rounded-lg hover:bg-red-50 flex items-center space-x-2"
+              className="px-4 py-2 text-red-700 dark:text-red-300 bg-white dark:bg-gray-900 border border-red-200 dark:border-red-800 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center space-x-2"
             >
               <Trash2 size={16} />
               <span>Delete</span>
@@ -238,59 +238,59 @@ export default function WorkOrderDetailPage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium text-gray-500">Vendor</p>
-            <Building2 className="w-4 h-4 text-gray-400" />
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Vendor</p>
+            <Building2 className="w-4 h-4 text-gray-400 dark:text-gray-500" />
           </div>
-          <p className="text-lg font-semibold text-gray-900">{workOrder.vendor.name}</p>
+          <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">{workOrder.vendor.name}</p>
           {workOrder.vendor.email && (
-            <p className="text-xs text-gray-500 mt-1 truncate">{workOrder.vendor.email}</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 truncate">{workOrder.vendor.email}</p>
           )}
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium text-gray-500">Project</p>
-            <FileText className="w-4 h-4 text-gray-400" />
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Project</p>
+            <FileText className="w-4 h-4 text-gray-400 dark:text-gray-500" />
           </div>
           {workOrder.project ? (
             <Link 
               href={`/projects/${workOrder.project.id}`}
-              className="text-lg font-semibold text-blue-600 hover:text-blue-800"
+              className="text-lg font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
             >
               {workOrder.project.projectNumber}
             </Link>
           ) : (
-            <p className="text-lg text-gray-500">No Project</p>
+            <p className="text-lg text-gray-500 dark:text-gray-400">No Project</p>
           )}
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium text-gray-500">Due Date</p>
-            <Calendar className="w-4 h-4 text-gray-400" />
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Due Date</p>
+            <Calendar className="w-4 h-4 text-gray-400 dark:text-gray-500" />
           </div>
           {workOrder.dueDate ? (
             <>
-              <p className="text-lg font-semibold text-gray-900">
+              <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                 {new Date(workOrder.dueDate).toLocaleDateString()}
               </p>
               {workOrder.status !== 'completed' && new Date(workOrder.dueDate) < new Date() && (
-                <p className="text-xs text-red-600 mt-1">Overdue</p>
+                <p className="text-xs text-red-600 dark:text-red-400 mt-1">Overdue</p>
               )}
             </>
           ) : (
-            <p className="text-lg text-gray-500">Not set</p>
+            <p className="text-lg text-gray-500 dark:text-gray-400">Not set</p>
           )}
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium text-gray-500">Assigned To</p>
-            <User className="w-4 h-4 text-gray-400" />
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Assigned To</p>
+            <User className="w-4 h-4 text-gray-400 dark:text-gray-500" />
           </div>
-          <p className="text-lg font-semibold text-gray-900">
+          <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">
             {workOrder.assignedTo?.name || 'Unassigned'}
           </p>
         </div>
@@ -302,33 +302,33 @@ export default function WorkOrderDetailPage() {
         <div className="lg:col-span-2 space-y-6">
           {/* Description */}
           {workOrder.description && (
-            <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Description</h2>
-              <p className="text-gray-700 whitespace-pre-wrap">{workOrder.description}</p>
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Description</h2>
+              <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{workOrder.description}</p>
             </div>
           )}
 
           {/* Location & Contact */}
           {(workOrder.location || workOrder.siteContact || workOrder.sitePhone) && (
-            <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Location & Contact</h2>
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Location & Contact</h2>
               <div className="space-y-3">
                 {workOrder.location && (
                   <div className="flex items-start space-x-3">
-                    <MapPin className="w-5 h-5 text-gray-400 mt-0.5" />
-                    <span className="text-gray-700">{workOrder.location}</span>
+                    <MapPin className="w-5 h-5 text-gray-400 dark:text-gray-500 mt-0.5" />
+                    <span className="text-gray-700 dark:text-gray-300">{workOrder.location}</span>
                   </div>
                 )}
                 {workOrder.siteContact && (
                   <div className="flex items-start space-x-3">
-                    <User className="w-5 h-5 text-gray-400 mt-0.5" />
-                    <span className="text-gray-700">{workOrder.siteContact}</span>
+                    <User className="w-5 h-5 text-gray-400 dark:text-gray-500 mt-0.5" />
+                    <span className="text-gray-700 dark:text-gray-300">{workOrder.siteContact}</span>
                   </div>
                 )}
                 {workOrder.sitePhone && (
                   <div className="flex items-start space-x-3">
-                    <Phone className="w-5 h-5 text-gray-400 mt-0.5" />
-                    <span className="text-gray-700">{workOrder.sitePhone}</span>
+                    <Phone className="w-5 h-5 text-gray-400 dark:text-gray-500 mt-0.5" />
+                    <span className="text-gray-700 dark:text-gray-300">{workOrder.sitePhone}</span>
                   </div>
                 )}
               </div>
@@ -337,11 +337,11 @@ export default function WorkOrderDetailPage() {
 
           {/* Completion Notes */}
           {workOrder.completionNotes && (
-            <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Completion Notes</h2>
-              <p className="text-gray-700 whitespace-pre-wrap">{workOrder.completionNotes}</p>
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Completion Notes</h2>
+              <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{workOrder.completionNotes}</p>
               {workOrder.completedBy && (
-                <p className="text-xs text-gray-500 mt-2">
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                   Completed by: {workOrder.completedBy} on {new Date(workOrder.completedDate!).toLocaleDateString()}
                 </p>
               )}
@@ -352,38 +352,38 @@ export default function WorkOrderDetailPage() {
         {/* Right Column - Sidebar */}
         <div className="space-y-6">
           {/* Cost Information */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="px-6 py-4 border-b bg-gray-50">
-              <h2 className="text-lg font-semibold text-gray-900">Cost Information</h2>
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+            <div className="px-6 py-4 border-b bg-gray-50 dark:bg-gray-800">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Cost Information</h2>
             </div>
             <div className="p-6">
               <dl className="space-y-3">
                 {workOrder.estimatedCost && (
                   <div className="flex justify-between">
-                    <dt className="text-xs text-gray-500">Estimated Cost</dt>
-                    <dd className="text-sm font-medium text-gray-900">
+                    <dt className="text-xs text-gray-500 dark:text-gray-400">Estimated Cost</dt>
+                    <dd className="text-sm font-medium text-gray-900 dark:text-gray-100">
                       {workOrder.currency} {workOrder.estimatedCost.toLocaleString()}
                     </dd>
                   </div>
                 )}
                 {workOrder.actualCost && (
                   <div className="flex justify-between">
-                    <dt className="text-xs text-gray-500">Actual Cost</dt>
-                    <dd className="text-sm font-medium text-gray-900">
+                    <dt className="text-xs text-gray-500 dark:text-gray-400">Actual Cost</dt>
+                    <dd className="text-sm font-medium text-gray-900 dark:text-gray-100">
                       {workOrder.currency} {workOrder.actualCost.toLocaleString()}
                     </dd>
                   </div>
                 )}
                 {workOrder.estimatedHours && (
                   <div className="flex justify-between">
-                    <dt className="text-xs text-gray-500">Estimated Hours</dt>
-                    <dd className="text-sm text-gray-900">{workOrder.estimatedHours} hrs</dd>
+                    <dt className="text-xs text-gray-500 dark:text-gray-400">Estimated Hours</dt>
+                    <dd className="text-sm text-gray-900 dark:text-gray-100">{workOrder.estimatedHours} hrs</dd>
                   </div>
                 )}
                 {workOrder.actualHours && (
                   <div className="flex justify-between">
-                    <dt className="text-xs text-gray-500">Actual Hours</dt>
-                    <dd className="text-sm text-gray-900">{workOrder.actualHours} hrs</dd>
+                    <dt className="text-xs text-gray-500 dark:text-gray-400">Actual Hours</dt>
+                    <dd className="text-sm text-gray-900 dark:text-gray-100">{workOrder.actualHours} hrs</dd>
                   </div>
                 )}
               </dl>
@@ -391,38 +391,38 @@ export default function WorkOrderDetailPage() {
           </div>
 
           {/* Timeline */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="px-6 py-4 border-b bg-gray-50">
-              <h2 className="text-lg font-semibold text-gray-900">Timeline</h2>
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+            <div className="px-6 py-4 border-b bg-gray-50 dark:bg-gray-800">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Timeline</h2>
             </div>
             <div className="p-6">
               <dl className="space-y-3">
                 <div className="flex justify-between">
-                  <dt className="text-xs text-gray-500">Requested</dt>
-                  <dd className="text-sm text-gray-900">
+                  <dt className="text-xs text-gray-500 dark:text-gray-400">Requested</dt>
+                  <dd className="text-sm text-gray-900 dark:text-gray-100">
                     {new Date(workOrder.requestedDate).toLocaleDateString()}
                   </dd>
                 </div>
                 {workOrder.scheduledDate && (
                   <div className="flex justify-between">
-                    <dt className="text-xs text-gray-500">Scheduled</dt>
-                    <dd className="text-sm text-gray-900">
+                    <dt className="text-xs text-gray-500 dark:text-gray-400">Scheduled</dt>
+                    <dd className="text-sm text-gray-900 dark:text-gray-100">
                       {new Date(workOrder.scheduledDate).toLocaleDateString()}
                     </dd>
                   </div>
                 )}
                 {workOrder.startDate && (
                   <div className="flex justify-between">
-                    <dt className="text-xs text-gray-500">Started</dt>
-                    <dd className="text-sm text-gray-900">
+                    <dt className="text-xs text-gray-500 dark:text-gray-400">Started</dt>
+                    <dd className="text-sm text-gray-900 dark:text-gray-100">
                       {new Date(workOrder.startDate).toLocaleDateString()}
                     </dd>
                   </div>
                 )}
                 {workOrder.completedDate && (
                   <div className="flex justify-between">
-                    <dt className="text-xs text-gray-500">Completed</dt>
-                    <dd className="text-sm text-gray-900">
+                    <dt className="text-xs text-gray-500 dark:text-gray-400">Completed</dt>
+                    <dd className="text-sm text-gray-900 dark:text-gray-100">
                       {new Date(workOrder.completedDate).toLocaleDateString()}
                     </dd>
                   </div>
@@ -432,30 +432,30 @@ export default function WorkOrderDetailPage() {
           </div>
 
           {/* Work Order Info - FIXED: Use assignedBy instead of createdBy */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="px-6 py-4 border-b bg-gray-50">
-              <h2 className="text-lg font-semibold text-gray-900">Work Order Info</h2>
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+            <div className="px-6 py-4 border-b bg-gray-50 dark:bg-gray-800">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Work Order Info</h2>
             </div>
             <div className="p-6">
               <dl className="space-y-3">
                 <div className="flex justify-between">
-                  <dt className="text-xs text-gray-500">Type</dt>
-                  <dd className="text-sm capitalize text-gray-900">{workOrder.type}</dd>
+                  <dt className="text-xs text-gray-500 dark:text-gray-400">Type</dt>
+                  <dd className="text-sm capitalize text-gray-900 dark:text-gray-100">{workOrder.type}</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-xs text-gray-500">Created By</dt>
-                  <dd className="text-sm text-gray-900">
+                  <dt className="text-xs text-gray-500 dark:text-gray-400">Created By</dt>
+                  <dd className="text-sm text-gray-900 dark:text-gray-100">
                     {workOrder.assignedBy?.name || workOrder.assignedBy?.email || 'System'}
                   </dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-xs text-gray-500">Created On</dt>
-                  <dd className="text-sm text-gray-900">{new Date(workOrder.createdAt).toLocaleDateString()}</dd>
+                  <dt className="text-xs text-gray-500 dark:text-gray-400">Created On</dt>
+                  <dd className="text-sm text-gray-900 dark:text-gray-100">{new Date(workOrder.createdAt).toLocaleDateString()}</dd>
                 </div>
                 {workOrder.approvalStatus !== 'pending' && (
                   <div className="flex justify-between">
-                    <dt className="text-xs text-gray-500">Approval</dt>
-                    <dd className="text-sm capitalize text-gray-900">{workOrder.approvalStatus}</dd>
+                    <dt className="text-xs text-gray-500 dark:text-gray-400">Approval</dt>
+                    <dd className="text-sm capitalize text-gray-900 dark:text-gray-100">{workOrder.approvalStatus}</dd>
                   </div>
                 )}
               </dl>

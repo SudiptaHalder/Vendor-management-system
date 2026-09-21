@@ -337,7 +337,7 @@ export default function NewInvoicePage() {
     return (
       <MainLayout>
         <div className="flex items-center justify-center h-64">
-          <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+          <Loader2 className="w-8 h-8 text-blue-600 dark:text-blue-400 animate-spin" />
         </div>
       </MainLayout>
     )
@@ -347,30 +347,30 @@ export default function NewInvoicePage() {
     <MainLayout>
       {/* Header */}
       <div className="mb-6">
-        <div className="flex items-center space-x-3 text-sm text-gray-500 mb-4">
-          <Link href="/invoices" className="hover:text-blue-600">
+        <div className="flex items-center space-x-3 text-sm text-gray-500 dark:text-gray-400 mb-4">
+          <Link href="/invoices" className="hover:text-blue-600 dark:hover:text-blue-400">
             Invoices
           </Link>
           <span>/</span>
-          <span className="text-gray-900 font-medium">New Invoice</span>
+          <span className="text-gray-900 dark:text-gray-100 font-medium">New Invoice</span>
         </div>
 
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <Link
               href="/invoices"
-              className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg"
+              className="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
             >
               <ArrowLeft size={20} />
             </Link>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Create New Invoice</h1>
-              <p className="text-sm text-gray-500 mt-1">Create an invoice from a purchase order or manually</p>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Create New Invoice</h1>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Create an invoice from a purchase order or manually</p>
             </div>
           </div>
           <Link
             href="/invoices"
-            className="px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center space-x-2"
+            className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-2"
           >
             <X size={16} />
             <span>Cancel</span>
@@ -379,7 +379,7 @@ export default function NewInvoicePage() {
       </div>
 
       {error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-center space-x-2">
+        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 rounded-lg flex items-center space-x-2">
           <AlertCircle size={16} />
           <span>{error}</span>
         </div>
@@ -387,21 +387,21 @@ export default function NewInvoicePage() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Basic Information */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h2>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Basic Information</h2>
           <div className="space-y-4">
             {/* Vendor */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Vendor <span className="text-red-500">*</span>
               </label>
               <div className="relative">
-                <Building2 className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                <Building2 className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                 <select
                   name="vendorId"
                   value={formData.vendorId}
                   onChange={(e) => handleVendorChange(e.target.value)}
-                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                   required
                 >
                   <option value="">Select a vendor...</option>
@@ -416,16 +416,16 @@ export default function NewInvoicePage() {
 
             {/* Purchase Order */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Purchase Order (Optional)
               </label>
               <div className="relative">
-                <FileText className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                <FileText className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                 <select
                   name="purchaseOrderId"
                   value={formData.purchaseOrderId}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 >
                   <option value="">No Purchase Order</option>
                   {purchaseOrders
@@ -441,14 +441,14 @@ export default function NewInvoicePage() {
 
             {/* Project */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Project (Optional)
               </label>
               <select
                 name="projectId"
                 value={formData.projectId}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
               >
                 <option value="">No Project</option>
                 {projects.map(project => (
@@ -462,14 +462,14 @@ export default function NewInvoicePage() {
             {/* Invoice Details */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Invoice Type
                 </label>
                 <select
                   name="type"
                   value={formData.type}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 >
                   <option value="service">Service</option>
                   <option value="product">Product</option>
@@ -478,14 +478,14 @@ export default function NewInvoicePage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Status
                 </label>
                 <select
                   name="status"
                   value={formData.status}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 >
                   <option value="draft">Draft</option>
                   <option value="pending">Pending</option>
@@ -497,38 +497,38 @@ export default function NewInvoicePage() {
             {/* Dates */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Issue Date <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
-                  <Calendar className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                  <Calendar className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                   <input
                     type="date"
                     name="issueDate"
                     value={formData.issueDate}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                    className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                     required
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Due Date
                 </label>
                 <div className="relative">
-                  <Calendar className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                  <Calendar className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                   <input
                     type="date"
                     name="dueDate"
                     value={formData.dueDate}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                    className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Payment Terms
                 </label>
                 <input
@@ -536,7 +536,7 @@ export default function NewInvoicePage() {
                   name="paymentTerms"
                   value={formData.paymentTerms}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder:text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 placeholder:text-gray-900 dark:text-gray-100"
                   placeholder="Net 30"
                 />
               </div>
@@ -544,7 +544,7 @@ export default function NewInvoicePage() {
 
             {/* Reference */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Reference Number
               </label>
               <input
@@ -552,7 +552,7 @@ export default function NewInvoicePage() {
                 name="reference"
                 value={formData.reference}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder:text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 placeholder:text-gray-900 dark:text-gray-100"
                 placeholder="Customer PO #, Contract #, etc."
               />
             </div>
@@ -560,13 +560,13 @@ export default function NewInvoicePage() {
         </div>
 
         {/* Line Items */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">Line Items</h2>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Line Items</h2>
             <button
               type="button"
               onClick={addLineItem}
-              className="text-sm text-blue-600 hover:text-blue-800 flex items-center space-x-1"
+              className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 flex items-center space-x-1"
             >
               <Plus size={16} />
               <span>Add Item</span>
@@ -575,28 +575,28 @@ export default function NewInvoicePage() {
 
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50">
+              <thead className="bg-gray-50 dark:bg-gray-800">
                 <tr>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">#</th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
-                  <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">Qty</th>
-                  <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">Unit</th>
-                  <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">Unit Price</th>
-                  <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">Discount %</th>
-                  <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">Total</th>
-                  <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase"></th>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">#</th>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Description</th>
+                  <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Qty</th>
+                  <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Unit</th>
+                  <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Unit Price</th>
+                  <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Discount %</th>
+                  <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Total</th>
+                  <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase"></th>
                 </tr>
               </thead>
               <tbody>
                 {lineItems.map((item) => (
                   <tr key={item.id}>
-                    <td className="px-4 py-2 text-sm text-gray-900">{item.lineNumber}</td>
+                    <td className="px-4 py-2 text-sm text-gray-900 dark:text-gray-100">{item.lineNumber}</td>
                     <td className="px-4 py-2">
                       <input
                         type="text"
                         value={item.description}
                         onChange={(e) => handleLineItemChange(item.id, 'description', e.target.value)}
-                        className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder:text-gray-900"
+                        className="w-full px-2 py-1 border border-gray-300 dark:border-gray-600 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 placeholder:text-gray-900 dark:text-gray-100"
                         placeholder="Item description"
                         required
                       />
@@ -606,7 +606,7 @@ export default function NewInvoicePage() {
                         type="number"
                         value={item.quantity}
                         onChange={(e) => handleLineItemChange(item.id, 'quantity', parseFloat(e.target.value) || 0)}
-                        className="w-20 px-2 py-1 border border-gray-300 rounded text-sm text-right focus:ring-1 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder:text-gray-900"
+                        className="w-20 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded text-sm text-right focus:ring-1 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 placeholder:text-gray-900 dark:text-gray-100"
                         min="0.01"
                         step="0.01"
                         placeholder="0.00"
@@ -617,7 +617,7 @@ export default function NewInvoicePage() {
                       <select
                         value={item.unit}
                         onChange={(e) => handleLineItemChange(item.id, 'unit', e.target.value)}
-                        className="w-20 px-2 py-1 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                        className="w-20 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                       >
                         <option value="piece">pc</option>
                         <option value="hour">hr</option>
@@ -631,13 +631,13 @@ export default function NewInvoicePage() {
                     <td className="px-4 py-2">
                       <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
-                          <span className="text-gray-500 text-xs">$</span>
+                          <span className="text-gray-500 dark:text-gray-400 text-xs">$</span>
                         </div>
                         <input
                           type="number"
                           value={item.unitPrice}
                           onChange={(e) => handleLineItemChange(item.id, 'unitPrice', parseFloat(e.target.value) || 0)}
-                          className="w-24 pl-5 pr-2 py-1 border border-gray-300 rounded text-sm text-right focus:ring-1 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder:text-gray-900"
+                          className="w-24 pl-5 pr-2 py-1 border border-gray-300 dark:border-gray-600 rounded text-sm text-right focus:ring-1 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 placeholder:text-gray-900 dark:text-gray-100"
                           min="0.01"
                           step="0.01"
                           placeholder="0.00"
@@ -650,14 +650,14 @@ export default function NewInvoicePage() {
                         type="number"
                         value={item.discountPercent}
                         onChange={(e) => handleLineItemChange(item.id, 'discountPercent', parseFloat(e.target.value) || 0)}
-                        className="w-16 px-2 py-1 border border-gray-300 rounded text-sm text-right focus:ring-1 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder:text-gray-900"
+                        className="w-16 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded text-sm text-right focus:ring-1 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 placeholder:text-gray-900 dark:text-gray-100"
                         min="0"
                         max="100"
                         step="0.1"
                         placeholder="0"
                       />
                     </td>
-                    <td className="px-4 py-2 text-sm font-medium text-gray-900 text-right">
+                    <td className="px-4 py-2 text-sm font-medium text-gray-900 dark:text-gray-100 text-right">
                       ${item.total.toFixed(2)}
                     </td>
                     <td className="px-4 py-2 text-right">
@@ -665,7 +665,7 @@ export default function NewInvoicePage() {
                         <button
                           type="button"
                           onClick={() => removeLineItem(item.id)}
-                          className="p-1 text-red-500 hover:text-red-700"
+                          className="p-1 text-red-500 hover:text-red-700 dark:hover:text-red-300"
                         >
                           <Trash2 size={16} />
                         </button>
@@ -679,19 +679,19 @@ export default function NewInvoicePage() {
         </div>
 
         {/* Financial Summary */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Financial Summary</h2>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Financial Summary</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Currency
                 </label>
                 <select
                   name="currency"
                   value={formData.currency}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 >
                   <option value="USD">USD - US Dollar</option>
                   <option value="EUR">EUR - Euro</option>
@@ -702,7 +702,7 @@ export default function NewInvoicePage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Notes
                 </label>
                 <textarea
@@ -710,27 +710,27 @@ export default function NewInvoicePage() {
                   rows={4}
                   value={formData.notes}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 resize-none placeholder:text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 resize-none placeholder:text-gray-900 dark:text-gray-100"
                   placeholder="Additional notes or terms..."
                 />
               </div>
             </div>
-            <div className="space-y-3 bg-gray-50 p-4 rounded-lg">
+            <div className="space-y-3 bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Subtotal:</span>
-                <span className="font-medium text-gray-900">
+                <span className="text-gray-600 dark:text-gray-400">Subtotal:</span>
+                <span className="font-medium text-gray-900 dark:text-gray-100">
                   {formData.currency} {formData.subtotal.toFixed(2)}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Discount:</span>
+                <span className="text-gray-600 dark:text-gray-400">Discount:</span>
                 <div className="flex items-center space-x-2">
                   <input
                     type="number"
                     name="discount"
                     value={formData.discount}
                     onChange={handleChange}
-                    className="w-20 px-2 py-1 border border-gray-300 rounded text-sm text-right focus:ring-1 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder:text-gray-900"
+                    className="w-20 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded text-sm text-right focus:ring-1 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 placeholder:text-gray-900 dark:text-gray-100"
                     min="0"
                     step="0.01"
                     placeholder="0.00"
@@ -739,7 +739,7 @@ export default function NewInvoicePage() {
                     name="discountType"
                     value={formData.discountType}
                     onChange={handleChange}
-                    className="w-24 px-2 py-1 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                    className="w-24 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                   >
                     <option value="percentage">%</option>
                     <option value="fixed">Fixed</option>
@@ -747,50 +747,50 @@ export default function NewInvoicePage() {
                 </div>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Tax Rate:</span>
+                <span className="text-gray-600 dark:text-gray-400">Tax Rate:</span>
                 <div className="flex items-center space-x-2">
                   <input
                     type="number"
                     name="taxRate"
                     value={formData.taxRate}
                     onChange={handleChange}
-                    className="w-20 px-2 py-1 border border-gray-300 rounded text-sm text-right focus:ring-1 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder:text-gray-900"
+                    className="w-20 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded text-sm text-right focus:ring-1 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 placeholder:text-gray-900 dark:text-gray-100"
                     min="0"
                     max="100"
                     step="0.1"
                     placeholder="0"
                   />
-                  <span className="text-gray-500">%</span>
+                  <span className="text-gray-500 dark:text-gray-400">%</span>
                 </div>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Tax Amount:</span>
-                <span className="font-medium text-gray-900">
+                <span className="text-gray-600 dark:text-gray-400">Tax Amount:</span>
+                <span className="font-medium text-gray-900 dark:text-gray-100">
                   {formData.currency} {formData.taxAmount.toFixed(2)}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Shipping:</span>
+                <span className="text-gray-600 dark:text-gray-400">Shipping:</span>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
-                    <span className="text-gray-500 text-xs">$</span>
+                    <span className="text-gray-500 dark:text-gray-400 text-xs">$</span>
                   </div>
                   <input
                     type="number"
                     name="shippingCost"
                     value={formData.shippingCost}
                     onChange={handleChange}
-                    className="w-24 pl-5 pr-2 py-1 border border-gray-300 rounded text-sm text-right focus:ring-1 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder:text-gray-900"
+                    className="w-24 pl-5 pr-2 py-1 border border-gray-300 dark:border-gray-600 rounded text-sm text-right focus:ring-1 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 placeholder:text-gray-900 dark:text-gray-100"
                     min="0"
                     step="0.01"
                     placeholder="0.00"
                   />
                 </div>
               </div>
-              <div className="pt-3 border-t border-gray-200">
+              <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
                 <div className="flex justify-between">
-                  <span className="text-base font-semibold text-gray-900">Total:</span>
-                  <span className="text-xl font-bold text-blue-600">
+                  <span className="text-base font-semibold text-gray-900 dark:text-gray-100">Total:</span>
+                  <span className="text-xl font-bold text-blue-600 dark:text-blue-400">
                     {formData.currency} {formData.total.toFixed(2)}
                   </span>
                 </div>
@@ -803,7 +803,7 @@ export default function NewInvoicePage() {
         <div className="flex justify-end space-x-3">
           <Link
             href="/invoices"
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+            className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800"
           >
             Cancel
           </Link>

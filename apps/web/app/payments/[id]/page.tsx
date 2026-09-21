@@ -132,11 +132,11 @@ export default function PaymentDetailPage() {
 
   const getStatusBadge = (status: string) => {
     const statusConfig: Record<string, { color: string, icon: any, label: string }> = {
-      pending: { color: 'bg-yellow-100 text-yellow-800', icon: Clock, label: 'Pending' },
-      completed: { color: 'bg-green-100 text-green-800', icon: CheckCircle, label: 'Completed' },
-      failed: { color: 'bg-red-100 text-red-800', icon: XCircle, label: 'Failed' },
-      refunded: { color: 'bg-purple-100 text-purple-800', icon: AlertCircle, label: 'Refunded' },
-      cancelled: { color: 'bg-gray-100 text-gray-800', icon: XCircle, label: 'Cancelled' }
+      pending: { color: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300', icon: Clock, label: 'Pending' },
+      completed: { color: 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300', icon: CheckCircle, label: 'Completed' },
+      failed: { color: 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300', icon: XCircle, label: 'Failed' },
+      refunded: { color: 'bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300', icon: AlertCircle, label: 'Refunded' },
+      cancelled: { color: 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200', icon: XCircle, label: 'Cancelled' }
     }
     const config = statusConfig[status] || statusConfig.pending
     const Icon = config.icon
@@ -170,7 +170,7 @@ export default function PaymentDetailPage() {
     return (
       <MainLayout>
         <div className="flex items-center justify-center h-64">
-          <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+          <Loader2 className="w-8 h-8 text-blue-600 dark:text-blue-400 animate-spin" />
         </div>
       </MainLayout>
     )
@@ -179,13 +179,13 @@ export default function PaymentDetailPage() {
   if (error || !payment) {
     return (
       <MainLayout>
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-12 text-center">
           <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Error Loading Payment</h3>
-          <p className="text-gray-500 mb-6">{error || 'Payment not found'}</p>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Error Loading Payment</h3>
+          <p className="text-gray-500 dark:text-gray-400 mb-6">{error || 'Payment not found'}</p>
           <Link
             href="/payments"
-            className="text-blue-600 hover:text-blue-800 font-medium flex items-center justify-center space-x-2"
+            className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium flex items-center justify-center space-x-2"
           >
             <ArrowLeft size={16} />
             <span>Back to Payments</span>
@@ -201,28 +201,28 @@ export default function PaymentDetailPage() {
     <MainLayout>
       {/* Header */}
       <div className="mb-6">
-        <div className="flex items-center space-x-3 text-sm text-gray-500 mb-4">
-          <Link href="/payments" className="hover:text-blue-600">
+        <div className="flex items-center space-x-3 text-sm text-gray-500 dark:text-gray-400 mb-4">
+          <Link href="/payments" className="hover:text-blue-600 dark:hover:text-blue-400">
             Payments
           </Link>
           <span>/</span>
-          <span className="text-gray-900 font-medium">{payment.paymentNumber}</span>
+          <span className="text-gray-900 dark:text-gray-100 font-medium">{payment.paymentNumber}</span>
         </div>
 
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className="flex items-start space-x-4">
             <Link
               href="/payments"
-              className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg"
+              className="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
             >
               <ArrowLeft size={20} />
             </Link>
             <div>
               <div className="flex items-center flex-wrap gap-3 mb-2">
-                <h1 className="text-2xl font-bold text-gray-900">Payment {payment.paymentNumber}</h1>
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Payment {payment.paymentNumber}</h1>
                 {getStatusBadge(payment.status)}
               </div>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-gray-500 dark:text-gray-400">
                 {new Date(payment.paymentDate).toLocaleDateString()}
               </p>
             </div>
@@ -233,14 +233,14 @@ export default function PaymentDetailPage() {
               <>
                 <Link
                   href={`/payments/${payment.id}/edit`}
-                  className="px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center space-x-2"
+                  className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-2"
                 >
                   <Edit size={16} />
                   <span>Edit</span>
                 </Link>
                 <button
                   onClick={handleVoidPayment}
-                  className="px-4 py-2 text-red-700 bg-white border border-red-200 rounded-lg hover:bg-red-50 flex items-center space-x-2"
+                  className="px-4 py-2 text-red-700 dark:text-red-300 bg-white dark:bg-gray-900 border border-red-200 dark:border-red-800 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center space-x-2"
                 >
                   <XCircle size={16} />
                   <span>Void</span>
@@ -248,14 +248,14 @@ export default function PaymentDetailPage() {
               </>
             )}
             {payment.status === 'completed' && (
-              <button className="px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center space-x-2">
+              <button className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-2">
                 <Printer size={16} />
                 <span>Receipt</span>
               </button>
             )}
             <button
               onClick={handleDeletePayment}
-              className="px-4 py-2 text-red-700 bg-white border border-red-200 rounded-lg hover:bg-red-50 flex items-center space-x-2"
+              className="px-4 py-2 text-red-700 dark:text-red-300 bg-white dark:bg-gray-900 border border-red-200 dark:border-red-800 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center space-x-2"
             >
               <Trash2 size={16} />
               <span>Delete</span>
@@ -266,45 +266,45 @@ export default function PaymentDetailPage() {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium text-gray-500">Payment Amount</p>
-            <DollarSign className="w-4 h-4 text-gray-400" />
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Payment Amount</p>
+            <DollarSign className="w-4 h-4 text-gray-400 dark:text-gray-500" />
           </div>
-          <p className="text-2xl font-bold text-gray-900">
+          <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
             {payment.currency} {Number(payment.amount).toLocaleString()}
           </p>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium text-gray-500">Payment Method</p>
-            <MethodIcon className="w-4 h-4 text-gray-400" />
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Payment Method</p>
+            <MethodIcon className="w-4 h-4 text-gray-400 dark:text-gray-500" />
           </div>
-          <p className="text-lg font-semibold text-gray-900 capitalize">
+          <p className="text-lg font-semibold text-gray-900 dark:text-gray-100 capitalize">
             {formatMethod(payment.method)}
           </p>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium text-gray-500">Invoice</p>
-            <Receipt className="w-4 h-4 text-gray-400" />
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Invoice</p>
+            <Receipt className="w-4 h-4 text-gray-400 dark:text-gray-500" />
           </div>
           <Link
             href={`/invoices/${payment.invoice.id}`}
-            className="text-lg font-semibold text-blue-600 hover:text-blue-800"
+            className="text-lg font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
           >
             {payment.invoice.invoiceNumber}
           </Link>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium text-gray-500">Invoice Balance</p>
-            <DollarSign className="w-4 h-4 text-gray-400" />
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Invoice Balance</p>
+            <DollarSign className="w-4 h-4 text-gray-400 dark:text-gray-500" />
           </div>
-          <p className="text-lg font-semibold text-gray-900">
+          <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">
             {payment.invoice.currency} {Number(payment.invoice.balance).toLocaleString()}
           </p>
         </div>
@@ -314,44 +314,44 @@ export default function PaymentDetailPage() {
         {/* Left Column - Payment Details */}
         <div className="lg:col-span-2 space-y-6">
           {/* Payment Information */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="px-6 py-4 border-b bg-gray-50">
-              <h2 className="text-lg font-semibold text-gray-900">Payment Information</h2>
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+            <div className="px-6 py-4 border-b bg-gray-50 dark:bg-gray-800">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Payment Information</h2>
             </div>
             <div className="p-6">
               <dl className="grid grid-cols-2 gap-6">
                 <div>
-                  <dt className="text-xs text-gray-500 mb-1">Payment Number</dt>
-                  <dd className="text-sm font-mono text-gray-900">{payment.paymentNumber}</dd>
+                  <dt className="text-xs text-gray-500 dark:text-gray-400 mb-1">Payment Number</dt>
+                  <dd className="text-sm font-mono text-gray-900 dark:text-gray-100">{payment.paymentNumber}</dd>
                 </div>
                 <div>
-                  <dt className="text-xs text-gray-500 mb-1">Payment Date</dt>
-                  <dd className="text-sm text-gray-900">{new Date(payment.paymentDate).toLocaleDateString()}</dd>
+                  <dt className="text-xs text-gray-500 dark:text-gray-400 mb-1">Payment Date</dt>
+                  <dd className="text-sm text-gray-900 dark:text-gray-100">{new Date(payment.paymentDate).toLocaleDateString()}</dd>
                 </div>
                 <div>
-                  <dt className="text-xs text-gray-500 mb-1">Reference / Check #</dt>
-                  <dd className="text-sm text-gray-900">{payment.reference || payment.checkNumber || '—'}</dd>
+                  <dt className="text-xs text-gray-500 dark:text-gray-400 mb-1">Reference / Check #</dt>
+                  <dd className="text-sm text-gray-900 dark:text-gray-100">{payment.reference || payment.checkNumber || '—'}</dd>
                 </div>
                 <div>
-                  <dt className="text-xs text-gray-500 mb-1">Transaction ID</dt>
-                  <dd className="text-sm text-gray-900">{payment.transactionId || payment.authorizationCode || '—'}</dd>
+                  <dt className="text-xs text-gray-500 dark:text-gray-400 mb-1">Transaction ID</dt>
+                  <dd className="text-sm text-gray-900 dark:text-gray-100">{payment.transactionId || payment.authorizationCode || '—'}</dd>
                 </div>
                 {payment.bankName && (
                   <div>
-                    <dt className="text-xs text-gray-500 mb-1">Bank Name</dt>
-                    <dd className="text-sm text-gray-900">{payment.bankName}</dd>
+                    <dt className="text-xs text-gray-500 dark:text-gray-400 mb-1">Bank Name</dt>
+                    <dd className="text-sm text-gray-900 dark:text-gray-100">{payment.bankName}</dd>
                   </div>
                 )}
                 {payment.accountNumber && (
                   <div>
-                    <dt className="text-xs text-gray-500 mb-1">Account #</dt>
-                    <dd className="text-sm text-gray-900">••••{payment.accountNumber.slice(-4)}</dd>
+                    <dt className="text-xs text-gray-500 dark:text-gray-400 mb-1">Account #</dt>
+                    <dd className="text-sm text-gray-900 dark:text-gray-100">••••{payment.accountNumber.slice(-4)}</dd>
                   </div>
                 )}
                 {payment.cardBrand && payment.cardLast4 && (
                   <div>
-                    <dt className="text-xs text-gray-500 mb-1">Card</dt>
-                    <dd className="text-sm capitalize text-gray-900">
+                    <dt className="text-xs text-gray-500 dark:text-gray-400 mb-1">Card</dt>
+                    <dd className="text-sm capitalize text-gray-900 dark:text-gray-100">
                       {payment.cardBrand} •••• {payment.cardLast4}
                     </dd>
                   </div>
@@ -362,9 +362,9 @@ export default function PaymentDetailPage() {
 
           {/* Notes */}
           {payment.notes && (
-            <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-              <h2 className="text-lg font-semibold text-gray-900 mb-2">Notes</h2>
-              <p className="text-gray-700 whitespace-pre-wrap">{payment.notes}</p>
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Notes</h2>
+              <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{payment.notes}</p>
             </div>
           )}
         </div>
@@ -372,23 +372,23 @@ export default function PaymentDetailPage() {
         {/* Right Column - Sidebar */}
         <div className="space-y-6">
           {/* Vendor Information */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="px-6 py-4 border-b bg-gray-50">
-              <h2 className="text-lg font-semibold text-gray-900">Vendor Information</h2>
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+            <div className="px-6 py-4 border-b bg-gray-50 dark:bg-gray-800">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Vendor Information</h2>
             </div>
             <div className="p-6">
               <div className="flex items-start space-x-3 mb-4">
-                <Building2 className="w-5 h-5 text-gray-400 mt-0.5" />
+                <Building2 className="w-5 h-5 text-gray-400 dark:text-gray-500 mt-0.5" />
                 <div>
-                  <p className="font-medium text-gray-900">{payment.invoice.vendor.name}</p>
+                  <p className="font-medium text-gray-900 dark:text-gray-100">{payment.invoice.vendor.name}</p>
                   {payment.invoice.vendor.email && (
-                    <a href={`mailto:${payment.invoice.vendor.email}`} className="text-sm text-blue-600 hover:text-blue-800 flex items-center mt-1">
+                    <a href={`mailto:${payment.invoice.vendor.email}`} className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 flex items-center mt-1">
                       <Mail size={14} className="mr-1" />
                       {payment.invoice.vendor.email}
                     </a>
                   )}
                   {payment.invoice.vendor.phone && (
-                    <a href={`tel:${payment.invoice.vendor.phone}`} className="text-sm text-gray-600 flex items-center mt-1">
+                    <a href={`tel:${payment.invoice.vendor.phone}`} className="text-sm text-gray-600 dark:text-gray-400 flex items-center mt-1">
                       <Phone size={14} className="mr-1" />
                       {payment.invoice.vendor.phone}
                     </a>
@@ -399,41 +399,41 @@ export default function PaymentDetailPage() {
           </div>
 
           {/* Invoice Summary */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="px-6 py-4 border-b bg-gray-50">
-              <h2 className="text-lg font-semibold text-gray-900">Invoice Summary</h2>
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+            <div className="px-6 py-4 border-b bg-gray-50 dark:bg-gray-800">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Invoice Summary</h2>
             </div>
             <div className="p-6">
               <dl className="space-y-3">
                 <div className="flex justify-between">
-                  <dt className="text-xs text-gray-500">Invoice #</dt>
-                  <dd className="text-sm font-mono text-gray-900">{payment.invoice.invoiceNumber}</dd>
+                  <dt className="text-xs text-gray-500 dark:text-gray-400">Invoice #</dt>
+                  <dd className="text-sm font-mono text-gray-900 dark:text-gray-100">{payment.invoice.invoiceNumber}</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-xs text-gray-500">Issue Date</dt>
-                  <dd className="text-sm text-gray-900">{new Date(payment.invoice.issueDate).toLocaleDateString()}</dd>
+                  <dt className="text-xs text-gray-500 dark:text-gray-400">Issue Date</dt>
+                  <dd className="text-sm text-gray-900 dark:text-gray-100">{new Date(payment.invoice.issueDate).toLocaleDateString()}</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-xs text-gray-500">Due Date</dt>
-                  <dd className="text-sm text-gray-900">
+                  <dt className="text-xs text-gray-500 dark:text-gray-400">Due Date</dt>
+                  <dd className="text-sm text-gray-900 dark:text-gray-100">
                     {payment.invoice.dueDate ? new Date(payment.invoice.dueDate).toLocaleDateString() : '—'}
                   </dd>
                 </div>
-                <div className="flex justify-between pt-2 border-t border-gray-200">
-                  <dt className="text-xs font-medium text-gray-700">Invoice Total</dt>
-                  <dd className="text-sm font-medium text-gray-900">
+                <div className="flex justify-between pt-2 border-t border-gray-200 dark:border-gray-700">
+                  <dt className="text-xs font-medium text-gray-700 dark:text-gray-300">Invoice Total</dt>
+                  <dd className="text-sm font-medium text-gray-900 dark:text-gray-100">
                     {payment.invoice.currency} {Number(payment.invoice.total).toLocaleString()}
                   </dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-xs font-medium text-gray-700">This Payment</dt>
-                  <dd className="text-sm font-medium text-green-600">
+                  <dt className="text-xs font-medium text-gray-700 dark:text-gray-300">This Payment</dt>
+                  <dd className="text-sm font-medium text-green-600 dark:text-green-400">
                     -{payment.currency} {Number(payment.amount).toLocaleString()}
                   </dd>
                 </div>
-                <div className="flex justify-between pt-2 border-t border-gray-200">
-                  <dt className="text-xs font-medium text-gray-700">Remaining Balance</dt>
-                  <dd className="text-sm font-bold text-blue-600">
+                <div className="flex justify-between pt-2 border-t border-gray-200 dark:border-gray-700">
+                  <dt className="text-xs font-medium text-gray-700 dark:text-gray-300">Remaining Balance</dt>
+                  <dd className="text-sm font-bold text-blue-600 dark:text-blue-400">
                     {payment.invoice.currency} {Number(payment.invoice.balance).toLocaleString()}
                   </dd>
                 </div>
@@ -442,19 +442,19 @@ export default function PaymentDetailPage() {
           </div>
 
           {/* Metadata */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="px-6 py-4 border-b bg-gray-50">
-              <h2 className="text-lg font-semibold text-gray-900">Payment Information</h2>
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+            <div className="px-6 py-4 border-b bg-gray-50 dark:bg-gray-800">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Payment Information</h2>
             </div>
             <div className="p-6">
               <dl className="space-y-3">
                 <div className="flex justify-between">
-                  <dt className="text-xs text-gray-500">Created By</dt>
-                  <dd className="text-sm text-gray-900">{payment.createdBy.name || payment.createdBy.email}</dd>
+                  <dt className="text-xs text-gray-500 dark:text-gray-400">Created By</dt>
+                  <dd className="text-sm text-gray-900 dark:text-gray-100">{payment.createdBy.name || payment.createdBy.email}</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-xs text-gray-500">Created On</dt>
-                  <dd className="text-sm text-gray-900">{new Date(payment.createdAt).toLocaleDateString()}</dd>
+                  <dt className="text-xs text-gray-500 dark:text-gray-400">Created On</dt>
+                  <dd className="text-sm text-gray-900 dark:text-gray-100">{new Date(payment.createdAt).toLocaleDateString()}</dd>
                 </div>
               </dl>
             </div>

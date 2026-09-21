@@ -142,33 +142,33 @@ export default function AddVendorModal({ isOpen, onClose, onSuccess }: AddVendor
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="fixed inset-0 bg-black bg-opacity-50" onClick={handleClose} />
       <div className="flex min-h-full items-center justify-center p-4">
-        <div className="relative w-full max-w-2xl bg-white rounded-xl shadow-2xl">
+        <div className="relative w-full max-w-2xl bg-white dark:bg-gray-900 rounded-xl shadow-2xl">
           
           {/* Header */}
           <div className="flex items-center justify-between px-6 py-4 border-b">
             <div className="flex items-center space-x-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <Building2 className="w-5 h-5 text-blue-600" />
+              <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                <Building2 className="w-5 h-5 text-blue-600 dark:text-blue-400" />
               </div>
               <div>
-                <h2 className="text-xl font-semibold text-gray-900">Add New Vendor</h2>
-                <p className="text-sm text-gray-500">Vendor will be pending for approval</p>
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Add New Vendor</h2>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Vendor will be pending for approval</p>
               </div>
             </div>
-            <button onClick={handleClose} className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100">
+            <button onClick={handleClose} className="p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
               <X className="w-5 h-5" />
             </button>
           </div>
 
           {/* Debug Info - Remove in production */}
           {debug && (
-            <div className="mx-6 mt-4 p-3 bg-gray-100 border border-gray-200 text-gray-700 rounded-lg text-xs font-mono">
+            <div className="mx-6 mt-4 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-xs font-mono">
               <strong>Debug:</strong> {debug}
             </div>
           )}
 
           {error && (
-            <div className="mx-6 mt-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg">
+            <div className="mx-6 mt-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 rounded-lg">
               {error}
             </div>
           )}
@@ -177,7 +177,7 @@ export default function AddVendorModal({ isOpen, onClose, onSuccess }: AddVendor
             <div className="space-y-4">
               {/* Company Name - Required */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Company Name <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -185,7 +185,7 @@ export default function AddVendorModal({ isOpen, onClose, onSuccess }: AddVendor
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                   placeholder="e.g., ABC Supplies Inc."
                   required
                 />
@@ -193,14 +193,14 @@ export default function AddVendorModal({ isOpen, onClose, onSuccess }: AddVendor
 
               {/* Category Dropdown */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Category
                 </label>
                 <select
                   name="categoryId"
                   value={formData.categoryId}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 >
                   <option value="">-- Select a category --</option>
                   {loadingCategories ? (
@@ -214,14 +214,14 @@ export default function AddVendorModal({ isOpen, onClose, onSuccess }: AddVendor
                   )}
                 </select>
                 {categories.length === 0 && !loadingCategories && (
-                  <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded-lg">
-                    <p className="text-xs text-yellow-700">
+                  <div className="mt-2 p-2 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+                    <p className="text-xs text-yellow-700 dark:text-yellow-300">
                       ⚠️ No categories found. Please create categories first in Vendors → Categories.
                     </p>
                     <button
                       type="button"
                       onClick={fetchCategories}
-                      className="text-xs text-blue-600 hover:text-blue-800 mt-1"
+                      className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 mt-1"
                     >
                       Refresh categories
                     </button>
@@ -232,33 +232,33 @@ export default function AddVendorModal({ isOpen, onClose, onSuccess }: AddVendor
               {/* Email & Phone */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Email
                   </label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                    <Mail className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                     <input
                       type="email"
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
-                      className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900"
+                      className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100"
                       placeholder="contact@company.com"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Phone
                   </label>
                   <div className="relative">
-                    <Phone className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                    <Phone className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                     <input
                       type="tel"
                       name="phone"
                       value={formData.phone}
                       onChange={handleChange}
-                      className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900"
+                      className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100"
                       placeholder="+1 (555) 123-4567"
                     />
                   </div>
@@ -267,17 +267,17 @@ export default function AddVendorModal({ isOpen, onClose, onSuccess }: AddVendor
 
               {/* Contact Person */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Contact Person
                 </label>
                 <div className="relative">
-                  <User className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                  <User className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                   <input
                     type="text"
                     name="contactPerson"
                     value={formData.contactPerson}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900"
+                    className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100"
                     placeholder="John Doe"
                   />
                 </div>
@@ -285,17 +285,17 @@ export default function AddVendorModal({ isOpen, onClose, onSuccess }: AddVendor
 
               {/* Address */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Address
                 </label>
                 <div className="relative">
-                  <MapPin className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                  <MapPin className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
                   <input
                     type="text"
                     name="address"
                     value={formData.address}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900"
+                    className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100"
                     placeholder="123 Business Ave"
                   />
                 </div>
@@ -308,7 +308,7 @@ export default function AddVendorModal({ isOpen, onClose, onSuccess }: AddVendor
                   name="city"
                   value={formData.city}
                   onChange={handleChange}
-                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900"
+                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100"
                   placeholder="City"
                 />
                 <input
@@ -316,14 +316,14 @@ export default function AddVendorModal({ isOpen, onClose, onSuccess }: AddVendor
                   name="state"
                   value={formData.state}
                   onChange={handleChange}
-                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900"
+                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100"
                   placeholder="State"
                 />
                 <select
                   name="country"
                   value={formData.country}
                   onChange={handleChange}
-                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900"
+                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100"
                 >
                   <option value="USA">USA</option>
                   <option value="Canada">Canada</option>
@@ -334,7 +334,7 @@ export default function AddVendorModal({ isOpen, onClose, onSuccess }: AddVendor
 
               {/* Notes */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Notes
                 </label>
                 <textarea
@@ -342,15 +342,15 @@ export default function AddVendorModal({ isOpen, onClose, onSuccess }: AddVendor
                   rows={2}
                   value={formData.notes}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900 resize-none"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100 resize-none"
                   placeholder="Additional notes..."
                 />
               </div>
 
               {/* Status Notice */}
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                <p className="text-xs text-blue-700">
-                  <span className="font-semibold">Status:</span> New vendors are created with <span className="font-mono bg-blue-100 px-1 py-0.5 rounded">pending</span> status and will appear in the Approvals page.
+              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+                <p className="text-xs text-blue-700 dark:text-blue-300">
+                  <span className="font-semibold">Status:</span> New vendors are created with <span className="font-mono bg-blue-100 dark:bg-blue-900/30 px-1 py-0.5 rounded">pending</span> status and will appear in the Approvals page.
                 </p>
               </div>
             </div>
@@ -360,7 +360,7 @@ export default function AddVendorModal({ isOpen, onClose, onSuccess }: AddVendor
               <button
                 type="button"
                 onClick={handleClose}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800"
               >
                 Cancel
               </button>
