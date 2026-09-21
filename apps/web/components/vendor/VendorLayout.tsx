@@ -334,7 +334,8 @@ import {
   ClipboardList,
   Database,
   Zap,
-  HardDrive
+  HardDrive,
+  History
 } from 'lucide-react'
 
 interface VendorLayoutProps {
@@ -425,6 +426,7 @@ export default function VendorLayout({ children }: VendorLayoutProps) {
       icon: BarChart3,
       submenu: [
         { name: 'Order Reports', href: '/vendor/reports/orders', icon: BarChart3 },
+        { name: 'Amendments', href: '/vendor/reports/amendments', icon: History },
         { name: 'Activity Log', href: '/vendor/activity', icon: Clock }
       ]
     },

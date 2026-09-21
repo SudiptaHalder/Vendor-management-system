@@ -124,3 +124,73 @@ export async function createInboundDeliveryFromEDI(params: CreateAsnParams): Pro
 
   return { deliveryDocument, raw: response };
 }
+
+export interface DeliveryRecord {
+  deliveryDocument: string;
+  vehicleNo: string | null;
+  supplierReference: string | null;
+  deliveryDate: string | null;
+  items: Array<{
+    poItemNumber: string;
+    materialCode: string;
+    quantity: string;
+    uom: string;
+  }>;
+}
+
+/**
+ * Finds every Inbound Delivery (ASN) created against a given PO or
+ * scheduling agreement number, for showing delivery history in a PO's
+ * detail view. ReferenceSDDocument only lives on the item entity, so this
+ * queries items first, then looks up each unique header found.
+ */
+export async function getDeliveriesForReferenceDocument(referenceDocument: string): Promise<DeliveryRecord[]> {
+  const sapAuth = SAPAuth.getInstance();
+  const client = sapAuth.getClient();
+
+  const itemsResponse = await client.get(`${INBOUND_DELIVERY_BASE}/A_InbDeliveryItem`, {
+    params: {
+      $format: 'json',
+      $filter: `ReferenceSDDocument eq '${referenceDocument}'`
+    }
+  });
+
+  const items = itemsResponse.data.d?.results || [];
+  if (items.length === 0) {
+    return [];
+  }
+
+  const deliveryDocumentNumbers: string[] = Array.from(new Set(items.map((i: any) => i.DeliveryDocument as string)));
+
+  const headers = await Promise.all(
+    deliveryDocumentNumbers.map((docNumber: string) =>
+      client
+        .get(`${INBOUND_DELIVERY_BASE}/A_InbDeliveryHeader('${docNumber}')`, { params: { $format: 'json' } })
+        .then((r: any) => r.data.d)
+        .catch(() => null)
+    )
+  );
+
+  const headerByDocNumber = new Map<string, any>();
+  headers.forEach((h: any) => {
+    if (h) headerByDocNumber.set(h.DeliveryDocument, h);
+  });
+
+  return deliveryDocumentNumbers.map((docNumber) => {
+    const header = headerByDocNumber.get(docNumber);
+    const docItems = items.filter((i: any) => i.DeliveryDocument === docNumber);
+
+    return {
+      deliveryDocument: docNumber,
+      vehicleNo: header?.BillOfLading || null,
+      supplierReference: header?.DeliveryDocumentBySupplier || null,
+      deliveryDate: header?.DeliveryDate || null,
+      items: docItems.map((i: any) => ({
+        poItemNumber: i.ReferenceSDDocumentItem,
+        materialCode: i.Material,
+        quantity: i.ActualDeliveryQuantity,
+        uom: i.DeliveryQuantityUnit
+      }))
+    };
+  });
+}

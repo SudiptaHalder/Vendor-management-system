@@ -96,6 +96,12 @@ function transformSchedulingAgreement(sa: any): TransformedSchedulingAgreement {
     }
   }
 
+  // If every schedule line across every item has been fully delivered,
+  // show the agreement as "completed" rather than trusting the raw status
+  // code - PrevDelivQtyOfScheduleLine is a real, confirmed-accurate field,
+  // unlike some status codes that don't reliably reflect delivery state.
+  const allLinesDelivered = lineItems.length > 0 && lineItems.every((li) => li.pendingQty <= 0);
+
   return {
     id: sa.SchedulingAgreement,
     poNumber: sa.SchedulingAgreement,
@@ -105,7 +111,7 @@ function transformSchedulingAgreement(sa: any): TransformedSchedulingAgreement {
     poAmendDate: null,
     expectedDate: null,
     deliveredDate: null,
-    status: mapSchedulingAgreementStatus(sa.SchedulingAgreementStatus),
+    status: allLinesDelivered ? 'completed' : mapSchedulingAgreementStatus(sa.SchedulingAgreementStatus),
     subtotal: 0,
     taxAmount: 0,
     totalAmount: parseSAPNumber(sa.TargetAmount),
@@ -143,4 +149,75 @@ export async function getSchedulingAgreementByNumber(saNumber: string): Promise<
   const sa = response.data.d;
   if (!sa) return null;
   return transformSchedulingAgreement(sa);
+}
+
+export interface AmendmentRecord {
+  schedulingAgreement: string;
+  schedulingAgreementItem: string;
+  supplier: string | null;
+  material: string | null;
+  materialDesc: string | null;
+  oldPrice: number;
+  newPrice: number;
+  percentChange: number | null;
+  amendmentDate: string | null;
+  oldDate: string | null;
+}
+
+/**
+ * Price amendments are a custom mechanism specific to scheduling agreements
+ * (YY1_OldPrice_PDI / YY1_NewPrice_SA_PDI on the item, populated only once
+ * a price has actually been changed - default is "0.00"/null, confirmed
+ * against live data). This has no equivalent on close-quantity POs.
+ */
+export async function getScheduleAgreementAmendments(): Promise<AmendmentRecord[]> {
+  const client = getClient();
+
+  const itemsResponse = await client.get(`${SCHED_AGRMT_BASE}/A_SchAgrmtItem`, {
+    params: {
+      $format: 'json',
+      $filter: 'YY1_NewPrice_SA_PDI gt 0.00m',
+      $top: 500
+    }
+  });
+
+  const items = itemsResponse.data.d?.results || [];
+  if (items.length === 0) {
+    return [];
+  }
+
+  // Supplier lives on the header, not the item - look up each unique
+  // agreement number found (no nav property from item back to header).
+  const saNumbers: string[] = Array.from(new Set(items.map((i: any) => i.SchedulingAgreement as string)));
+  const headers = await Promise.all(
+    saNumbers.map((saNumber: string) =>
+      client
+        .get(`${SCHED_AGRMT_BASE}/A_SchAgrmtHeader('${saNumber}')`, { params: { $format: 'json' } })
+        .then((r: any) => r.data.d)
+        .catch(() => null)
+    )
+  );
+  const headerBySA = new Map<string, any>();
+  headers.forEach((h: any) => {
+    if (h) headerBySA.set(h.SchedulingAgreement, h);
+  });
+
+  return items.map((item: any) => {
+    const oldPrice = parseSAPNumber(item.YY1_OldPrice_PDI);
+    const newPrice = parseSAPNumber(item.YY1_NewPrice_SA_PDI);
+    const header = headerBySA.get(item.SchedulingAgreement);
+
+    return {
+      schedulingAgreement: item.SchedulingAgreement,
+      schedulingAgreementItem: item.SchedulingAgreementItem,
+      supplier: header?.Supplier || null,
+      material: item.Material || null,
+      materialDesc: item.PurchasingDocumentItemText || item.Material || null,
+      oldPrice,
+      newPrice,
+      percentChange: oldPrice > 0 ? ((newPrice - oldPrice) / oldPrice) * 100 : null,
+      amendmentDate: item.YY1_AmmendmentDate_SA_PDI || null,
+      oldDate: item.YY1_OldDate_SA_PDI || null
+    };
+  });
 }

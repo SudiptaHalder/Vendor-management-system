@@ -220,8 +220,10 @@ import { SAPAuth } from '../../services/sap/shared/sapAuth';
 import {
   isSchedulingAgreementNumber,
   getSchedulingAgreementsForSupplier,
-  getSchedulingAgreementByNumber
+  getSchedulingAgreementByNumber,
+  getScheduleAgreementAmendments
 } from '../../services/sap/schedulingAgreementService';
+import { getDeliveriesForReferenceDocument } from '../../services/sap/inboundDeliveryService';
 
 const router = Router();
 
@@ -265,7 +267,14 @@ router.get('/', vendorMiddleware, async (req, res) => {
     // Transform SAP data to match our interface
     const transformedOrders = orders.map((po: any) => {
       const lineItems = po.to_PurchaseOrderItem?.results || [];
-      
+
+      // IsCompletelyDelivered is a real, SAP-maintained flag per item -
+      // QuantityDelivered (used below for receivedQty) doesn't actually
+      // exist on this entity, so completion can't be derived from quantity
+      // math here. If every item is fully delivered, the PO is "completed"
+      // regardless of what the raw processing status code says.
+      const allItemsDelivered = lineItems.length > 0 && lineItems.every((item: any) => item.IsCompletelyDelivered === true);
+
       return {
         id: po.PurchaseOrder,
         poNumber: po.PurchaseOrder,
@@ -275,7 +284,7 @@ router.get('/', vendorMiddleware, async (req, res) => {
         poAmendDate: po.LastChangeDate || null,
         expectedDate: po.DeliveryDate || null,
         deliveredDate: null,
-        status: mapSAPStatus(po.PurchaseOrderStatus),
+        status: allItemsDelivered ? 'completed' : mapSAPStatus(po.PurchasingProcessingStatus),
         subtotal: po.TotalAmount || 0,
         taxAmount: 0,
         totalAmount: po.TotalAmount || 0,
@@ -288,8 +297,9 @@ router.get('/', vendorMiddleware, async (req, res) => {
           uom: item.OrderUnit || null,
           quantity: item.OrderQuantity || null,
           receivedQty: item.QuantityDelivered || null,
-          pendingQty: item.OrderQuantity && item.QuantityDelivered ? 
+          pendingQty: item.OrderQuantity && item.QuantityDelivered ?
             item.OrderQuantity - item.QuantityDelivered : null,
+          isCompletelyDelivered: item.IsCompletelyDelivered === true,
           unitPrice: item.NetPriceAmount || null,
           discountPercent: null,
           discountAmount: null,
@@ -300,7 +310,7 @@ router.get('/', vendorMiddleware, async (req, res) => {
           igstPercent: null,
           gstAmount: null,
           totalAmount: item.NetPriceAmount ? item.NetPriceAmount * (item.OrderQuantity || 0) : 0,
-          status: item.Status || 'pending'
+          status: item.IsCompletelyDelivered === true ? 'completed' : 'pending'
         }))
       };
     });
@@ -331,6 +341,35 @@ router.get('/', vendorMiddleware, async (req, res) => {
     res.status(500).json({
       success: false,
       error: error.message || 'Failed to fetch purchase orders'
+    });
+  }
+});
+
+// Get this vendor's own price amendments (scheduling agreements only).
+// Registered before /:poNumber so "amendments" isn't matched as a PO number.
+router.get('/amendments', vendorMiddleware, async (req, res) => {
+  try {
+    const user = (req as any).user;
+    const vendor = (req as any).vendor;
+    const vendorId = user?.username || vendor?.supplierCode;
+
+    if (!vendorId) {
+      return res.status(401).json({ success: false, error: 'Not authenticated' });
+    }
+
+    const allAmendments = await getScheduleAgreementAmendments();
+    const ownAmendments = allAmendments.filter((a) => a.supplier === vendorId);
+
+    res.json({
+      success: true,
+      data: ownAmendments,
+      count: ownAmendments.length
+    });
+  } catch (error: any) {
+    console.error('Error fetching vendor amendments:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Failed to fetch amendments'
     });
   }
 });
@@ -409,7 +448,11 @@ router.get('/:poNumber', vendorMiddleware, async (req, res) => {
     }
 
     const lineItems = po.to_PurchaseOrderItem?.results || [];
-    
+
+    // See the "/" handler above for why this uses IsCompletelyDelivered
+    // instead of quantity math (QuantityDelivered doesn't actually exist).
+    const allItemsDelivered = lineItems.length > 0 && lineItems.every((item: any) => item.IsCompletelyDelivered === true);
+
     const transformedPO = {
       id: po.PurchaseOrder,
       poNumber: po.PurchaseOrder,
@@ -419,7 +462,7 @@ router.get('/:poNumber', vendorMiddleware, async (req, res) => {
       poAmendDate: po.LastChangeDate || null,
       expectedDate: po.DeliveryDate || null,
       deliveredDate: null,
-      status: mapSAPStatus(po.PurchaseOrderStatus),
+      status: allItemsDelivered ? 'completed' : mapSAPStatus(po.PurchasingProcessingStatus),
       subtotal: po.TotalAmount || 0,
       taxAmount: 0,
       totalAmount: po.TotalAmount || 0,
@@ -432,8 +475,9 @@ router.get('/:poNumber', vendorMiddleware, async (req, res) => {
         uom: item.OrderUnit || null,
         quantity: item.OrderQuantity || null,
         receivedQty: item.QuantityDelivered || null,
-        pendingQty: item.OrderQuantity && item.QuantityDelivered ? 
+        pendingQty: item.OrderQuantity && item.QuantityDelivered ?
           item.OrderQuantity - item.QuantityDelivered : null,
+        isCompletelyDelivered: item.IsCompletelyDelivered === true,
         unitPrice: item.NetPriceAmount || null,
         discountPercent: null,
         discountAmount: null,
@@ -444,7 +488,7 @@ router.get('/:poNumber', vendorMiddleware, async (req, res) => {
         igstPercent: null,
         gstAmount: null,
         totalAmount: item.NetPriceAmount ? item.NetPriceAmount * (item.OrderQuantity || 0) : 0,
-        status: item.Status || 'pending'
+        status: item.IsCompletelyDelivered === true ? 'completed' : 'pending'
       }))
     };
 
@@ -463,20 +507,75 @@ router.get('/:poNumber', vendorMiddleware, async (req, res) => {
   }
 });
 
-// Helper to map SAP status
+// Get the delivery (ASN) history for a PO or scheduling agreement - shows
+// what's actually been shipped against it, not just the order itself.
+router.get('/:poNumber/deliveries', vendorMiddleware, async (req, res) => {
+  try {
+    const user = (req as any).user;
+    const vendor = (req as any).vendor;
+    const vendorId = user?.username || vendor?.supplierCode;
+    const { poNumber } = req.params;
+
+    if (!vendorId) {
+      return res.status(401).json({ success: false, error: 'Not authenticated' });
+    }
+
+    // Verify ownership before revealing delivery history
+    if (isSchedulingAgreementNumber(poNumber)) {
+      const sa = await getSchedulingAgreementByNumber(poNumber);
+      if (!sa) {
+        return res.status(404).json({ success: false, error: 'Scheduling agreement not found' });
+      }
+      if (sa.supplier !== vendorId) {
+        return res.status(403).json({ success: false, error: 'Access denied' });
+      }
+    } else {
+      const sapAuth = SAPAuth.getInstance();
+      const client = sapAuth.getClient();
+      const poResponse = await client.get(
+        `/sap/opu/odata/sap/API_PURCHASEORDER_PROCESS_SRV/A_PurchaseOrder('${poNumber}')`,
+        { params: { $format: 'json' } }
+      );
+      const po = poResponse.data.d;
+      if (!po) {
+        return res.status(404).json({ success: false, error: 'Purchase order not found' });
+      }
+      if (po.Supplier !== vendorId) {
+        return res.status(403).json({ success: false, error: 'Access denied' });
+      }
+    }
+
+    const deliveries = await getDeliveriesForReferenceDocument(poNumber);
+
+    res.json({
+      success: true,
+      data: deliveries
+    });
+  } catch (error: any) {
+    console.error('Error fetching deliveries for PO:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Failed to fetch deliveries'
+    });
+  }
+});
+
+// Helper to map SAP status. The real field is PurchasingProcessingStatus
+// (2-digit code) - PurchaseOrderStatus doesn't exist on this entity at all,
+// which is why every PO used to show "pending" regardless of its real state.
+// Only '05' has been directly confirmed against live data (matches
+// "completed" for a fully-processed close-quantity PO); the others follow
+// standard SAP convention but haven't been observed live yet - worth
+// double-checking if a PO ever shows an unexpected status.
 function mapSAPStatus(status: string): string {
   const statusMap: Record<string, string> = {
-    '1': 'pending',
-    '2': 'approved',
-    '3': 'approved',
-    '4': 'completed',
-    '5': 'cancelled',
-    '6': 'completed',
-    'open': 'pending',
-    'closed': 'completed',
-    'cancelled': 'cancelled'
+    '01': 'pending',   // Open
+    '02': 'pending',   // In Release
+    '03': 'approved',  // Released
+    '04': 'approved',  // Being processed / partially processed
+    '05': 'completed'  // Completed
   };
-  return statusMap[status] || 'pending';
+  return statusMap[status] || (status ? status.toLowerCase() : 'pending');
 }
 
 export default router;

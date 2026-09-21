@@ -504,7 +504,7 @@
 //                 </div>
 //                 <div className="bg-gray-50 p-3 rounded-lg">
 //                   <p className="text-xs text-gray-500">PO Type</p>
-//                   <p className="text-sm font-semibold text-gray-900">{selectedPO.poType || 'Standard'}</p>
+//                   <p className="text-sm font-semibold text-gray-900">{getPOTypeLabel(selectedPO.poType)}</p>
 //                 </div>
 //                 <div className="bg-gray-50 p-3 rounded-lg">
 //                   <p className="text-xs text-gray-500">Status</p>
@@ -663,6 +663,44 @@ interface LineItem {
   status: string
 }
 
+// SAP purchase document type codes -> friendly labels. Any code not listed
+// here (e.g. standard SAP types like "NB") still shows correctly - it just
+// falls back to displaying the raw code instead of a translated label.
+const PO_TYPE_LABELS: Record<string, string> = {
+  ZBOP: 'PO: Bought Out',
+  ZCAP: 'PO: Capital',
+  ZCON: 'PO: Consumable',
+  ZCRE: 'Customer Return',
+  ZCSR: 'PO: Service Contract',
+  ZFOC: 'Free of Cost P.O.',
+  ZIMP: 'PO: Import',
+  ZOTH: 'PO: Int. Stock Transfer',
+  ZPRO: 'Development PO',
+  ZPUR: 'Purchase Return',
+  ZROH: 'PO: Raw Material',
+  ZSER: 'PO: Service',
+  ZSUB: 'PO: Subcon (Job Work)',
+  ZUB: 'Stock Transport Order Del.',
+  ZVRE: 'Vendor Return',
+  LP: 'Scheduling Agreement',
+  NB: 'Standard PO'
+}
+
+const getPOTypeLabel = (type: string | null | undefined): string => {
+  if (!type) return '-'
+  return PO_TYPE_LABELS[type] || type
+}
+
+// SAP OData V2 dates come as "/Date(1712448000000)/" - plain new Date() on
+// that string returns Invalid Date, which silently breaks >= comparisons
+// (always false), so date-range filtering never actually matched anything.
+const parseSAPDateValue = (value: string | null | undefined): Date | null => {
+  if (!value) return null
+  const match = /\/Date\((\d+)\)\//.exec(value)
+  const ms = match ? parseInt(match[1], 10) : Date.parse(value)
+  return isNaN(ms) ? null : new Date(ms)
+}
+
 interface PurchaseOrder {
   id: string
   poNumber: string
@@ -681,6 +719,19 @@ interface PurchaseOrder {
   category?: 'close_quantity' | 'schedule' | null
 }
 
+interface DeliveryRecord {
+  deliveryDocument: string
+  vehicleNo: string | null
+  supplierReference: string | null
+  deliveryDate: string | null
+  items: Array<{
+    poItemNumber: string
+    materialCode: string
+    quantity: string
+    uom: string
+  }>
+}
+
 export default function VendorPurchaseOrdersPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -693,6 +744,8 @@ export default function VendorPurchaseOrdersPage() {
   const [filteredPOs, setFilteredPOs] = useState<PurchaseOrder[]>([])
   const [selectedPO, setSelectedPO] = useState<PurchaseOrder | null>(null)
   const [showDetails, setShowDetails] = useState(false)
+  const [deliveries, setDeliveries] = useState<DeliveryRecord[]>([])
+  const [loadingDeliveries, setLoadingDeliveries] = useState(false)
   
   // Main Status Toggle (default open)
   const [mainStatus, setMainStatus] = useState<'completed' | 'open'>('open')
@@ -819,19 +872,22 @@ export default function VendorPurchaseOrdersPage() {
     const now = new Date()
     if (dateFilter === 'today') {
       const today = new Date(now.setHours(0, 0, 0, 0))
-      filtered = filtered.filter(po => 
-        po.poCreateDate && new Date(po.poCreateDate) >= today
-      )
+      filtered = filtered.filter(po => {
+        const d = parseSAPDateValue(po.poCreateDate)
+        return d && d >= today
+      })
     } else if (dateFilter === 'week') {
       const weekAgo = new Date(now.setDate(now.getDate() - 7))
-      filtered = filtered.filter(po => 
-        po.poCreateDate && new Date(po.poCreateDate) >= weekAgo
-      )
+      filtered = filtered.filter(po => {
+        const d = parseSAPDateValue(po.poCreateDate)
+        return d && d >= weekAgo
+      })
     } else if (dateFilter === 'month') {
       const monthAgo = new Date(now.setMonth(now.getMonth() - 1))
-      filtered = filtered.filter(po => 
-        po.poCreateDate && new Date(po.poCreateDate) >= monthAgo
-      )
+      filtered = filtered.filter(po => {
+        const d = parseSAPDateValue(po.poCreateDate)
+        return d && d >= monthAgo
+      })
     }
     
     // Apply sorting
@@ -853,7 +909,11 @@ export default function VendorPurchaseOrdersPage() {
 
   const formatDate = (dateStr: string | null) => {
     if (!dateStr) return '-'
-    return new Date(dateStr).toLocaleDateString()
+    // SAP OData V2 dates come as "/Date(1712448000000)/", not a plain ISO string
+    const match = /\/Date\((\d+)\)\//.exec(dateStr)
+    const ms = match ? parseInt(match[1], 10) : Date.parse(dateStr)
+    if (isNaN(ms)) return '-'
+    return new Date(ms).toLocaleDateString()
   }
 
   const formatCurrency = (amount: number | null) => {
@@ -890,11 +950,30 @@ export default function VendorPurchaseOrdersPage() {
   const viewPODetails = (po: PurchaseOrder) => {
     setSelectedPO(po)
     setShowDetails(true)
+    fetchDeliveries(po.poNumber)
   }
 
   const closeDetails = () => {
     setShowDetails(false)
     setSelectedPO(null)
+    setDeliveries([])
+  }
+
+  const fetchDeliveries = async (poNumber: string) => {
+    setLoadingDeliveries(true)
+    try {
+      const token = localStorage.getItem('vendorToken')
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/vendor/sap-purchase-orders/${poNumber}/deliveries`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+      const data = await response.json()
+      setDeliveries(data.success ? data.data : [])
+    } catch (err) {
+      console.error('Error fetching deliveries:', err)
+      setDeliveries([])
+    } finally {
+      setLoadingDeliveries(false)
+    }
   }
 
   const toggleSort = (field: 'date' | 'number') => {
@@ -1030,7 +1109,7 @@ export default function VendorPurchaseOrdersPage() {
           >
             <option value="all">All Types</option>
             {poTypes.map(type => (
-              <option key={type} value={type}>{type}</option>
+              <option key={type} value={type}>{getPOTypeLabel(type)} ({type})</option>
             ))}
           </select>
 
@@ -1166,7 +1245,7 @@ export default function VendorPurchaseOrdersPage() {
                 </div>
                 <div className="bg-gray-50 p-3 rounded-lg">
                   <p className="text-xs text-gray-500">PO Type</p>
-                  <p className="text-sm font-semibold text-gray-900">{selectedPO.poType || 'Standard'}</p>
+                  <p className="text-sm font-semibold text-gray-900">{getPOTypeLabel(selectedPO.poType)}</p>
                 </div>
                 <div className="bg-gray-50 p-3 rounded-lg">
                   <p className="text-xs text-gray-500">Status</p>
@@ -1218,6 +1297,46 @@ export default function VendorPurchaseOrdersPage() {
               ) : (
                 <div className="text-center py-8 text-gray-500 bg-gray-50 rounded-lg">
                   No line items found
+                </div>
+              )}
+
+              {/* Deliveries - what's actually been shipped against this PO */}
+              <h4 className="text-md font-semibold text-gray-900 mb-3 mt-6 flex items-center">
+                <Package size={16} className="mr-2" />
+                Deliveries ({deliveries.length})
+              </h4>
+
+              {loadingDeliveries ? (
+                <div className="text-center py-8 text-gray-500 bg-gray-50 rounded-lg">
+                  Loading deliveries...
+                </div>
+              ) : deliveries.length > 0 ? (
+                <div className="space-y-3">
+                  {deliveries.map((delivery) => (
+                    <div key={delivery.deliveryDocument} className="border border-gray-200 rounded-lg overflow-hidden">
+                      <div className="bg-gray-50 px-3 py-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-600">
+                        <span className="font-semibold text-gray-900">Delivery {delivery.deliveryDocument}</span>
+                        <span>Vehicle: {delivery.vehicleNo || '-'}</span>
+                        <span>Invoice Ref: {delivery.supplierReference || '-'}</span>
+                        <span>Date: {formatDate(delivery.deliveryDate)}</span>
+                      </div>
+                      <table className="w-full text-sm">
+                        <tbody className="divide-y divide-gray-100">
+                          {delivery.items.map((item, idx) => (
+                            <tr key={idx}>
+                              <td className="px-3 py-1.5 font-mono text-xs text-gray-600">{item.poItemNumber}</td>
+                              <td className="px-3 py-1.5 font-mono text-xs text-gray-900">{item.materialCode}</td>
+                              <td className="px-3 py-1.5 text-right text-gray-900">{item.quantity} {item.uom}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8 text-gray-500 bg-gray-50 rounded-lg">
+                  No deliveries submitted yet for this order
                 </div>
               )}
             </div>

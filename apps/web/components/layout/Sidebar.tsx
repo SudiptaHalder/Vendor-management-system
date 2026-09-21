@@ -41,7 +41,8 @@ import {
   Upload,
   Lock,
   TrendingUp, // Added for SAP Data Explorer
-  ScanLine
+  ScanLine,
+  History
 } from 'lucide-react'
 
 interface SubMenuItem {
@@ -165,9 +166,9 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsO
       icon: Package,
       submenu: [
         { name: 'Purchase Orders', href: '/procurement/purchase-orders', icon: FileText },
+        { name: 'Amendments', href: '/procurement/amendments', icon: History },
         { name: 'RFQs', href: '/procurement/rfqs', icon: MessageSquare, disabled: true },
         { name: 'Quotes', href: '/procurement/quotes', icon: FileSignature, disabled: true },
-        { name: 'Contracts', href: '/procurement/contracts', icon: FileCheck, disabled: true },
         { name: 'Bids', href: '/procurement/bids', icon: ClipboardList, disabled: true }
       ]
     },
@@ -194,6 +195,7 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsO
         { name: 'Vendor Reports', href: '/reports/vendors', icon: FileText },
         { name: 'Financial Reports', href: '/reports/financial', icon: FileText },
         { name: 'Project Reports', href: '/reports/projects', icon: FileText },
+        { name: 'Amendment Report', href: '/procurement/amendments', icon: History },
         { name: 'Analytics', href: '/reports/analytics', icon: BarChart3 }
       ]
     },

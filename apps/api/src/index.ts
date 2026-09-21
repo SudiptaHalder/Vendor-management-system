@@ -241,6 +241,7 @@ import vendorEdiRoutes from './routes/vendor/edi.routes'
 import adminSyncRoutes from './routes/adminSyncRoutes'
 import sapInvitationRoutes from './routes/sapInvitation.routes'
 import cronRoutes from './routes/cron.routes'
+import amendmentsRoutes from './routes/amendments.routes'
 
 const app = express()
 const PORT = process.env.PORT || 3001
@@ -344,6 +345,7 @@ app.use('/api/sap', sapVendorDirectRoutes)
 // Admin Sync Routes (Protected)
 app.use('/api/admin/sync', adminSyncRoutes)
 app.use('/api/sap/purchase-orders', sapPurchaseOrderRoutes)
+app.use('/api/procurement/amendments', amendmentsRoutes)
 
 // SAP Background Sync - a setInterval loop can't survive between invocations
 // on Vercel's serverless functions, so it's replaced there by Vercel Cron
