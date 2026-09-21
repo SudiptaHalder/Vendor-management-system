@@ -75,7 +75,7 @@ export class SAPLiveDataService {
   async getLivePurchaseOrdersCount(): Promise<number> {
     try {
       const response = await this.sapClient.get(
-        '/sap/opu/odata/sap/API_PURCHASE_ORDER_PROCESS_SRV/A_PurchaseOrder',
+        '/sap/opu/odata/sap/API_PURCHASEORDER_PROCESS_SRV/A_PurchaseOrder',
         {
           params: {
             $format: 'json',

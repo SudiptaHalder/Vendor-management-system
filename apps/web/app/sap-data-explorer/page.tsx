@@ -45,18 +45,38 @@ interface Vendor {
 }
 
 interface PurchaseOrder {
-  id: string;
   poNumber: string;
-  vendor: {
-    supplierCode: string;
-    supplierName: string;
-  };
+  supplierCode: string;
+  supplierName: string;
   poCreateDate: string;
   totalAmount: number;
   currency: string;
   status: string;
   lineItems: any[];
-  createdAt: string;
+}
+
+// Mirrors the mapping used server-side in sap-purchase-orders.routes.ts -
+// SAP's PurchaseOrderStatus is a numeric processing code, not a plain string.
+function mapSAPPOStatus(status: string): string {
+  const statusMap: Record<string, string> = {
+    '1': 'pending',
+    '2': 'approved',
+    '3': 'approved',
+    '4': 'completed',
+    '5': 'cancelled',
+    '6': 'completed'
+  };
+  return statusMap[status] || status || 'pending';
+}
+
+// SAP OData V2 dates come as "/Date(1712448000000)/", not a plain ISO
+// string - new Date() on that raw string produces "Invalid Date".
+function parseSAPDate(value: string | null | undefined): Date | null {
+  if (!value) return null;
+  const match = /\/Date\((\d+)\)\//.exec(value);
+  if (match) return new Date(parseInt(match[1], 10));
+  const parsed = new Date(value);
+  return isNaN(parsed.getTime()) ? null : parsed;
 }
 
 interface MaterialDocument {
@@ -128,13 +148,22 @@ export default function SAPDataExplorer() {
         setVendors(vendorsData.data || []);
       }
 
-      // Fetch purchase orders
-      const poRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/purchase-orders`, {
+      // Fetch purchase orders - live from SAP, not the local DB cache
+      const poRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/sap/purchase-orders?limit=200`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const poData = await poRes.json();
       if (poData.success) {
-        setPurchaseOrders(poData.data || []);
+        setPurchaseOrders((poData.data || []).map((o: any) => ({
+          poNumber: o.PurchaseOrder,
+          supplierCode: o.Supplier,
+          supplierName: o.SupplierName || o.Supplier,
+          poCreateDate: o.PurchaseOrderDate,
+          totalAmount: o.TotalAmount || 0,
+          currency: o.DocumentCurrency || 'INR',
+          status: mapSAPPOStatus(o.PurchaseOrderStatus),
+          lineItems: o.to_PurchaseOrderItem?.results || []
+        })));
       }
 
       // Fetch material documents
@@ -152,12 +181,35 @@ export default function SAPDataExplorer() {
       });
       const metricsData = await metricsRes.json();
 
+      // True live SAP totals (uncapped) - the .length checks below only count
+      // the fetched page (limit=200/100 above), not the real total counts.
+      const [vendorCountRes, poCountRes, docCountRes] = await Promise.all([
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/sap/live/vendors/count`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        }),
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/sap/live/purchase-orders/count`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        }),
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/sap/live/material-documents/count`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
+      ]);
+      const vendorCountData = await vendorCountRes.json();
+      const poCountData = await poCountRes.json();
+      const docCountData = await docCountRes.json();
+
       setStats({
-        totalVendors: vendorsData.data?.length || 0,
+        totalVendors: vendorCountData.data?.count ?? vendorsData.data?.length ?? 0,
         activeVendors: metricsData.activeVendors || 0,
-        totalPOs: poData.data?.length || 0,
-        openPOs: poData.data?.filter((p: any) => p.status === 'open').length || 0,
-        totalMaterialDocs: docsData.data?.length || 0,
+        totalPOs: poCountData.data?.count ?? poData.data?.length ?? 0,
+        // Open-PO count still comes from the capped page above - SAP's PO
+        // status is a composite processing status, not a single filterable
+        // field, so a true live "open" count needs its own $filter logic.
+        openPOs: poData.data?.filter((p: any) => {
+          const s = mapSAPPOStatus(p.PurchaseOrderStatus);
+          return s === 'pending' || s === 'approved';
+        }).length || 0,
+        totalMaterialDocs: docCountData.data?.count ?? docsData.data?.length ?? 0,
         syncedVendors: metricsData.syncedVendors || 0,
         vendorsWithGSTN: metricsData.vendorsWithGSTN || 0
       });
@@ -204,9 +256,9 @@ export default function SAPDataExplorer() {
     v.email?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const filteredPOs = purchaseOrders.filter(p => 
+  const filteredPOs = purchaseOrders.filter(p =>
     p.poNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    p.vendor?.supplierName?.toLowerCase().includes(searchTerm.toLowerCase())
+    p.supplierName?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const filteredDocs = materialDocs.filter(d => 
@@ -270,7 +322,7 @@ export default function SAPDataExplorer() {
               </div>
               <Building2 className="w-8 h-8 text-blue-500" />
             </div>
-            <p className="text-xs text-gray-500 mt-1">{stats.activeVendors} active</p>
+            <p className="text-xs text-gray-500 mt-1">{stats.activeVendors} active in local cache</p>
           </div>
           <div className="bg-gradient-to-br from-green-50 to-white rounded-xl p-4 border border-green-100">
             <div className="flex items-center justify-between">
@@ -280,7 +332,7 @@ export default function SAPDataExplorer() {
               </div>
               <Package className="w-8 h-8 text-green-500" />
             </div>
-            <p className="text-xs text-gray-500 mt-1">{stats.openPOs} open</p>
+            <p className="text-xs text-gray-500 mt-1">{stats.openPOs} open (of last {purchaseOrders.length} fetched)</p>
           </div>
           <div className="bg-gradient-to-br from-purple-50 to-white rounded-xl p-4 border border-purple-100">
             <div className="flex items-center justify-between">
@@ -294,12 +346,12 @@ export default function SAPDataExplorer() {
           <div className="bg-gradient-to-br from-orange-50 to-white rounded-xl p-4 border border-orange-100">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500">SAP Sync Status</p>
+                <p className="text-sm text-gray-500">Local DB Sync Status</p>
                 <p className="text-2xl font-bold text-orange-600">{stats.syncedVendors.toLocaleString()}</p>
               </div>
               <CheckCircle className="w-8 h-8 text-orange-500" />
             </div>
-            <p className="text-xs text-gray-500 mt-1">vendors synced</p>
+            <p className="text-xs text-gray-500 mt-1">vendors synced to local cache</p>
           </div>
         </div>
 
@@ -329,7 +381,7 @@ export default function SAPDataExplorer() {
             </div>
             <div className="flex items-center space-x-3">
               <span className="text-sm text-gray-500">
-                {vendors.length} total
+                {vendors.length} loaded of {stats.totalVendors.toLocaleString()} in SAP
               </span>
               {expandedSections.vendors ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
             </div>
@@ -408,7 +460,7 @@ export default function SAPDataExplorer() {
             </div>
             <div className="flex items-center space-x-3">
               <span className="text-sm text-gray-500">
-                {purchaseOrders.length} total
+                {purchaseOrders.length} loaded of {stats.totalPOs.toLocaleString()} in SAP
               </span>
               {expandedSections.purchaseOrders ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
             </div>
@@ -429,15 +481,15 @@ export default function SAPDataExplorer() {
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {filteredPOs.slice(0, 20).map((po) => (
-                    <tr key={po.id} className="hover:bg-gray-50">
+                    <tr key={po.poNumber} className="hover:bg-gray-50">
                       <td className="px-4 py-3 whitespace-nowrap font-medium text-gray-900">
                         {po.poNumber}
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
-                        {po.vendor?.supplierName || 'Unknown'}
+                        {po.supplierName || 'Unknown'}
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
-                        {po.poCreateDate ? new Date(po.poCreateDate).toLocaleDateString() : '-'}
+                        {parseSAPDate(po.poCreateDate)?.toLocaleDateString() || '-'}
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
                         {po.totalAmount} {po.currency || 'INR'}
@@ -452,7 +504,7 @@ export default function SAPDataExplorer() {
                       </td>
                       <td className="px-4 py-3 text-right">
                         <Link
-                          href={`/procurement/purchase-orders/${po.id}`}
+                          href={`/procurement/purchase-orders/${po.poNumber}`}
                           className="text-blue-600 hover:text-blue-800"
                         >
                           <Eye size={16} />
@@ -485,7 +537,7 @@ export default function SAPDataExplorer() {
             </div>
             <div className="flex items-center space-x-3">
               <span className="text-sm text-gray-500">
-                {materialDocs.length} total
+                {materialDocs.length} loaded of {stats.totalMaterialDocs.toLocaleString()} in SAP
               </span>
               {expandedSections.materialDocs ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
             </div>

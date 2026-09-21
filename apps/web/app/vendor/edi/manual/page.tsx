@@ -733,6 +733,7 @@ interface LineItem {
   quantity: number
   unitPrice: number
   totalAmount: number
+  deliveryDate?: string | null
 }
 
 interface PurchaseOrder {
@@ -742,6 +743,7 @@ interface PurchaseOrder {
   plantCode: string
   status: string
   lineItems: LineItem[]
+  isSchedulingAgreement?: boolean
 }
 
 interface EDIInvoice {
@@ -763,9 +765,19 @@ interface EDIInvoice {
     isVerified: boolean
     isValid: boolean
     errorMessage: string
+    deliveryDate?: string | null
   }[]
   isSubmitted: boolean
   barcode: string
+}
+
+// SAP OData V2 dates come as "/Date(1712448000000)/", not a plain ISO string.
+function parseSAPDate(value: string | null | undefined): string {
+  if (!value) return '-'
+  const match = /\/Date\((\d+)\)\//.exec(value)
+  const ms = match ? parseInt(match[1], 10) : Date.parse(value)
+  if (isNaN(ms)) return '-'
+  return new Date(ms).toLocaleDateString()
 }
 
 const formatCurrency = (value: any): string => {
@@ -883,7 +895,8 @@ export default function EDIManualPage() {
         enteredTotalPrice: 0,
         isVerified: false,
         isValid: false,
-        errorMessage: ''
+        errorMessage: '',
+        deliveryDate: item.deliveryDate || null
       }
     }) || []
 
@@ -1187,10 +1200,15 @@ export default function EDIManualPage() {
                 <option value="">-- Select Purchase Order --</option>
                 {purchaseOrders.map(po => (
                   <option key={po.id} value={po.poNumber}>
-                    {po.poNumber} - {po.plantCode}
+                    {po.poNumber} - {po.plantCode} {po.isSchedulingAgreement ? '(Open PO - recurring)' : ''}
                   </option>
                 ))}
               </select>
+              {formData.selectedPO?.isSchedulingAgreement && (
+                <p className="mt-1 text-xs text-blue-600">
+                  This is an Open PO (Scheduling Agreement) - each line below is one month's scheduled delivery, not a one-time order.
+                </p>
+              )}
             </div>
 
             {/* Line Items Table */}
@@ -1204,6 +1222,9 @@ export default function EDIManualPage() {
                         <th className="px-2 py-1.5 text-left">Material</th>
                         <th className="px-2 py-1.5 text-left">Description</th>
                         <th className="px-2 py-1.5 text-left w-10">UOM</th>
+                        {formData.selectedPO?.isSchedulingAgreement && (
+                          <th className="px-2 py-1.5 text-left w-24">Delivery Date</th>
+                        )}
                         <th className="px-2 py-1.5 text-right w-14">PO Qty</th>
                         <th className="px-2 py-1.5 text-right w-16">Unit Price</th>
                         <th className="px-2 py-1.5 text-right w-20">Invoice Qty</th>
@@ -1223,6 +1244,9 @@ export default function EDIManualPage() {
                             <td className="px-2 py-1.5 font-mono">{item.materialCode}</td>
                             <td className="px-2 py-1.5 truncate max-w-[120px]">{item.materialDesc}</td>
                             <td className="px-2 py-1.5">{item.uom}</td>
+                            {formData.selectedPO?.isSchedulingAgreement && (
+                              <td className="px-2 py-1.5 whitespace-nowrap">{parseSAPDate(item.deliveryDate)}</td>
+                            )}
                             <td className="px-2 py-1.5 text-right font-medium">{item.poQty}</td>
                             <td className="px-2 py-1.5 text-right">₹{formatCurrency(item.unitPrice)}</td>
                             <td className="px-2 py-1.5">
@@ -1341,6 +1365,9 @@ export default function EDIManualPage() {
                           <th className="px-2 py-1.5 text-left">Material Code</th>
                           <th className="px-2 py-1.5 text-left">Description</th>
                           <th className="px-2 py-1.5 text-left">UOM</th>
+                          {formData.selectedPO?.isSchedulingAgreement && (
+                            <th className="px-2 py-1.5 text-left">Delivery Date</th>
+                          )}
                           <th className="px-2 py-1.5 text-right">Invoice Qty</th>
                           <th className="px-2 py-1.5 text-right">Total Price (₹)</th>
                         </tr>
@@ -1351,6 +1378,9 @@ export default function EDIManualPage() {
                             <td className="px-2 py-1.5 font-mono">{item.materialCode}</td>
                             <td className="px-2 py-1.5">{item.materialDesc}</td>
                             <td className="px-2 py-1.5">{item.uom}</td>
+                            {formData.selectedPO?.isSchedulingAgreement && (
+                              <td className="px-2 py-1.5 whitespace-nowrap">{parseSAPDate(item.deliveryDate)}</td>
+                            )}
                             <td className="px-2 py-1.5 text-right">{item.invoiceQty}</td>
                             <td className="px-2 py-1.5 text-right">₹{formatCurrency(item.enteredTotalPrice)}</td>
                           </tr>
@@ -1358,7 +1388,7 @@ export default function EDIManualPage() {
                       </tbody>
                       <tfoot className="bg-gray-50">
                         <tr>
-                          <td colSpan={4} className="px-2 py-1.5 text-right font-semibold">Total:</td>
+                          <td colSpan={formData.selectedPO?.isSchedulingAgreement ? 5 : 4} className="px-2 py-1.5 text-right font-semibold">Total:</td>
                           <td className="px-2 py-1.5 text-right font-bold text-green-600">
                             ₹{formData.lineItemsData.reduce((sum, item) => sum + safeNumber(item.enteredTotalPrice), 0).toFixed(2)}
                           </td>
@@ -1388,7 +1418,12 @@ export default function EDIManualPage() {
                     </div>
                     <div className="bg-gray-50 p-2 rounded">
                       <p className="text-xs text-gray-500">PO Number</p>
-                      <p className="font-medium text-gray-900">{formData.poNumber}</p>
+                      <p className="font-medium text-gray-900">
+                        {formData.poNumber}
+                        {formData.selectedPO?.isSchedulingAgreement && (
+                          <span className="ml-1.5 inline-block px-1.5 py-0.5 text-[10px] font-medium bg-blue-100 text-blue-700 rounded">Open PO</span>
+                        )}
+                      </p>
                     </div>
                   </div>
                 </div>

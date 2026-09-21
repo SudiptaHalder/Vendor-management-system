@@ -5,13 +5,12 @@ import axios, { AxiosInstance } from 'axios';
 
 export class SAPAuth {
   private static instance: SAPAuth;
+  private static schedInstance: SAPAuth;
   private axiosInstance: AxiosInstance;
 
-  private constructor() {
+  private constructor(username: string, password: string) {
     const baseURL = process.env.SAP_BASE_URL;
-    const username = process.env.SAP_USERNAME;
-    const password = process.env.SAP_PASSWORD;
-    
+
     if (!baseURL || !username || !password) {
       throw new Error('SAP credentials not configured');
     }
@@ -33,9 +32,27 @@ export class SAPAuth {
 
   static getInstance(): SAPAuth {
     if (!SAPAuth.instance) {
-      SAPAuth.instance = new SAPAuth();
+      SAPAuth.instance = new SAPAuth(process.env.SAP_USERNAME as string, process.env.SAP_PASSWORD as string);
     }
     return SAPAuth.instance;
+  }
+
+  /**
+   * Separate technical user for Scheduling Agreement Integration
+   * (SAP_COM_0103 / API_SCHED_AGRMT_PROCESS_SRV) - VMS_USER is not authorized
+   * for this scenario; it's tied to a different Communication System
+   * (SCHED_SYS) with its own dedicated user (SCHED_USER).
+   */
+  static getSchedInstance(): SAPAuth {
+    if (!SAPAuth.schedInstance) {
+      const username = process.env.SAP_SCHED_USERNAME;
+      const password = process.env.SAP_SCHED_PASSWORD;
+      if (!username || !password) {
+        throw new Error('Scheduling agreement SAP credentials not configured (SAP_SCHED_USERNAME/SAP_SCHED_PASSWORD)');
+      }
+      SAPAuth.schedInstance = new SAPAuth(username, password);
+    }
+    return SAPAuth.schedInstance;
   }
 
   private setupInterceptors(): void {
@@ -66,8 +83,12 @@ export class SAPAuth {
    * session cookie SAP returns alongside it. Basic auth alone (used for our
    * reads) is not enough for writes.
    */
-  async postWithCsrf<T = any>(url: string, data: any, options: any = {}): Promise<T> {
-    const csrfResponse = await this.axiosInstance.get(url, {
+  // csrfUrl lets callers fetch the token against a plain, GET-able entity set
+  // (the default: the same url) - needed for OData Function Imports (actions
+  // like PutawayOneItemWithSalesQuantity), which don't support a bare GET
+  // with $top the way entity sets do.
+  async postWithCsrf<T = any>(url: string, data: any, options: any = {}, csrfUrl: string = url): Promise<T> {
+    const csrfResponse = await this.axiosInstance.get(csrfUrl, {
       params: { $top: 1 },
       headers: {
         ...(options.headers || {}),

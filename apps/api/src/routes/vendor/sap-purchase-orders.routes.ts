@@ -217,6 +217,11 @@
 import { Router } from 'express';
 import { vendorMiddleware } from '../../middleware/vendor.middleware';
 import { SAPAuth } from '../../services/sap/shared/sapAuth';
+import {
+  isSchedulingAgreementNumber,
+  getSchedulingAgreementsForSupplier,
+  getSchedulingAgreementByNumber
+} from '../../services/sap/schedulingAgreementService';
 
 const router = Router();
 
@@ -300,11 +305,24 @@ router.get('/', vendorMiddleware, async (req, res) => {
       };
     });
 
+    // Scheduling agreements ("open POs", 55-prefixed, recurring monthly) use
+    // a separate SAP API and technical user - merge them into the same list
+    // so the vendor sees both types of order in one place.
+    let schedulingAgreements: any[] = [];
+    try {
+      schedulingAgreements = await getSchedulingAgreementsForSupplier(vendorId);
+      console.log(`📦 Found ${schedulingAgreements.length} scheduling agreements for vendor ${vendorId}`);
+    } catch (schedError: any) {
+      console.error('⚠️ Could not fetch scheduling agreements (continuing with POs only):', schedError.message);
+    }
+
+    const combinedOrders = [...transformedOrders, ...schedulingAgreements];
+
     res.json({
       success: true,
-      data: transformedOrders,
+      data: combinedOrders,
       source: 'SAP Live',
-      count: transformedOrders.length,
+      count: combinedOrders.length,
       vendorId: vendorId
     });
 
@@ -333,6 +351,31 @@ router.get('/:poNumber', vendorMiddleware, async (req, res) => {
     }
 
     console.log(`📦 Fetching PO ${poNumber} from SAP for vendor: ${vendorId}`);
+
+    if (isSchedulingAgreementNumber(poNumber)) {
+      const sa = await getSchedulingAgreementByNumber(poNumber);
+
+      if (!sa) {
+        return res.status(404).json({
+          success: false,
+          error: 'Scheduling agreement not found'
+        });
+      }
+
+      if (sa.supplier !== vendorId) {
+        console.warn(`⚠️ Vendor ${vendorId} tried to access scheduling agreement ${poNumber} belonging to ${sa.supplier}`);
+        return res.status(403).json({
+          success: false,
+          error: 'Access denied - This scheduling agreement does not belong to you'
+        });
+      }
+
+      return res.json({
+        success: true,
+        data: sa,
+        source: 'SAP Live'
+      });
+    }
 
     const sapAuth = SAPAuth.getInstance();
     const client = sapAuth.getClient();

@@ -80,5 +80,47 @@ export async function createInboundDeliveryFromEDI(params: CreateAsnParams): Pro
     throw new Error('SAP did not return a DeliveryDocument number for the created ASN');
   }
 
+  // The create call above only sets ActualDeliveryQuantity. SAP treats
+  // "Delivery Quantity" and "Put Away Quantity" as separate mandatory fields
+  // that stay unset until explicitly confirmed - this action sets both to
+  // the same value the vendor entered, in the item's sales unit (uom).
+  const createdItems = response?.d?.to_DeliveryDocumentItem?.results || [];
+  for (const requested of lineItems) {
+    const createdItem = createdItems.find(
+      (i: any) => i.ReferenceSDDocumentItem === requested.poItemNumber
+    );
+    if (!createdItem) {
+      console.warn(`⚠️ Could not match created delivery item for PO item ${requested.poItemNumber} - skipping putaway/delivery quantity confirmation`);
+      continue;
+    }
+
+    // This action requires an If-Match header with the item's current ETag
+    // (SAP returns 428 Precondition Required without it). The create
+    // response normally already carries it; fall back to a fresh GET if not.
+    let etag = createdItem.__metadata?.etag;
+    if (!etag) {
+      const client = sapAuth.getClient();
+      const itemResponse = await client.get(
+        `${INBOUND_DELIVERY_BASE}/A_InbDeliveryItem(DeliveryDocument='${deliveryDocument}',DeliveryDocumentItem='${createdItem.DeliveryDocumentItem}')`
+      );
+      etag = itemResponse.headers['etag'];
+    }
+
+    await sapAuth.postWithCsrf<any>(
+      `${INBOUND_DELIVERY_BASE}/PutawayOneItemWithSalesQuantity`,
+      undefined,
+      {
+        headers: etag ? { 'If-Match': etag } : {},
+        params: {
+          ActualDeliveryQuantity: `${requested.quantity}M`,
+          DeliveryDocument: `'${deliveryDocument}'`,
+          DeliveryDocumentItem: `'${createdItem.DeliveryDocumentItem}'`,
+          DeliveryQuantityUnit: `'${requested.uom}'`
+        }
+      },
+      `${INBOUND_DELIVERY_BASE}/A_InbDeliveryHeader`
+    );
+  }
+
   return { deliveryDocument, raw: response };
 }

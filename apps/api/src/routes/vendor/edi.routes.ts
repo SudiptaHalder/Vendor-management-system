@@ -3,6 +3,10 @@ import { vendorMiddleware } from '../../middleware/vendor.middleware';
 import { authMiddleware } from '../../middleware/auth.middleware';
 import { SAPAuth } from '../../services/sap/shared/sapAuth';
 import { createInboundDeliveryFromEDI } from '../../services/sap/inboundDeliveryService';
+import {
+  isSchedulingAgreementNumber,
+  getSchedulingAgreementByNumber
+} from '../../services/sap/schedulingAgreementService';
 
 const router = Router();
 
@@ -28,49 +32,92 @@ router.post('/submit', vendorMiddleware, async (req, res) => {
       });
     }
 
-    // Re-fetch the PO from SAP server-side - never trust client-supplied
-    // material/uom/plant for a write. Also re-verifies PO ownership.
-    const sapAuth = SAPAuth.getInstance();
-    const client = sapAuth.getClient();
+    // Re-fetch the PO/scheduling agreement from SAP server-side - never trust
+    // client-supplied material/uom/plant for a write. Also re-verifies
+    // ownership. Scheduling agreements ("open POs", 55-prefixed) use a
+    // different SAP API and structure (schedule lines instead of a single
+    // fixed quantity per item), so they're validated separately.
+    let resolvedLineItems: Array<{ poItemNumber: string; materialCode: string; uom: string; quantity: number; plantCode: string | null }>;
 
-    const poResponse = await client.get(
-      `/sap/opu/odata/sap/API_PURCHASEORDER_PROCESS_SRV/A_PurchaseOrder('${poNumber}')`,
-      { params: { $format: 'json', $expand: 'to_PurchaseOrderItem' } }
-    );
+    if (isSchedulingAgreementNumber(poNumber)) {
+      const sa = await getSchedulingAgreementByNumber(poNumber);
+      if (!sa) {
+        return res.status(404).json({ success: false, error: 'Scheduling agreement not found' });
+      }
+      if (sa.supplier !== vendorId) {
+        console.warn(`⚠️ Vendor ${vendorId} tried to submit EDI against scheduling agreement ${poNumber} belonging to ${sa.supplier}`);
+        return res.status(403).json({ success: false, error: 'Access denied - This scheduling agreement does not belong to you' });
+      }
 
-    const po = poResponse.data.d;
-    if (!po) {
-      return res.status(404).json({ success: false, error: 'Purchase order not found' });
+      resolvedLineItems = lineItems.map((li: any) => {
+        // li.poItemNumber is "{SchedulingAgreementItem}-{ScheduleLine}",
+        // matching the composite id the vendor list/detail endpoints return.
+        const scheduleLine = sa.lineItems.find((s) => s.id === li.poItemNumber);
+        if (!scheduleLine) {
+          throw new Error(`Schedule line ${li.poItemNumber} not found on scheduling agreement ${poNumber}`);
+        }
+
+        const quantity = Number(li.quantity);
+        if (!quantity || quantity <= 0) {
+          throw new Error(`Invalid quantity for schedule line ${li.poItemNumber}`);
+        }
+        if (quantity > scheduleLine.quantity) {
+          throw new Error(`Quantity ${quantity} for schedule line ${li.poItemNumber} exceeds planned quantity ${scheduleLine.quantity}`);
+        }
+
+        return {
+          // SAP's Inbound Delivery only references the item, not the
+          // schedule line, for ReferenceSDDocumentItem.
+          poItemNumber: scheduleLine.schedulingAgreementItem,
+          materialCode: scheduleLine.materialCode || '',
+          uom: scheduleLine.uom || '',
+          quantity,
+          plantCode: sa.plantCode
+        };
+      });
+    } else {
+      const sapAuth = SAPAuth.getInstance();
+      const client = sapAuth.getClient();
+
+      const poResponse = await client.get(
+        `/sap/opu/odata/sap/API_PURCHASEORDER_PROCESS_SRV/A_PurchaseOrder('${poNumber}')`,
+        { params: { $format: 'json', $expand: 'to_PurchaseOrderItem' } }
+      );
+
+      const po = poResponse.data.d;
+      if (!po) {
+        return res.status(404).json({ success: false, error: 'Purchase order not found' });
+      }
+      if (po.Supplier !== vendorId) {
+        console.warn(`⚠️ Vendor ${vendorId} tried to submit EDI against PO ${poNumber} belonging to ${po.Supplier}`);
+        return res.status(403).json({ success: false, error: 'Access denied - This PO does not belong to you' });
+      }
+
+      const sapLineItems = po.to_PurchaseOrderItem?.results || [];
+
+      resolvedLineItems = lineItems.map((li: any) => {
+        const sapItem = sapLineItems.find((s: any) => s.PurchaseOrderItem === li.poItemNumber);
+        if (!sapItem) {
+          throw new Error(`Line item ${li.poItemNumber} not found on PO ${poNumber}`);
+        }
+
+        const quantity = Number(li.quantity);
+        if (!quantity || quantity <= 0) {
+          throw new Error(`Invalid quantity for line item ${li.poItemNumber}`);
+        }
+        if (quantity > Number(sapItem.OrderQuantity)) {
+          throw new Error(`Quantity ${quantity} for line item ${li.poItemNumber} exceeds PO quantity ${sapItem.OrderQuantity}`);
+        }
+
+        return {
+          poItemNumber: sapItem.PurchaseOrderItem,
+          materialCode: sapItem.Material,
+          uom: sapItem.OrderUnit,
+          quantity,
+          plantCode: po.Plant || null
+        };
+      });
     }
-    if (po.Supplier !== vendorId) {
-      console.warn(`⚠️ Vendor ${vendorId} tried to submit EDI against PO ${poNumber} belonging to ${po.Supplier}`);
-      return res.status(403).json({ success: false, error: 'Access denied - This PO does not belong to you' });
-    }
-
-    const sapLineItems = po.to_PurchaseOrderItem?.results || [];
-
-    const resolvedLineItems = lineItems.map((li: any) => {
-      const sapItem = sapLineItems.find((s: any) => s.PurchaseOrderItem === li.poItemNumber);
-      if (!sapItem) {
-        throw new Error(`Line item ${li.poItemNumber} not found on PO ${poNumber}`);
-      }
-
-      const quantity = Number(li.quantity);
-      if (!quantity || quantity <= 0) {
-        throw new Error(`Invalid quantity for line item ${li.poItemNumber}`);
-      }
-      if (quantity > Number(sapItem.OrderQuantity)) {
-        throw new Error(`Quantity ${quantity} for line item ${li.poItemNumber} exceeds PO quantity ${sapItem.OrderQuantity}`);
-      }
-
-      return {
-        poItemNumber: sapItem.PurchaseOrderItem,
-        materialCode: sapItem.Material,
-        uom: sapItem.OrderUnit,
-        quantity,
-        plantCode: po.Plant || null
-      };
-    });
 
     const result = await createInboundDeliveryFromEDI({
       supplierCode: vendorId,

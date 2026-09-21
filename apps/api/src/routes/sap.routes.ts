@@ -187,3 +187,15 @@ router.get('/live/vendors/count', authMiddleware, async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 });
+
+// Get live purchase orders count from SAP
+router.get('/live/purchase-orders/count', authMiddleware, async (req, res) => {
+  try {
+    const { SAPLiveDataService } = require('../services/sap/sapLiveDataService');
+    const liveDataService = new SAPLiveDataService();
+    const count = await liveDataService.getLivePurchaseOrdersCount();
+    res.json({ success: true, data: { count, source: 'SAP Live' } });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
